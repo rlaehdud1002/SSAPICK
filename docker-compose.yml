@@ -29,5 +29,5 @@ services:
     image: redis:5.0.7-alpine
     container_name: ssapick-cache-database
     ports:
-      - "6379:6379"
+      - "6380:6379"
     entrypoint: redis-server --requirepass ssapick --maxmemory 128mb
