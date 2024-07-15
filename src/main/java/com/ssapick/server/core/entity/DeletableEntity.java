@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @MappedSuperclass
-public abstract  class SoftDeletableEntity extends BaseEntity {
+public abstract  class DeletableEntity extends TimeBaseEntity {
 
 	@Column(name = "is_deleted", nullable = false)
 	@ColumnDefault("false")
