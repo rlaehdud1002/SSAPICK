@@ -14,9 +14,9 @@ public class Follow extends TimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "follower_id", nullable = false ,foreignKey = @ForeignKey(name = "foreign_key_follow_follower_id"))
-    private User follower;
+    private User followUser;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "following_id", nullable = false ,foreignKey = @ForeignKey(name = "foreign_key_follow_following_id"))
-    private User toUser;
+    private User followingUser;
 }

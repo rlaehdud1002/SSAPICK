@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.user.entity.type;
+package com.ssapick.server.domain.user.entity;
 
 public enum ProviderType {
     NAVER,

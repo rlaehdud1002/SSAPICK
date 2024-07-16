@@ -1,15 +1,21 @@
 package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.BaseEntity;
-import com.ssapick.server.domain.user.entity.type.ProviderType;
-import com.ssapick.server.domain.user.entity.type.RoleType;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
         name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = "username")}
+        uniqueConstraints = {@UniqueConstraint(columnNames = "username")},
+        indexes = {
+                @Index(name = "index_user_username", columnList = "username")
+        }
 )
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +47,20 @@ public class User extends BaseEntity {
 
     @Column(name = "is_locked", nullable = false)
     private boolean isLocked = false;
+
+    /**
+     * 사용자 생성 메서드
+     * @param username 사용자 이름
+     * @param providerType 제공자 타입 (GOOGLE, NAVER, KAKAO)
+     * @param providerId 제공자 ID
+     * @return {@link User} 새롭게 생성한 유저 객체
+     */
+    public static User createUser(String username, ProviderType providerType, String providerId) {
+        User user = new User();
+        user.username = username;
+        user.email = username;
+        user.providerType = providerType;
+        user.providerId = providerId;
+        return user;
+    }
 }
