@@ -1,10 +1,11 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Header from "./components/Header";
 
 function App() {
   return (
     <>
-      <h1 className="luckiest_guy logo_font_style">SSAPICK</h1>
+      <Header/>
     </>
   );
 }
