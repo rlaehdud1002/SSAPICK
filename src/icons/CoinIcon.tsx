@@ -4,7 +4,15 @@ interface CoinIconProps {
 }
 
 const CoinIcon = ({ width, height }: CoinIconProps) => {
-  return <img className="cursor-pointer" width={width} height={height} src="/icons/coin.png" alt="coin" />;
-}
+  return (
+    <img
+      className="cursor-pointer"
+      width={width}
+      height={height}
+      src="/icons/coin.png"
+      alt="coin"
+    />
+  );
+};
 
 export default CoinIcon;
