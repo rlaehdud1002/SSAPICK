@@ -5,8 +5,8 @@ import Footer from './components/common/Footer';
 function App() {
   return (
     <div className="flex flex-col relative">
-        <Header />
-        <Footer />
+      <Header />
+      <Footer />
     </div>
   );
 }
