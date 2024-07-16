@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.question;
+package com.ssapick.server.domain.question.entity;
 
 import jakarta.persistence.*;
 

@@ -1,6 +1,8 @@
 package com.ssapick.server.domain.pick.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
+import com.ssapick.server.domain.user.entity.User;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,11 +24,21 @@ public class Message extends TimeEntity {
     @Column(nullable = false, updatable = false)
     private String content;
 
-    @Column(nullable = false)
-    private boolean toDeleted = false;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "from_user_id", nullable = false, updatable = false)
+    private User fromUser;
+
 
     @Column(nullable = false)
     private boolean fromDeleted = false;
+
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "to_user_id", nullable = false, updatable = false)
+    private User toUser;
+
+    @Column(nullable = false)
+    private boolean toDeleted = false;
 
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
