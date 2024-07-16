@@ -1,12 +1,12 @@
-import React from "react";
-import Header from "./components/common/Header";
-import Footer from "./components/common/Footer";
+import React from 'react';
+import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 
 function App() {
   return (
-    <div className="relative h-screen">
-    <Header />
-    <Footer />
+    <div className="flex flex-col relative">
+        <Header />
+        <Footer />
     </div>
   );
 }
