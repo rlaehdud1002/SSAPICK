@@ -6,9 +6,7 @@ import static lombok.AccessLevel.*;
 
 import java.util.ArrayList;
 
-import com.ssapick.server.core.entity.TimeBaseEntity;
-import com.ssapick.server.domain.entity.member.Profile;
-import com.ssapick.server.domain.entity.question.Question;
+import com.ssapick.server.core.entity.TimeEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class Pick extends TimeBaseEntity {
+public class Pick extends TimeEntity {
 
 	@Id @GeneratedValue(strategy = IDENTITY)
 	@Column(name = "pick_id")

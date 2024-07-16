@@ -1,6 +1,6 @@
 package com.ssapick.server.domain.user.entity;
 
-import com.ssapick.server.domain.entity.member.Profile;
+import com.ssapick.server.core.entity.BaseEntity;
 import com.ssapick.server.domain.user.entity.type.ProviderType;
 import com.ssapick.server.domain.user.entity.type.RoleType;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import jakarta.persistence.*;
         name = "users",
         uniqueConstraints = {@UniqueConstraint(columnNames = "username")}
 )
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

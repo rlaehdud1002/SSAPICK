@@ -2,8 +2,6 @@ package com.ssapick.server.domain.entity.pick;
 
 import static jakarta.persistence.FetchType.*;
 
-import com.ssapick.server.domain.entity.member.Profile;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
