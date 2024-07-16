@@ -26,7 +26,7 @@ services:
     restart: always
 
   cache-database:
-    image: redis:5.0.7-alpine
+    image: redis:7.4-rc2-alpine
     container_name: ssapick-cache-database
     ports:
       - "6379:6379"
