@@ -1,13 +1,10 @@
 package com.ssapick.server.domain.pick.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.user.entity.User;
 
 public interface PickRepository extends JpaRepository<Pick, Long> {
 

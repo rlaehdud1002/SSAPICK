@@ -9,11 +9,11 @@ import com.ssapick.server.domain.pick.entity.Hint;
 public interface HintRepository extends JpaRepository<Hint, Long> {
 
 	/**
-	 * UserId로 힌트 조회 (힌트 타입으로 정렬)
-	 * @param userId
-	 * @return {@link List<Hint>} 힌트 리스트 반환 (존재하지 않으면, 빈 리스트 반환)
+	 *  사용자의 아이디로 힌트 조회
+	 * @param userId 사용자 아이디
+	 * @return {@link List<Hint>} 힌트 엔티티 리스트 존재하지 않으면 빈 리스트
 	 */
-	List<Hint> findAllByUserIdOrderByHintType(Long userId);
+	List<Hint> findAllByUserId(Long userId);
 
 
 }
