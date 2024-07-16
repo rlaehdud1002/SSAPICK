@@ -26,4 +26,7 @@ public class Question extends BaseEntity {
 
     @Column(name = "ban_count", nullable = false)
     private int banCount = 0;
+
+    @Column(name = "is_alarm_sent")
+    private boolean isAlarmSent = false;
 }

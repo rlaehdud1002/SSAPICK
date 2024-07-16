@@ -27,4 +27,8 @@ public class Message extends TimeEntity {
 
     @Column(nullable = false)
     private boolean fromDeleted = false;
+
+    @Column(name = "is_alarm_sent")
+    private boolean isAlarmSent = false;
+
 }
