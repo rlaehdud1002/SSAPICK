@@ -1,10 +1,10 @@
-import React from "react";
-import "./App.css";
+import React from 'react';
+import './App.css';
 
 function App() {
   return (
     <>
-      <h1>Hello</h1>
+      <h1 className="luckiest_guy logo_font_color">SSAP</h1>
     </>
   );
 }
