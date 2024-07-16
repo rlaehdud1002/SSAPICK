@@ -25,9 +25,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(name = "provider_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;

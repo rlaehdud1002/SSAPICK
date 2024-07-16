@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.entity.pick;
+package com.ssapick.server.domain.pick.entity;
 
 public enum HintType {
 	TRACK,

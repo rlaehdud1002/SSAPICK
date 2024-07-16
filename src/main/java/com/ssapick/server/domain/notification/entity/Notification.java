@@ -24,4 +24,7 @@ public class Notification extends TimeEntity {
     /** 울린 알림의 ID 값을 저장 */
     @Column(name = "reference_id")
     private Long referenceId;
+
+    @Column(name = "is_read")
+    private boolean isRead = false;
 }

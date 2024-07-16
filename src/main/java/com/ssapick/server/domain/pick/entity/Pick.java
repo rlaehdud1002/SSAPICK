@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.pick;
+package com.ssapick.server.domain.pick.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.question.Question;
@@ -26,4 +26,6 @@ public class Pick extends TimeEntity {
     @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_question_id"))
     private Question question;
 
+    @Column(name = "is_alarm_sent")
+    private boolean isAlarmSent = false;
 }
