@@ -34,6 +34,13 @@ public class Profile extends BaseEntity {
 	@Column(nullable = false)
 	private int pickco = 0;
 
+	public void changePickco(int amount) {
+		if (pickco + amount < 0) {
+			throw new IllegalArgumentException("픽코가 부족합니다.");
+		}
+		this.pickco += amount;
+	}
+
 //	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
 //	private Set<MemberBan> bannedToProfiles = new HashSet<>();
 //

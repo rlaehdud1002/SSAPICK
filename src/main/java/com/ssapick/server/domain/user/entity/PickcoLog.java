@@ -26,4 +26,12 @@ public class PickcoLog extends TimeEntity {
     @Column(nullable = false)
     private int remain;
 
+    public static PickcoLog createPickcoLog(User user, PickcoLogType pickcoLogType, int change, int remain) {
+        PickcoLog pickcoLog = new PickcoLog();
+        pickcoLog.user = user;
+        pickcoLog.pickcoLogType = pickcoLogType;
+        pickcoLog.change = change;
+        pickcoLog.remain = remain;
+        return pickcoLog;
+    }
 }
