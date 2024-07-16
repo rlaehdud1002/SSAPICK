@@ -17,7 +17,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class PickcoService {
     private final PickcoLogRepository pickcoLogRepository;
 
-    @Transactional
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void createPickcoLog(PickcoEvent event) {
         log.debug("신규 픽코 발생 / 사용: {}, 타입: {}, 금액: {}, 현재: {}", event.getUser().getUsername(), event.getType(), event.getAmount(), event.getCurrent());
