@@ -1,10 +1,10 @@
 package com.ssapick.server.domain.user.repository;
 
-import com.ssapick.server.domain.user.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.ssapick.server.domain.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     /**
