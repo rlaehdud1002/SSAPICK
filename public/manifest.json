@@ -1,10 +1,22 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SSAPICK",
+  "name": "싸피인의 모든 것, SSAPICK",
+  "description": "싸피인의 모든 것",
   "icons": [
+    {
+      "src": "icons/ssapick-196x196.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/ssapick-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ],
-  "start_url": ".",
-  "display": "standalone",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientaion" : "portrait",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#000855"
 }
