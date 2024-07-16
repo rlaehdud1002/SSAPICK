@@ -29,4 +29,10 @@ public class Alarm {
 
     @Column(name = "add_question_alarm", nullable = false)
     private boolean addQuestionAlarm = true;
+
+    public static Alarm createAlarm(User user) {
+        Alarm alarm = new Alarm();
+        alarm.user = user;
+        return alarm;
+    }
 }

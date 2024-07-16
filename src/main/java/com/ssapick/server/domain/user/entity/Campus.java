@@ -1,11 +1,19 @@
 package com.ssapick.server.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table(name = "campus", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name", "section"})
-})
+@Getter
+@Table(
+        name = "campus",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"name", "section"})
+        },
+        indexes = {
+            @Index(name = "index_campus_name", columnList = "name")
+        }
+)
 public class Campus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,14 +21,22 @@ public class Campus {
     private Long id;
 
     /** 캠퍼스 이름 */
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String name;
 
     /** 캠퍼스 내 소속한 반 */
     @Column(nullable = false, updatable = false)
-    private int section;
+    private short section;
 
     /** 트랙에 대한 설명 */
     @Column
     private String description;
+
+    public static Campus createCampus(String name, short section, String description) {
+        Campus campus = new Campus();
+        campus.name = name;
+        campus.section = section;
+        campus.description = description;
+        return campus;
+    }
 }

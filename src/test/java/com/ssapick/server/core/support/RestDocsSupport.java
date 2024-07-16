@@ -24,7 +24,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @Disabled
-@WebMvcTest
 @ExtendWith({RestDocumentationExtension.class})
 @Import(RestDocsConfig.class)
 @AutoConfigureRestDocs
@@ -54,6 +53,10 @@ public abstract class RestDocsSupport {
                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                 descriptor
         };
+    }
+
+    protected FieldDescriptor[] empty() {
+        return response(fieldWithPath("data").type(JsonFieldType.NULL).description("빈 데이터"));
     }
 
     protected <T> String toJson(T data) {
