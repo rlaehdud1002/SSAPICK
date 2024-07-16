@@ -4,9 +4,9 @@ import Footer from "./components/common/Footer";
 
 function App() {
   return (
-    <div className="relative h-screen">
-    <Header />
-    <Footer />
+    <div className="flex flex-col relative">
+      <Header />
+      <Footer />
     </div>
   );
 }
