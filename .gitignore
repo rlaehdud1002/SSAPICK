@@ -39,3 +39,4 @@ data/
 
 ## Properties ##
 /src/main/resources/application-prod.properties
+/src/main/resources/application-auth.properties
