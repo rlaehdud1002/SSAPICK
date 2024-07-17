@@ -5,22 +5,23 @@ import com.ssapick.server.domain.user.entity.ProviderType;
 
 import java.util.Map;
 
-public class NaverResponse implements OAuth2Response {
+public class GoogleResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 
-    public NaverResponse(Map<String, Object> attribute) {
-        this.attribute = (Map<String, Object>) attribute.get("response");
+    public GoogleResponse(Map<String, Object> attribute) {
+
+        this.attribute = attribute;
     }
 
     @Override
     public ProviderType getProvider() {
-        return ProviderType.NAVER;
+        return ProviderType.GOOGLE;
     }
 
     @Override
     public String getProviderId() {
-        return attribute.get("id").toString();
+        return attribute.get("sub").toString();
     }
 
     @Override
@@ -35,6 +36,6 @@ public class NaverResponse implements OAuth2Response {
 
     @Override
     public String getImageUrl() {
-        return attribute.get("profile_image").toString();
+        return attribute.get("picture").toString();
     }
 }

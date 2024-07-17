@@ -3,7 +3,9 @@ package com.ssapick.server.domain.auth.service;
 import com.ssapick.server.domain.auth.response.CustomOAuth2User;
 import com.ssapick.server.domain.auth.response.OAuth2Response;
 import com.ssapick.server.domain.auth.response.UserDTO;
+import com.ssapick.server.domain.auth.response.impl.GoogleResponse;
 import com.ssapick.server.domain.auth.response.impl.NaverResponse;
+import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
@@ -28,11 +30,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         System.out.println(oauth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        System.out.println("registrationId = " + registrationId);
         OAuth2Response oauth2Response = null;
 
-        System.out.println("registrationId = " + registrationId);
 
-        if (registrationId.equals("naver")) {
+        if (registrationId.equals(ProviderType.NAVER.name().toLowerCase())) {
+            oauth2Response = new NaverResponse(oauth2User.getAttributes());
+        } else if (registrationId.equals(ProviderType.GOOGLE.name().toLowerCase())) {
             oauth2Response = new NaverResponse(oauth2User.getAttributes());
         } else {
             return null;
@@ -45,10 +49,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             User signupUser = User.createUser(
                     username,
                     oauth2Response.getName(),
-                    ProviderType.valueOf(oauth2Response.getProvider()),
+                    oauth2Response.getProvider(),
                     oauth2Response.getProviderId()
             );
 
+            // TODO 프로필 이미지 추가
             userRepository.save(signupUser);
 
             UserDTO userDTO = new UserDTO();
@@ -59,7 +64,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return new CustomOAuth2User(userDTO);
         } else {
             // TODO: 유저 정보가 바뀌었을 수 있음 업데이트 로직 필요
-
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setName(oauth2Response.getName());

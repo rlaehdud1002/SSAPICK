@@ -1,22 +1,15 @@
 package com.ssapick.server.domain.auth.response;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.ssapick.server.domain.user.entity.ProviderType;
 
-import java.util.Map;
+public interface OAuth2Response {
+   ProviderType getProvider();
 
-@RequiredArgsConstructor
-@Getter
-public abstract class OAuth2Response {
-    private final Map<String, Object> attributes;
+   String getProviderId();
 
-    public abstract String getProvider();
+   String getEmail();
 
-    public abstract String getProviderId();
+   String getName();
 
-    public abstract String getEmail();
-
-    public abstract String getName();
-
-    public abstract String getImageUrl();
+   String getImageUrl();
 }
