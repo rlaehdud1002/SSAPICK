@@ -18,13 +18,6 @@ function App() {
   return (
     <div className="flex flex-col relative">
       <Header />
-      <Login/>
-      {/* <Login/> */}
-      {/* <UserInfo/> */}
-      <UserAddInfo/>
-      <Footer />
-      <div className="flex flex-col min-h-screen">
-        <Header />
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -35,6 +28,10 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
+      {/* <Login/> */}
+      {/* <UserInfo/> */}
+      <UserAddInfo/>
+      <div className="flex flex-col min-h-screen">
         <Footer />
       </div>
     </div>
