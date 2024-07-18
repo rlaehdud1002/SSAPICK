@@ -14,14 +14,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+  "paths": {
+    "components/*": ["./components/*"],
+    "icons/*": ["./icons/*"], 
+    "lib/*": ["./lib/*"],
+  },
   },
   "include": [
     "src"
   ],
-  "baseUrl": ".",
-  "paths": {
-    "@components/*": ["src/components/*"],
-    "@icons/*": ["src/icons/*"]
-},
 }
