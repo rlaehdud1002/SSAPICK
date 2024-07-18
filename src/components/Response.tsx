@@ -1,27 +1,41 @@
-// import UserIcon from '../icons/UserIcon';
-import DropDownIcon from "@icons/DropDownIcon";
+import UserIcon from '../icons/UserIcon';
+import SendingIcon from 'icons/SendingIcon';
 
-// import { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from 'components/ui/accordion';
 
 const Response = () => {
-  // const [open, SetOpen] = useState(false);
-
-
   return (
-    <></>
-
-    // <div classNameName="rounded-md bg-white/50 p-5">
-    //   <div classNameName="flex flex-row justify-between">
-    //     <div classNameName="flex flex-row">
-    //       <UserIcon />
-    //       <h3 classNameName="mx-3">XX기 X반 XXX</h3>
-    //     </div>
-    //     <DropDownIcon />
-    //   </div>
-    //   <div classNameName="mt-5">
-    //     <p classNameName='text-center'>나랑 같이 프로젝트 하고 싶은 사람은?</p>
-    //   </div>
-    // </div>
+    <div className="rounded-md bg-white/50 p-4">
+      <Accordion type="single" collapsible>
+        <AccordionItem value="item-1" className="border-none">
+          <AccordionTrigger className="p-0">
+            <div className="flex flex-col">
+              <div className="flex flex-row">
+                <UserIcon />
+                <h3 className="mx-3">XX기 X반 XXX</h3>
+              </div>
+            </div>
+          </AccordionTrigger>
+          <p className="text-center mb-4">
+            나랑 같이 프로젝트 하고 싶은 사람은?
+          </p>
+          <AccordionContent>
+            <div className="flex flex-row justify-center">
+              <div className="rounded-md bg-white/50 p-3 mx-10">hint1</div>
+              <div className="rounded-md bg-white/50 p-3 mx-10">hint2</div>
+            </div>
+            <div className="float-end">
+              <SendingIcon />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
   );
 };
 
