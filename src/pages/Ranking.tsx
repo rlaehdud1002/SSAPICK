@@ -1,4 +1,4 @@
-import TrophyIcon from "icons/TrophyIcon";
+import TrophyIcon from "../icons/TrophyIcon";
 
 interface RankingProps {
   isRanked: boolean;
@@ -13,20 +13,6 @@ const Ranking = ({isRanked}:RankingProps) => {
       <div className="flex">
         <TrophyIcon width={25} height={25} />
         <h2>가장 많이 Pick한 질문</h2>
-      </div>
-      <div  >1.</div>
-      <div  >2.</div>
-      <div  >3.</div>
-      <div className="flex">
-        <TrophyIcon width={25} height={25} />
-        <h2>가장 많이 스킵된 질문</h2>
-      </div>
-      <div  >1.</div>
-      <div  >2.</div>
-      <div  >3.</div>
-      <div className="flex">
-        <TrophyIcon width={25} height={25} />
-        <h2>가장 많이 지목된 사람</h2>
       </div>
       <div  >1.</div>
       <div  >2.</div>
