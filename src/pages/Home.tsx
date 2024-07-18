@@ -1,7 +1,9 @@
+import Response from "../components/Response";
+
 const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
+    <div className="m-6">
+      <Response />
     </div>
   );
 };

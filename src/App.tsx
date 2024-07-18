@@ -12,11 +12,14 @@ import Profile from './pages/Profile';
 
 import { Routes, Route } from 'react-router-dom';
 
-
 function App() {
   return (
     <div className="flex flex-col relative">
-      <Header />
+      {/* <Login/> */}
+      {/* <UserInfo/> */}
+      {/* <UserAddInfo/> */}
+      <div className="flex flex-col min-h-screen">
+        <Header />
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -27,11 +30,12 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
-      {/* <Login/> */}
-      {/* <UserInfo/> */}
-      {/* <UserAddInfo/> */}
-      <div className="flex flex-col min-h-screen">
-        <Footer />
+        {/* <Login/> */}
+        {/* <UserInfo/> */}
+        {/* <UserAddInfo/> */}
+        <div className="flex flex-col min-h-screen">
+          <Footer />
+        </div>
       </div>
     </div>
   );
