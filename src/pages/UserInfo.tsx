@@ -1,5 +1,5 @@
 import InfoInput from "components/InfoInput"
-import InfoDrop from "components/InfoDrop"
+import InfoSelect from "components/InfoSelect"
 import {useForm} from "react-hook-form"
 
 interface UserForm{
@@ -32,20 +32,13 @@ const UserInfo = () =>{
                 
             })} />
             
-            <InfoDrop title="성별"/>
+            <InfoSelect title="성별"/>
 
-            <InfoInput title="기수" register={register("th", {
-                required: "기수를 입력해주세요."
-            })} />
-            <InfoInput title="캠퍼스 " register={register("campus", {
-                required: "캠퍼스를 입력해주세요.",
-                maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
-            })} />
-            <InfoInput title="반" register={register("class", {
-                required: "반을 입력해주세요.",
-                maxLength: { value: 3, message: "3글자 이하로 입력해주세요." }
-            })} />
+            <InfoSelect title="기수"/>
 
+            <InfoSelect title="캠퍼스"/>
+            
+            <InfoSelect title="반"/>
             
         </div>
     </form>
