@@ -45,11 +45,6 @@ class CampusControllerTest extends RestDocsSupport {
 
         // * THEN: 이런 결과가 나와야 한다
         perform.andExpect(status().isCreated())
-//                .andExpect(data -> {
-//                    SuccessResponse response = fromJson(data.getResponse().getContentAsString(), SuccessResponse.class);
-//                    assertThat(response.getStatus()).isEqualTo(201);
-//                    assertThat(response.getMessage()).isEqualTo("success");
-//                })
                 .andDo(restDocs.document(
                     requestFields(
                             fieldWithPath("name").type(JsonFieldType.STRING).description("캠퍼스 이름"),
@@ -58,5 +53,17 @@ class CampusControllerTest extends RestDocsSupport {
                     ),
                     responseFields(empty())
         ));
+    }
+
+    @Test
+    @DisplayName("캠퍼스_생성_실패_테스트")
+    void 캠퍼스_생성_실패_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+
+
+        // * WHEN: 이걸 실행하면
+
+        // * THEN: 이런 결과가 나와야 한다
+
     }
 }
