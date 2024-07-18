@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
+import HintModal from 'modals/HintModal';
 
 const Response = () => {
   return (
@@ -26,8 +27,10 @@ const Response = () => {
           </p>
           <AccordionContent>
             <div className="flex flex-row justify-center">
-              <div className="rounded-md bg-white/50 p-3 mx-10">hint1</div>
-              <div className="rounded-md bg-white/50 p-3 mx-10">hint2</div>
+              <div className="rounded-md bg-white/50 p-3 mx-10">
+                <HintModal title="hint1"/>
+              </div>
+              <div className="rounded-md bg-white/50 p-3 mx-10"><HintModal title="hint2"/></div>
             </div>
             <div className="float-end">
               <SendingIcon />
