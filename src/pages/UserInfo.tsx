@@ -31,10 +31,9 @@ const UserInfo = () =>{
                 maxLength: { value: 10, message: "10글자로 입력해주세요." },
                 
             })} />
-            <InfoInput title="성별" register={register("gender", {
-                required: "성별을 입력해주세요.",
-                maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
-            })} />
+            
+            <InfoDrop title="성별"/>
+
             <InfoInput title="기수" register={register("th", {
                 required: "기수를 입력해주세요."
             })} />
@@ -44,7 +43,7 @@ const UserInfo = () =>{
             })} />
             <InfoInput title="반" register={register("class", {
                 required: "반을 입력해주세요.",
-                maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
+                maxLength: { value: 3, message: "3글자 이하로 입력해주세요." }
             })} />
 
             
