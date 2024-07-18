@@ -44,6 +44,9 @@ const UserInfo = () =>{
                 <option value="fifth">5반</option>
             </select>
             </div>
+            <div>
+                <button type="button" className="text-white bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 ">다음</button>
+            </div>
         </div>
     </form>
 }

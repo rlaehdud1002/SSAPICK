@@ -25,6 +25,9 @@ const UserAddInfo = () => {
                 <label htmlFor="hobby">관심사 </label>
                 <input className="rounded-md bg-white/50 border border-indigo-950" type="text" name="hobby"/>
             </div>
+            <div>
+                <button type="button" className="text-white bg-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 " >완료</button>
+            </div>
         </div>
     </div>
     </div>
