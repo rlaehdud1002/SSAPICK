@@ -5,6 +5,7 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
+import UserInfo from './pages/UserInfo';
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -27,7 +28,7 @@ function App() {
           </Routes>
         </div>
         {/* <Login/> */}
-        {/* <UserInfo/> */}
+        <UserInfo/>
         {/* <UserAddInfo/> */}
         <div className="flex flex-col min-h-screen">
           <Footer />

@@ -1,31 +1,32 @@
+import { Button } from "components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "components/ui/dropdown-menu"
+} from "components/ui/dropdown-menu";
+import * as React from "react";
 
-import { UseFormRegisterReturn } from "react-hook-form";
+import DropContent from "./DropContent";
 
 interface InfoDropProps {
   title: string,
-  register: UseFormRegisterReturn
 }
 
-const InfoDrop = ({ title, register }: InfoDropProps) => {
+const InfoDrop = ({ title }: InfoDropProps) => {
+  const [position, setPosition] = React.useState("bottom")
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
+        <Button>{title}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuContent className="w-56">
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+          <DropContent content="남자" />
+          <DropContent content="여자" />
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
 
