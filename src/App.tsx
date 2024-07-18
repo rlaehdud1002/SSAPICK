@@ -17,12 +17,10 @@ import Profile from './pages/Profile';
 function App() {
   return (
     <div className="flex flex-col relative">
-      <Header />
+      {/* <Login/>
       <Login/>
-      {/* <Login/> */}
-      {/* <UserInfo/> */}
-      <UserAddInfo/>
-      <Footer />
+      <UserInfo/>
+      <UserAddInfo/> */}
       <div className="flex flex-col min-h-screen">
         <Header />
         <div className="flex-grow">
