@@ -1,6 +1,4 @@
-body {
-  background-image: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
-}
+
 
 .luckiest_guy {
   font-family: 'Luckiest Guy';
@@ -13,8 +11,4 @@ body {
   font-size: 30px;
   padding-left: 20px;
   padding-top: 20px;
-}
-
-body{
-  background-image: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
 }

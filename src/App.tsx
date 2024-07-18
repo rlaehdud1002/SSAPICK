@@ -12,7 +12,6 @@ import Profile from './pages/Profile';
 
 import { Routes, Route } from 'react-router-dom';
 
-
 function App() {
   return (
     <div className="flex flex-col relative">
@@ -28,7 +27,7 @@ function App() {
           </Routes>
         </div>
       {/* <Login/> */}
-      {/* <UserInfo/> */}
+      <UserInfo/>
       {/* <UserAddInfo/> */}
       <div className="flex flex-col min-h-screen">
         <Footer />
