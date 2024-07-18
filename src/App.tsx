@@ -5,29 +5,33 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import UserInfo from './pages/UserInfo';
 
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
     <div className="flex flex-col relative">
-      <Header />
-      <div className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/ranking" element={<Ranking isRanked={true} />} />
-          <Route path="/pick" element={<Pick />} />
-          <Route path="/message" element={<Message />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </div>
       {/* <Login/> */}
-      <UserInfo />
+      {/* <UserInfo/> */}
       {/* <UserAddInfo/> */}
       <div className="flex flex-col min-h-screen">
-        <Footer />
+        <Header />
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/ranking" element={<Ranking isRanked={true} />} />
+            <Route path="/pick" element={<Pick />} />
+            <Route path="/message" element={<Message />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </div>
+        {/* <Login/> */}
+        {/* <UserInfo/> */}
+        {/* <UserAddInfo/> */}
+        <div className="flex flex-col min-h-screen">
+          <Footer />
+        </div>
       </div>
     </div>
   );
