@@ -1,37 +1,3 @@
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectItem,
-// } from 'components/ui/select';
-// import Selected from 'components/Selected';
-// import { useState } from 'react';
-// import React from 'react';
-
-// interface InfoDropProps {
-//   title: string;
-// }
-
-// const InfoSelect = ({ title }: InfoDropProps) => {
-  
-//   return (
-//     <Select>
-//       <SelectTrigger className="w-[180px]">
-//         <SelectValue placeholder={title} />
-//       </SelectTrigger>
-//       <SelectContent>
-//         <SelectGroup>
-//             <SelectItem value="남자">남자</SelectItem>
-//             <SelectItem value="여자">여자</SelectItem>
-//         </SelectGroup>
-//       </SelectContent>
-//     </Select>
-//   )
-// }
-
-// export default InfoSelect;
 import React, { useState } from 'react';
 import {
   Select,

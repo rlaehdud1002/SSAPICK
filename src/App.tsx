@@ -28,7 +28,7 @@ function App() {
           </Routes>
         </div>
         {/* <Login/> */}
-        <UserInfo/>
+        {/* <UserInfo/> */}
         {/* <UserAddInfo/> */}
         <div className="flex flex-col min-h-screen">
           <Footer />

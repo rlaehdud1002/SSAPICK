@@ -1,11 +1,29 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from "components/ui/card";
 
 
 const Pick = () => {
   return (
     <div>
-      <h1>Pick</h1>
-      
-      
+      <Card>
+        <CardHeader>
+          <CardDescription>Card Description</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Card Content</p>
+        </CardContent>
+        <CardFooter>
+          <p>Card Footer</p>
+        </CardFooter>
+      </Card>
+
+
+
     </div>
   );
 };
