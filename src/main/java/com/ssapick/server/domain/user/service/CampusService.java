@@ -24,7 +24,9 @@ public class CampusService {
      * @return {@link CampusData.SearchResponse} 조회된 캠퍼스 반 리스트
      */
     public List<CampusData.SearchResponse> searchCampusByName(String name) {
-        return campusRepository.findByName(name).stream().map(CampusData.SearchResponse::fromEntity).toList();
+        return campusRepository.findByName(name).stream().
+            map(CampusData.SearchResponse::fromEntity).
+            toList();
     }
 
     /**

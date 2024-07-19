@@ -1,14 +1,19 @@
 package com.ssapick.server.domain.pick.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Pick extends TimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pick_id")
@@ -28,4 +33,11 @@ public class Pick extends TimeEntity {
 
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
+
+    @OneToMany(mappedBy = "pick", cascade = CascadeType.ALL)
+    private List<HintOpen> hintOpens = new ArrayList<>();
+
+
+
+
 }

@@ -5,12 +5,14 @@ import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Hint extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +31,6 @@ public class Hint extends TimeEntity {
 
     @Column(nullable = false)
     private boolean visibility = false;
+
+
 }
