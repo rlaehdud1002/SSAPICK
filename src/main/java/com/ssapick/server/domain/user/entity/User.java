@@ -67,4 +67,8 @@ public class User extends BaseEntity {
         user.providerId = providerId;
         return user;
     }
+
+    public void updateUser(String name, String email) {
+
+    }
 }
