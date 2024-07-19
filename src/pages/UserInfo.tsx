@@ -1,6 +1,7 @@
 import InfoInput from "components/InfoInput"
 import InfoSelect from "components/InfoSelect"
 import {useForm} from "react-hook-form"
+import DoneButton from "buttons/DoneButton"
 
 interface UserForm{
     name: string;
@@ -39,7 +40,9 @@ const UserInfo = () =>{
             <InfoSelect title="캠퍼스"/>
             
             <InfoSelect title="반"/>
-            
+
+
+            <DoneButton/>
         </div>
     </form>
 }
