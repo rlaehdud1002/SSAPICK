@@ -1,13 +1,12 @@
 import UserIcon from '../icons/UserIcon';
 
-import { Button } from 'components/ui/button';
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
+
 import HintModal from 'modals/HintModal';
 import MessageFirstModal from 'modals/MessageFirstModal';
 import MessageSecondModal from 'modals/MessageSecondModal';
@@ -22,12 +21,13 @@ const Response = () => {
             <div className="flex flex-col">
               <div className="flex flex-row">
                 <UserIcon />
-                <h3 className="mx-3">12기 2반</h3>
+                <h3 className="mx-3 text-color-000855">
+                  12기 2반
+                </h3>
               </div>
             </div>
           </AccordionTrigger>
           <p className="text-center mb-4">
-            <Button />
             나랑 같이 프로젝트 하고 싶은 사람은?
           </p>
           <AccordionContent>

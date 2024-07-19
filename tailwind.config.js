@@ -73,5 +73,20 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")
+    , function ({ addUtilities }) {
+      addUtilities({
+        '.ssapick': {
+          backgroundColor: '#5F86E9', // 원하는 HEX 값
+          color: '#FFFFFF', // 텍스트 색상
+          '&:hover': {
+            backgroundColor: '#86A3F0', // 호버 시 색상
+          },
+        },
+        '.input-box': {
+          backgroundColor: '#C2E9FB',
+        },
+      });
+    },
+  ],
 }
