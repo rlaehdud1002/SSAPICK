@@ -1,29 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from "components/ui/card";
-
+import Question from 'components/PickPage/Question';
 
 const Pick = () => {
   return (
     <div>
-      <Card>
-        <CardHeader>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-
-
-
+      <Question category="프로젝트" />
     </div>
   );
 };
