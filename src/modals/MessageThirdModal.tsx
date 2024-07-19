@@ -1,5 +1,4 @@
 import SendingIcon from 'icons/SendingIcon';
-import CoinIcon from 'icons/CoinIcon';
 
 import {
   Dialog,
