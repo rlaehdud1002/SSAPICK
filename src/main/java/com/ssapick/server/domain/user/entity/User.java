@@ -29,6 +29,9 @@ public class User extends BaseEntity {
     private String username;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String email;
 
     @Column(name = "provider_type", nullable = false)
@@ -55,9 +58,10 @@ public class User extends BaseEntity {
      * @param providerId 제공자 ID
      * @return {@link User} 새롭게 생성한 유저 객체
      */
-    public static User createUser(String username, ProviderType providerType, String providerId) {
+    public static User createUser(String username, String name, ProviderType providerType, String providerId) {
         User user = new User();
         user.username = username;
+        user.name = name;
         user.email = username;
         user.providerType = providerType;
         user.providerId = providerId;
