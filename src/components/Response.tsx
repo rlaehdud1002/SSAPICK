@@ -1,5 +1,4 @@
 import UserIcon from '../icons/UserIcon';
-import SendingIcon from 'icons/SendingIcon';
 
 import {
   Accordion,
@@ -7,7 +6,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
+
 import HintModal from 'modals/HintModal';
+import MessageFirstModal from 'modals/MessageFirstModal';
+import MessageSecondModal from 'modals/MessageSecondModal';
+import MessageThirdModal from 'modals/MessageThirdModal';
 
 const Response = () => {
   return (
@@ -18,7 +21,9 @@ const Response = () => {
             <div className="flex flex-col">
               <div className="flex flex-row">
                 <UserIcon />
-                <h3 className="mx-3">XX기 X반 XXX</h3>
+                <h3 className="mx-3 text-color-000855">
+                  12기 2반
+                </h3>
               </div>
             </div>
           </AccordionTrigger>
@@ -28,12 +33,16 @@ const Response = () => {
           <AccordionContent>
             <div className="flex flex-row justify-center">
               <div className="rounded-md bg-white/50 p-3 mx-10">
-                <HintModal title="hint1"/>
+                <HintModal title="hint1" />
               </div>
-              <div className="rounded-md bg-white/50 p-3 mx-10"><HintModal title="hint2"/></div>
+              <div className="rounded-md bg-white/50 p-3 mx-10">
+                <HintModal title="hint2" />
+              </div>
             </div>
             <div className="float-end">
-              <SendingIcon />
+              <MessageFirstModal />
+              <MessageSecondModal />
+              <MessageThirdModal />
             </div>
           </AccordionContent>
         </AccordionItem>
