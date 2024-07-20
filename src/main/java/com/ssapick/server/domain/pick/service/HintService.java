@@ -6,15 +6,12 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintOpenRepository;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.user.dto.CampusData;
-import com.ssapick.server.domain.user.repository.CampusRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,41 +25,73 @@ public class HintService {
 	private final PickRepository pickRepository;
 
 	/**
-	 * 픽 아이디로 오픈된 힌트 조회
+	 * pickId로 열린 힌트 리스트 조회 후 2개 미만 이라면 힌트를 반환
 	 * @param pickId 조회할 픽 아이디
-	 * @return {@link HintData.Id } 조회된 힌트 리스트
+	 * @return {@link Hint } 랜덤한 힌트
 	 */
-	public Hint getHintByPickId(Long pickId) {
+	@Transactional
+	public Hint getRandomHintByPickId(Long pickId) {
 
-		Pick pick = pickRepository.findById(pickId).get();
+		Pick pick = pickRepository.findById(pickId).orElseThrow();
 
 		List<HintOpen> hintOpens = pick.getHintOpens();
 
-		if (hintOpens == null) {
+		if (hintOpens.isEmpty()) {
 
 			List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId())
 				.stream()
-				.filter(Hint::isVisibility).toList();
+				.toList();
 
-			return hints.get(new Random().nextInt(hints.size()));
+			Hint hint = hints.get(new Random().nextInt(hints.size()));
+
+			HintOpen hintOpen = HintOpen.builder()
+				.hint(hint)
+				.pick(pick)
+				.build();
+
+			pick.getHintOpens().add(hintOpen);
+			return hint;
+
 		}
 
-		if (hintOpens.size() ==1){
+		if (hintOpens.size() == 1) {
 
 			List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId())
 				.stream()
-				.filter(Hint::isVisibility)
 				.filter(hint -> !hint.getId().equals(hintOpens.get(0).getHint().getId()))
 				.toList();
 
-			return hints.get(new Random().nextInt(hints.size()));
+			Hint hint = hints.get(new Random().nextInt(hints.size()));
+
+			HintOpen hintOpen = HintOpen.builder()
+				.hint(hint)
+				.pick(pick)
+				.build();
+
+			pick.getHintOpens().add(hintOpen);
+			return hint;
 		}
 
-		// return hintOpenRepository.findAllByPickId(pickId).stream()
-		// 	.map(HintData.Id::fromEntity)
-		// 	.toList();
 		return null;
 
 	}
 
+	/**
+	 * 힌트 저장
+	 * @param UserId 사용자 아이디
+	//  * @param HintType 힌트 타입
+	//  * @param content 힌트 내용
+	//  * @return {@link Hint} 저장될 힌트
+	//  */
+	// @Transactional
+	// public Hint saveHint(Long userId, String hintType, String content) {
+	//
+	// 	Hint hint = Hint.builder()
+	// 		.user(userId)
+	// 		.hintType(hintType)
+	// 		.content(content)
+	// 		.build();
+	//
+	// 	return hintRepository.save(hint);
+	// }
 }

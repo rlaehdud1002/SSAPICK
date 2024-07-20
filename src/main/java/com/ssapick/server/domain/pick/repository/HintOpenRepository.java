@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 
 public interface HintOpenRepository extends JpaRepository<HintOpen, Long> {
@@ -16,6 +15,8 @@ public interface HintOpenRepository extends JpaRepository<HintOpen, Long> {
 	 */
 	List<HintOpen> findAllByPickId(Long pickId);
 
-
+	/**
+	 * HintId, PickId 저장
+	 */
 
 }
