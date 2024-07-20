@@ -17,7 +17,7 @@ const MessageThirdModal = () => {
       <DialogTrigger>
         <SendingIcon />
       </DialogTrigger>
-      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2">
+      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
           <DialogTitle className="flex flex-start">쪽지 보내기</DialogTitle>
           <DialogDescription className="flex justify-center my-10">

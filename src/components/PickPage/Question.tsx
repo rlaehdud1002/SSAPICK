@@ -1,4 +1,4 @@
-import PlusIcon from 'icons/PlusIcon';
+import QuestionPlusModal from 'modals/QuestionPlusModal';
 import PassIcon from 'icons/PassIcon';
 import WarningIcon from 'icons/WarningIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
@@ -17,7 +17,7 @@ const Question = ({ category }: QuestionProps) => {
         <p className="px-2 py-1 text-xs bg-white rounded-xl text-color-000855">
           프로젝트
         </p>
-        <PlusIcon />
+        <QuestionPlusModal />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <p className="text-xs text-right text-red-400">2 of 10</p>

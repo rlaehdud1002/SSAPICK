@@ -76,7 +76,7 @@ module.exports = {
   plugins: [require("tailwindcss-animate")
     , function ({ addUtilities }) {
       addUtilities({
-        '.ssapick': {
+        '.bg-ssapick': {
           backgroundColor: '#5F86E9', // 원하는 HEX 값
           color: '#FFFFFF', // 텍스트 색상
           '&:hover': {
