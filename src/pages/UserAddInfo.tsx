@@ -1,5 +1,5 @@
 import DoneButton from "buttons/DoneButton";
-import InfoInput from "components/InfoInput";
+import InfoInput from "components/LoginPage/InfoInput";
 
 import { useForm } from "react-hook-form";
 
@@ -50,7 +50,7 @@ const UserAddInfo = () => {
             })} />
 
             
-            <DoneButton />
+            <DoneButton title="완료" />
         </div>
     </form>
 

@@ -1,5 +1,5 @@
-import InfoInput from "components/InfoInput"
-import InfoSelect from "components/InfoSelect"
+import InfoInput from "components/LoginPage/InfoInput"
+import InfoSelect from "components/LoginPage/InfoSelect"
 import {useForm} from "react-hook-form"
 import DoneButton from "buttons/DoneButton"
 
@@ -42,7 +42,7 @@ const UserInfo = () =>{
             <InfoSelect title="반"/>
 
 
-            <DoneButton/>
+            <DoneButton title="완료"/>
         </div>
     </form>
 }

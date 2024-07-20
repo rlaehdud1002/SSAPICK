@@ -5,7 +5,7 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-
+import Mattermost from './pages/Mattermost';
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ function App() {
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         <Header />
-        <div className="flex-grow">
+        {/* <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -23,7 +23,8 @@ function App() {
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
             </Routes>
-        </div>
+        </div> */}
+        <Mattermost/>
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
