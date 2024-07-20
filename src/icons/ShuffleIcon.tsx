@@ -1,36 +1,49 @@
-const ShuffleIcon = () => {
+interface ShuffleIconProps {
+  className: string;
+}
+
+const ShuffleIcon = ({ className }: ShuffleIconProps) => {
   return (
     <svg
-      width="10"
-      height="11"
-      viewBox="0 0 10 11"
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
-      <g clip-path="url(#clip0_397_671)">
+      <circle cx="10" cy="10" r="10" fill="white" fill-opacity="0.5" />
+      <g clip-path="url(#clip0_637_1554)">
         <path
-          d="M2.30024 6.49915V8.29915H0.500244"
+          d="M9.48893 8.50003C9.27495 8.21206 9.00142 7.9736 8.68697 7.80088C8.37251 7.62816 8.02452 7.52524 7.66671 7.49915H5.33337"
           stroke="#000855"
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
-          d="M7.7002 4.69917V2.89917H9.5002"
+          d="M15.3334 7.49915H13C11.3334 7.49915 10.3334 9.83248 10.3334 9.83248C10.3334 9.83248 9.33337 12.1658 7.66671 12.1658H5.33337"
           stroke="#000855"
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
-          d="M7.81293 2.89795C8.43361 3.54458 8.81266 4.38523 8.88635 5.2785C8.96003 6.17177 8.72384 7.06317 8.21751 7.80276C7.71118 8.54235 6.9656 9.08502 6.10617 9.33947C5.24674 9.59393 4.3259 9.54466 3.49854 9.19995"
+          d="M11.1777 11.1666C11.3917 11.4544 11.6653 11.6927 11.9798 11.8651C12.2943 12.0375 12.6422 12.1401 13 12.1657H15.3333"
           stroke="#000855"
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
-          d="M2.187 8.30035C1.56768 7.6534 1.18981 6.81304 1.11685 5.92041C1.0439 5.02777 1.28029 4.13722 1.78635 3.39828C2.29241 2.65934 3.0373 2.11703 3.89596 1.8624C4.75461 1.60778 5.67473 1.65635 6.5018 1.99995"
+          d="M14 6.16577L15.3333 7.4991L14 8.83244"
+          stroke="#000855"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M14 10.8324L15.3333 12.1657L14 13.4991"
           stroke="#000855"
           stroke-width="1.5"
           stroke-linecap="round"
@@ -38,12 +51,12 @@ const ShuffleIcon = () => {
         />
       </g>
       <defs>
-        <clipPath id="clip0_397_671">
+        <clipPath id="clip0_637_1554">
           <rect
-            width="9.6"
-            height="9.6"
+            width="10.6667"
+            height="10.6667"
             fill="white"
-            transform="translate(0.200195 0.799927)"
+            transform="translate(5 4.5)"
           />
         </clipPath>
       </defs>
