@@ -4,9 +4,11 @@ import com.ssapick.server.core.entity.BaseEntity;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
