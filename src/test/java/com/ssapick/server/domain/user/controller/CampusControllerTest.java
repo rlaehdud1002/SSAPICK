@@ -1,27 +1,20 @@
 package com.ssapick.server.domain.user.controller;
 
-import com.ssapick.server.core.response.BaseResponse;
-import com.ssapick.server.core.response.SuccessResponse;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.user.dto.CampusData;
-import com.ssapick.server.domain.user.service.CampusService;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.user.dto.CampusData;
+import com.ssapick.server.domain.user.service.CampusService;
 
 @WebMvcTest(CampusController.class)
 class CampusControllerTest extends RestDocsSupport {
