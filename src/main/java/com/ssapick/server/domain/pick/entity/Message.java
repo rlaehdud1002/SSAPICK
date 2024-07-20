@@ -3,6 +3,7 @@ package com.ssapick.server.domain.pick.entity;
 import static jakarta.persistence.FetchType.*;
 
 import com.ssapick.server.core.entity.TimeEntity;
+import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -13,9 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message extends TimeEntity {
 
@@ -49,4 +52,21 @@ public class Message extends TimeEntity {
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
 
+
+    public static Message of(MessageData.Create create) {
+        Message message = new Message();
+        message.content = create.getContent();
+        message.pick = create.getPick();
+        message.fromUser = create.getFromUser();
+        message.toUser = create.getToUser();
+        return message;
+    }
+
+    public void deleteFromMessage() {
+        fromDeleted = true;
+    }
+
+    public void deleteToMessage() {
+        toDeleted = true;
+    }
 }
