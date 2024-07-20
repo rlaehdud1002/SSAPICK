@@ -22,4 +22,5 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	 */
 	List<Pick> findAllByToUserId(Long toUserId);
 
+
 }
