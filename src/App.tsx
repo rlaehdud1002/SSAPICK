@@ -1,3 +1,4 @@
+import UserAddInfo from 'pages/UserAddInfo';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 import Home from './pages/Home';
@@ -5,7 +6,8 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import MattermostDone from 'pages/MattermostDone';
+import UserInfo from './pages/UserInfo';
+
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -24,7 +26,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             </Routes>
         </div> */}
-        <MattermostDone/>
+        {/* <UserInfo/> */}
+        <UserAddInfo/>
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
