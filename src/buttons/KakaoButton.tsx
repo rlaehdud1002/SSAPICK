@@ -1,11 +1,10 @@
 const KakaoButton = () =>{
- return <div className="py-2.5">
- <svg width="265" height="55" viewBox="0 0 265 55" fill="none" xmlns="http://www.w3.org/2000/svg">
- 
- <rect x="-3" width="268" height="55" rx="20" fill="#FEE500"/>
- </svg>
- 
- </div> 
+ return <div className="flex items-center my-2 bg-yellow-300 w-72 h-14 rounded-xl">
+    <div className="flex ml-16">
+    <img className="w-5 h-5 mr-4" src="../images/icons/kakao.png" alt="" />
+    <h2>카카오로 시작하기</h2>
+    </div>
+ </div>
 
 }
 

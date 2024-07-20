@@ -6,14 +6,12 @@ import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
 
+
 import { Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
     <div className="flex flex-col relative">
-      {/* <Login/> */}
-      {/* <UserInfo/> */}
-      {/* <UserAddInfo/> */}
       <div className="flex flex-col max-h-screen">
         <Header />
         <div className="flex-grow">
@@ -24,11 +22,8 @@ function App() {
             <Route path="/pick" element={<Pick />} />
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
-          </Routes>
+            </Routes>
         </div>
-        {/* <Login/> */}
-        {/* <UserInfo/> */}
-        {/* <UserAddInfo/> */}
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
