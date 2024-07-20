@@ -24,10 +24,10 @@ const Mattermost = () => {
         <h1 className='my-5' >Mattermost 인증</h1>
         <MattermostIcon/>
         <span className='text-xs mt-2 mb-20'>본 인증은 <span className='luckiest_guy'>ssapick</span> 서비스 이용을 위한 필수 사항입니다. </span>
-        <AuthInput title="매터모스트 아이디" register={register("id",{
+        <AuthInput title="매터모스트 아이디" placeholder="아이디를 입력해주세요." register={register("id",{
             required: "매터모스트 아이디를 입력해주세요."
         })}/>
-        <AuthInput title="매터모스트 비밀번호" register={register("password",{
+        <AuthInput title="매터모스트 비밀번호" placeholder="비밀번호를 입력해주세요." register={register("password",{
             required: "매터모스트 비밀번호를 입력해주세요."
         })}/>
         <span className='text-xs mb-10'>입력하신 인증정보는 오직 인증을 목적으로만 사용됩니다.</span>
