@@ -5,7 +5,7 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import Mattermost from './pages/Mattermost';
+import MattermostDone from 'pages/MattermostDone';
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             </Routes>
         </div> */}
-        <Mattermost/>
+        <MattermostDone/>
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
