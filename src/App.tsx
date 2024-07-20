@@ -5,7 +5,6 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import UserInfo from './pages/UserInfo';
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -15,7 +14,7 @@ function App() {
       {/* <Login/> */}
       {/* <UserInfo/> */}
       {/* <UserAddInfo/> */}
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col max-h-screen">
         <Header />
         <div className="flex-grow">
           <Routes>
@@ -30,7 +29,7 @@ function App() {
         {/* <Login/> */}
         {/* <UserInfo/> */}
         {/* <UserAddInfo/> */}
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
       </div>
