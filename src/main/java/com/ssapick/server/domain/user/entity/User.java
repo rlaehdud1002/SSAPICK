@@ -29,6 +29,10 @@ public class User extends BaseEntity {
     private String username;
 
     @Column(nullable = false)
+    private char gender;
+
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
