@@ -42,7 +42,7 @@ const Response = () => {
             <div className="float-end">
               <MessageFirstModal />
               <MessageSecondModal />
-              <CheckModal title="쪽지 보내기" innerText="전송이 완료되었습니다."/>
+              {/* <CheckModal title="쪽지 보내기" innerText="전송이 완료되었습니다."/> */}
             </div>
           </AccordionContent>
         </AccordionItem>

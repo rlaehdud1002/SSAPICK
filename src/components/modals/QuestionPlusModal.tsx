@@ -12,12 +12,26 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 
-const QuestionPlusModal = () => {
+interface QuestionPlusModalProps {
+  show: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onCreate: () => void;
+}
+
+const QuestionPlusModal = ({
+  show,
+  onOpen,
+  onClose,
+  onCreate,
+}: QuestionPlusModalProps) => {
   return (
     <div>
-      <Dialog>
+      <Dialog open={show} onOpenChange={(isOpen) => !isOpen && onClose()}>
         <DialogTrigger>
-          <PlusIcon />
+          <button onClick={onOpen}>
+            <PlusIcon />
+          </button>
         </DialogTrigger>
         <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
@@ -30,7 +44,13 @@ const QuestionPlusModal = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row justify-end">
-            <Button variant="ssapick">  
+            <Button
+              variant="ssapick"
+              onClick={() => {
+                onCreate();
+                onClose();
+              }}
+            >
               질문 생성
             </Button>
           </DialogFooter>

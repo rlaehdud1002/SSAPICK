@@ -1,5 +1,6 @@
 import SendingIcon from 'icons/SendingIcon';
 import PlusIcon from 'icons/PlusIcon';
+import { Button } from 'components/ui/button';
 
 import {
   Dialog,
@@ -7,20 +8,19 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogFooter,
 } from 'components/ui/dialog';
 
 interface CheckModalProps {
   title: string;
   innerText: string;
+  show: boolean;
+  onClose: () => void;
 }
 
-const CheckModal = ({ title, innerText }: CheckModalProps) => {
+const CheckModal = ({ title, innerText, show, onClose }: CheckModalProps) => {
   return (
-    <Dialog>
-      <DialogTrigger>
-        {title === '쪽지 보내기' ? <SendingIcon /> : <PlusIcon />}
-      </DialogTrigger>
+    <Dialog open={show} onOpenChange={(open) => (open ? undefined : onClose())}>
       <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
           <DialogTitle className="flex flex-start">{title}</DialogTitle>
@@ -28,6 +28,11 @@ const CheckModal = ({ title, innerText }: CheckModalProps) => {
             <h1 className="my-12">{innerText}</h1>
           </DialogDescription>
         </DialogHeader>
+        <DialogFooter className="flex flex-row justify-end">
+          <Button variant="ssapick" onClick={onClose}>
+            닫기
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
