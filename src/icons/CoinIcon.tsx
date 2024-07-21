@@ -9,7 +9,7 @@ const CoinIcon = ({ width, height }: CoinIconProps) => {
       className="cursor-pointer"
       width={width}
       height={height}
-      src="/icons/coin.png"
+      src="/icons/Coin.png"
       alt="coin"
     />
   );

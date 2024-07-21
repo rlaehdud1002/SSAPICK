@@ -9,7 +9,7 @@ const UserPickImage = ({ width, height }: UserPickImageProps) => {
       className="cursor-pointer"
       width={width}
       height={height}
-      src="images/icons/profile.png"
+      src="icons/profile.png"
       alt="profileImage"
     />
   );

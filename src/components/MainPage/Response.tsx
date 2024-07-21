@@ -1,4 +1,4 @@
-import UserIcon from '../icons/UserIcon';
+import UserIcon from '../../icons/UserIcon';
 
 import {
   Accordion,
@@ -7,10 +7,10 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-import HintModal from 'modals/HintModal';
-import MessageFirstModal from 'modals/MessageFirstModal';
-import MessageSecondModal from 'modals/MessageSecondModal';
-import CheckModal from 'modals/CheckModal';
+import HintModal from 'components/modals/HintModal';
+import MessageFirstModal from 'components/modals/MessageFirstModal';
+import MessageSecondModal from 'components/modals/MessageSecondModal';
+import CheckModal from 'components/modals/CheckModal';
 
 const Response = () => {
   return (

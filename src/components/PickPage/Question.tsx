@@ -1,8 +1,8 @@
-import QuestionPlusModal from 'modals/QuestionPlusModal';
+import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import PassIcon from 'icons/PassIcon';
 import WarningIcon from 'icons/WarningIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
-import CheckModal from 'modals/CheckModal';
+import CheckModal from 'components/modals/CheckModal';
 
 interface QuestionProps {
   category: string;

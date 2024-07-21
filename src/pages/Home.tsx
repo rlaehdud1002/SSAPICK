@@ -1,4 +1,4 @@
-import Response from "components/Response";
+import Response from "components/MainPage/Response";
 
 const Home = () => {
   return (
