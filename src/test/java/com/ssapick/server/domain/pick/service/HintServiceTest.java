@@ -1,11 +1,11 @@
 package com.ssapick.server.domain.pick.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,7 @@ class HintServiceTest {
 		Hint findHint = hintService.getRandomHintByPickId(1L);
 
 		// then
-		Assertions.assertThat(findHint.getId()).isNotNull();
+		assertThat(findHint.getId()).isNotNull();
 
 	}
 
@@ -96,8 +96,32 @@ class HintServiceTest {
 		Hint findHint = hintService.getRandomHintByPickId(1L);
 
 		// then
-		Assertions.assertThat(findHint.getId()).isNotEqualTo(1L);
+		assertThat(findHint.getId()).isNotEqualTo(1L);
 
+	}
+
+	@Test
+	@WithMockUser
+	@DisplayName("힌트 오픈이 2 개일때 에러 던지는 테스트")
+	void getRandomHintByPickIdTest2() {
+		// given
+		User mockUser = userCreate(1L, "test");
+		Pick mockPick = pickCreate(mockUser);
+		Hint mockHint1 = hintCreate(1L, "장덕동1", mockUser);
+		Hint mockHint2 = hintCreate(2L, "장덕동2", mockUser);
+		HintOpen mockHintOpen1 = hintOpencreate(mockHint1, mockPick);
+		HintOpen mockHintOpen2 = hintOpencreate(mockHint2, mockPick);
+
+		mockPick.getHintOpens().add(mockHintOpen1);
+		mockPick.getHintOpens().add(mockHintOpen2);
+
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(mockPick));
+
+		// when & then
+		assertThatThrownBy(() -> hintService.getRandomHintByPickId(1L))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("힌트는 2개까지만 열 수 있습니다.");
 	}
 
 	@Test
@@ -133,10 +157,10 @@ class HintServiceTest {
 		verify(hintRepository).save(hintArgumentCaptor.capture());
 		Hint savedHint = hintArgumentCaptor.getValue();
 
-		Assertions.assertThat(savedHint.getUser()).isEqualTo(mockUser);
-		Assertions.assertThat(savedHint.getContent()).isEqualTo(hintContent);
-		Assertions.assertThat(savedHint.getHintType()).isEqualTo(hintType);
-		Assertions.assertThat(savedHint.isVisibility()).isEqualTo(visibility);
+		assertThat(savedHint.getUser()).isEqualTo(mockUser);
+		assertThat(savedHint.getContent()).isEqualTo(hintContent);
+		assertThat(savedHint.getHintType()).isEqualTo(hintType);
+		assertThat(savedHint.isVisibility()).isEqualTo(visibility);
 	}
 
 	@Test
@@ -158,8 +182,8 @@ class HintServiceTest {
 		List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
 
 		// then
-		Assertions.assertThat(hintOpens).hasSize(1);
-		Assertions.assertThat(hintOpens.get(0).getHint().getId()).isEqualTo(1L);
+		assertThat(hintOpens).hasSize(1);
+		assertThat(hintOpens.get(0).getHint().getId()).isEqualTo(1L);
 	}
 
 	@Test
@@ -167,20 +191,12 @@ class HintServiceTest {
 	@DisplayName("userId로 hint 조회 테스트")
 	void getHintsByUserIdTest() {
 		// given
-		when(hintRepository.findAllByUserId(1L)).thenReturn(List.of(
-			hintCreate(1L, "장덕동1", userCreate(1L, "test-user")),
-			hintCreate(2L, "장덕동2", userCreate(1L, "test-user")),
-			hintCreate(3L, "장덕동3", userCreate(1L, "test-user")),
-			hintCreate(4L, "장덕동4", userCreate(1L, "test-user")),
-			hintCreate(5L, "장덕동5", userCreate(1L, "test-user")),
-			hintCreate(6L, "장덕동6", userCreate(1L, "test-user"))
-		));
 
 		// when
 		List<Hint> hints = hintService.getHintsByUserId(1L);
 
 		// then
-		Assertions.assertThat(hints).hasSize(6);
+		assertThat(hints).hasSize(6);
 	}
 
 	private HintOpen hintOpencreate(Hint mockHint, Pick mockPick) {
