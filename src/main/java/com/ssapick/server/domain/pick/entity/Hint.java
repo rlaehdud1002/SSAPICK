@@ -17,10 +17,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 public class Hint extends TimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +45,8 @@ public class Hint extends TimeEntity {
 	@Builder
 	private Hint(Long id, String content, User user, HintType hintType, boolean visibility) {
 		this.id = id;
-		this.content = content;
 		this.user = user;
+		this.content = content;
 		this.hintType = hintType;
 		this.visibility = visibility;
 	}
