@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ExtendWith({RestDocumentationExtension.class})
 @Import(RestDocsConfig.class)
 @AutoConfigureRestDocs
-public abstract class RestDocsSupport {
+public abstract class RestDocsSupport extends AuthenticatedSupport {
     @Autowired
     protected RestDocumentationResultHandler restDocs;
 

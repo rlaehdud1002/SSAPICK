@@ -41,8 +41,8 @@ public class JWTService {
      * @param user {@link CustomOAuth2User} 인증된 사용자 정보
      * @return {@link JwtToken} 토큰
      */
-    public JwtToken generateToken(CustomOAuth2User user) {
-        String authority = user.getAuthorities().stream()
+    public JwtToken generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+        String authority = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
@@ -54,7 +54,7 @@ public class JWTService {
         String accessToken = Jwts.builder()
                 .header().add("typ", "JWT").add("alg", "HS256")
                 .and()
-                .subject(user.getUsername())
+                .subject(username)
                 .claim("authorities", authority)
                 .issuedAt(new Date(now))
                 .expiration(accessTokenExpire)
@@ -62,7 +62,7 @@ public class JWTService {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .subject(user.getUsername())
+                .subject(username)
                 .claim("authorities", authority)
                 .issuedAt(new Date(now))
                 .expiration(refreshTokenExpire)
@@ -96,6 +96,22 @@ public class JWTService {
             message = "토큰 파싱 중 에러가 발생했습니다.";
         }
         throw new Exception(message);
+    }
+
+    public String getUsername(String accessToken) throws Exception {
+        Claims claims = parseClaims(accessToken);
+        return claims.getSubject();
+    }
+
+    public JwtToken refreshToken(String refreshToken) throws Exception {
+        Claims claims = parseClaims(refreshToken);
+
+        Collection<? extends GrantedAuthority> authorities =
+                Arrays.stream(claims.get("authorities").toString().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+        return generateToken(claims.getSubject(), authorities);
     }
 
     public Authentication parseAuthentication(String accessToken) throws Exception {
