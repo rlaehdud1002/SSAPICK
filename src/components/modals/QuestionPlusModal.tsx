@@ -2,6 +2,8 @@ import PlusIcon from 'icons/PlusIcon';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 
+import { useForm } from 'react-hook-form';
+
 import {
   Dialog,
   DialogContent,
@@ -19,14 +21,30 @@ interface QuestionPlusModalProps {
   onCreate: () => void;
 }
 
+interface QuestionForm {
+  newQuestion: string;
+}
+
 const QuestionPlusModal = ({
   show,
   onOpen,
   onClose,
   onCreate,
 }: QuestionPlusModalProps) => {
+  const { register, handleSubmit } = useForm<QuestionForm>();
+
+  const onSubmit = (data: QuestionForm) => {
+    console.log('ok', data);
+    onCreate();
+    onClose();
+  };
+
+  const onInvalid = (errors: any) => {
+    console.log('errors', errors);
+  };
+
   return (
-    <div>
+    <form>
       <Dialog open={show} onOpenChange={(isOpen) => !isOpen && onClose()}>
         <DialogTrigger onClick={onOpen}>
           <PlusIcon />
@@ -37,24 +55,25 @@ const QuestionPlusModal = ({
             <DialogDescription className="flex justify-center">
               <Input
                 type="text"
-                className="input-box border-none h-20 focus:outline-none mt-6"
+                className="input-box border-none h-20 focus:outline-none my-6"
+                register={register('newQuestion', {
+                  required: '질문을 입력해주세요.',
+                })}
               />
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row justify-end">
             <Button
+              type="submit"
               variant="ssapick"
-              onClick={() => {
-                onCreate();
-                onClose();
-              }}
+              onClick={handleSubmit(onSubmit, onInvalid)}
             >
               질문 생성
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </form>
   );
 };
 

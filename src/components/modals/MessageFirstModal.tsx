@@ -40,10 +40,10 @@ const MessageFirstModal = ({
               <UserIcon />
               <h3 className="ms-3">11기 2반</h3>
             </div>
-            <Input
+            {/* <Input
               className="input-box border-none h-10 focus:outline-none"
               type="text"
-            />
+            /> */}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="text-right">

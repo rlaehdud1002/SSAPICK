@@ -27,7 +27,7 @@ function App() {
             </Routes>
         </div>
         {/* <UserInfo/> */}
-        <UserAddInfo/>
+        {/* <UserAddInfo/> */}
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
