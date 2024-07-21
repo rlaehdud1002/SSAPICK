@@ -16,7 +16,7 @@ function App() {
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         <Header />
-        {/* <div className="flex-grow">
+        <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -25,7 +25,7 @@ function App() {
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
             </Routes>
-        </div> */}
+        </div>
         {/* <UserInfo/> */}
         <UserAddInfo/>
         <div className="flex flex-col max-h-screen">
