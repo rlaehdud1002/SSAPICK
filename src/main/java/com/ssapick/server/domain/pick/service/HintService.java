@@ -2,96 +2,97 @@ package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.pick.repository.HintOpenRepository;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HintService {
 
 	private final HintRepository hintRepository;
-	private final HintOpenRepository hintOpenRepository;
 	private final PickRepository pickRepository;
 
-	/**
-	 * pickId로 열린 힌트 리스트 조회 후 2개 미만 이라면 힌트를 반환
-	 * @param pickId 조회할 픽 아이디
-	 * @return {@link Hint } 랜덤한 힌트
-	 */
-	@Transactional
 	public Hint getRandomHintByPickId(Long pickId) {
+		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
+			() -> new IllegalArgumentException("Pick이 존재하지 않습니다.")
+		);
 
-		Pick pick = pickRepository.findById(pickId).orElseThrow();
-
-		List<HintOpen> hintOpens = pick.getHintOpens();
-
-		if (hintOpens.isEmpty()) {
-
-			List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId())
-				.stream()
-				.toList();
-
-			Hint hint = hints.get(new Random().nextInt(hints.size()));
-
-			HintOpen hintOpen = HintOpen.builder()
-				.hint(hint)
-				.pick(pick)
-				.build();
-
-			pick.getHintOpens().add(hintOpen);
-			return hint;
-
+		if (pick.getHintOpens().size() >= 2) {
+			throw new IllegalArgumentException("힌트는 2개까지만 열 수 있습니다.");
 		}
 
-		if (hintOpens.size() == 1) {
+		List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId());
+		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
-			List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId())
-				.stream()
-				.filter(hint -> !hint.getId().equals(hintOpens.get(0).getHint().getId()))
-				.toList();
+		log.debug("availableHints: {}", availableHints);
 
-			Hint hint = hints.get(new Random().nextInt(hints.size()));
+		Long openHintId = selectRandomHintId(availableHints);
+		Hint openHint = findHintById(hints, openHintId);
 
-			HintOpen hintOpen = HintOpen.builder()
-				.hint(hint)
-				.pick(pick)
-				.build();
+		addHintOpenToPick(pick, openHint);
 
-			pick.getHintOpens().add(hintOpen);
-			return hint;
-		}
-
-		return null;
-
+		return openHint;
 	}
 
-	/**
-	 * 힌트 저장
-	 * @param UserId 사용자 아이디
-	//  * @param HintType 힌트 타입
-	//  * @param content 힌트 내용
-	//  * @return {@link Hint} 저장될 힌트
-	//  */
-	// @Transactional
-	// public Hint saveHint(Long userId, String hintType, String content) {
-	//
-	// 	Hint hint = Hint.builder()
-	// 		.user(userId)
-	// 		.hintType(hintType)
-	// 		.content(content)
-	// 		.build();
-	//
-	// 	return hintRepository.save(hint);
-	// }
+	public List<Long> getAvailableHintIds(Pick pick, List<Hint> hints) {
+		List<Long> openedHintIds = pick.getHintOpens().stream()
+			.map(HintOpen::getHint)
+			.map(Hint::getId)
+			.toList();
+
+		return hints.stream()
+			.map(Hint::getId)
+			.filter(hintId -> !openedHintIds.contains(hintId))
+			.collect(Collectors.toList());
+	}
+
+	public Long selectRandomHintId(List<Long> availableHints) {
+		return availableHints.get(new Random().nextInt(availableHints.size()));
+	}
+
+	public Hint findHintById(List<Hint> hints, Long hintId) {
+		return hints.stream()
+			.filter(hint -> hint.getId().equals(hintId))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("힌트를 찾을 수 없습니다."));
+	}
+
+	public void addHintOpenToPick(Pick pick, Hint openHint) {
+		HintOpen hintOpen = HintOpen.builder()
+			.hint(openHint)
+			.pick(pick)
+			.build();
+		pick.getHintOpens().add(hintOpen);
+	}
+
+	public List<Hint> getHintsByUserId(Long userId) {
+		return hintRepository.findAllByUserId(userId);
+	}
+
+	public List<HintOpen> getHintOpensByPickId(Long pickId) {
+		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
+			() -> new IllegalArgumentException("Pick이 존재하지 않습니다.")
+		);
+
+		return pick.getHintOpens();
+	}
+
+	@Transactional
+	public void saveHint(HintData.Create request) {
+		hintRepository.save(request.toEntity());
+	}
 }

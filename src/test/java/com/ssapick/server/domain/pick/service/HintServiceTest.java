@@ -1,114 +1,75 @@
 package com.ssapick.server.domain.pick.service;
 
+import static org.mockito.Mockito.*;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Repeat;
 
-import com.ssapick.server.core.properties.JwtProperties;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.auth.service.JWTService;
+import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.pick.repository.HintOpenRepository;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.question.entity.QuestionCategory;
-import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
-import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
-
-@SpringBootTest
+@WebMvcTest(HintService.class)
 @AutoConfigureMockMvc
-class HintServiceTest extends RestDocsSupport {
+class HintServiceTest {
 
 	@Autowired
 	private HintService hintService;
 
-	@Autowired
+	@MockBean
 	private HintRepository hintRepository;
 
-	@Autowired
-	private HintOpenRepository hintOpenRepository;
-
-	@Autowired
+	@MockBean
 	private UserRepository userRepository;
 
-	@Autowired
+	@MockBean
 	private PickRepository pickRepository;
-
-	@Autowired
-	private QuestionRepository questionRepository;
-
-	@Autowired
-	private QuestionCategoryRepository questionCategoryRepository;
-
-	@MockBean
-	private JWTService jwtService;
-
-	@MockBean
-	private JwtProperties jwtProperties;
-
-	@MockBean
-	private ClientRegistrationRepository clientRegistrationRepository;
 
 	@BeforeEach
 	void setUp() {
-		Mockito.when(jwtProperties.getSecret()).thenReturn("test-secret-key");
-		Mockito.when(jwtProperties.getAccessExpire()).thenReturn(3600000);
-		Mockito.when(jwtProperties.getRefreshExpire()).thenReturn(7200000);
+		// 데이터 초기화
+		User user = userCreate(1L, "test-user");
+		when(hintRepository.findAllByUserId(1L))
+			.thenReturn(List.of(
+				hintCreate(1L, "장덕동1", user),
+				hintCreate(2L, "장덕동2", user),
+				hintCreate(3L, "장덕동3", user),
+				hintCreate(4L, "장덕동4", user),
+				hintCreate(5L, "장덕동5", user),
+				hintCreate(6L, "장덕동6", user)
+			));
 	}
 
 	@Test
 	@WithMockUser
 	@DisplayName("힌트 오픈이 0 개일때 힌트를 랜덤으로 가져오는 테스트")
 	void getRandomHintByPickIdTest0() {
-
-		// given
-		User user1 = userCreate(1L, "test1");
-		User user2 = userCreate(2L, "test2");
-
-		User savedUser1 = userRepository.save(user1);
-		User savedUser2 = userRepository.save(user2);
-
-		Hint hint1 = createHint(1L, "장덕동1", savedUser1);
-		Hint hint2 = createHint(2L, "장덕동2", savedUser1);
-		Hint hint3 = createHint(3L, "장덕동3", savedUser1);
-		Hint hint4 = createHint(4L, "장덕동4", savedUser1);
-		Hint hint5 = createHint(5L, "장덕동5", savedUser1);
-		Hint hint6 = createHint(6L, "장덕동6", savedUser1);
-
-		hintRepository.saveAll(List.of(hint1, hint2, hint3, hint4, hint5, hint6));
-
-		Question testQuestion = getQuestion(user1);
-
-		Pick pick = Pick.builder()
-			.fromUser(savedUser1)
-			.toUser(savedUser2)
-			.question(testQuestion)
-			.build();
-
-		Pick savedPick = pickRepository.save(pick);
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(pickCreate(userCreate(1L, "test")))
+		);
 
 		// when
-		Hint findHint = hintService.getRandomHintByPickId(savedPick.getId());
+		Hint findHint = hintService.getRandomHintByPickId(1L);
 
 		// then
 		Assertions.assertThat(findHint.getId()).isNotNull();
@@ -116,74 +77,118 @@ class HintServiceTest extends RestDocsSupport {
 	}
 
 	@Test
+	@Repeat(10)
 	@WithMockUser
 	@DisplayName("힌트 오픈이 1 개일때 힌트를 랜덤으로 가져오는 테스트")
-	@Transactional
 	void getRandomHintByPickIdTest1() {
 
-		// given
-		User user1 = userCreate(1L, "test1");
-		User user2 = userCreate(2L, "test2");
+		User mockUser = userCreate(1L, "test");
+		Pick mockPick = pickCreate(mockUser);
+		Hint mockHint = hintCreate(1L, "장덕동1", mockUser);
+		HintOpen mockHintOpen = hintOpencreate(mockHint, mockPick);
 
-		User savedUser1 = userRepository.save(user1);
-		User savedUser2 = userRepository.save(user2);
+		mockPick.getHintOpens().add(mockHintOpen);
 
-		Hint hint1 = createHint(1L, "장덕동1", savedUser1);
-		Hint hint2 = createHint(2L, "장덕동2", savedUser1);
-		Hint hint3 = createHint(3L, "장덕동3", savedUser1);
-		Hint hint4 = createHint(4L, "장덕동4", savedUser1);
-		Hint hint5 = createHint(5L, "장덕동5", savedUser1);
-		Hint hint6 = createHint(6L, "장덕동6", savedUser1);
-
-		hintRepository.saveAll(List.of(
-			hint1, hint2, hint3, hint4, hint5, hint6
-		));
-
-		Question testQuestion = getQuestion(user1);
-
-		Pick pick = Pick.builder()
-			.fromUser(savedUser1)
-			.toUser(savedUser2)
-			.question(testQuestion)
-			.build();
-
-		Pick savedPick = pickRepository.save(pick);
-
-		HintOpen hintOpen = HintOpen.builder()
-			.hint(hint1)
-			.pick(savedPick)
-			.build();
-
-		savedPick.getHintOpens().add(hintOpen);
-
-		pickRepository.save(savedPick);
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(mockPick));
 
 		// when
-		Hint findHint = hintService.getRandomHintByPickId(savedPick.getId());
+		Hint findHint = hintService.getRandomHintByPickId(1L);
 
 		// then
-		Assertions.assertThat(findHint.getId()).isNotEqualTo(hint1.getId());
+		Assertions.assertThat(findHint.getId()).isNotEqualTo(1L);
 
 	}
 
-	private Question getQuestion(User user1) {
-		QuestionCategory testCategory = QuestionCategory.builder()
-			.id(1L)
-			.name("장소")
+	@Test
+	@WithMockUser
+	@DisplayName("힌트 저장 테스트")
+	void saveHintTest() {
+		// given
+		User mockUser = userCreate(1L, "test");
+		String hintContent = "장덕동1";
+		HintType hintType = HintType.RESIDENTIAL_AREA;
+		boolean visibility = false;
+
+		HintData.Create hintCreateRequest = new HintData.Create();
+		hintCreateRequest.setUser(mockUser);
+		hintCreateRequest.setContent(hintContent);
+		hintCreateRequest.setHintType(hintType.name());
+		hintCreateRequest.setVisibility(visibility);
+
+		Hint expectedHint = Hint.builder()
+			.user(mockUser)
+			.content(hintContent)
+			.hintType(hintType)
+			.visibility(visibility)
 			.build();
 
-		questionCategoryRepository.save(testCategory);
+		when(hintRepository.save(any(Hint.class))).thenReturn(expectedHint);
 
-		Question testQuestion = Question.builder()
-			.id(1L)
-			.questionCategory(testCategory)
-			.content("장덕동")
-			.author(user1)
-			.banCount(0)
-			.build();
+		// when
+		hintService.saveHint(hintCreateRequest);
 
-		questionRepository.save(testQuestion);
-		return testQuestion;
+		// then
+		ArgumentCaptor<Hint> hintArgumentCaptor = ArgumentCaptor.forClass(Hint.class);
+		verify(hintRepository).save(hintArgumentCaptor.capture());
+		Hint savedHint = hintArgumentCaptor.getValue();
+
+		Assertions.assertThat(savedHint.getUser()).isEqualTo(mockUser);
+		Assertions.assertThat(savedHint.getContent()).isEqualTo(hintContent);
+		Assertions.assertThat(savedHint.getHintType()).isEqualTo(hintType);
+		Assertions.assertThat(savedHint.isVisibility()).isEqualTo(visibility);
+	}
+
+	@Test
+	@WithMockUser
+	@DisplayName("pickId로 hintOpens 조회 테스트")
+	void getHintOpensByPickIdTest() {
+		// given
+		User mockUser = userCreate(1L, "test");
+		Pick mockPick = pickCreate(mockUser);
+		Hint mockHint = hintCreate(1L, "장덕동1", mockUser);
+		HintOpen mockHintOpen = hintOpencreate(mockHint, mockPick);
+
+		mockPick.getHintOpens().add(mockHintOpen);
+
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(mockPick));
+
+		// when
+		List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
+
+		// then
+		Assertions.assertThat(hintOpens).hasSize(1);
+		Assertions.assertThat(hintOpens.get(0).getHint().getId()).isEqualTo(1L);
+	}
+
+	@Test
+	@WithMockUser
+	@DisplayName("userId로 hint 조회 테스트")
+	void getHintsByUserIdTest() {
+		// given
+		when(hintRepository.findAllByUserId(1L)).thenReturn(List.of(
+			hintCreate(1L, "장덕동1", userCreate(1L, "test-user")),
+			hintCreate(2L, "장덕동2", userCreate(1L, "test-user")),
+			hintCreate(3L, "장덕동3", userCreate(1L, "test-user")),
+			hintCreate(4L, "장덕동4", userCreate(1L, "test-user")),
+			hintCreate(5L, "장덕동5", userCreate(1L, "test-user")),
+			hintCreate(6L, "장덕동6", userCreate(1L, "test-user"))
+		));
+
+		// when
+		List<Hint> hints = hintService.getHintsByUserId(1L);
+
+		// then
+		Assertions.assertThat(hints).hasSize(6);
+	}
+
+	private HintOpen hintOpencreate(Hint mockHint, Pick mockPick) {
+		return HintOpen.builder().hint(mockHint).pick(mockPick).build();
+	}
+
+	private Pick pickCreate(User mockUser) {
+		return Pick.builder().fromUser(mockUser).build();
 	}
 
 	private User userCreate(Long id, String username) {
@@ -200,7 +205,7 @@ class HintServiceTest extends RestDocsSupport {
 			.build();
 	}
 
-	private Hint createHint(Long id, String content, User user) {
+	private Hint hintCreate(Long id, String content, User user) {
 		return Hint.builder()
 			.id(id)
 			.content(content)
