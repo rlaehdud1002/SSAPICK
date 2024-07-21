@@ -1,5 +1,3 @@
-import SendingIcon from 'icons/SendingIcon';
-import PlusIcon from 'icons/PlusIcon';
 import { Button } from 'components/ui/button';
 
 import {

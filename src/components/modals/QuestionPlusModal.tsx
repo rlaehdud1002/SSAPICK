@@ -28,10 +28,8 @@ const QuestionPlusModal = ({
   return (
     <div>
       <Dialog open={show} onOpenChange={(isOpen) => !isOpen && onClose()}>
-        <DialogTrigger>
-          <button onClick={onOpen}>
-            <PlusIcon />
-          </button>
+        <DialogTrigger onClick={onOpen}>
+          <PlusIcon />
         </DialogTrigger>
         <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
