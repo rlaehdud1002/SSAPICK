@@ -10,7 +10,7 @@ import {
 import HintModal from 'modals/HintModal';
 import MessageFirstModal from 'modals/MessageFirstModal';
 import MessageSecondModal from 'modals/MessageSecondModal';
-import MessageThirdModal from 'modals/MessageThirdModal';
+import CheckModal from 'modals/CheckModal';
 
 const Response = () => {
   return (
@@ -42,7 +42,7 @@ const Response = () => {
             <div className="float-end">
               <MessageFirstModal />
               <MessageSecondModal />
-              <MessageThirdModal />
+              <CheckModal title="쪽지 보내기" innerText="전송이 완료되었습니다."/>
             </div>
           </AccordionContent>
         </AccordionItem>
