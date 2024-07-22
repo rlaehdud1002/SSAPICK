@@ -2,6 +2,7 @@ package com.ssapick.server.core.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
 
@@ -34,11 +35,11 @@ public class CookieUtils {
         return cookie;
     }
 
-    public static Cookie removeCookie(String name) {
+    public static void removeCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
-        return cookie;
+        response.addCookie(cookie);
     }
 }

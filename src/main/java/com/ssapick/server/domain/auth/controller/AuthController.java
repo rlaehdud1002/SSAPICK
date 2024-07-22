@@ -12,11 +12,13 @@ import com.ssapick.server.domain.auth.service.AuthService;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/auth")
@@ -29,39 +31,40 @@ public class AuthController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> signOut(
             @CurrentUser User user,
-            HttpServletRequest request
+            HttpServletRequest request,
+            HttpServletResponse response
     ) {
         Cookie cookie = CookieUtils.getCookie(request, AuthConst.REFRESH_TOKEN).orElseThrow(
                 () -> new IllegalArgumentException("로그인 되어있지 않습니다.")
         );
 
         authService.signOut(user, cookie.getValue());
-        CookieUtils.removeCookie(AuthConst.REFRESH_TOKEN);
+        CookieUtils.removeCookie(response, AuthConst.REFRESH_TOKEN);
         return SuccessResponse.empty();
     }
 
     @Authenticated
     @PostMapping(value = "/refresh")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<Void> refresh(HttpServletRequest request) {
+    public SuccessResponse<Void> refresh(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = CookieUtils.getCookie(request, AuthConst.REFRESH_TOKEN).orElseThrow(
                 () -> new IllegalArgumentException("로그인 되어있지 않습니다.")
         );
 
         JwtToken refreshedToken = authService.refresh(cookie.getValue());
 
-        CookieUtils.removeCookie(AuthConst.REFRESH_TOKEN);
+        CookieUtils.removeCookie(response, AuthConst.REFRESH_TOKEN);
         CookieUtils.addCookie(AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(), true);
 
         return SuccessResponse.created();
     }
 
-    @Authenticated
-    @PostMapping("mattermost-confirm")
+    @PostMapping("/mattermost-confirm")
     public SuccessResponse<Void> authenticate(
             @CurrentUser User user,
             @RequestBody MattermostData.Request request
     ) {
+        log.debug("user = {}", user);
         authService.authenticate(user, request);
         return SuccessResponse.empty();
     }

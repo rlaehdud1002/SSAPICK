@@ -3,12 +3,9 @@ package com.ssapick.server.domain.auth.repository;
 import com.ssapick.server.core.config.RedisTestConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest(AuthCacheRepository.class)
 @Import({RedisTestConfig.class})
 class AuthCacheRepositoryTest {
     @Test

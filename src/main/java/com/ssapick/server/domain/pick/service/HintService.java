@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HintService {
-
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
 

@@ -65,16 +65,19 @@ public class User extends BaseEntity {
 
 	/**
 	 * 사용자 생성 메서드
-	 * @param username 사용자 이름
+	 *
+	 * @param username     사용자 이름
+	 * @param gender
 	 * @param providerType 제공자 타입 (GOOGLE, NAVER, KAKAO)
-	 * @param providerId 제공자 ID
+	 * @param providerId   제공자 ID
 	 * @return {@link User} 새롭게 생성한 유저 객체
 	 */
-	public static User createUser(String username, String name, ProviderType providerType, String providerId) {
+	public static User createUser(String username, String name, char gender, ProviderType providerType, String providerId) {
 		User user = new User();
 		user.username = username;
 		user.name = name;
 		user.email = username;
+		user.gender = gender;
 		user.providerType = providerType;
 		user.providerId = providerId;
 		return user;

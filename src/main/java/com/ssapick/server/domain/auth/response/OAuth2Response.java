@@ -11,5 +11,7 @@ public interface OAuth2Response {
 
    String getName();
 
+   String getGender();
+
    String getImageUrl();
 }
