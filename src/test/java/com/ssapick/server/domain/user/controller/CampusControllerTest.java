@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.user.controller;
 
+import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.user.dto.CampusData;
 import com.ssapick.server.domain.user.service.CampusService;
@@ -7,15 +9,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CampusController.class)
+@WebMvcTest(
+        value = CampusController.class,
+        excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JWTFilter.class),
+    }
+)
 class CampusControllerTest extends RestDocsSupport {
     @MockBean
     private CampusService campusService;
@@ -45,6 +56,7 @@ class CampusControllerTest extends RestDocsSupport {
                     ),
                     responseFields(empty())
         ));
+        verify(campusService).createCampus(create);
     }
 
     @Test

@@ -1,22 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Repeat;
-
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
@@ -27,29 +10,39 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.test.context.support.WithMockUser;
 
-@WebMvcTest(HintService.class)
-@AutoConfigureMockMvc
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class HintServiceTest {
-
-	@Autowired
+	@InjectMocks
 	private HintService hintService;
 
-	@MockBean
+	@Mock
 	private HintRepository hintRepository;
 
-	@MockBean
-	private UserRepository userRepository;
-
-	@MockBean
+	@Mock
 	private PickRepository pickRepository;
 
 	@BeforeEach
 	void setUp() {
 		// 데이터 초기화
 		User user = userCreate(1L, "test-user");
-		when(hintRepository.findAllByUserId(1L))
+		lenient().when(hintRepository.findAllByUserId(1L))
 			.thenReturn(List.of(
 				hintCreate(1L, "장덕동1", user),
 				hintCreate(2L, "장덕동2", user),
@@ -57,7 +50,7 @@ class HintServiceTest {
 				hintCreate(4L, "장덕동4", user),
 				hintCreate(5L, "장덕동5", user),
 				hintCreate(6L, "장덕동6", user)
-			));
+		));
 	}
 
 	@Test
@@ -73,15 +66,12 @@ class HintServiceTest {
 
 		// then
 		assertThat(findHint.getId()).isNotNull();
-
 	}
 
 	@Test
-	@Repeat(10)
 	@WithMockUser
 	@DisplayName("힌트 오픈이 1 개일때 힌트를 랜덤으로 가져오는 테스트")
 	void getRandomHintByPickIdTest1() {
-
 		User mockUser = userCreate(1L, "test");
 		Pick mockPick = pickCreate(mockUser);
 		Hint mockHint = hintCreate(1L, "장덕동1", mockUser);
@@ -97,7 +87,6 @@ class HintServiceTest {
 
 		// then
 		assertThat(findHint.getId()).isNotEqualTo(1L);
-
 	}
 
 	@Test

@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HintService {
-
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
 

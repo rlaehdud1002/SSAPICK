@@ -1,33 +1,33 @@
 package com.ssapick.server.domain.auth.service;
 
-import com.ssapick.server.core.config.RedisTestConfig;
 import com.ssapick.server.core.constants.AuthConst;
-import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.AuthenticatedSupport;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.entity.User;
-import io.micrometer.observation.Observation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(AuthService.class)
+@ExtendWith(MockitoExtension.class)
 class AuthServiceTest extends AuthenticatedSupport {
-    @MockBean
+    @Mock
     private AuthCacheRepository authCacheRepository;
 
-    @Autowired
+    @Mock
+    private JWTService jwtService;
+
+    @InjectMocks
     private AuthService authService;
 
     @Test
