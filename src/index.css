@@ -99,14 +99,3 @@
 .background-google{
   background-color: white;
 }
-
-.css_absolute{
-  position:absolute;
-  bottom: 5px;
-  right: 10px;
-  width: 40px;
-}
-.css_relative{
-  position:relative;
-  width: 180px;
-}
