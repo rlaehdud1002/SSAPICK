@@ -264,7 +264,7 @@ class HintServiceTest {
 	}
 
 	private Pick pickCreate(User mockUser) {
-		return Pick.builder().fromUser(mockUser).build();
+		return Pick.builder().sender(mockUser).build();
 	}
 
 	private User userCreate(Long id, String username) {
