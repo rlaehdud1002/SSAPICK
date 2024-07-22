@@ -3,7 +3,7 @@ import CoinIcon from 'icons/CoinIcon';
 
 import { Button } from 'components/ui/button';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -29,9 +29,21 @@ interface MessageForm {
   message: string;
 }
 
-const MessageFirstModal = () => {
+const MessageModal = () => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
+  useEffect(() => {
+    if (step === MessageModalStep.ALERT) {
+      const timer = setTimeout(() => {
+        setIsModalVisible(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
 
   const {
     register,
@@ -40,15 +52,14 @@ const MessageFirstModal = () => {
     reset,
   } = useForm<MessageForm>();
 
-  const onSubmit1 = (data: MessageForm) => {
+  const onSubmit = (data: MessageForm) => {
     console.log('ok', data);
-    setStep(MessageModalStep.CONFIRM);
-    reset();
-  };
-
-  const onSubmit2 = () => {
-    console.log('ok');
-    setStep(MessageModalStep.ALERT);
+    if (step === MessageModalStep.INPUT) {
+      setStep(MessageModalStep.CONFIRM);
+      reset();
+    } else if (step === MessageModalStep.CONFIRM) {
+      setStep(MessageModalStep.ALERT);
+    }
   };
 
   const onClose = () => {
@@ -56,13 +67,13 @@ const MessageFirstModal = () => {
     setStep(MessageModalStep.INPUT);
   };
 
-  const onInvalid1 = (errors: any) => {
+  const onInvalid = (errors: any) => {
     console.log('errors', errors);
   };
 
-  const onInvalid2 = (errors: any) => {
-    console.log('errors', errors);
-  };
+  if (!isModalVisible) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
@@ -71,7 +82,9 @@ const MessageFirstModal = () => {
       </DialogTrigger>
       <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5 relative">
         <DialogHeader>
-          <DialogTitle className="flex flex-start">쪽지 보내기</DialogTitle>
+          <DialogTitle className="flex flex-start text-color-5F86E9">
+            쪽지 보내기
+          </DialogTitle>
         </DialogHeader>
         {step === MessageModalStep.INPUT && (
           <div>
@@ -90,8 +103,9 @@ const MessageFirstModal = () => {
                 type="submit"
                 variant="ssapick"
                 size="messageButton"
+                className="flex flex-row items-center"
                 onClick={() => {
-                  handleSubmit(onSubmit1, onInvalid1)();
+                  handleSubmit(onSubmit, onInvalid)();
                 }}
               >
                 <CoinIcon width={25} height={25} />
@@ -109,7 +123,7 @@ const MessageFirstModal = () => {
                 variant="ssapick"
                 size="md"
                 onClick={() => {
-                  handleSubmit(onSubmit2, onInvalid2)();
+                  handleSubmit(onSubmit, onInvalid)();
                 }}
               >
                 전송
@@ -123,4 +137,4 @@ const MessageFirstModal = () => {
   );
 };
 
-export default MessageFirstModal;
+export default MessageModal;

@@ -7,7 +7,6 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-
 import HintModal from 'components/modals/HintModal';
 import MessageModal from 'components/modals/MessageModal';
 
