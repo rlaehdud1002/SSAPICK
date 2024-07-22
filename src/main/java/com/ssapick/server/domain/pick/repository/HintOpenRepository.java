@@ -15,6 +15,8 @@ public interface HintOpenRepository extends JpaRepository<HintOpen, Long> {
 	 */
 	List<HintOpen> findAllByPickId(Long pickId);
 
-
+	/**
+	 * HintId, PickId 저장
+	 */
 
 }
