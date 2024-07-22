@@ -8,8 +8,8 @@ import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
 import UserInfo from './pages/UserInfo';
 
-
 import { Route, Routes } from 'react-router-dom';
+import Alarm from 'pages/Alarm';
 
 function App() {
   return (
@@ -19,12 +19,13 @@ function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/alarm" element={<Alarm />} />
             <Route path="/home" element={<Home />} />
             <Route path="/ranking" element={<Ranking isRanked={true} />} />
             <Route path="/pick" element={<Pick />} />
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
-            </Routes>
+          </Routes>
         </div>
         {/* <UserInfo/> */}
         {/* <UserAddInfo/> */}
