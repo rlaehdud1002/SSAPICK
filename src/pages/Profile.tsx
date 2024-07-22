@@ -1,7 +1,11 @@
+
+
 const Profile = () => {
   return (
-    <div>
-      <h1>Profile</h1>
+    <div 
+    style={{ backgroundColor: '#000855', opacity: '80%' }} 
+    className="text-white mx-4 rounded-md p-3 pb-1">
+    <img src="" alt="profile" />
     </div>
   );
 };
