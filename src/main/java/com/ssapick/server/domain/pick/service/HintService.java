@@ -1,21 +1,19 @@
 package com.ssapick.server.domain.pick.service;
 
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +33,7 @@ public class HintService {
 			throw new IllegalArgumentException("힌트는 2개까지만 열 수 있습니다.");
 		}
 
-		List<Hint> hints = hintRepository.findAllByUserId(pick.getFromUser().getId());
+		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
 		log.debug("availableHints: {}", availableHints);

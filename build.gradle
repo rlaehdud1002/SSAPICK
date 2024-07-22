@@ -99,16 +99,16 @@ dependencies {
 
     // Feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // Test Container
+    testImplementation "org.testcontainers:testcontainers:1.19.0"
+    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.2"
     }
-
-    // Test Container
-    testImplementation "org.testcontainers:testcontainers:1.19.0"
-    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
 }
 
 tasks.register('openapi3-generator') {
