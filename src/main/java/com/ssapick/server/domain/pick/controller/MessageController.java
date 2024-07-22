@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,15 +23,14 @@ public class MessageController {
 	private final MessageService messageService;
 
 	@GetMapping("/receive")
-	public SuccessResponse<List<MessageData.SearchReceive>> searchSendMessage(Long userId) {
-		List<MessageData.SearchReceive> result = messageService.searchReceiveMessage(userId);
+	public SuccessResponse<List<MessageData.Search>> searchSendMessage(Long userId) {
+		List<MessageData.Search> result = messageService.searchReceiveMessage(userId);
 		return SuccessResponse.of(result);
 	}
 
 	@GetMapping("/send")
-	public SuccessResponse<List<MessageData.SearchSend>> searchReceiveMessage(Long userId) {
-
-		List<MessageData.SearchSend> result = messageService.searchSendMessage(userId);
+	public SuccessResponse<List<MessageData.Search>> searchReceiveMessage(Long userId) {
+		List<MessageData.Search> result = messageService.searchSendMessage(userId);
 		return SuccessResponse.of(result);
 	}
 
@@ -40,14 +40,14 @@ public class MessageController {
 		return SuccessResponse.empty();
 	}
 
-	@DeleteMapping("/from")
-	public SuccessResponse<Void> deleteFromMessage(Long messageId) {
+	@DeleteMapping("/{messageId}/from")
+	public SuccessResponse<Void> deleteFromMessage(@PathVariable Long messageId) {
 		messageService.deleteFromMessage(messageId);
 		return SuccessResponse.empty();
 	}
 
-	@DeleteMapping("/to")
-	public SuccessResponse<Void> deleteToMessage(Long messageId) {
+	@DeleteMapping("/{messageId}/to")
+	public SuccessResponse<Void> deleteToMessage(@PathVariable Long messageId) {
 		messageService.deleteToMessage(messageId);
 		return SuccessResponse.empty();
 	}
