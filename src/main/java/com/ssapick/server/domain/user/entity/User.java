@@ -6,6 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Table(
         name = "users",
@@ -46,6 +51,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RoleType roleType = RoleType.USER;
 
+    @OneToMany(fetch = LAZY, mappedBy = "followUser")
+    private List<Follow> followers = new ArrayList<>();
+
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
@@ -70,5 +78,9 @@ public class User extends BaseEntity {
         user.providerType = providerType;
         user.providerId = providerId;
         return user;
+    }
+
+    public void updateUser(String name, String email) {
+
     }
 }

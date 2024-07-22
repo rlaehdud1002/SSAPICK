@@ -30,7 +30,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.debug("Success Handler");
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        JwtToken jwtToken = jwtService.generateToken(customUserDetails);
+        JwtToken jwtToken = jwtService.generateToken(customUserDetails.getUsername(), customUserDetails.getAuthorities());
 
         response.addCookie(createCookie("refresh_token", jwtToken.getRefreshToken()));
 

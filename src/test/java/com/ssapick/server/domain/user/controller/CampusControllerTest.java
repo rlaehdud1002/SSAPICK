@@ -1,9 +1,8 @@
 package com.ssapick.server.domain.user.controller;
 
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.user.dto.CampusData;
+import com.ssapick.server.domain.user.service.CampusService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.user.dto.CampusData;
-import com.ssapick.server.domain.user.service.CampusService;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CampusController.class)
 class CampusControllerTest extends RestDocsSupport {
@@ -27,8 +26,8 @@ class CampusControllerTest extends RestDocsSupport {
         // * GIVEN: 이런게 주어졌을 때
         CampusData.Create create = new CampusData.Create();
         create.setName("캠퍼스 이름");
-        create.setSection((short) 1);
         create.setDescription("전공");
+        create.setSection((short) 1);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(post("/api/v1/campus")
