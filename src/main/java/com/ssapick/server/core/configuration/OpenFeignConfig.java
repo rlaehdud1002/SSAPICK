@@ -4,6 +4,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableFeignClients("org.example.openfeigndemo")
+@EnableFeignClients("com.ssapick.server.domain.auth.controller")
 public class OpenFeignConfig {
 }
