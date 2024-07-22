@@ -1,19 +1,21 @@
 package com.ssapick.server.domain.pick.service;
 
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,8 +37,6 @@ public class HintService {
 
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
-
-		log.debug("availableHints: {}", availableHints);
 
 		Long openHintId = selectRandomHintId(availableHints);
 		Hint openHint = findHintById(hints, openHintId);
@@ -90,7 +90,34 @@ public class HintService {
 	}
 
 	@Transactional
-	public void saveHint(HintData.Create request) {
-		hintRepository.save(request.toEntity());
+	public void saveHint(List<HintData.Create> request) {
+
+		if (request.stream().anyMatch(hint -> hint.getUser() == null)) {
+			throw new IllegalArgumentException("유저 정보가 없습니다.");
+		}
+
+		if (request.stream().anyMatch(hint -> hint.getContent() == null)) {
+			throw new IllegalArgumentException("힌트 내용이 없습니다.");
+		}
+
+		// id가 null이면 새로운 힌트 생성
+		if (request.stream().allMatch(hint -> hint.getId() == null)) {
+			List<Hint> hints = request.stream()
+				.map(HintData.Create::toEntity)
+				.collect(Collectors.toList());
+
+			hintRepository.saveAll(hints);
+			log.info("힌트 저장 완료");
+		}
+
+		// id가 null이 아니면 기존 힌트를 찾아서 업데이트
+		if (request.stream().allMatch(hint -> hint.getId() != null)) {
+			List<Hint> hints_haveId = request.stream()
+				.map(HintData.Create::toEntity)
+				.collect(Collectors.toList());
+
+			hintRepository.saveAll(hints_haveId);
+			log.info("힌트 업데이트 완료");
+		}
 	}
 }

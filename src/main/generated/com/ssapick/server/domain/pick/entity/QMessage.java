@@ -29,19 +29,19 @@ public class QMessage extends EntityPathBase<Message> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final BooleanPath fromDeleted = createBoolean("fromDeleted");
-
-    public final com.ssapick.server.domain.user.entity.QUser fromUser;
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isAlarmSent = createBoolean("isAlarmSent");
 
+    public final BooleanPath isReceiverDeleted = createBoolean("isReceiverDeleted");
+
+    public final BooleanPath isSenderDeleted = createBoolean("isSenderDeleted");
+
     public final QPick pick;
 
-    public final BooleanPath toDeleted = createBoolean("toDeleted");
+    public final com.ssapick.server.domain.user.entity.QUser receiver;
 
-    public final com.ssapick.server.domain.user.entity.QUser toUser;
+    public final com.ssapick.server.domain.user.entity.QUser sender;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -64,9 +64,9 @@ public class QMessage extends EntityPathBase<Message> {
 
     public QMessage(Class<? extends Message> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.fromUser = inits.isInitialized("fromUser") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("fromUser"), inits.get("fromUser")) : null;
         this.pick = inits.isInitialized("pick") ? new QPick(forProperty("pick"), inits.get("pick")) : null;
-        this.toUser = inits.isInitialized("toUser") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("toUser"), inits.get("toUser")) : null;
+        this.receiver = inits.isInitialized("receiver") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("receiver"), inits.get("receiver")) : null;
+        this.sender = inits.isInitialized("sender") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("sender"), inits.get("sender")) : null;
     }
 
 }

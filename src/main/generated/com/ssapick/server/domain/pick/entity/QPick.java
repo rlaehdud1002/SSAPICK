@@ -27,17 +27,19 @@ public class QPick extends EntityPathBase<Pick> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final com.ssapick.server.domain.user.entity.QUser fromUser;
-
     public final ListPath<HintOpen, QHintOpen> hintOpens = this.<HintOpen, QHintOpen>createList("hintOpens", HintOpen.class, QHintOpen.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isAlarmSent = createBoolean("isAlarmSent");
 
+    public final BooleanPath isMessageSend = createBoolean("isMessageSend");
+
     public final com.ssapick.server.domain.question.entity.QQuestion question;
 
-    public final com.ssapick.server.domain.user.entity.QUser toUser;
+    public final com.ssapick.server.domain.user.entity.QUser receiver;
+
+    public final com.ssapick.server.domain.user.entity.QUser sender;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -60,9 +62,9 @@ public class QPick extends EntityPathBase<Pick> {
 
     public QPick(Class<? extends Pick> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.fromUser = inits.isInitialized("fromUser") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("fromUser"), inits.get("fromUser")) : null;
         this.question = inits.isInitialized("question") ? new com.ssapick.server.domain.question.entity.QQuestion(forProperty("question"), inits.get("question")) : null;
-        this.toUser = inits.isInitialized("toUser") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("toUser"), inits.get("toUser")) : null;
+        this.receiver = inits.isInitialized("receiver") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("receiver"), inits.get("receiver")) : null;
+        this.sender = inits.isInitialized("sender") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("sender"), inits.get("sender")) : null;
     }
 
 }

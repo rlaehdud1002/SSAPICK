@@ -37,8 +37,7 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final BooleanPath isAlarmSent = createBoolean("isAlarmSent");
 
-    //inherited
-    public final BooleanPath isDeleted = _super.isDeleted;
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
 
     public final QQuestionCategory questionCategory;
 
