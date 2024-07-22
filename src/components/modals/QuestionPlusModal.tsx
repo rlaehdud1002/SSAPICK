@@ -50,7 +50,7 @@ const QuestionPlusModal = ({
 
   return (
     <form>
-      <Dialog open={show} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <Dialog open={show} onOpenChange={(open) => !open && onClose()}>
         <DialogTrigger onClick={onOpen}>
           <PlusIcon />
         </DialogTrigger>
