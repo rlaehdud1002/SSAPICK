@@ -1,6 +1,7 @@
 import DoneButton from "buttons/DoneButton";
 import InfoInput from "components/LoginPage/InfoInput";
 import InfoSelect from "components/LoginPage/InfoSelect";
+import { useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 
@@ -14,10 +15,13 @@ interface AddUserForm {
 }
 
 const UserAddInfo = () => {
+    const navigate = useNavigate()
+
     const { register, handleSubmit, setValue } = useForm<AddUserForm>();
 
     const onSubmit = (data: AddUserForm) => {
         console.log(data)
+        navigate('/home')
     }
 
     const onInvalid = (errors: any) => {
@@ -61,6 +65,10 @@ const UserAddInfo = () => {
                 required: "관심사를 입력해주세요.",
                 maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
             })} />
+            <div className="flex">
+                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
+                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 "></div>
+                </div>
             <div>
             <DoneButton title="완료" />
             </div>

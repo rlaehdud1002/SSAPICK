@@ -4,6 +4,8 @@ import InfoSelect from "components/LoginPage/InfoSelect"
 import ProfileCameraIcon from "icons/ProfileCameraIcon"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import UserAddInfo from "./UserAddInfo"
 
 
 interface UserForm {
@@ -15,10 +17,17 @@ interface UserForm {
 
 
 const UserInfo = () => {
+    const navigate = useNavigate()
+    const navigateToAddInfo = () => {
+        navigate('/UserAddInfo')
+    }
+
     const { register, handleSubmit, setValue } = useForm<UserForm>();
     const [setUploadImage] = useState<File | undefined>(undefined)
 
     const onSubmit = (data: UserForm) => {
+        
+        navigateToAddInfo()
         const form = new FormData()
         form.append("name", data.name)
         form.append("image", "")
@@ -37,6 +46,7 @@ const UserInfo = () => {
                 <div className="mb-10">
                     <ProfileCameraIcon setUploadImage={setUploadImage} />
                 </div>
+            <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
 
                 <InfoInput title="이름" register={register("name", {
                     required: "이름을 입력해주세요.",
@@ -54,9 +64,12 @@ const UserInfo = () => {
                 <InfoSelect title="캠퍼스" register={register("campus", {
                     required: "캠퍼스를 선택해주세요."
                 })} setValue={(value: string) => setValue("campus", value)} />
-
+                <div className="flex">
+                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
+                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
+                </div>
                 <div>
-                    <DoneButton title="완료" />
+                    <DoneButton title="다음" />
                 </div>
             </div>
         </form>
