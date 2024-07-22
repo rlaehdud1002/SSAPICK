@@ -2,7 +2,7 @@ import PlusIcon from 'icons/PlusIcon';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
@@ -17,7 +17,6 @@ import {
 } from 'components/ui/dialog';
 
 import QuestionInput from 'components/modals/QuestionInput';
-import Question from 'components/PickPage/Question';
 import QuestionCheckModal from 'components/modals/QuestionCheckModal';
 
 enum NewQuestionStep {
@@ -32,6 +31,18 @@ interface QuestionForm {
 const QuestionPlusModal = () => {
   const [step, setStep] = useState<NewQuestionStep>(NewQuestionStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
+  useEffect(() => {
+    if (step === NewQuestionStep.ALERT) {
+      const timer = setTimeout(() => {
+        setIsModalVisible(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
 
   const {
     register,
@@ -55,6 +66,10 @@ const QuestionPlusModal = () => {
     setStep(NewQuestionStep.INPUT);
   };
 
+  if (!isModalVisible) {
+    return null;
+  }
+
   return (
     <form>
       <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
@@ -63,7 +78,7 @@ const QuestionPlusModal = () => {
         </DialogTrigger>
         <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
-            <DialogTitle className="flex flex-start">질문 만들기</DialogTitle>
+            <DialogTitle className="flex flex-start text-color-5F86E9">질문 만들기</DialogTitle>
           </DialogHeader>
           {step === NewQuestionStep.INPUT && (
             <div>
