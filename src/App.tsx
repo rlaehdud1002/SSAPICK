@@ -5,8 +5,7 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import UserInfo from 'pages/UserInfo';
-import UserAddInfo from 'pages/UserAddInfo';
+
 
 
 
@@ -28,8 +27,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             </Routes>
         </div> */}
-        <UserInfo/>
-        {/* <UserAddInfo/> */}
+
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>

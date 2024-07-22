@@ -11,13 +11,12 @@ interface UserForm {
     gender: string;
     th: number;
     campus: string;
-    class: number;
 }
 
 
 const UserInfo = () => {
     const { register, handleSubmit, setValue } = useForm<UserForm>();
-    const [uploadImage, setUploadImage] = useState<File | undefined>(undefined)
+    const [setUploadImage] = useState<File | undefined>(undefined)
 
     const onSubmit = (data: UserForm) => {
         const form = new FormData()
@@ -55,10 +54,6 @@ const UserInfo = () => {
                 <InfoSelect title="캠퍼스" register={register("campus", {
                     required: "캠퍼스를 선택해주세요."
                 })} setValue={(value: string) => setValue("campus", value)} />
-
-                <InfoSelect title="반" register={register("class", {
-                    required: "반을 선택해주세요."
-                })} setValue={(value: number) => setValue("class", value)} />
 
                 <div>
                     <DoneButton title="완료" />
