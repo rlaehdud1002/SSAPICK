@@ -11,46 +11,38 @@ import lombok.Data;
 public class MessageData {
 
 	@Data
-	public static class SearchSend {
+	public static class Search {
 
-		private Long fromUserId;
-		private boolean fromDeleted;
+		private String senderName;
+		private String receiverName;
 		private LocalDateTime createdAt;
 		private String content;
+		private String questionContent;
 
-		public static SearchSend fromEntity(Message message) {
-			SearchSend messages = new SearchSend();
-			messages.fromUserId = message.getFromUser().getId();
-			messages.fromDeleted = message.getFromUser().isDeleted();
-			messages.createdAt = message.getCreatedAt();
-			messages.content = message.getContent();
-			return messages;
-		}
-	}
+		public static Search fromEntity(Message message, boolean isReceived) {
+			Search search = new Search();
 
-	@Data
-	public static class SearchReceive {
+			if (isReceived) {
+				search.receiverName = message.getSender().getName();
+			}
 
-		private Long toUserId;
-		private boolean toDeleted;
-		private LocalDateTime createdAt;
-		private String content;
-
-		public static SearchReceive fromEntity(Message message) {
-			SearchReceive messages = new SearchReceive();
-			messages.toUserId = message.getToUser().getId();
-			messages.toDeleted = message.getToUser().isDeleted();
-			messages.createdAt = message.getCreatedAt();
-			messages.content = message.getContent();
-			return messages;
+			search.senderName = message.getReceiver().getName();
+			search.createdAt = message.getCreatedAt();
+			search.content = message.getContent();
+			search.questionContent = message.getPick().getQuestion().getContent();
+			return search;
 		}
 	}
 
 	@Data
 	public static class Create{
-		private User fromUser;
-		private User toUser;
+		private User sender;
+		private User receiver;
 		private Pick pick;
 		private String content;
+
 	}
+
+
+
 }
