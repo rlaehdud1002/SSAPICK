@@ -23,10 +23,12 @@ public class MessageData {
 			Search search = new Search();
 
 			if (isReceived) {
-				search.receiverName = message.getSender().getName();
+				search.senderName = "익명";
+			} else{
+				search.senderName = message.getReceiver().getName();
 			}
 
-			search.senderName = message.getReceiver().getName();
+			search.receiverName = message.getSender().getName();
 			search.createdAt = message.getCreatedAt();
 			search.content = message.getContent();
 			search.questionContent = message.getPick().getQuestion().getContent();
