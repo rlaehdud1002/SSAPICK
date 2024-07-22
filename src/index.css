@@ -31,6 +31,10 @@
     --chart-5: 27 87% 67%;
   }
 
+  img {
+    height: fit-content;
+  }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -84,11 +88,10 @@
   color: #000855;
 }
 
-.text-color-5F86E9{
-  color:#5F86E9
+.text-color-5F86E9 {
+  color: #5F86E9
 }
 
-.background-color-5F86E9{
-  background-color:#5F86E9
+.background-color-5F86E9 {
+  background-color: #5F86E9
 }
-
