@@ -216,7 +216,7 @@ class HintServiceTest {
 			.providerType(ProviderType.GOOGLE)
 			.roleType(RoleType.USER)
 			.providerId("프로바이더 아이디")
-			.isEmailVerified(true)
+			.isMattermostConfirmed(true)
 			.isLocked(false)
 			.build();
 	}

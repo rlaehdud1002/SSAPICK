@@ -57,8 +57,8 @@ public class User extends BaseEntity {
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
-    @Column(name = "is_email_verified", nullable = false)
-    private boolean isEmailVerified = false;
+    @Column(name = "is_mattermost_confirmed", nullable = false)
+    private boolean isMattermostConfirmed = false;
 
     @Column(name = "is_locked", nullable = false)
     private boolean isLocked = false;
@@ -86,10 +86,15 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Hint> hints = new ArrayList<>();
 
+
+	public void mattermostConfirm() {
+		this.isMattermostConfirmed = true;
+	}
+
 	@Builder
 	private User(Long id, String username, String name, String email, ProviderType providerType,
 		RoleType roleType, String providerId,
-		boolean isEmailVerified, boolean isLocked) {
+		boolean isMattermostConfirmed, boolean isLocked) {
 		this.id = id;
 		this.username = username;
 		this.name = name;
@@ -97,7 +102,7 @@ public class User extends BaseEntity {
 		this.providerType = providerType;
 		this.roleType = roleType;
 		this.providerId = providerId;
-		this.isEmailVerified = isEmailVerified;
+		this.isMattermostConfirmed = isMattermostConfirmed;
 		this.isLocked = isLocked;
 	}
 
@@ -105,4 +110,5 @@ public class User extends BaseEntity {
 		this.username = username;
 		this.name = name;
 	}
+
 }
