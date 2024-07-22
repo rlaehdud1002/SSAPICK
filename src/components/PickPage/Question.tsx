@@ -2,23 +2,12 @@ import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import PassIcon from 'icons/PassIcon';
 import WarningIcon from 'icons/WarningIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
-import CheckModal from 'components/modals/CheckModal';
-
-import { useState } from 'react';
 
 interface QuestionProps {
   category: string;
 }
 
 const Question = ({ category }: QuestionProps) => {
-  const [showQuestionPlusModal, setShowQuestionPlusModal] = useState(false);
-  const [showCheckModal, setShowCheckModal] = useState(false);
-
-  const openQuestionPlusModal = () => setShowQuestionPlusModal(true);
-  const closeQuestionPlusModal = () => setShowQuestionPlusModal(false);
-  const openCheckModal = () => setShowCheckModal(true);
-  const closeCheckModal = () => setShowCheckModal(false);
-
   return (
     <div
       className="text-white mx-4 rounded-md p-3 pb-1"
@@ -28,18 +17,7 @@ const Question = ({ category }: QuestionProps) => {
         <p className="px-2 py-1 text-xs bg-white rounded-xl text-color-000855">
           {category}
         </p>
-        <QuestionPlusModal
-          show={showQuestionPlusModal}
-          onOpen={openQuestionPlusModal}
-          onClose={closeQuestionPlusModal}
-          onCreate={openCheckModal}
-        />
-        <CheckModal
-          title="질문 만들기"
-          innerText="질문 생성 신청이 완료되었습니다."
-          show={showCheckModal}
-          onClose={closeCheckModal}
-        />
+        <QuestionPlusModal />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <p className="text-xs text-right text-red-400">2 of 10</p>

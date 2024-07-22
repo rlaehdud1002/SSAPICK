@@ -1,4 +1,4 @@
-import { DialogDescription } from '@radix-ui/react-dialog';
+import { DialogDescription  } from '@radix-ui/react-dialog';
 
 const MessageCheckModal = () => {
   return (
