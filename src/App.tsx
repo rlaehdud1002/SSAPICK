@@ -5,7 +5,9 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import Login from 'pages/Login';
+import UserInfo from 'pages/UserInfo';
+import UserAddInfo from 'pages/UserAddInfo';
+
 
 
 import { Route, Routes } from 'react-router-dom';
@@ -16,7 +18,7 @@ function App() {
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         <Header />
-        <div className="flex-grow">
+        {/* <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -25,8 +27,9 @@ function App() {
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
             </Routes>
-        </div>
-        <Login/>
+        </div> */}
+        <UserInfo/>
+        {/* <UserAddInfo/> */}
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
