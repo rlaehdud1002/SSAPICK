@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.pick.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +27,8 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	List<Pick> findAllByToUserId(Long userId);
 
 
+
+	@Query("SELECT p FROM Pick p JOIN FETCH p.hintOpens WHERE p.id = :pickId")
+	Optional<Pick> findPickWithHintsById(Long pickId);
 
 }

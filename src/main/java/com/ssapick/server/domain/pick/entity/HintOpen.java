@@ -14,24 +14,42 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class HintOpen extends TimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hint_open_id")
-    private Long id;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "hint_id", nullable = false,foreignKey = @ForeignKey(name = "foreign_key_hint_open_hint_id"))
-    private Hint hint;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "hint_open_id")
+	private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "pick_id", nullable = false, updatable = false,foreignKey = @ForeignKey(name = "PICK pick_id 외래키 참조"))
-    private Pick pick;
+	@OneToOne(fetch = LAZY)
+	@JoinColumn(name = "hint_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_hint_open_hint_id"))
+	private Hint hint;
 
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "pick_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "PICK pick_id 외래키 참조"))
+	private Pick pick;
+
+	@Builder
+	private HintOpen(Hint hint, Pick pick) {
+		this.hint = hint;
+		this.pick = pick;
+	}
+
+	public void setPick(Pick pick) {
+		if (this.pick != null) {
+			this.pick.getHintOpens().remove(this);
+		}
+		this.pick = pick;
+		pick.getHintOpens().add(this);
+	}
 }
