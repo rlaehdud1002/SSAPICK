@@ -2,7 +2,6 @@ import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import PassIcon from 'icons/PassIcon';
 import WarningIcon from 'icons/WarningIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
-import CheckModal from 'components/modals/CheckModal';
 
 interface QuestionProps {
   category: string;
@@ -19,10 +18,6 @@ const Question = ({ category }: QuestionProps) => {
           {category}
         </p>
         <QuestionPlusModal />
-        <CheckModal
-          title="질문 만들기"
-          innerText="질문 생성 신청이 완료되었습니다."
-        />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <p className="text-xs text-right text-red-400">2 of 10</p>

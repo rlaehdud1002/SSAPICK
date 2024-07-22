@@ -30,8 +30,7 @@ function App() {
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
             </Routes>
-            </div>
-            {/* <UserInfo /> */}
+
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>

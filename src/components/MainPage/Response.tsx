@@ -8,9 +8,7 @@ import {
 } from 'components/ui/accordion';
 
 import HintModal from 'components/modals/HintModal';
-import MessageFirstModal from 'components/modals/MessageFirstModal';
-import MessageSecondModal from 'components/modals/MessageSecondModal';
-import CheckModal from 'components/modals/CheckModal';
+import MessageModal from 'components/modals/MessageModal';
 
 const Response = () => {
   return (
@@ -21,28 +19,24 @@ const Response = () => {
             <div className="flex flex-col">
               <div className="flex flex-row">
                 <UserIcon />
-                <h3 className="mx-3 text-color-000855">
-                  12기 2반
-                </h3>
+                <h3 className="mx-3 text-color-000855">12기 2반</h3>
               </div>
             </div>
           </AccordionTrigger>
-          <p className="text-center mb-4">
+          <p className="text-center my-4">
             나랑 같이 프로젝트 하고 싶은 사람은?
           </p>
           <AccordionContent>
             <div className="flex flex-row justify-center">
-              <div className="rounded-md bg-white/50 p-3 mx-10">
-                <HintModal title="hint1" />
+              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+                <HintModal title="?" />
               </div>
-              <div className="rounded-md bg-white/50 p-3 mx-10">
-                <HintModal title="hint2" />
+              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+                <HintModal title="?" />
               </div>
             </div>
             <div className="float-end">
-              <MessageFirstModal />
-              <MessageSecondModal />
-              <CheckModal title="쪽지 보내기" innerText="전송이 완료되었습니다."/>
+              <MessageModal />
             </div>
           </AccordionContent>
         </AccordionItem>
