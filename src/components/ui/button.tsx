@@ -26,6 +26,7 @@ const buttonVariants = cva(
         sm: 'h-8 w-20 rounded-md px-3 text-xs',
         md: 'h-9 w-20 rounded-md px-4',
         lg: 'h-10 w-20 rounded-md px-8',
+        messageButton: "h-10 w-[100px] rounded-md px-8",
         icon: 'h-9 w-9',
       },
     },

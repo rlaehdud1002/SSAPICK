@@ -55,7 +55,7 @@ const MessageFirstModal = ({
       <DialogTrigger onClick={onOpen}>
         <SendingIcon />
       </DialogTrigger>
-      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
+      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5 relative">
         <DialogHeader>
           <DialogTitle className="flex flex-start">쪽지 보내기</DialogTitle>
           <DialogDescription className="flex flex-col justify-center">
@@ -65,7 +65,7 @@ const MessageFirstModal = ({
             </div>
             <Input
               type="text"
-              className="input-box border-none h-10 focus:outline-none"
+              className="input-box border-none h-20 focus:outline-none"
               register={register('message', {
                 required: '쪽지 내용을 입력해주세요.',
                 maxLength: {
@@ -78,16 +78,16 @@ const MessageFirstModal = ({
               errors={errors}
               name="message"
               render={({ message }) => (
-                <h6 className="text-red-500 text-left text-xs">{message}</h6>
+                <h6 className="text-red-400 text-left text-xs my-1 fixed bottom-[50px]">{message}</h6>
               )}
             />
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="text-right">
+        <DialogFooter className="flex flex-row justify-end mt-3">
           <Button
             type="submit"
             variant="ssapick"
-            size="lg"
+            size="messageButton"
             onClick={handleSubmit(onSubmit, onInvalid)}
           >
             <CoinIcon width={25} height={25} />

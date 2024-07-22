@@ -72,7 +72,9 @@ const QuestionPlusModal = ({
               <ErrorMessage
                 errors={errors}
                 name="newQuestion"
-                render={({ message }) => <h6 className='text-red-500 text-left text-xs'>{message}</h6>}
+                render={({ message }) => (
+                  <h6 className="text-red-400 text-left text-xs">{message}</h6>
+                )}
               />
             </DialogDescription>
           </DialogHeader>
