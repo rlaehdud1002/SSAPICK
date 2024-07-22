@@ -34,7 +34,7 @@ public class GoogleResponse implements OAuth2Response {
 
     @Override
     public String getGender() {
-        return attribute.get("gender").toString();
+        return "F";
     }
 
     @Override
