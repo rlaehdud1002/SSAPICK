@@ -1,11 +1,7 @@
 package com.ssapick.server.domain.user.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ssapick.server.core.entity.BaseEntity;
 import com.ssapick.server.domain.pick.entity.Hint;
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -102,4 +98,8 @@ public class User extends BaseEntity {
 		this.isLocked = isLocked;
 	}
 
+	public void updateUser(String username, String name) {
+		this.username = username;
+		this.name = name;
+	}
 }

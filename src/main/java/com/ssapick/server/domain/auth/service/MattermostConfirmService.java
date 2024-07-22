@@ -1,18 +1,13 @@
 package com.ssapick.server.domain.auth.service;
 
-import com.ssapick.server.domain.auth.controller.MattermostConfirmClient;
-import com.ssapick.server.domain.auth.dto.MattermostConfirmRequest;
-import com.ssapick.server.domain.auth.dto.MattermostConfirmDTO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.ssapick.server.domain.auth.dto.MattermostData;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@Service
-@RequiredArgsConstructor
-public class MattermostConfirmService {
 
-    private final MattermostConfirmClient mattermostConfirmClient;
-
-    public MattermostConfirmDTO authenticate(MattermostConfirmRequest request) {
-        return mattermostConfirmClient.authenticate(request);
-    }
+@FeignClient(name = "mattermost-service", url = "https://meeting.ssafy.com/api/v4")
+public interface MattermostConfirmService {
+    @PostMapping("/users/login")
+    MattermostData.Response authenticate(@RequestBody MattermostData.Request request);
 }

@@ -6,6 +6,7 @@ import com.ssapick.server.core.constants.AuthConst;
 import com.ssapick.server.core.properties.JwtProperties;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.core.util.CookieUtils;
+import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.service.AuthService;
 import com.ssapick.server.domain.user.entity.User;
@@ -13,10 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -56,5 +54,15 @@ public class AuthController {
         CookieUtils.addCookie(AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(), true);
 
         return SuccessResponse.created();
+    }
+
+    @Authenticated
+    @PostMapping("mattermost-confirm")
+    public SuccessResponse<Void> authenticate(
+            @CurrentUser User user,
+            @RequestBody MattermostData.Request request
+    ) {
+        authService.authenticate(user, request);
+        return SuccessResponse.empty();
     }
 }
