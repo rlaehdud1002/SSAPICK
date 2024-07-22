@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Repeat;
 
+import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
@@ -31,7 +32,7 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 
 @WebMvcTest(HintService.class)
 @AutoConfigureMockMvc
-class HintServiceTest {
+class HintServiceTest extends RestDocsSupport {
 
 	@Autowired
 	private HintService hintService;
@@ -204,7 +205,7 @@ class HintServiceTest {
 	}
 
 	private Pick pickCreate(User mockUser) {
-		return Pick.builder().fromUser(mockUser).build();
+		return Pick.builder().sender(mockUser).build();
 	}
 
 	private User userCreate(Long id, String username) {
