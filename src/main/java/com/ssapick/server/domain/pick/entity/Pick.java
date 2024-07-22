@@ -22,11 +22,11 @@ public class Pick extends TimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_from_user_id"))
-    private User fromUser;
+    private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_to_user_id"))
-    private User toUser;
+    private User receiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_question_id"))
@@ -36,18 +36,16 @@ public class Pick extends TimeEntity {
     private boolean isAlarmSent = false;
 
     @Column(name = "is_message_sent")
-    private boolean isMessageSent = false;
+    private boolean isMessageSend = false;
 
     @OneToMany(mappedBy = "pick", cascade = CascadeType.ALL)
     private List<HintOpen> hintOpens = new ArrayList<>();
 
-    public static Pick of(PickData.Create create, User fromUser, User toUser, Question question) {
+    public static Pick of(PickData.Create create) {
         Pick pick = new Pick();
-        pick.fromUser = fromUser;
-        pick.toUser = toUser;
-        pick.question = question;
-        pick.isAlarmSent = create.isAlarmSent();
-        pick.isMessageSent = create.isMessageSent();
+        pick.sender = create.getSender();
+        pick.receiver = create.getReceiver();
+        pick.question = create.getQuestion();
         return pick;
     }
 }

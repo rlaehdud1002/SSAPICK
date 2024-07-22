@@ -22,21 +22,37 @@ public class PickController {
 
 	private final PickService pickService;
 
-	@GetMapping(value = "")
+	/**
+	 * 받은 픽 조회하기
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/received")
 	@ResponseStatus(value = HttpStatus.OK)
-	public SuccessResponse<List<PickData.Search>> searchPick(Long userId) {
-
-		List<PickData.Search> userPicksInfo = pickService.searchToPickInfos(userId);
-
-		return SuccessResponse.of(userPicksInfo);
+	public SuccessResponse<List<PickData.Recevied>> getReceivedPick(Long userId) {
+		return SuccessResponse.of(pickService.searchReceived(userId));
 	}
 
+	/**
+	 * 보낸 픽 조회하기
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/sent")
+	@ResponseStatus(value = HttpStatus.OK)
+	public SuccessResponse<List<PickData.Sent>> getSentPick(Long userId) {
+		return SuccessResponse.of(pickService.searchSent(userId));
+	}
+
+	/**
+	 * 픽 생성하기
+	 * @param create
+	 * @return
+	 */
 	@PostMapping("")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<Void> createPick(PickData.Create create) {
-
 		pickService.createPick(create);
-
 		return SuccessResponse.empty();
 	}
 }
