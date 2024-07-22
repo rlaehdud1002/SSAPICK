@@ -35,19 +35,19 @@ public class Message extends TimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "from_user_id", nullable = false, updatable = false)
-    private User fromUser;
+    private User sender;
 
 
     @Column(nullable = false)
-    private boolean fromDeleted = false;
+    private boolean isSenderDeleted = false;
 
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "to_user_id", nullable = false, updatable = false)
-    private User toUser;
+    private User receiver;
 
     @Column(nullable = false)
-    private boolean toDeleted = false;
+    private boolean isReceiverDeleted = false;
 
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
@@ -57,16 +57,16 @@ public class Message extends TimeEntity {
         Message message = new Message();
         message.content = create.getContent();
         message.pick = create.getPick();
-        message.fromUser = create.getFromUser();
-        message.toUser = create.getToUser();
+        message.sender = create.getSender();
+        message.receiver = create.getReceiver();
         return message;
     }
 
     public void deleteFromMessage() {
-        fromDeleted = true;
+        isSenderDeleted = true;
     }
 
     public void deleteToMessage() {
-        toDeleted = true;
+        isReceiverDeleted = true;
     }
 }
