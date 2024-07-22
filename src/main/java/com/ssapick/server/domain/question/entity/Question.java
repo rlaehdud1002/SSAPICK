@@ -31,4 +31,7 @@ public class Question extends BaseEntity {
 
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 }
