@@ -1,7 +1,6 @@
 package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,23 +19,15 @@ public class MessageService {
 	final MessageRepository messageRepository;
 
 
-	public void createMessage(MessageData.Create create) {
-		messageRepository.save(Message.of(create));
-	}
-
 	/**
 	 * 보낸 메시지 조회하기
 	 * @param userId
 	 * @return
 	 */
-	public List<MessageData.SearchSend> searchSendMessage(Long userId) {
-		List<Message> sendMessages = messageRepository.findAllByFromUserId(userId);
-
-		List<MessageData.SearchSend> result = sendMessages.stream()
-			.map(MessageData.SearchSend::fromEntity)
-			.collect(Collectors.toList());
-
-		return result;
+	public List<MessageData.Search> searchSendMessage(Long userId) {
+		return messageRepository.findAllBySender_IdAndIsSenderDeletedFalse(userId).stream()
+			.map((Message message) -> MessageData.Search.fromEntity(message, false))
+			.toList();
 	}
 
 	/**
@@ -44,14 +35,18 @@ public class MessageService {
 	 * @param userId
 	 * @return
 	 */
-	public List<MessageData.SearchReceive> searchReceiveMessage(Long userId) {
-		List<Message> receiveMessages = messageRepository.findAllByToUserId(userId);
+	public List<MessageData.Search> searchReceiveMessage(Long userId) {
+		return messageRepository.findAllByReceiver_IdAndIsReceiverDeletedFalse(userId).stream()
+			.map((Message message) -> MessageData.Search.fromEntity(message, true))
+			.toList();
+	}
 
-		List<MessageData.SearchReceive> result = receiveMessages.stream()
-			.map(MessageData.SearchReceive::fromEntity)
-			.collect(Collectors.toList());
-
-		return result;
+	/**
+	 * 메시지 생성하기
+	 * @param create
+	 */
+	public void createMessage(MessageData.Create create) {
+		messageRepository.save(Message.of(create));
 	}
 
 	/**
