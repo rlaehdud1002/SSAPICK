@@ -19,7 +19,7 @@ const Header = () => {
           </span>
         </div>
         <Link to="/alarm">
-          <AlarmIcon />
+          <AlarmIcon className="" />
         </Link>
       </div>
     </header>
