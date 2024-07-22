@@ -1,15 +1,12 @@
 import PlusIcon from 'icons/PlusIcon';
-import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -78,7 +75,9 @@ const QuestionPlusModal = () => {
         </DialogTrigger>
         <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
-            <DialogTitle className="flex flex-start text-color-5F86E9">질문 만들기</DialogTitle>
+            <DialogTitle className="flex flex-start text-color-5F86E9">
+              질문 만들기
+            </DialogTitle>
           </DialogHeader>
           {step === NewQuestionStep.INPUT && (
             <div>
