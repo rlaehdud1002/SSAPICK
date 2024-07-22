@@ -33,6 +33,12 @@ public class NaverResponse implements OAuth2Response {
     }
 
     @Override
+    public String getGender() {
+        return attribute.get("gender").toString();
+
+    }
+
+    @Override
     public String getImageUrl() {
         return attribute.get("profile_image").toString();
     }

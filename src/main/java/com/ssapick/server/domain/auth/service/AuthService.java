@@ -5,10 +5,14 @@ import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.entity.User;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -42,9 +46,17 @@ public class AuthService {
 
     @Transactional
     public void authenticate(User user, MattermostData.Request request) {
-        MattermostData.Response mattermostResponse = mattermostConfirmService.authenticate(request);
+        MattermostData.Response mattermostResponse = null;
+        try {
+            System.out.println("mattermostResponse = " + mattermostResponse);
+            mattermostConfirmService.authenticate(request);
+        } catch (FeignException.NotFound exception) {
+            System.out.println("exception = " + exception);
+            throw new IllegalArgumentException("사용자 정보가 일치하지 않습니다.");
+        }
 
         user.updateUser(mattermostResponse.getUsername(), mattermostResponse.getEmail());
+
     }
 
     private String signOutKey(String username) {

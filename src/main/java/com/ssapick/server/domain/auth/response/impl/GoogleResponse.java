@@ -33,6 +33,11 @@ public class GoogleResponse implements OAuth2Response {
     }
 
     @Override
+    public String getGender() {
+        return attribute.get("gender").toString();
+    }
+
+    @Override
     public String getImageUrl() {
         return attribute.get("picture").toString();
     }

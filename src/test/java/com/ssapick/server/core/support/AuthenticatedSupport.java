@@ -18,6 +18,6 @@ public abstract class AuthenticatedSupport {
     protected JwtProperties properties;
 
     protected User createUser() {
-        return User.createUser("test", "테스트 유저", ProviderType.KAKAO, "123456");
+        return User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456");
     }
 }
