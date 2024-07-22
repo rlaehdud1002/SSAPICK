@@ -29,8 +29,8 @@ public class PickController {
 	 */
 	@GetMapping("/received")
 	@ResponseStatus(value = HttpStatus.OK)
-	public SuccessResponse<List<PickData.Recevied>> getReceivedPick(Long userId) {
-		return SuccessResponse.of(pickService.searchReceived(userId));
+	public SuccessResponse<List<PickData.Search>> getReceivedPick(Long userId) {
+		return SuccessResponse.of(pickService.searchReceiver(userId));
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class PickController {
 	 */
 	@GetMapping("/sent")
 	@ResponseStatus(value = HttpStatus.OK)
-	public SuccessResponse<List<PickData.Sent>> getSentPick(Long userId) {
-		return SuccessResponse.of(pickService.searchSent(userId));
+	public SuccessResponse<List<PickData.Search>> getSentPick(Long userId) {
+		return SuccessResponse.of(pickService.searchSender(userId));
 	}
 
 	/**
