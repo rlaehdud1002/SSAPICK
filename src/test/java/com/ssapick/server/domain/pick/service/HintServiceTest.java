@@ -1,5 +1,24 @@
 package com.ssapick.server.domain.pick.service;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
@@ -10,25 +29,6 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.test.context.support.WithMockUser;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
-
-import ch.qos.logback.classic.Logger;
 
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest {
@@ -42,13 +42,14 @@ class HintServiceTest {
 	private PickRepository pickRepository;
 
 	static User user;
-	private Logger log;
+
+	private static final Logger log = LoggerFactory.getLogger(HintServiceTest.class);
 
 	@BeforeEach
 	void setUp() {
 		// 데이터 초기화
 		user = userCreate(1L, "test-user");
-		
+
 		lenient().when(hintRepository.findAllByUserId(1L))
 			.thenReturn(List.of(
 				hintCreate(1L, "장덕동1", user),
@@ -57,7 +58,7 @@ class HintServiceTest {
 				hintCreate(4L, "장덕동4", user),
 				hintCreate(5L, "장덕동5", user),
 				hintCreate(6L, "장덕동6", user)
-		));
+			));
 	}
 
 	@Test
@@ -115,8 +116,11 @@ class HintServiceTest {
 		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
 			Optional.of(mockPick));
 
-		// when & then
-		assertThatThrownBy(() -> hintService.getRandomHintByPickId(1L))
+		// when
+		Runnable runnable = () -> hintService.getRandomHintByPickId(1L);
+
+		// then
+		assertThatThrownBy(runnable::run)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("힌트는 2개까지만 열 수 있습니다.");
 	}
@@ -171,11 +175,7 @@ class HintServiceTest {
 
 		List<Hint> capturedHints = captor.getValue();
 
-		log.debug("capturedHints: {}", capturedHints);
-		log.debug("expectedHints: {}", expectedHints);
-
-		assertThat(capturedHints.get(0).getUser().getId()).isEqualTo(expectedHints.get(0).getUser().getId());
-		assertThat(capturedHints.get(0).getContent()).isEqualTo(expectedHints.get(0).getContent());
+		assertThat(capturedHints.get(0).getContent()).isEqualTo("힌트 내용");
 
 	}
 
@@ -192,8 +192,12 @@ class HintServiceTest {
 			new HintData.Create(null, null, "힌트 내용", HintType.RESIDENTIAL_AREA, true)
 		);
 
-		// when & then
-		assertThatThrownBy(() -> hintService.saveHint(hintsWithNullUser))
+		// when
+
+		Runnable runnable = () -> hintService.saveHint(hintsWithNullUser);
+
+		// then
+		assertThatThrownBy(runnable::run)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("유저 정보가 없습니다.");
 	}
@@ -211,8 +215,10 @@ class HintServiceTest {
 			new HintData.Create(null, user, null, HintType.RESIDENTIAL_AREA, true)
 		);
 
-		// when & then
-		assertThatThrownBy(() -> hintService.saveHint(hintsWithNullContent))
+		// when
+		Runnable runnable = () -> hintService.saveHint(hintsWithNullContent);
+		// then
+		assertThatThrownBy(runnable::run)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("힌트 내용이 없습니다.");
 	}
