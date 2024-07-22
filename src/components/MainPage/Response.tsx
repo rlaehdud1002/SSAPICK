@@ -7,25 +7,11 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-import { useState } from 'react';
 
 import HintModal from 'components/modals/HintModal';
-import MessageFirstModal from 'components/modals/MessageFirstModal';
-import MessageSecondModal from 'components/modals/MessageSecondModal';
-import CheckModal from 'components/modals/CheckModal';
+import MessageModal from 'components/modals/MessageModal';
 
 const Response = () => {
-  const [showFirstModal, setShowFirstModal] = useState(false);
-  const [showSecondModal, setShowSecondModal] = useState(false);
-  const [showCheckModal, setShowCheckModal] = useState(false);
-
-  const openFirstModal = () => setShowFirstModal(true);
-  const closeFirstModal = () => setShowFirstModal(false);
-  const openSecondModal = () => setShowSecondModal(true);
-  const closeSecondModal = () => setShowSecondModal(false);
-  const openCheckModal = () => setShowCheckModal(true);
-  const closeCheckModal = () => setShowCheckModal(false);
-
   return (
     <div className="rounded-md bg-white/50 p-4">
       <Accordion type="single" collapsible>
@@ -38,36 +24,20 @@ const Response = () => {
               </div>
             </div>
           </AccordionTrigger>
-          <p className="text-center mb-4">
+          <p className="text-center my-4">
             나랑 같이 프로젝트 하고 싶은 사람은?
           </p>
           <AccordionContent>
             <div className="flex flex-row justify-center">
-              <div className="rounded-md bg-white/50 p-3 mx-10">
-                <HintModal title="hint1" />
+              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+                <HintModal title="?" />
               </div>
-              <div className="rounded-md bg-white/50 p-3 mx-10">
-                <HintModal title="hint2" />
+              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+                <HintModal title="?" />
               </div>
             </div>
             <div className="float-end">
-              <MessageFirstModal
-                show={showFirstModal}
-                onOpen={openFirstModal}
-                onClose={closeFirstModal}
-                onCreate={openSecondModal}
-              />
-              <MessageSecondModal
-                show={showSecondModal}
-                onClose={closeSecondModal}
-                onCreate={openCheckModal}
-              />
-              <CheckModal
-                title="쪽지 보내기"
-                innerText="전송이 완료되었습니다."
-                show={showCheckModal}
-                onClose={closeCheckModal}
-              />
+              <MessageModal />
             </div>
           </AccordionContent>
         </AccordionItem>

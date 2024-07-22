@@ -18,8 +18,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className,
         )}
         {...register}
-        // ref={ref}
-        // {...props}
       />
     );
   },
