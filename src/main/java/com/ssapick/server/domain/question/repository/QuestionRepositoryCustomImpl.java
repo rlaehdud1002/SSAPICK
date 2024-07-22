@@ -15,7 +15,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
 	private JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Question> findAllByQuestionByCategory_Name(String questionCategory) {
+	public List<Question> findQuestionsByCategory_Name(String questionCategory) {
 		return queryFactory
 			.selectFrom(question)
 			.where(question.questionCategory.name.eq(questionCategory)

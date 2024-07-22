@@ -34,7 +34,7 @@ public class Message extends TimeEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "from_user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "sender", nullable = false, updatable = false)
     private User sender;
 
 
@@ -43,7 +43,7 @@ public class Message extends TimeEntity {
 
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "to_user_id", nullable = false, updatable = false)
+    @JoinColumn(name = "receiver", nullable = false, updatable = false)
     private User receiver;
 
     @Column(nullable = false)
@@ -62,11 +62,11 @@ public class Message extends TimeEntity {
         return message;
     }
 
-    public void deleteFromMessage() {
+    public void deleteMessageOfSender() {
         isSenderDeleted = true;
     }
 
-    public void deleteToMessage() {
+    public void deleteMessageOfReceiver() {
         isReceiverDeleted = true;
     }
 }
