@@ -37,7 +37,7 @@ const Profile = () => {
       </ProfileAlarm>
       </Link>
       <Link to="/Attendance">
-      <ProfileAlarm title="출석 체크" content="연속 출석 도전하고 PIICKCO 얻자 !">
+      <ProfileAlarm title="출석 체크" content="연속 출석 도전하고 PICKCO 얻자 !">
         <AttendanceIcon width={50} height={50} />
       </ProfileAlarm>
       </Link>

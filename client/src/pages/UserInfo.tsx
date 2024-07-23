@@ -21,11 +21,11 @@ const UserInfo = () => {
         navigate('/UserAddInfo')
     }
 
-    const { register, handleSubmit, setValue } = useForm<UserForm>();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<UserForm>();
     const [setUploadImage] = useState<File | undefined>(undefined)
 
     const onSubmit = (data: UserForm) => {
-        
+
         navigateToAddInfo()
         const form = new FormData()
         form.append("name", data.name)
@@ -45,27 +45,27 @@ const UserInfo = () => {
                 <div className="mb-10">
                     <ProfileCameraIcon setUploadImage={setUploadImage} />
                 </div>
-            <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
+                <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
 
-                <InfoInput title="이름" register={register("name", {
+                <InfoInput name="name" title="이름" register={register("name", {
                     required: "이름을 입력해주세요.",
                     maxLength: { value: 10, message: "10글자로 입력해주세요." },
-                })} />
+                })} errors={errors} />
 
-                <InfoSelect title="성별" register={register("gender", {
+                <InfoSelect name="gender" title="성별" register={register("gender", {
                     required: "성별을 선택해주세요."
-                })} setValue={(value: string) => setValue("gender", value)} />
+                })} setValue={(value: string) => setValue("gender", value)} errors={errors}/>
 
-                <InfoSelect title="기수" register={register("th", {
+                <InfoSelect name="th" title="기수" register={register("th", {
                     required: "기수를 선택해주세요."
-                })} setValue={(value: number) => setValue("th", value)} />
+                })} setValue={(value: number) => setValue("th", value)} errors={errors}/>
 
-                <InfoSelect title="캠퍼스" register={register("campus", {
+                <InfoSelect name="campus" title="캠퍼스" register={register("campus", {
                     required: "캠퍼스를 선택해주세요."
-                })} setValue={(value: string) => setValue("campus", value)} />
+                })} setValue={(value: string) => setValue("campus", value)} errors={errors}/>
                 <div className="flex">
-                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
-                <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
+                    <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
+                    <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
                 </div>
                 <div>
                     <DoneButton title="다음" />

@@ -15,6 +15,7 @@ import Attendance from 'pages/Attendance';
 import LocationAlarm from 'pages/LocationAlarm';
 import QuestionList from 'pages/QuestionList';
 import SetAccont from 'pages/SetAccount';
+import Login from 'pages/Login';
 
 
 
@@ -36,16 +37,18 @@ function App() {
             <Route path="/pick" element={<Pick />} />
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/UserInfo" element={<UserInfo />} />
-            <Route path="/UserAddInfo" element={<UserAddInfo />} />
-            <Route path="/ModiUserInfo" element={<ModiUserInfo />} />
-            <Route path="/SetAlarm" element={<SetAlarm />} />
-            <Route path="/Friend" element={<Freind/>} />
-            <Route path="/Block" element={<Block/>} />
-            <Route path="/Attendance" element={<Attendance/>} />
-            <Route path="/LocationAlarm" element={<LocationAlarm/>} />
-            <Route path="/QuestionList" element={<QuestionList/>} />
-            <Route path="/SetAccount" element={<SetAccont/>} />
+            <Route path="/userinfo" element={<UserInfo />} />
+            <Route path="/useraddinfo" element={<UserAddInfo />} />
+            <Route path="/modiuserinfo" element={<ModiUserInfo />} />
+            <Route path="/setalarm" element={<SetAlarm />} />
+            <Route path="/friend" element={<Freind/>} />
+            <Route path="/block" element={<Block/>} />
+            <Route path="/attendance" element={<Attendance/>} />
+            <Route path="/locationalarm" element={<LocationAlarm/>} />
+            <Route path="/questionlist" element={<QuestionList/>} />
+            <Route path="/setaccount" element={<SetAccont/>} />
+            <Route path="/login" element={<Login/>} />
+      
             </Routes>
         <div className="flex flex-col max-h-screen">
           <Footer />

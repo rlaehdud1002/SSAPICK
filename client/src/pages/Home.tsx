@@ -1,4 +1,5 @@
 import Response from "components/MainPage/Response";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
