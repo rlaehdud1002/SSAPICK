@@ -1,9 +1,12 @@
 package com.ssapick.server.domain.question.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
+import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -29,4 +32,12 @@ public class QuestionBan extends TimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "QUESTION question_id 외래키 참조"))
     private Question question;
+
+
+    public static QuestionBan of(User user, Question question) {
+        QuestionBan questionBan = new QuestionBan();
+        questionBan.user = user;
+        questionBan.question = question;
+        return questionBan;
+    }
 }

@@ -6,5 +6,4 @@ import com.ssapick.server.domain.question.entity.Question;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionRepositoryCustom {
 
-
 }

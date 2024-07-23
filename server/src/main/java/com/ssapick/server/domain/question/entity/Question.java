@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.question.entity;
 
 import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -15,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -54,4 +54,6 @@ public class Question extends BaseEntity {
 		this.author = author;
 		this.banCount = banCount;
 	}
+
+
 }

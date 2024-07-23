@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.question.entity;
 
+import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 
@@ -19,4 +20,13 @@ public class QuestionRegistration {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "foreign_key_question_user_id"))
     private User author;
+
+    public static QuestionRegistration of(User author, QuestionCategory questionCategory, String content) {
+        QuestionRegistration questionRegistration = new QuestionRegistration();
+        questionRegistration.author = author;
+        questionRegistration.questionCategory = questionCategory;
+        questionRegistration.content = content;
+        return questionRegistration;
+
+    }
 }
