@@ -70,9 +70,6 @@ class FollowControllerTest extends RestDocsSupport {
                                 .tag("follow")
                                 .description("팔로우한 유저 목록 조회 API")
                                 .summary("로그인된 사용자가 팔로우한 유저 목록을 조회한다.")
-                                .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer access-token")
-                                )
                                 .responseFields(response(
                                         fieldWithPath("data[]").description("팔로우한 유저 목록"),
                                         fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
@@ -106,9 +103,6 @@ class FollowControllerTest extends RestDocsSupport {
                                 .tag("follow")
                                 .description("팔로우 생성 API")
                                 .summary("로그인된 사용자가 다른 사용자를 팔로우한다.")
-                                .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer access-token")
-                                )
                                 .pathParameters(parameterWithName("userId").type(SimpleType.NUMBER).description("팔로우할 사용자 식별자"))
                                 .responseFields(empty())
                                 .build()
@@ -136,9 +130,6 @@ class FollowControllerTest extends RestDocsSupport {
                                 .tag("follow")
                                 .description("팔로우 삭제 API")
                                 .summary("로그인된 사용자가 다른 사용자를 언팔로우한다.")
-                                .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer access-token")
-                                )
                                 .pathParameters(parameterWithName("userId").type(SimpleType.NUMBER).description("언팔로우할 사용자 식별자"))
                                 .responseFields(empty())
                                 .build()

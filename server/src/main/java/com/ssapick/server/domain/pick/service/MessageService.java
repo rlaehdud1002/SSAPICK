@@ -2,6 +2,7 @@ package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
 
+import com.ssapick.server.domain.user.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,24 +25,24 @@ public class MessageService {
 
 	/**
 	 * 보낸 메시지 조회하기
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
-	public List<MessageData.Search> searchSendMessage(Long userId) {
-		return messageRepository.findSentMessageByUserId(userId).stream()
-			.map((Message message) -> MessageData.Search.fromEntity(message, false))
-			.toList();
+	public List<MessageData.Search> searchSendMessage(User user) {
+		return messageRepository.findSentMessageByUserId(user.getId()).stream()
+				.map((message) -> MessageData.Search.fromEntity(message, false))
+				.toList();
 	}
 
 	/**
 	 * 받은 메시지 조회하기
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
-	public List<MessageData.Search> searchReceiveMessage(Long userId) {
-		return messageRepository.findReceivedMessageByUserId(userId).stream()
-			.map((Message message) -> MessageData.Search.fromEntity(message, true))
-			.toList();
+	public List<MessageData.Search> searchReceiveMessage(User user) {
+		return messageRepository.findReceivedMessageByUserId(user.getId()).stream()
+				.map((message) -> MessageData.Search.fromEntity(message, true))
+				.toList();
 	}
 
 	/**
@@ -49,16 +50,16 @@ public class MessageService {
 	 * @param create
 	 */
 	@Transactional
-	public void createMessage(MessageData.Create create) {
-		Pick pick = pickRepository.findById(create.getPick().getId())
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 픽입니다."));
+	public void createMessage(User user, MessageData.Create create) {
+		Pick pick = pickRepository.findById(create.getPickId())
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 픽입니다."));
 
 		if (pick.isMessageSend()) {
 			throw new IllegalArgumentException("하나의 Pick에 대해서는 하나의 메시지만 보낼 수 있습니다.");
 		}
 
-		messageRepository.save(Message.of(create));
-		pickRepository.updateMessageSendTrue(create.getPick().getId());
+		messageRepository.save(Message.createMessage(user, user, null, ""));
+		pickRepository.updateMessageSendTrue(create.getPickId());
 	}
 
 	/**
@@ -67,8 +68,7 @@ public class MessageService {
 	 */
 	@Transactional
 	public void deleteFromMessage(Long messageId) {
-		Message message = messageRepository.findById(messageId)
-			.orElseThrow();
+		Message message = messageRepository.findById(messageId).orElseThrow();
 		message.deleteMessageOfSender();
 	}
 
@@ -78,8 +78,7 @@ public class MessageService {
 	 */
 	@Transactional
 	public void deleteToMessage(Long messageId) {
-		Message message = messageRepository.findById(messageId).
-			orElseThrow();
+		Message message = messageRepository.findById(messageId).orElseThrow();
 		message.deleteMessageOfReceiver();
 	}
 }

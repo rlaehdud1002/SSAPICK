@@ -54,18 +54,11 @@ public class Pick extends TimeEntity {
 	@OneToMany(mappedBy = "pick", cascade = CascadeType.ALL)
 	private List<HintOpen> hintOpens = new ArrayList<>();
 
-	public static Pick of(PickData.Create create) {
+	public static Pick createPick(User sender, User receiver, Question question) {
 		Pick pick = new Pick();
-		pick.sender = create.getSender();
-		pick.receiver = create.getReceiver();
-		pick.question = create.getQuestion();
+		pick.sender = sender;
+		pick.receiver = receiver;
+		pick.question = question;
 		return pick;
-	}
-
-	@Builder
-	private Pick(User sender, User receiver, Question question) {
-		this.sender = sender;
-		this.receiver = receiver;
-		this.question = question;
 	}
 }

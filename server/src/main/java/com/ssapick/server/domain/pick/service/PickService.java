@@ -54,6 +54,6 @@ public class PickService {
 	 * @param create
 	 */
 	public void createPick(PickData.Create create) {
-		pickRepository.save(Pick.of(create));
+		pickRepository.save(Pick.createPick(create.getSender(), create.getReceiver(), create.getQuestion()));
 	}
 }

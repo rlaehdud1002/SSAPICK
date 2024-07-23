@@ -20,16 +20,16 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
 	@Override
 	public List<Message> findReceivedMessageByUserId(Long userId) {
 		return queryFactory.selectFrom(message)
-			.where(message.receiver.id.eq(userId)
+				.where(message.receiver.id.eq(userId)
 				.and(message.isReceiverDeleted.isFalse()))
-			.fetch();
+				.fetch();
 	}
 
 	@Override
 	public List<Message> findSentMessageByUserId(Long userId) {
 		return queryFactory.selectFrom(message)
-			.where(message.sender.id.eq(userId)
+				.where(message.sender.id.eq(userId)
 				.and(message.isSenderDeleted.isFalse()))
-			.fetch();
+				.fetch();
 	}
 }

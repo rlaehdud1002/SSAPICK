@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ssapick.server.domain.question.entity.Question;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -267,7 +268,7 @@ class HintServiceTest {
 	}
 
 	private Pick pickCreate(User mockUser) {
-		return Pick.builder().sender(mockUser).build();
+		return Pick.createPick(mockUser, mockUser, Question.createQuestion(null, "테스트 질문", mockUser));
 	}
 
 	private User userCreate(Long id, String username) {

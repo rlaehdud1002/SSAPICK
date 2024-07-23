@@ -46,12 +46,11 @@ public class Question extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
-	@Builder
-	private Question(Long id, QuestionCategory questionCategory, String content, User author, int banCount) {
-		this.id = id;
-		this.questionCategory = questionCategory;
-		this.content = content;
-		this.author = author;
-		this.banCount = banCount;
-	}
+    public static Question createQuestion(QuestionCategory category, String content, User author) {
+        Question question = new Question();
+        question.questionCategory = category;
+        question.content = content;
+        question.author = author;
+        return question;
+    }
 }

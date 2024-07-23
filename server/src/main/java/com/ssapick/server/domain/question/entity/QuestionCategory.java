@@ -24,9 +24,10 @@ public class QuestionCategory {
 
 	private String thumbnail;
 
-	@Builder
-	public QuestionCategory(Long id, String name) {
-		this.id = id;
-		this.name = name;
+	public static QuestionCategory create(String name, String thumbnail) {
+		QuestionCategory questionCategory = new QuestionCategory();
+		questionCategory.name = name;
+		questionCategory.thumbnail = thumbnail;
+		return questionCategory;
 	}
 }
