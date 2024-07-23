@@ -43,7 +43,7 @@ openapi3 {
     title = 'SSAPICK API Documentation'
     description = '싸피 프로젝트 싸픽의 API 문서입니다.'
     version = '0.0.1'
-    outputFileNamePrefix = 'open-api-0.0.1'
+    outputFileNamePrefix = 'ssapick-api-docs'
     format = 'json'
     outputDirectory = 'build/resources/main/static/docs'
 }
@@ -114,11 +114,10 @@ dependencyManagement {
 
 tasks.register('openapi3-generator') {
     dependsOn 'openapi3'
-    delete file('src/main/resources/static/docs/')
-    delete file('build/resources/main/static/docs/')
+
     copy {
         from "build/resources/main/static/docs"
-        into "src/main/resources/static/docs/"
+        into "src/test/resources/docs"
     }
 }
 
