@@ -8,14 +8,11 @@ import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
 import UserAddInfo from 'pages/UserAddInfo';
 
-
-
 import { Route, Routes } from 'react-router-dom';
 import Alarm from 'pages/Alarm';
 
 function App() {
   return (
-    
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         <Header />
@@ -30,13 +27,13 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
-            </Routes>
-        <div className="flex flex-col max-h-screen">
-          <Footer />
+          </Routes>
+          <div className="flex flex-col max-h-screen">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
-   
   );
 }
 
