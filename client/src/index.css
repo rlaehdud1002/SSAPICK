@@ -75,6 +75,8 @@
     font-weight: 700;
     font-style: normal;
     color: #000855;
+    max-width: screen;
+    max-height: screen;
   }
 }
 
