@@ -12,7 +12,7 @@ const CommonRoute = ()=>{
        <Route path="/" element={<Home />} />
               <Route path="/alarm" element={<Alarm />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/ranking" element={<Ranking isRanked={true} />} />
+              <Route path="/ranking" element={<Ranking/>} />
               <Route path="/pick" element={<Pick />} />
               <Route path="/message" element={<Message />} />
               <Route path="/profile" element={<Profile />} />
