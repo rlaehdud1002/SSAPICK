@@ -11,7 +11,7 @@ interface AlarmContentProps {
 
 const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
   return (
-    <div className="bg-white/50 rounded-md flex flex-row p-3">
+    <div className="bg-white/50 rounded-lg flex flex-row p-3 mb-3">
       <div>
         {category === 'location' && (
           <LocationAlarmIcon width={42} height={42} />

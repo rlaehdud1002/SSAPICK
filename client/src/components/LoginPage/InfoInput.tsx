@@ -8,7 +8,7 @@ interface InfoInputProps {
 const InfoInput = ({ title, register }: InfoInputProps) => {
   return (
     
-    <div className="w-72 h-10 text-sm flex justify-center py-2 border border-black rounded-md">
+    <div className="w-72 h-10 text-sm flex justify-center py-2 border border-black rounded-lg">
       <label className="relative w-40 ml-8" htmlFor={title}>
         {title}
       </label>
