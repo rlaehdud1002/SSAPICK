@@ -23,3 +23,4 @@ const ProfileRoute = () => {
 
   )
 }
+export default ProfileRoute;
