@@ -6,7 +6,7 @@ interface AlarmIconProps {
 
 const AlarmIcon = ({ className }: AlarmIconProps) => {
   // TODO: 전역 상태로 선언된 알람 갯수 기반으로 아이콘 색상 변경
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen] = useState(false);
 
   return (
     <svg

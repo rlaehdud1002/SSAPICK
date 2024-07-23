@@ -7,6 +7,14 @@ import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
 import UserAddInfo from 'pages/UserAddInfo';
+import ModiUserInfo from 'pages/ModiUserInfo';
+import SetAlarm from 'pages/SetAlarm';
+import Freind from 'pages/Friend';
+import Block from 'pages/Block';
+import Attendance from 'pages/Attendance';
+import LocationAlarm from 'pages/LocationAlarm';
+import QuestionList from 'pages/QuestionList';
+import SetAccont from 'pages/SetAccount';
 
 
 
@@ -30,12 +38,21 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
+            <Route path="/ModiUserInfo" element={<ModiUserInfo />} />
+            <Route path="/SetAlarm" element={<SetAlarm />} />
+            <Route path="/Friend" element={<Freind/>} />
+            <Route path="/Block" element={<Block/>} />
+            <Route path="/Attendance" element={<Attendance/>} />
+            <Route path="/LocationAlarm" element={<LocationAlarm/>} />
+            <Route path="/QuestionList" element={<QuestionList/>} />
+            <Route path="/SetAccount" element={<SetAccont/>} />
             </Routes>
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
       </div>
     </div>
+  </div>
    
   );
 }
