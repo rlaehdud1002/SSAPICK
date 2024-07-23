@@ -6,7 +6,9 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public class PickData {
 
@@ -40,9 +42,18 @@ public class PickData {
 
 
 	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class Create {
-		private User receiver;
-		private User sender;
-		private Question question;
+		private Long receiverId;
+		private Long questionId;
+
+		public static Pick toEntity(User sender, User receiver, Question question) {
+			return Pick.builder()
+					.sender(sender)
+					.receiver(receiver)
+					.question(question)
+					.build();
+		}
 	}
 }
