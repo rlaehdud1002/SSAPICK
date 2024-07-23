@@ -1,4 +1,4 @@
-import UserAddInfo from 'pages/UserAddInfo';
+import UserInfo from 'pages/UserInfo';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 import Home from './pages/Home';
@@ -6,13 +6,16 @@ import Message from './pages/Message';
 import Pick from './pages/Pick';
 import Profile from './pages/Profile';
 import Ranking from './pages/Ranking';
-import UserInfo from './pages/UserInfo';
+import UserAddInfo from 'pages/UserAddInfo';
+
+
 
 import { Route, Routes } from 'react-router-dom';
 import Alarm from 'pages/Alarm';
 
 function App() {
   return (
+    
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         <Header />
@@ -25,15 +28,15 @@ function App() {
             <Route path="/pick" element={<Pick />} />
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </div>
-        {/* <UserInfo/> */}
-        {/* <UserAddInfo/> */}
+            <Route path="/UserInfo" element={<UserInfo />} />
+            <Route path="/UserAddInfo" element={<UserAddInfo />} />
+            </Routes>
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
       </div>
     </div>
+   
   );
 }
 

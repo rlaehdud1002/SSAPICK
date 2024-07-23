@@ -1,68 +1,73 @@
-import React, { useState } from 'react';
 import {
   Select,
   SelectContent,
   SelectGroup,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectItem,
 } from 'components/ui/select';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface InfoSelectProps {
   title: string;
+  register: UseFormRegisterReturn;
+  setValue: any;
 }
 
-const InfoSelect: React.FC<InfoSelectProps> = ({ title }) => {
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
-
+const InfoSelect = ({ title, register, setValue }: InfoSelectProps) => {
   const handleChange = (value: string) => {
-    setSelectedValue(value);
+    setValue(value);
   };
 
+  console.log();
+
   return (
-    <Select onValueChange={handleChange}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={selectedValue || title} />
+    <Select {...register} onValueChange={handleChange}>
+      <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
+        <SelectValue placeholder={title} />
       </SelectTrigger>
       <SelectContent>
-        <SelectGroup>
+        <SelectGroup >
           {title === "성별" && (
             <>
-              <SelectItem value="man">남자</SelectItem>
-              <SelectItem value="woman">여자</SelectItem>
+              <SelectItem value="남자" >남자</SelectItem>
+              <SelectItem value="여자" >여자</SelectItem>
             </>
           )}
           {title === "기수" && (
             <>
-              <SelectItem value="11th">11기</SelectItem>
-              <SelectItem value="12th">12기</SelectItem>
+              <SelectItem value="11">11기</SelectItem>
+              <SelectItem value="12">12기</SelectItem>
             </>
           )}
           {title === "캠퍼스" && (
             <>
-              <SelectItem value="seoul">서울</SelectItem>
-              <SelectItem value="daejeon">대전</SelectItem>
-              <SelectItem value="gwangju">광주</SelectItem>
-              <SelectItem value="booulgyeong">부울경</SelectItem>
-              <SelectItem value="gumi">구미</SelectItem>
+              <SelectItem value="서울">서울</SelectItem>
+              <SelectItem value="대전">대전</SelectItem>
+              <SelectItem value="광주">광주</SelectItem>
+              <SelectItem value="부울경">부울경</SelectItem>
+              <SelectItem value="구미">구미</SelectItem>
             </>
           )}
           {title === "반" && (
             <>
-              <SelectItem value="class_1">1반</SelectItem>
-              <SelectItem value="class_2">2반</SelectItem>
-              <SelectItem value="class_3">3반</SelectItem>
-              <SelectItem value="class_4">4반</SelectItem>
-              <SelectItem value="class_5">5반</SelectItem>
-              <SelectItem value="class_6">6반</SelectItem>
-              <SelectItem value="class_7">7반</SelectItem>
-              <SelectItem value="class_8">8반</SelectItem>
+              <SelectItem value="1">1반</SelectItem>
+              <SelectItem value="2">2반</SelectItem>
+              <SelectItem value="3">3반</SelectItem>
+              <SelectItem value="4">4반</SelectItem>
+              <SelectItem value="5">5반</SelectItem>
+              <SelectItem value="6">6반</SelectItem>
+              <SelectItem value="7">7반</SelectItem>
+              <SelectItem value="8">8반</SelectItem>
             </>
           )}
         </SelectGroup>
       </SelectContent>
     </Select>
+
   );
 };
 
 export default InfoSelect;
+
+
