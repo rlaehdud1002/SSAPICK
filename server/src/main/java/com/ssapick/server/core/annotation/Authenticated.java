@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@Secured({"ROLE_USER", "ROLE_ADMIN"})
+@Secured({"USER", "ADMIN"})
 public @interface Authenticated {
 }

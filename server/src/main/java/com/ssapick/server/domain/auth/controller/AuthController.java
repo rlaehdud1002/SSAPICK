@@ -59,6 +59,7 @@ public class AuthController {
         return SuccessResponse.created();
     }
 
+    @Authenticated
     @PostMapping("/mattermost-confirm")
     public SuccessResponse<Void> authenticate(
             @CurrentUser User user,
