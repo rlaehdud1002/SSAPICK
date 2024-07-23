@@ -125,4 +125,24 @@ public class User extends BaseEntity {
 		this.name = name;
 	}
 
+	public void updateName(String newName) {
+		this.name = newName;
+	}
+
+	public void assignProfile(Profile newProfile) {
+		this.profile = newProfile;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", profile=" + profile +
+			", username='" + username + '\'' +
+			", gender=" + gender +
+			", name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", providerType=" + providerType +
+			'}';
+	}
 }
