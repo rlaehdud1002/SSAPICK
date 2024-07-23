@@ -40,9 +40,9 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final BooleanPath isDeleted = _super.isDeleted;
 
-    public final BooleanPath isEmailVerified = createBoolean("isEmailVerified");
-
     public final BooleanPath isLocked = createBoolean("isLocked");
+
+    public final BooleanPath isMattermostConfirmed = createBoolean("isMattermostConfirmed");
 
     public final StringPath name = createString("name");
 

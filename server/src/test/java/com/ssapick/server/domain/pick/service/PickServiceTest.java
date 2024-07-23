@@ -126,7 +126,7 @@ class PickServiceTest  {
 			.providerType(ProviderType.GOOGLE)
 			.roleType(RoleType.USER)
 			.providerId("프로바이더 아이디")
-			.isEmailVerified(true)
+			// .isEmailVerified(true)
 			.isLocked(false)
 			.build();
 	}
