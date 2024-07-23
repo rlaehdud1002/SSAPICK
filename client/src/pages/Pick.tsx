@@ -1,7 +1,7 @@
-import Question from 'components/PickPage/Question';
-import Choice from 'components/PickPage/Choice';
-import ShuffleIcon from 'icons/ShuffleIcon';
-import CoolTime from 'components/PickPage/CoolTime';
+// import Question from 'components/PickPage/Question';
+// import Choice from 'components/PickPage/Choice';
+// import ShuffleIcon from 'icons/ShuffleIcon';
+// import CoolTime from 'components/PickPage/CoolTime';
 import PickComplete from "components/PickPage/PickComplete";
 
 const Pick = () => {
