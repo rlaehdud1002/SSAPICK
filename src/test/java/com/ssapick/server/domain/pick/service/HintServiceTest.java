@@ -1,36 +1,11 @@
 package com.ssapick.server.domain.pick.service;
 
-<<<<<<< HEAD
-=======
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Repeat;
-
-import com.ssapick.server.core.support.RestDocsSupport;
->>>>>>> dev/Seoungmin
-import com.ssapick.server.domain.pick.dto.HintData;
-import com.ssapick.server.domain.pick.entity.Hint;
-import com.ssapick.server.domain.pick.entity.HintOpen;
-import com.ssapick.server.domain.pick.entity.HintType;
-import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.pick.repository.HintRepository;
-import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.user.entity.ProviderType;
-import com.ssapick.server.domain.user.entity.RoleType;
-import com.ssapick.server.domain.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,24 +16,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 
-<<<<<<< HEAD
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import com.ssapick.server.domain.pick.dto.HintData;
+import com.ssapick.server.domain.pick.entity.Hint;
+import com.ssapick.server.domain.pick.entity.HintOpen;
+import com.ssapick.server.domain.pick.entity.HintType;
+import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.pick.repository.HintRepository;
+import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.ProviderType;
+import com.ssapick.server.domain.user.entity.RoleType;
+import com.ssapick.server.domain.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest {
 	@InjectMocks
-=======
-@WebMvcTest(HintService.class)
-@AutoConfigureMockMvc
-class HintServiceTest extends RestDocsSupport {
-
-	@Autowired
->>>>>>> dev/Seoungmin
 	private HintService hintService;
 
 	@Mock

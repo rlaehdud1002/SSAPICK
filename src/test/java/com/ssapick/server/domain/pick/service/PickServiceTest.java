@@ -8,15 +8,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickRepository;
@@ -27,21 +26,21 @@ import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
-@WebMvcTest(PickService.class)
-@AutoConfigureMockMvc
-class PickServiceTest extends RestDocsSupport {
+@ExtendWith(MockitoExtension.class)
+class PickServiceTest  {
 
 	private static final Logger log = LoggerFactory.getLogger(PickServiceTest.class);
-	@Autowired
+
+	@InjectMocks
 	private PickService pickService;
 
-	@MockBean
+	@Mock
 	private PickRepository pickRepository;
 
-	@MockBean
+	@Mock
 	private UserRepository userRepository;
 
-	@MockBean
+	@Mock
 	private QuestionRepository questionRepository;
 
 	static User receiver;

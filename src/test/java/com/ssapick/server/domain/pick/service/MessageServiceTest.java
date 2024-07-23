@@ -10,13 +10,12 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -28,23 +27,24 @@ import com.ssapick.server.domain.user.entity.RoleType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
-@WebMvcTest(MessageService.class)
-@AutoConfigureMockMvc
-class MessageServiceTest extends RestDocsSupport {
+@ExtendWith(MockitoExtension.class)
+class MessageServiceTest {
 
 	 Logger log = Logger.getLogger(MessageServiceTest.class.getName());
 
-	@Autowired
+	@InjectMocks
 	private  MessageService messageService;
 
-	@MockBean
-	private MessageRepository messageRepository;
 
-	@MockBean
+	@Mock
+	private MessageRepository messageRepository;
+	@Mock
 	private PickRepository pickRepository;
 
-	@MockBean
+	@Mock
 	private UserRepository userRepository;
+
+
 
 	static User receiver;
 	static User sender;
@@ -58,6 +58,8 @@ class MessageServiceTest extends RestDocsSupport {
 		sender = userCreate(2L, "test-user2", '남');
 		question = Question.builder().id(1L).content("질문").build();
 		pick = pickCreate(receiver, sender, question);
+		pickRepository.save(pick);
+
 	}
 
 	@Test
