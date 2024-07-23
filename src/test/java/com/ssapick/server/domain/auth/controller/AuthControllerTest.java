@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.auth.controller;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.properties.JwtProperties;
@@ -16,9 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
-import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,10 +49,15 @@ class AuthControllerTest extends RestDocsSupport {
 
         // * THEN: 이런 결과가 나와야 한다
         action.andExpect(status().isNoContent())
-              .andDo(restDocs.document(
-                        requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰")),
-                        requestCookies(cookieWithName("refreshToken").description("발급 받은 리프레시 토큰")),
-                        responseHeaders(headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰 삭제를 위한 쿠키"))
+              .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("auth")
+                                .summary("로그아웃 API")
+                                .description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
+                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
+                                .responseHeaders(headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰 삭제를 위한 쿠키"))
+                                .build()
+                      )
               )
         );
     }

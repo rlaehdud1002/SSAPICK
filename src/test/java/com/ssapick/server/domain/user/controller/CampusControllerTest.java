@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.user.controller;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
@@ -15,9 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(
@@ -48,19 +50,25 @@ class CampusControllerTest extends RestDocsSupport {
 
         // * THEN: 이런 결과가 나와야 한다
         perform.andExpect(status().isCreated())
-                .andDo(restDocs.document(
-                    requestFields(
-                            fieldWithPath("name").type(JsonFieldType.STRING).description("캠퍼스 이름"),
-                            fieldWithPath("section").type(JsonFieldType.NUMBER).description("캠퍼스 반"),
-                            fieldWithPath("description").type(JsonFieldType.STRING).description("반 전공")
-                    ),
-                    responseFields(empty())
+                .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("campus")
+                                .summary("캠퍼스 생성 API")
+                                .description("전국 캠퍼스 정보를 생성한다.")
+                                .requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("캠퍼스 이름"),
+                                        fieldWithPath("section").type(JsonFieldType.NUMBER).description("캠퍼스 반"),
+                                        fieldWithPath("description").type(JsonFieldType.STRING).description("반 전공")
+                                )
+                                .responseFields(empty())
+                                .build()
+                        )
         ));
         verify(campusService).createCampus(create);
     }
 
     @Test
-    @DisplayName("캠퍼스_생성_실패_테스트")
+    @DisplayName("캠퍼스 생성 실패 테스트")
     void 캠퍼스_생성_실패_테스트() throws Exception {
         // * GIVEN: 이런게 주어졌을 때
 
