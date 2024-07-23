@@ -1,17 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
 interface AttendanceIconProps {
   width: number;
   height: number;
 }
 
 const AttendanceIcon = ({width, height}:AttendanceIconProps) => {
-  const navigate = useNavigate();
-  const navigateToAttendance = () => {
-    navigate('/Attendance');
-  }
-  return <img 
-  onClick={navigateToAttendance}
+  return <img
   width={width}
   height={height}
   src="icons/Attend.png" 
