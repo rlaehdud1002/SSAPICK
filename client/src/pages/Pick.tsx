@@ -1,11 +1,13 @@
-import Question from 'components/PickPage/Question';
-import Choice from 'components/PickPage/Choice';
-import ShuffleIcon from 'icons/ShuffleIcon';
+// import Question from 'components/PickPage/Question';
+// import Choice from 'components/PickPage/Choice';
+// import ShuffleIcon from 'icons/ShuffleIcon';
+import CoolTime from 'components/PickPage/CoolTime';
 
 const Pick = () => {
   return (
-    <div>
-      <Question category="프로젝트" />
+    <div className='relative'>
+      <CoolTime />
+      {/* <Question category="프로젝트" />
       <div className="m-7">
         <div className='flex flex-row justify-end'>
           <ShuffleIcon className="" />
@@ -18,7 +20,7 @@ const Pick = () => {
           <Choice username="이인준" />
           <Choice username="황성민" />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

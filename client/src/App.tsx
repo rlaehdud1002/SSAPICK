@@ -14,7 +14,7 @@ import Alarm from 'pages/Alarm';
 function App() {
   return (
     <div className="flex flex-col relative">
-      <div className="flex flex-col max-h-screen">
+      <div className="flex flex-col">
         <Header />
         <div className="flex-grow">
           <Routes>
@@ -28,7 +28,7 @@ function App() {
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
           </Routes>
-          <div className="flex flex-col max-h-screen">
+          <div className="flex flex-col">
             <Footer />
           </div>
         </div>
