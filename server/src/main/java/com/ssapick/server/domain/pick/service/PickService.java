@@ -2,6 +2,8 @@ package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
 
+import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,9 +53,20 @@ public class PickService {
 
 	/**
 	 * 픽 생성하기
-	 * @param create
+	 *
+	 * @param sender
+	 * @param request
 	 */
-	public void createPick(PickData.Create create) {
-		pickRepository.save(Pick.of(create));
+	@Transactional
+	public void createPick(User sender, PickData.Create request) {
+		User receiver = userRepository.findById(request.getReceiverId())
+						.orElseThrow(() -> new IllegalArgumentException("받는 사람을 찾을 수 없습니다."));
+
+		Question question = questionRepository.findById(request.getQuestionId())
+						.orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
+
+		Pick pick = PickData.Create.toEntity(sender, receiver, question);
+
+		pickRepository.save(pick);
 	}
 }
