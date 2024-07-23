@@ -1,7 +1,7 @@
-import LocationAlarmIcon from 'icons/Alarm/LocationAlarmIcon';
-import MessageAlarmIcon from 'icons/Alarm/MessageAlarmIcon';
-import PickAlarmIcon from 'icons/Alarm/PickAlarmIcon';
-import QuestionAlarmIcon from 'icons/Alarm/QuestionAlarmIcon';
+import LocationAlarmIcon from 'icons/LocationAlarmIcon';
+import MessageAlarmIcon from 'icons/MessageAlarmIcon';
+import PickAlarmIcon from 'icons/PickAlarmIcon';
+import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
 
 interface AlarmContentProps {
   category: string;
