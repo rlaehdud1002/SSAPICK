@@ -1,7 +1,7 @@
-import LocationAlarmIcon from 'icons/Alarm/LocationAlarmIcon';
-import MessageAlarmIcon from 'icons/Alarm/MessageAlarmIcon';
-import PickAlarmIcon from 'icons/Alarm/PickAlarmIcon';
-import QuestionAlarmIcon from 'icons/Alarm/QuestionAlarmIcon';
+import LocationAlarmIcon from 'icons/LocationAlarmIcon';
+import MessageAlarmIcon from 'icons/MessageAlarmIcon';
+import PickAlarmIcon from 'icons/PickAlarmIcon';
+import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
 
 interface AlarmContentProps {
   category: string;
@@ -11,7 +11,7 @@ interface AlarmContentProps {
 
 const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
   return (
-    <div className="bg-white/50 rounded-md flex flex-row p-3">
+    <div className="bg-white/50 rounded-lg flex flex-row p-3 mb-3">
       <div>
         {category === 'location' && (
           <LocationAlarmIcon width={42} height={42} />
