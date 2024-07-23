@@ -109,7 +109,7 @@ const MessageModal = () => {
                 }}
               >
                 <CoinIcon width={25} height={25} />
-                <h3 className="luckiest_guy ms-2 me-4">1</h3>전송
+                <h3 className="luckiest_guy ms-2 me-4 pt-1">1</h3>전송
               </Button>
             </DialogFooter>
           </div>
