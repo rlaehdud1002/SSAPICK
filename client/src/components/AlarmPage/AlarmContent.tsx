@@ -11,7 +11,7 @@ interface AlarmContentProps {
 
 const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
   return (
-    <div className="bg-white/50 rounded-md flex flex-row p-3">
+    <div className="bg-white/50 rounded-lg flex flex-row p-3 mb-3">
       <div>
         {category === 'location' && (
           <LocationAlarmIcon width={42} height={42} />
@@ -27,7 +27,7 @@ const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
         <div className="flex flex-row">
           <p className="text-xs text-gray-500">1분 전</p>
           {read && (
-            <p className="text-xs text-red-500 luckiest_guy bg-white/50 rounded-full px-1 ms-1">
+            <p className="text-xs text-red-500 luckiest_guy bg-white/50 rounded-full px-1 ms-1 pt-1">
               N
             </p>
           )}

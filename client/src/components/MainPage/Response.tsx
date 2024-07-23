@@ -12,7 +12,7 @@ import MessageModal from 'components/modals/MessageModal';
 
 const Response = () => {
   return (
-    <div className="rounded-md bg-white/50 p-4">
+    <div className="rounded-lg bg-white/50 p-4">
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1" className="border-none">
           <AccordionTrigger className="p-0">
@@ -28,10 +28,10 @@ const Response = () => {
           </p>
           <AccordionContent>
             <div className="flex flex-row justify-center">
-              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
                 <HintModal title="?" />
               </div>
-              <div className="rounded-md bg-white/50 p-3 mx-10 w-20 text-center">
+              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
                 <HintModal title="?" />
               </div>
             </div>

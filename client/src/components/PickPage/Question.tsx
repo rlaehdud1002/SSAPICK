@@ -10,7 +10,7 @@ interface QuestionProps {
 const Question = ({ category }: QuestionProps) => {
   return (
     <div
-      className="text-white mx-4 rounded-md p-3 pb-1"
+      className="text-white mx-4 rounded-lg p-3 pb-1"
       style={{ backgroundColor: '#000855', opacity: '80%' }}
     >
       <div className="flex flex-row justify-between items-center">

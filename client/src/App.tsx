@@ -14,21 +14,21 @@ import Alarm from 'pages/Alarm';
 function App() {
   return (
     <div className="flex flex-col relative">
-      <div className="flex flex-col max-h-screen">
+      <div className="flex flex-col">
         <Header />
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/alarm" element={<Alarm />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/ranking" element={<Ranking isRanked={true} />} />
+            <Route path="/ranking" element={<Ranking />} />
             <Route path="/pick" element={<Pick />} />
             <Route path="/message" element={<Message />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
           </Routes>
-          <div className="flex flex-col max-h-screen">
+          <div className="flex flex-col">
             <Footer />
           </div>
         </div>

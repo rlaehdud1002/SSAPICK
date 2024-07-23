@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
-    private Map<String, Object> kakaoAccountAttributes;
-    private Map<String, Object> profileAttributes;
+    private final Map<String, Object> properties;
+    private final Map<String, Object> kakaoAccount;
 
     public KakaoResponse(Map<String, Object> attributes) {
         this.attribute = attributes;
-        this.kakaoAccountAttributes = (Map<String, Object>) attributes.get("kakao_account");
-        this.profileAttributes = (Map<String, Object>) attributes.get("profile");
+        this.properties = (Map<String, Object>) attributes.get("properties");
+        this.kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
     }
 
     @Override
@@ -28,17 +28,17 @@ public class KakaoResponse implements OAuth2Response {
 
     @Override
     public String getEmail() {
-        return "";
+        return kakaoAccount.get("email").toString();
     }
 
     @Override
     public String getName() {
-        return "";
+        return properties.get("nickname").toString();
     }
 
     @Override
     public String getGender() {
-        return "";
+        return "M";
     }
 
     @Override
