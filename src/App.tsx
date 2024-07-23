@@ -10,8 +10,8 @@ import UserAddInfo from 'pages/UserAddInfo';
 
 
 
-
 import { Route, Routes } from 'react-router-dom';
+import Alarm from 'pages/Alarm';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/alarm" element={<Alarm />} />
             <Route path="/home" element={<Home />} />
             <Route path="/ranking" element={<Ranking isRanked={true} />} />
             <Route path="/pick" element={<Pick />} />
@@ -30,7 +31,6 @@ function App() {
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
             </Routes>
-
         <div className="flex flex-col max-h-screen">
           <Footer />
         </div>
