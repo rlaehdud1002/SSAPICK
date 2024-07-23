@@ -29,6 +29,10 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath email = createString("email");
 
+    public final ListPath<Follow, QFollow> followers = this.<Follow, QFollow>createList("followers", Follow.class, QFollow.class, PathInits.DIRECT2);
+
+    public final ComparablePath<Character> gender = createComparable("gender", Character.class);
+
     public final ListPath<com.ssapick.server.domain.pick.entity.Hint, com.ssapick.server.domain.pick.entity.QHint> hints = this.<com.ssapick.server.domain.pick.entity.Hint, com.ssapick.server.domain.pick.entity.QHint>createList("hints", com.ssapick.server.domain.pick.entity.Hint.class, com.ssapick.server.domain.pick.entity.QHint.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

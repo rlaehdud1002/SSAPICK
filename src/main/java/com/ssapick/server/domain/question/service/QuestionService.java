@@ -33,7 +33,7 @@ public class QuestionService {
 	 * @param questionCategory
 	 */
 	public List<QuestionData.Search> searchQeustionsByCategory(String questionCategory) {
-		List<Question> all = questionRepository.findAllByQuestionByCategory_Name(questionCategory);
+		List<Question> all = questionRepository.findQuestionsByCategory_Name(questionCategory);
 		return all.stream()
 			.map(QuestionData.Search::fromEntity)
 			.toList();
@@ -45,7 +45,7 @@ public class QuestionService {
 	 * @param questionId
 	 * @return
 	 */
-	public QuestionData.Search searchQeustionsByQuestionId(Long questionId) {
+	public QuestionData.Search searchQeustionByQuestionId(Long questionId) {
 		return questionRepository.findById(questionId)
 			.filter(q -> !q.isDeleted())
 			.map(QuestionData.Search::fromEntity)

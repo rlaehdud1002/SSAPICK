@@ -2,6 +2,8 @@ package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class PickService {
 
+	private static final Logger log = LoggerFactory.getLogger(PickService.class);
 	private final PickRepository pickRepository;
 	private final UserRepository userRepository;
 	private final QuestionRepository questionRepository;
@@ -28,20 +31,28 @@ public class PickService {
 	 * @param userId
 	 * @return List<PickData.Search>
 	 */
-	public List<PickData.Recevied> searchReceived(Long userId) {
-		return pickRepository.findAllByToUserId(userId)
-			.stream().map(PickData.Recevied::fromEntity).toList();
-		}
+	public List<PickData.Search> searchReceiver(Long userId) {
+		return pickRepository.findReceiverByUserId(userId).stream()
+			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
+			.toList();
+
+	}
+
 	/**
 	 * 보낸 픽 조회하기
 	 * @param userId
 	 * @return
 	 */
-	public List<PickData.Sent> searchSent(Long userId) {
-		return pickRepository.findAllByFromUserId(userId)
-			.stream().map(PickData.Sent::fromEntity).toList();
+	public List<PickData.Search> searchSender(Long userId) {
+		return pickRepository.findSenderByUserId(userId).stream()
+			.map((Pick pick) -> PickData.Search.fromEntity(pick, false))
+			.toList();
 	}
 
+	/**
+	 * 픽 생성하기
+	 * @param create
+	 */
 	public void createPick(PickData.Create create) {
 		pickRepository.save(Pick.of(create));
 	}

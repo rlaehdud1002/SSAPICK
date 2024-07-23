@@ -34,7 +34,7 @@ public class QuestionController {
 
 	@GetMapping("/{questionId}")
 	public SuccessResponse<QuestionData.Search> searchQeustionsByQuestionId(Long questionId) {
-		QuestionData.Search search = questionService.searchQeustionsByQuestionId(questionId);
+		QuestionData.Search search = questionService.searchQeustionByQuestionId(questionId);
 		return SuccessResponse.of(search);
 	}
 }

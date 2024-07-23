@@ -56,13 +56,12 @@ public class HintController {
 	}
 
 	/**
-	 * 힌트 저장 API
+	 * 힌트 리스트 저장 API
 	 * @param create 저장할 힌트 정보
-	 * @return {@link Hint}
 	 */
 	@PostMapping(value = "/save")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public SuccessResponse<Void> saveHint(@RequestBody HintData.Create create) {
+	public SuccessResponse<Void> saveHint(@RequestBody List<HintData.Create> create) {
 		hintService.saveHint(create);
 		return SuccessResponse.created();
 	}

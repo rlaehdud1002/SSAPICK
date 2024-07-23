@@ -15,5 +15,5 @@ public interface HintRepository extends JpaRepository<Hint, Long> {
 	 */
 	List<Hint> findAllByUserId(Long userId);
 
-
+	Hint findByUserId(Long userId);
 }
