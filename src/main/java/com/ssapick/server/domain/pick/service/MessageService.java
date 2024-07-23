@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
+import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
+import com.ssapick.server.domain.pick.repository.PickRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class MessageService {
 
 	final MessageRepository messageRepository;
+	final PickRepository pickRepository;
 
 
 	/**
@@ -25,7 +28,7 @@ public class MessageService {
 	 * @return
 	 */
 	public List<MessageData.Search> searchSendMessage(Long userId) {
-		return messageRepository.findAllBySender_IdAndIsSenderDeletedFalse(userId).stream()
+		return messageRepository.findSentMessageByUserId(userId).stream()
 			.map((Message message) -> MessageData.Search.fromEntity(message, false))
 			.toList();
 	}
@@ -36,7 +39,7 @@ public class MessageService {
 	 * @return
 	 */
 	public List<MessageData.Search> searchReceiveMessage(Long userId) {
-		return messageRepository.findAllByReceiver_IdAndIsReceiverDeletedFalse(userId).stream()
+		return messageRepository.findReceivedMessageByUserId(userId).stream()
 			.map((Message message) -> MessageData.Search.fromEntity(message, true))
 			.toList();
 	}
@@ -45,8 +48,17 @@ public class MessageService {
 	 * 메시지 생성하기
 	 * @param create
 	 */
+	@Transactional
 	public void createMessage(MessageData.Create create) {
+		Pick pick = pickRepository.findById(create.getPick().getId())
+			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 픽입니다."));
+
+		if (pick.isMessageSend()) {
+			throw new IllegalArgumentException("하나의 Pick에 대해서는 하나의 메시지만 보낼 수 있습니다.");
+		}
+
 		messageRepository.save(Message.of(create));
+		pickRepository.updateMessageSendTrue(create.getPick().getId());
 	}
 
 	/**
@@ -57,7 +69,7 @@ public class MessageService {
 	public void deleteFromMessage(Long messageId) {
 		Message message = messageRepository.findById(messageId)
 			.orElseThrow();
-		message.deleteFromMessage();
+		message.deleteMessageOfSender();
 	}
 
 	/**
@@ -68,6 +80,6 @@ public class MessageService {
 	public void deleteToMessage(Long messageId) {
 		Message message = messageRepository.findById(messageId).
 			orElseThrow();
-		message.deleteToMessage();
+		message.deleteMessageOfReceiver();
 	}
 }

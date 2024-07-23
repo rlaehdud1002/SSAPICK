@@ -11,19 +11,26 @@ import lombok.Data;
 public class PickData {
 
 	@Data
-	public static class Recevied {
+	public static class Search {
 		private Long id;
-		private char gender;
+		private char senderGender;
 		private User sender;
+		private User receiver;
 		private Question question;
 		private boolean isMessageSend;
 		private LocalDateTime createdAt;
 
-		public static Recevied fromEntity(Pick pick) {
-			Recevied search = new Recevied();
+		public static Search fromEntity(Pick pick, boolean isReceiver) {
+			Search search = new Search();
+
+			if (isReceiver){
+				search.senderGender = pick.getSender().getGender();
+			} else{
+				search.sender = pick.getSender();
+			}
+
 			search.id = pick.getId();
-			search.gender = pick.getSender().getGender();
-			search.sender = pick.getSender();
+			search.receiver = pick.getReceiver();
 			search.question = pick.getQuestion();
 			search.isMessageSend = pick.isMessageSend();
 			search.createdAt = pick.getCreatedAt();
@@ -31,22 +38,6 @@ public class PickData {
 		}
 	}
 
-	@Data
-	public static class Sent {
-		private Long id;
-		private User receiver;
-		private Question question;
-		private LocalDateTime createdAt;
-
-		public static Sent fromEntity(Pick pick) {
-			Sent search = new Sent();
-			search.id = pick.getId();
-			search.receiver = pick.getReceiver();
-			search.question = pick.getQuestion();
-			search.createdAt = pick.getCreatedAt();
-			return search;
-		}
-	}
 
 	@Data
 	public static class Create {
