@@ -40,13 +40,13 @@ public class MessageController {
 		return SuccessResponse.empty();
 	}
 
-	@DeleteMapping("/{messageId}/from")
+	@DeleteMapping("/{messageId}/received")
 	public SuccessResponse<Void> deleteFromMessage(@PathVariable Long messageId) {
 		messageService.deleteFromMessage(messageId);
 		return SuccessResponse.empty();
 	}
 
-	@DeleteMapping("/{messageId}/to")
+	@DeleteMapping("/{messageId}/sent")
 	public SuccessResponse<Void> deleteToMessage(@PathVariable Long messageId) {
 		messageService.deleteToMessage(messageId);
 		return SuccessResponse.empty();
