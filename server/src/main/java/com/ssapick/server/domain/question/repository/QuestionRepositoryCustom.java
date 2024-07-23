@@ -6,4 +6,6 @@ import com.ssapick.server.domain.question.entity.Question;
 
 public interface QuestionRepositoryCustom {
 	List<Question> findAll();
+
+	List<Question> findRanking(Long userId);
 }
