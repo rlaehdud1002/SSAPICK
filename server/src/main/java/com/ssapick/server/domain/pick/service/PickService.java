@@ -65,7 +65,11 @@ public class PickService {
 		Question question = questionRepository.findById(request.getQuestionId())
 						.orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
 
-		Pick pick = PickData.Create.toEntity(sender, receiver, question);
+		Pick pick = Pick.builder()
+				.sender(sender)
+				.receiver(receiver)
+				.question(question)
+				.build();
 
 		pickRepository.save(pick);
 	}

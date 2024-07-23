@@ -42,18 +42,8 @@ public class PickData {
 
 
 	@Data
-	@AllArgsConstructor
-	@NoArgsConstructor
 	public static class Create {
 		private Long receiverId;
 		private Long questionId;
-
-		public static Pick toEntity(User sender, User receiver, Question question) {
-			return Pick.builder()
-					.sender(sender)
-					.receiver(receiver)
-					.question(question)
-					.build();
-		}
 	}
 }
