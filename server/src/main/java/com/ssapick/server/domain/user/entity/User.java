@@ -36,46 +36,45 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
+	private Long id;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Profile profile;
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	private Profile profile;
 
-    @Column(nullable = false)
-    private String username;
+	@Column(nullable = false)
+	private String username;
 
-    @Column(nullable = false)
-    private char gender;
+	@Column(nullable = false)
+	private char gender;
 
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(name = "provider_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProviderType providerType;
 
-    @Column(name = "provider_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private RoleType roleType = RoleType.USER;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType = RoleType.USER;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
+	private List<Follow> followers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
-    private List<Follow> followers = new ArrayList<>();
+	@Column(name = "provider_id", nullable = false)
+	private String providerId;
 
-    @Column(name = "provider_id", nullable = false)
-    private String providerId;
+	@Column(name = "is_mattermost_confirmed", nullable = false)
+	private boolean isMattermostConfirmed = false;
 
-    @Column(name = "is_mattermost_confirmed", nullable = false)
-    private boolean isMattermostConfirmed = false;
-
-    @Column(name = "is_locked", nullable = false)
-    private boolean isLocked = false;
+	@Column(name = "is_locked", nullable = false)
+	private boolean isLocked = false;
 
 	/**
 	 * 사용자 생성 메서드
@@ -86,7 +85,8 @@ public class User extends BaseEntity {
 	 * @param providerId   제공자 ID
 	 * @return {@link User} 새롭게 생성한 유저 객체
 	 */
-	public static User createUser(String username, String name, char gender, ProviderType providerType, String providerId) {
+	public static User createUser(String username, String name, char gender, ProviderType providerType,
+		String providerId) {
 		User user = new User();
 		user.username = username;
 		user.name = name;
@@ -100,7 +100,6 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Hint> hints = new ArrayList<>();
 
-
 	public void mattermostConfirm() {
 		this.isMattermostConfirmed = true;
 	}
@@ -112,7 +111,7 @@ public class User extends BaseEntity {
 		this.id = id;
 		this.username = username;
 		this.name = name;
-        this.gender = gender;
+		this.gender = gender;
 		this.email = email;
 		this.providerType = providerType;
 		this.roleType = roleType;
