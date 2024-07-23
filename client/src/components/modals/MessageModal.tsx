@@ -80,7 +80,7 @@ const MessageModal = () => {
       <DialogTrigger onClick={() => setOpen(true)}>
         <SendingIcon />
       </DialogTrigger>
-      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5 relative">
+      <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
         <DialogHeader>
           <DialogTitle className="flex flex-start text-color-5F86E9">
             쪽지 보내기
@@ -109,7 +109,7 @@ const MessageModal = () => {
                 }}
               >
                 <CoinIcon width={25} height={25} />
-                <h3 className="luckiest_guy ms-2 me-4">1</h3>전송
+                <h3 className="luckiest_guy ms-2 me-4 pt-1">1</h3>전송
               </Button>
             </DialogFooter>
           </div>

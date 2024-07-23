@@ -31,7 +31,7 @@ const HintModal = ({ title }: HintModalProps) => {
       >
         {title}
       </DialogTrigger>
-      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5 relative">
+      <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
         <DialogHeader>
           <DialogTitle className="flex flex-start text-color-5F86E9">
             힌트 공개
@@ -39,7 +39,7 @@ const HintModal = ({ title }: HintModalProps) => {
           <DialogDescription className="flex justify-center">
             <h3 className="flex flex-row my-10 items-center">
               <CoinIcon width={25} height={25} />
-              <h3 className="luckiest_guy ms-1 me-2">1</h3>이 사용됩니다.
+              <h3 className="luckiest_guy ms-1 me-2 pt-1">1</h3>이 사용됩니다.
             </h3>
           </DialogDescription>
         </DialogHeader>

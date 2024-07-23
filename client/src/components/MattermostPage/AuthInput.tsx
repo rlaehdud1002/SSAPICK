@@ -8,7 +8,7 @@ interface AuthInputProps {
 
 const AuthInput = ({title,placeholder,register}:AuthInputProps) => {
     return (
-        <div className="flex justify-center w-96 py-2 my-2 border border-black rounded-md">
+        <div className="flex justify-center w-96 py-2 my-2 border border-black rounded-lg">
             <label className="relative" htmlFor={title}>
                 {title}
                 <span className="absolute -right-2 -top-1 text-red-600">*</span>

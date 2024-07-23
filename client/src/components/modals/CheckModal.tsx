@@ -19,7 +19,7 @@ interface CheckModalProps {
 const CheckModal = ({ title, innerText, show, onClose }: CheckModalProps) => {
   return (
     <Dialog open={show} onOpenChange={(open) => (open ? undefined : onClose())}>
-      <DialogContent className="border rounded-md bg-[#E9F2FD] mx-2 w-4/5">
+      <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
           <DialogTitle className="flex flex-start">{title}</DialogTitle>
           <DialogDescription className="flex justify-center">

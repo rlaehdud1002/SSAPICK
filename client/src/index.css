@@ -75,6 +75,8 @@
     font-weight: 700;
     font-style: normal;
     color: #000855;
+    max-width: screen;
+    max-height: screen;
   }
 }
 
@@ -82,6 +84,7 @@
   font-family: 'Luckiest Guy';
   font-weight: 400;
   font-style: normal;
+  line-height: 1;
 }
 
 .text-color-000855 {
@@ -89,9 +92,8 @@
 }
 
 .text-color-5F86E9 {
-  color: #5F86E9
+  color: #5f86e9;
 }
-
 
 .background-color-5F86E9 {
   background-color: #5F86E9
@@ -100,6 +102,10 @@
   background-color: #FEE500 ;
 }
 
-.background-google{
+.backGround-kakao {
+  background-color: #fee500;
+}
+
+.background-google {
   background-color: white;
 }
