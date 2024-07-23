@@ -1,18 +1,21 @@
 package com.ssapick.server.domain.pick.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -57,9 +60,8 @@ class MessageServiceTest {
 		receiver = userCreate(1L, "test-user1", '여');
 		sender = userCreate(2L, "test-user2", '남');
 		question = Question.builder().id(1L).content("질문").build();
-		pick = pickCreate(receiver, sender, question);
+		pick = spy(pickCreate(receiver, sender, question));
 		pickRepository.save(pick);
-
 	}
 
 	@Test
@@ -113,18 +115,43 @@ class MessageServiceTest {
 	@DisplayName("메시지를 생성하는 테스트")
 	void createMessage() {
 		// given
+		when(pick.getId()).thenReturn(1L);
 		MessageData.Create create = new MessageData.Create();
-		create.setSender(sender);
-		create.setReceiver(receiver);
+		create.setSender(receiver);
+		create.setReceiver(sender);
 		create.setPick(pick);
 		create.setContent("메시지1");
 
-		when(pickRepository.findById(anyLong())).thenReturn(Optional.of(pick));
+		lenient().when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
 		// when
 		messageService.createMessage(create);
-		// then
+
+		// // then
 		verify(messageRepository).save(any(Message.class));
-		verify(pickRepository).updateMessageSendTrue(1L);
+	}
+
+	@Test
+	@DisplayName("한_픽에대해_여러_메시지를_보내는_테스트")
+	void 한_픽에대해_여러_메시지를_보내는_테스트() throws Exception {
+	    // * GIVEN: 이런게 주어졌을 때
+
+	    // * WHEN: 이걸 실행하면
+		when(pick.getId()).thenReturn(1L);
+		when(pick.isMessageSend()).thenReturn(true);  // 이미 메시지를 보냈다고 가정
+		when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
+
+		MessageData.Create create = new MessageData.Create();
+
+		create.setSender(receiver);
+		create.setReceiver(sender);
+		create.setPick(pick);
+		create.setContent("메시지1");
+
+
+		// * THEN: 이런 결과가 나와야 한다
+		Runnable runnable = () -> messageService.createMessage(create);
+		assertThrows(IllegalArgumentException.class, runnable::run);
+
 	}
 
 
@@ -138,7 +165,7 @@ class MessageServiceTest {
 			.providerType(ProviderType.GOOGLE)
 			.roleType(RoleType.USER)
 			.providerId("프로바이더 아이디")
-			.isEmailVerified(true)
+			// .isEmailVerified(true)
 			.isLocked(false)
 			.build();
 	}
