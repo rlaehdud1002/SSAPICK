@@ -42,6 +42,8 @@ public class PickData {
 
 
 	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class Create {
 		private Long receiverId;
 		private Long questionId;
