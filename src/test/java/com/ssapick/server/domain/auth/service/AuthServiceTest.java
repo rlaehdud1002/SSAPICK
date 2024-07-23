@@ -2,6 +2,7 @@ package com.ssapick.server.domain.auth.service;
 
 import com.ssapick.server.core.constants.AuthConst;
 import com.ssapick.server.core.support.AuthenticatedSupport;
+import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.entity.User;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest extends AuthenticatedSupport {
+
     @Mock
     private AuthCacheRepository authCacheRepository;
 
@@ -29,6 +31,7 @@ class AuthServiceTest extends AuthenticatedSupport {
 
     @InjectMocks
     private AuthService authService;
+
 
     @Test
     @DisplayName("로그아웃 정상 테스트")

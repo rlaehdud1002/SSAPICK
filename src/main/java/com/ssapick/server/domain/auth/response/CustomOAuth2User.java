@@ -56,6 +56,6 @@ public class CustomOAuth2User implements OAuth2User, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !user.isLocked() && user.isEmailVerified();
+        return !user.isLocked() && user.isMattermostConfirmed();
     }
 }
