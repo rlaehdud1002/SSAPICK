@@ -1,5 +1,5 @@
-import ProfileAlarm from "ProfilePage/ProfileAlarm";
-import ProfileContent from "ProfilePage/ProfileContent";
+import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
+import ProfileContent from "components/ProfilePage/ProfileContent";
 import UserInfoIcon from "icons/UserInfoIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import FriendAlarmIcon from "icons/FriendAlarmIcon";

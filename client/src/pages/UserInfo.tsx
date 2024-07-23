@@ -45,7 +45,7 @@ const UserInfo = () => {
                 <div className="mb-10">
                     <ProfileCameraIcon setUploadImage={setUploadImage} />
                 </div>
-                <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
+                {/* <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> */}
 
                 <InfoInput name="name" title="이름" register={register("name", {
                     required: "이름을 입력해주세요.",

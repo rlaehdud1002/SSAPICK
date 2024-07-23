@@ -4,6 +4,7 @@ import InfoSelect from "components/LoginPage/InfoSelect"
 import ProfileCameraIcon from "icons/ProfileCameraIcon"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 
 
 interface UserForm {
@@ -18,8 +19,13 @@ const ModiUserInfo = () => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<UserForm>();
   const [setUploadImage] = useState<File | undefined>(undefined)
 
-  const onSubmit = (data: UserForm) => {
+  const navigate = useNavigate()
+  const navigateToAddInfo = () => {
+    navigate('/ModiUserAddInfo')
+  }
 
+  const onSubmit = (data: UserForm) => {
+    navigateToAddInfo()
     const form = new FormData()
     form.append("name", data.name)
     form.append("image", "")
@@ -32,12 +38,14 @@ const ModiUserInfo = () => {
 
   return <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
 
+    <div className="ml-8 my-2">정보 수정</div>
+    <div className="bg-white ml-5 h-0.5 w-24"></div>
     <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
       <div className="mb-10">
         <ProfileCameraIcon setUploadImage={setUploadImage} />
       </div>
 
-      <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
+      {/* <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> */}
 
       <InfoInput name="name" title="이름" register={register("name", {
         required: "이름을 입력해주세요.",
