@@ -1,6 +1,8 @@
 package com.ssapick.server.domain.question.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,12 +85,21 @@ public class QuestionController {
 		return SuccessResponse.empty();
 	}
 
-	// @GetMapping("/list")
-	// public SuccessResponse<List<QuestionData.Search>> searchQeustionsList(@CurrentUser User user) {
-	//
-	// 	// ALL
-	// 	List<QuestionData.Search> searches = questionService.searchQeustions();
-	//
-	// 	return nu
-	// }
+	/**
+	 * 사용자에게 질문을 뿌려주는 API (벤된 질문 제외)
+	 * @param user
+	 * @return
+	 */
+	@GetMapping("/list")
+	public SuccessResponse<List<QuestionData.Search>> searchQeustionsList(@CurrentUser User user) {
+
+		Set<QuestionData.Search> searcheSet = new HashSet<>(questionService.searchQeustions());
+
+		Set<QuestionData.Search> banSet = new HashSet<>(questionService.searchBanQuestions(user.getId()));
+
+		searcheSet.removeAll(banSet);
+
+		return SuccessResponse.of(List.copyOf(searcheSet));
+	}
+
 }

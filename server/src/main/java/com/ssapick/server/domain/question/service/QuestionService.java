@@ -102,4 +102,12 @@ public class QuestionService {
 
 		questionBanRepository.save(QuestionBan.of(user, em.getReference(Question.class, questionId)));
 	}
+
+	public List<QuestionData.Search> searchBanQuestions(Long userId) {
+		return questionBanRepository.findUserBanQuestion(userId)
+			.stream()
+			.map(QuestionData.Search::fromEntity)
+			.toList();
+
+	}
 }
