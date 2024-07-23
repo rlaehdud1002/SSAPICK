@@ -6,7 +6,7 @@ interface CoinIconProps {
 const CoinIcon = ({ width, height }: CoinIconProps) => {
   return (
     <img
-      className="cursor-pointer"
+      className="cursor-pointer "
       width={width}
       height={height}
       src="/icons/Coin.png"
