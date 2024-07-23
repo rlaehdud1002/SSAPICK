@@ -10,21 +10,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PickService {
 
-	private static final Logger log = LoggerFactory.getLogger(PickService.class);
 	private final PickRepository pickRepository;
 	private final UserRepository userRepository;
 	private final QuestionRepository questionRepository;
-
 
 	/**
 	 * 받은 픽 조회하기
@@ -35,7 +36,6 @@ public class PickService {
 		return pickRepository.findReceiverByUserId(userId).stream()
 			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
 			.toList();
-
 	}
 
 	/**
@@ -51,9 +51,15 @@ public class PickService {
 
 	/**
 	 * 픽 생성하기
-	 * @param create
+	 * @param sender
+	 * @param receiverId
+	 * @param questionId
 	 */
-	public void createPick(PickData.Create create) {
-		pickRepository.save(Pick.of(create));
+	public void createPick(User sender, Long receiverId, Long questionId) {
+
+		User receiver = userRepository.findById(receiverId).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+		Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+
+		pickRepository.save(Pick.of(sender, receiver, question));
 	}
 }

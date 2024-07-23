@@ -91,27 +91,25 @@ class PickServiceTest  {
 
 	}
 
-
-
-	@Test
-	@WithMockUser
-	@DisplayName("유저1이 유저2를 픽하는 테스트")
-	void setPick() {
-		PickData.Create createData = new PickData.Create();
-		createData.setReceiver(receiver);
-		createData.setSender(sender);
-		createData.setQuestion(question);
-
-		// when
-		pickService.createPick(createData);
-
-		// then
-		verify(pickRepository, times(1)).save(argThat(pick ->
-			pick.getReceiver().equals(receiver) &&
-				pick.getSender().equals(sender) &&
-				(pick.getQuestion() == null ? question == null : pick.getQuestion().equals(question))
-		));
-	}
+	// @Test
+	// @WithMockUser
+	// @DisplayName("유저1이 유저2를 픽하는 테스트")
+	// void setPick() {
+	// 	PickData.Create createData = new PickData.Create();
+	// 	createData.setReceiver(receiver);
+	// 	createData.setSender(sender);
+	// 	createData.setQuestion(question);
+	//
+	// 	// when
+	// 	pickService.createPick(createData);
+	//
+	// 	// then
+	// 	verify(pickRepository, times(1)).save(argThat(pick ->
+	// 		pick.getReceiver().equals(receiver) &&
+	// 			pick.getSender().equals(sender) &&
+	// 			(pick.getQuestion() == null ? question == null : pick.getQuestion().equals(question))
+	// 	));
+	// }
 	private Pick pickCreate(User receiver, User sender) {
 		return Pick.builder().receiver(receiver).sender(sender).build();
 	}

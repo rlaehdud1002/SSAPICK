@@ -38,11 +38,4 @@ public class PickData {
 		}
 	}
 
-
-	@Data
-	public static class Create {
-		private User receiver;
-		private User sender;
-		private Question question;
-	}
 }

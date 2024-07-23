@@ -13,6 +13,7 @@ import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.service.PickService;
+import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
@@ -48,17 +49,15 @@ public class PickController {
 
 	/**
 	 * 픽 생성하기
-	 * @param create
+	 * @param user
+	 * @param reciverId
+	 * @param questionId
 	 * @return
 	 */
 	@PostMapping("")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public SuccessResponse<Void> createPick(@CurrentUser User user,  PickData.Create create) {
-		create.setSender(user);
-		pickService.createPick(create);
+	public SuccessResponse<Void> createPick(@CurrentUser User user, Long reciverId, Long questionId) {
+		pickService.createPick(user, reciverId, questionId);
 		return SuccessResponse.empty();
 	}
-
-
-
 }

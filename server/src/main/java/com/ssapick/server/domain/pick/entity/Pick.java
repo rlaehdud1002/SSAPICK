@@ -59,11 +59,11 @@ public class Pick extends TimeEntity {
 		this.isMessageSend = true;
 	}
 
-	public static Pick of(PickData.Create create) {
+	public static Pick of(User sender, User receiver, Question question) {
 		Pick pick = new Pick();
-		pick.sender = create.getSender();
-		pick.receiver = create.getReceiver();
-		pick.question = create.getQuestion();
+		pick.sender = sender;
+		pick.receiver = receiver;
+		pick.question = question;
 		return pick;
 	}
 
