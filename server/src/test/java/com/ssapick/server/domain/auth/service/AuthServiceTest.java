@@ -5,6 +5,8 @@ import com.ssapick.server.core.support.AuthenticatedSupport;
 import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
+import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,11 +19,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest extends AuthenticatedSupport {
+class AuthServiceTest {
 
     @Mock
     private AuthCacheRepository authCacheRepository;
@@ -90,5 +91,9 @@ class AuthServiceTest extends AuthenticatedSupport {
 
         // * THEN: 이런 결과가 나와야 한다
         assertThrows(IllegalArgumentException.class, runnable::run);
+    }
+
+    protected User createUser() {
+        return User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456");
     }
 }
