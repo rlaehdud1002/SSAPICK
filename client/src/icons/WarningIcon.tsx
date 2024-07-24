@@ -1,5 +1,5 @@
 interface WarningIconProps {
-  className: string;
+  className?: string;
 }
 
 const WarningIcon = ({className} : WarningIconProps) => {

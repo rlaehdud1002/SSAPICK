@@ -63,47 +63,45 @@ const QuestionPlusModal = () => {
     setStep(NewQuestionStep.INPUT);
   };
 
-  if (!isModalVisible) {
-    return null;
-  }
-
   return (
     <form>
       <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
         <DialogTrigger onClick={() => setOpen(true)}>
           <PlusIcon />
         </DialogTrigger>
-        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
-          <DialogHeader>
-            <DialogTitle className="flex flex-start text-color-5F86E9">
-              질문 만들기
-            </DialogTitle>
-          </DialogHeader>
-          {step === NewQuestionStep.INPUT && (
-            <div>
-              <QuestionInput
-                register={register('newQuestion', {
-                  required: '질문을 입력해주세요.',
-                  maxLength: {
-                    value: 100,
-                    message: '100글자 이하로 입력해주세요.',
-                  },
-                })}
-                errors={errors}
-              />
-              <DialogFooter className="flex flex-row justify-end">
-                <Button
-                  type="submit"
-                  variant="ssapick"
-                  onClick={handleSubmit(onSubmit, onInvalid)}
-                >
-                  질문 생성
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
-          {step === NewQuestionStep.ALERT && <QuestionCheckModal />}
-        </DialogContent>
+        {isModalVisible && (
+          <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
+            <DialogHeader>
+              <DialogTitle className="flex flex-start text-color-5F86E9">
+                질문 만들기
+              </DialogTitle>
+            </DialogHeader>
+            {step === NewQuestionStep.INPUT && (
+              <div>
+                <QuestionInput
+                  register={register('newQuestion', {
+                    required: '질문을 입력해주세요.',
+                    maxLength: {
+                      value: 100,
+                      message: '100글자 이하로 입력해주세요.',
+                    },
+                  })}
+                  errors={errors}
+                />
+                <DialogFooter className="flex flex-row justify-end">
+                  <Button
+                    type="submit"
+                    variant="ssapick"
+                    onClick={handleSubmit(onSubmit, onInvalid)}
+                  >
+                    질문 생성
+                  </Button>
+                </DialogFooter>
+              </div>
+            )}
+            {step === NewQuestionStep.ALERT && <QuestionCheckModal />}
+          </DialogContent>
+        )}
       </Dialog>
     </form>
   );
