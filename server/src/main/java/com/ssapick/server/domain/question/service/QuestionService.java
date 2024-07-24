@@ -78,12 +78,12 @@ public class QuestionService {
 	 * 질문 생성 요청
 	 * @param addRequest
 	 */
-	public void createQuestion(QuestionData.AddRequest addRequest) {
+	public void createQuestion(User user, QuestionData.AddRequest addRequest) {
 
 		QuestionCategory category = questionCategoryRepository.findById(addRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
 		
-		questionRegistrationRepository.save(QuestionRegistration.of(addRequest.getUser(), category, addRequest.getContent()));
+		questionRegistrationRepository.save(QuestionRegistration.of(user, category, addRequest.getContent()));
 	}
 
 	/**

@@ -57,7 +57,6 @@ public class QuestionData {
 
 	@Data
 	public static class AddRequest{
-		private User user;
 		private Long categoryId;
 		private String content;
 	}

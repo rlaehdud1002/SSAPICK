@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.service.MessageService;
+import com.ssapick.server.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,8 +38,11 @@ public class MessageController {
 	}
 
 	@PostMapping()
-	public SuccessResponse<Void> createMessage(MessageData.Create create) {
-		messageService.createMessage(create);
+	public SuccessResponse<Void> createMessage(
+		@CurrentUser User user,
+		@RequestBody MessageData.Create create) {
+
+		messageService.createMessage(user, create);
 		return SuccessResponse.empty();
 	}
 

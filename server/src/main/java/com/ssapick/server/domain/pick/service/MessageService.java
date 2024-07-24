@@ -10,6 +10,7 @@ import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,8 +50,9 @@ public class MessageService {
 	 * @param create
 	 */
 	@Transactional
-	public void createMessage(MessageData.Create create) {
-		Pick pick = pickRepository.findById(create.getPick().getId())
+	public void createMessage(User user, MessageData.Create create) {
+
+		Pick pick = pickRepository.findById(create.getPickId())
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 픽입니다."));
 
 		if (pick.isMessageSend()) {
@@ -58,7 +60,8 @@ public class MessageService {
 		}
 		pick.messageSend();
 
-		if (!create.getSender().equals(pick.getReceiver())){
+
+		if (!create.getReceiverId().equals(pick.getSender())){
 			throw new IllegalArgumentException("픽을 받은 사람이 픽을 보낸 사람 대상으로 메시지를 보낼 수 있습니다.");
 		}
 		messageRepository.save(Message.of(create));

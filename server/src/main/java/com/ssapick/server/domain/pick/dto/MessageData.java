@@ -38,9 +38,8 @@ public class MessageData {
 
 	@Data
 	public static class Create{
-		private User sender;
-		private User receiver;
-		private Pick pick;
+		private Long receiverId;
+		private Long pickId;
 		private String content;
 
 	}

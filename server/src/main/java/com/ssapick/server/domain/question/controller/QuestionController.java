@@ -71,8 +71,7 @@ public class QuestionController {
 	 */
 	@PostMapping("/add")
 	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user, @RequestBody QuestionData.AddRequest addRequest) {
-		addRequest.setUser(user);
-		questionService.createQuestion(addRequest);
+		questionService.createQuestion(user, addRequest);
 
 
 		return SuccessResponse.empty();
