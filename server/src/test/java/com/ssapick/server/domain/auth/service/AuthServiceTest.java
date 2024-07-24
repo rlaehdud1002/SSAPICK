@@ -1,11 +1,8 @@
 package com.ssapick.server.domain.auth.service;
 
 import com.ssapick.server.core.constants.AuthConst;
-import com.ssapick.server.core.support.AuthenticatedSupport;
-import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
-import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -19,11 +16,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
-
     @Mock
     private AuthCacheRepository authCacheRepository;
 

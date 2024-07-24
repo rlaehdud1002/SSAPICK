@@ -21,13 +21,13 @@ public class MessageController {
 
     @GetMapping("/send")
     @Authenticated
-    public SuccessResponse<List<MessageData.Search>> searchReceiveMessage(@CurrentUser User user) {
+    public SuccessResponse<List<MessageData.Search>> searchSendMessage(@CurrentUser User user) {
         return SuccessResponse.of(messageService.searchSendMessage(user));
     }
 
     @Authenticated
     @GetMapping("/receive")
-    public SuccessResponse<List<MessageData.Search>> searchSendMessage(@CurrentUser User user) {
+    public SuccessResponse<List<MessageData.Search>> searchReceiveMessage(@CurrentUser User user) {
         return SuccessResponse.of(messageService.searchReceiveMessage(user));
     }
 

@@ -21,10 +21,10 @@ public class MessageData {
             if (isReceived) {
                 search.senderName = "익명";
             } else {
-                search.senderName = message.getReceiver().getName();
+                search.senderName = message.getSender().getName();
             }
             search.id = message.getId();
-            search.receiverName = message.getSender().getName();
+            search.receiverName = message.getReceiver().getName();
             search.createdAt = message.getCreatedAt();
             search.content = message.getContent();
             search.questionContent = message.getPick().getQuestion().getContent();
