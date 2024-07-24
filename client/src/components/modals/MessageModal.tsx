@@ -72,7 +72,7 @@ const MessageModal = () => {
   };
 
   if (!isModalVisible) {
-    return null;
+    return null; 
   }
 
   return (

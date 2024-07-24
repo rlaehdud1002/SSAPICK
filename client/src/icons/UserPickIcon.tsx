@@ -1,8 +1,9 @@
 interface UserPickIconProps {
-  gen: string;
+  gen?: string;
 }
 
 const UserPickIcon = ({ gen }: UserPickIconProps) => {
+
   return (
     <svg
       width="35"

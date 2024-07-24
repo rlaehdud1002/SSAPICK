@@ -1,8 +1,8 @@
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
-import CommonRoute from 'pages/Routes/CommonRoute';
-import LoginRoute from 'pages/Routes/LoginRoute';
-import ProfileRoute from 'pages/Routes/ProfileRoute';
+import CommonRoute from 'components/Routes/CommonRoute';
+import LoginRoute from 'components/Routes/LoginRoute';
+import ProfileRoute from 'components/Routes/ProfileRoute';
 
 function App() {
   return (
