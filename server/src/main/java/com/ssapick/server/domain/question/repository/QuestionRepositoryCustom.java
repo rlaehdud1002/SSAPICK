@@ -5,9 +5,7 @@ import java.util.List;
 import com.ssapick.server.domain.question.entity.Question;
 
 public interface QuestionRepositoryCustom {
-	List<Question> findQuestionsByCategory_Name(String questionCategory);
-
 	List<Question> findAll();
 
-
+	List<Question> findRanking(Long userId);
 }

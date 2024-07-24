@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        lucky: ["Luckiest Guy"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

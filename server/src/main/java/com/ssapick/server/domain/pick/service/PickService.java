@@ -2,8 +2,6 @@ package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
 
-import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -53,24 +53,15 @@ public class PickService {
 
 	/**
 	 * 픽 생성하기
-	 *
 	 * @param sender
-	 * @param request
+	 * @param receiverId
+	 * @param questionId
 	 */
-	@Transactional
-	public void createPick(User sender, PickData.Create request) {
-		User receiver = userRepository.findById(request.getReceiverId())
-						.orElseThrow(() -> new IllegalArgumentException("받는 사람을 찾을 수 없습니다."));
+	public void createPick(User sender, Long receiverId, Long questionId) {
 
-		Question question = questionRepository.findById(request.getQuestionId())
-						.orElseThrow(() -> new IllegalArgumentException("질문을 찾을 수 없습니다."));
+		User receiver = userRepository.findById(receiverId).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+		Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
 
-		Pick pick = Pick.builder()
-				.sender(sender)
-				.receiver(receiver)
-				.question(question)
-				.build();
-
-		pickRepository.save(pick);
+		pickRepository.save(Pick.of(sender, receiver, question));
 	}
 }

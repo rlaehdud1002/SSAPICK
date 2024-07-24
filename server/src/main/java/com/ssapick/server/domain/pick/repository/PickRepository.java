@@ -26,12 +26,12 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	@Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.question WHERE p.sender.id = :userId")
 	List<Pick> findSenderByUserId(Long userId);
 
-	/**
-	 * 메시지를 보냈을 때 픽의 메시지 전송 여부 true로 변경하기
-	 * @param pickId
-	 */
-	@Query("UPDATE Pick p SET p.isMessageSend = true WHERE p.id = :pickId")
-	void updateMessageSendTrue(Long pickId);
+	// /**
+	//  * 메시지를 보냈을 때 픽의 메시지 전송 여부 true로 변경하기
+	//  * @param pickId
+	//  */
+	// @Query("UPDATE Pick p SET p.isMessageSend = true WHERE p.id = :pickId")
+	// void updateMessageSendTrue(Long pickId);
 
 
 	@Query("SELECT p FROM Pick p JOIN FETCH p.hintOpens WHERE p.id = :pickId")

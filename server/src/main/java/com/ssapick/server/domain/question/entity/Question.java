@@ -1,6 +1,11 @@
 package com.ssapick.server.domain.question.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -12,10 +17,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -46,6 +51,9 @@ public class Question extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
+	@OneToMany(mappedBy = "question")
+	private List<Pick> picks = new ArrayList<>();
+
 	@Builder
 	private Question(Long id, QuestionCategory questionCategory, String content, User author, int banCount) {
 		this.id = id;
@@ -54,4 +62,6 @@ public class Question extends BaseEntity {
 		this.author = author;
 		this.banCount = banCount;
 	}
+
+
 }

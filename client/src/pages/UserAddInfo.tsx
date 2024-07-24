@@ -17,7 +17,7 @@ interface AddUserForm {
 const UserAddInfo = () => {
     const navigate = useNavigate()
 
-    const { register, handleSubmit, setValue } = useForm<AddUserForm>();
+    const { register, handleSubmit, setValue, formState:{errors} } = useForm<AddUserForm>();
 
     const onSubmit = (data: AddUserForm) => {
         console.log(data)
@@ -37,34 +37,34 @@ const UserAddInfo = () => {
         </div>
         <div className="flex w-full flex-col justify-center items-center space-y-2">
 
-            <InfoInput title="MBTI" register={register("mbti", {
+            <InfoInput name="mbti" title="MBTI" register={register("mbti", {
                 required: "MBTI를 입력해주세요.",
                 maxLength: { value: 4, message: "4글자로 입력해주세요." },
                 minLength: { value: 4, message: "4글자로 입력해주세요." },
                 pattern: { value: /^[E,I,N,S,T,F,P,J]{4}$/, message: "대문자 MBTI 유형으로 입력해주세요." }
-            })} />
+            })} errors={errors} />
 
-            <InfoSelect title="반" register={register("class", {
+            <InfoSelect name="class" title="반" register={register("class", {
                     required: "반을 선택해주세요."
-                })} setValue={(value: number) => setValue("class", value)} />
+                })} setValue={(value: number) => setValue("class", value)} errors={errors}/>
 
 
-            <InfoInput title="전공" register={register("major", {
+            <InfoInput name="major" title="전공" register={register("major", {
                 required: "전공을 입력해주세요.",
                 maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
-            })} />
-            <InfoInput title="생년월일" register={register("birth", {
+            })}errors={errors} />
+            <InfoInput name="birth" title="생년월일" register={register("birth", {
                 required: "생년월일을 입력해주세요.",
                 pattern:{value:/^\d{4}-\d{2}-\d{2}$/, message:"YYYY-MM-DD 형식으로 입력해주세요."
-            }})} />
-            <InfoInput title="동네 " register={register("town", {
+            }})}errors={errors} />
+            <InfoInput name="town" title="동네 " register={register("town", {
                 required: "동네를 입력해주세요.",
                 maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
-            })} />
-            <InfoInput title="관심사" register={register("hobby", {
+            })}errors={errors} />
+            <InfoInput name="hobby" title="관심사" register={register("hobby", {
                 required: "관심사를 입력해주세요.",
                 maxLength: { value: 20, message: "20글자 이하로 입력해주세요." }
-            })} />
+            })}errors={errors} />
             <div className="flex">
                 <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
                 <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 "></div>
