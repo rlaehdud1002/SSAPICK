@@ -89,7 +89,7 @@ public class MessageService {
             throw new IllegalArgumentException("본인이 받은 메시지만 삭제할 수 있습니다.");
         }
 
-        message.deleteMessageOfSender();
+        message.deleteMessageOfReceiver();
     }
 
     /**
@@ -109,6 +109,6 @@ public class MessageService {
             throw new IllegalArgumentException("본인이 보낸 메시지만 삭제할 수 있습니다.");
         }
 
-        message.deleteMessageOfReceiver();
+        message.deleteMessageOfSender();
     }
 }
