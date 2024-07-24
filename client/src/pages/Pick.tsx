@@ -12,7 +12,7 @@ const Pick = () => {
       <Question category="프로젝트" />
       <div className="m-7">
         <div className='flex flex-row justify-end'>
-          <ShuffleIcon className="" />
+          <ShuffleIcon className="cursor-pointer" />
         </div>
         <div className="flex flex-row justify-center">
           <Choice username="민준수" />
