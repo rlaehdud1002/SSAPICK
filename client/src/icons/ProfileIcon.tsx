@@ -36,16 +36,16 @@ const ProfileIcon = ({ isHighlighted }: ProfileIconProps) => {
           <path
             d="M21.3715 22.1511C20.8777 20.7689 19.7897 19.5476 18.2761 18.6766C16.7625 17.8055 14.908 17.3334 13.0002 17.3334C11.0923 17.3334 9.23782 17.8055 7.72423 18.6766C6.21065 19.5476 5.12259 20.7689 4.62881 22.151"
             stroke="black"
-            stroke-width="2"
-            stroke-linecap="round"
+            strokeWidth="2"
+            strokeLinecap="round"
           />
           <circle
             cx="13.0003"
             cy="8.66671"
             r="4.33333"
             stroke="black"
-            stroke-width="2"
-            stroke-linecap="round"
+            strokeWidth="2"
+            strokeLinecap="round"
           />
         </svg>
       )}
