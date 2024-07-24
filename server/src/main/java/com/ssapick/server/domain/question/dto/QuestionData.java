@@ -22,8 +22,8 @@ public class QuestionData {
             Search search = new Search();
             search.questionId = question.getId();
             search.banCount = question.getBanCount();
-//			search.questionCategoyId = question.getQuestionCategory().getId();
-//			search.questionCategoryName = question.getQuestionCategory().getName();
+			search.questionCategoyId = question.getQuestionCategory().getId();
+			search.questionCategoryName = question.getQuestionCategory().getName();
             search.authorId = question.getAuthor().getId();
             search.author = question.getAuthor().getName();
             search.content = question.getContent();

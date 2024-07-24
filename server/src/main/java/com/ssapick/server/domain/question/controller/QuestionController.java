@@ -96,14 +96,7 @@ public class QuestionController {
 	 */
 	@GetMapping("/list")
 	public SuccessResponse<List<QuestionData.Search>> searchQeustionsList(@CurrentUser User user) {
-
-		Set<QuestionData.Search> searcheSet = new HashSet<>(questionService.searchQeustions());
-
-		Set<QuestionData.Search> banSet = new HashSet<>(questionService.searchBanQuestions(user.getId()));
-
-		searcheSet.removeAll(banSet);
-
-		return SuccessResponse.of(List.copyOf(searcheSet));
+		return SuccessResponse.of(List.copyOf(questionService.searchQeustionList(user)));
 	}
 
 	/**

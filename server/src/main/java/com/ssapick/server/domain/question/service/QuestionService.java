@@ -54,11 +54,10 @@ public class QuestionService {
 			throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
 		});
 
-//		return category.getQuestions().stream()
-//			.filter(q -> !q.isDeleted())
-//			.map(QuestionData.Search::fromEntity)
-//			.toList();
-        return List.of();
+		return category.getQuestions().stream()
+			.filter(q -> !q.isDeleted())
+			.map(QuestionData.Search::fromEntity)
+			.toList();
     }
 
 	/**
@@ -124,4 +123,15 @@ public class QuestionService {
                 .map(QuestionData.Search::fromEntity)
                 .toList();
     }
+
+	public List<QuestionData.Search> searchQeustionList(User user) {
+
+		List<QuestionData.Search> searches = searchQeustions();
+		List<QuestionData.Search> banQuestions = searchBanQuestions(user.getId());
+
+		searches.removeAll(banQuestions);
+
+		return searches;
+
+	}
 }
