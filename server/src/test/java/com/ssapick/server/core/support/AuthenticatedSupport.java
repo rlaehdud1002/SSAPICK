@@ -34,7 +34,7 @@ public abstract class AuthenticatedSupport {
     }
 
     protected User createUser(String name) {
-        User user = spy(User.createUser(name, "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
+        User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
         Profile profile = Profile.createProfile(user, (short) 1, createCampus(), "https://test-profile.com");
         when(user.getProfile()).thenReturn(profile);
         when(user.getId()).thenReturn(atomicLong.incrementAndGet());

@@ -56,7 +56,6 @@ class MessageServiceTest {
 		// 1L이 2L을 픽함
 		receiver = userCreate(1L, "test-user1", '여');
 		sender = userCreate(2L, "test-user2", '남');
-		question = Question.builder().id(1L).content("질문").build();
 		pick = pickCreate(receiver, sender, question);
 		pickRepository.save(pick);
 
@@ -145,20 +144,11 @@ class MessageServiceTest {
 
 
 	private Pick pickCreate(User receiver, User sender, Question question) {
-		return Pick.builder()
-			.receiver(receiver)
-			.sender(sender)
-			.question(question)
-			.build();
+		return Pick.createPick(sender, receiver, question);
 	}
 
 	private Message messageCreate(User sender, User receiver, Pick pick, String content) {
-		MessageData.Create create = new MessageData.Create();
-		create.setSender(sender);
-		create.setReceiver(receiver);
-		create.setPick(pick);
-		create.setContent(content);
-		return Message.of(create);
+		return Message.createMessage(sender, receiver, pick, content);
 	}
 
 

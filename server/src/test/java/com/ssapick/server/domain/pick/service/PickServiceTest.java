@@ -53,7 +53,6 @@ class PickServiceTest  {
 		 receiver = userCreate(1L, "test-user1", '여');
 		 sender = userCreate(2L, "test-user2", '남');
 		 pick = pickCreate(receiver, sender);
-		 question = Question.builder().id(1L).content("질문").build();
 
 	}
 
@@ -113,7 +112,7 @@ class PickServiceTest  {
 		));
 	}
 	private Pick pickCreate(User receiver, User sender) {
-		return Pick.builder().receiver(receiver).sender(sender).build();
+		return Pick.createPick(sender, receiver, null);
 	}
 
 	private User userCreate(Long id, String username, char gender) {
