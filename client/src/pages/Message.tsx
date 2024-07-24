@@ -20,9 +20,9 @@ const Message = () => {
           보낸 쪽지
         </Link>
       </div>
-      {/* <div className="mt-5">
+      <div className="mt-5">
         <Outlet />
-      </div> */}
+      </div>
       <MessageContent
         name="김도영"
         question="나랑 같이 프로젝트 하고 싶은 사람은?"

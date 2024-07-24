@@ -10,6 +10,8 @@ import UserAddInfo from 'pages/UserAddInfo';
 
 import { Route, Routes } from 'react-router-dom';
 import Alarm from 'pages/Alarm';
+import Received from 'components/MessagePage/Received';
+import Send from 'components/MessagePage/Send';
 
 function App() {
   return (
@@ -23,7 +25,10 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/ranking" element={<Ranking />} />
             <Route path="/pick" element={<Pick />} />
-            <Route path="/message" element={<Message />} />
+            <Route path="/message" element={<Message />}>
+        <Route path="received" element={<Received />} />
+        <Route path="send" element={<Send />} />
+      </Route>
             <Route path="/profile" element={<Profile />} />
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/UserAddInfo" element={<UserAddInfo />} />
