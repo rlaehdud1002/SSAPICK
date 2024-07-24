@@ -55,11 +55,11 @@ public class PickService {
 	 * 픽 생성하기
 	 * @param create
 	 */
-	public void createPick(PickData.Create create) {
+	public void createPick(User user, PickData.Create create) {
 
 		User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
 		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
 
-		pickRepository.save(Pick.of(create.getUser(), receiver, question));
+		pickRepository.save(Pick.of(user, receiver, question));
 	}
 }

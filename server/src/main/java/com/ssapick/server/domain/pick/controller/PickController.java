@@ -62,9 +62,7 @@ public class PickController {
 	public SuccessResponse<Void> createPick(@CurrentUser User user,
 		@RequestBody PickData.Create create) {
 
-		create.setUser(user);
-
-		pickService.createPick(create);
+		pickService.createPick(user, create);
 
 		return SuccessResponse.empty();
 	}
