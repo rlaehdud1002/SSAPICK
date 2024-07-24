@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.question.repository;
 
+import static com.ssapick.server.domain.pick.entity.QPick.*;
 import static com.ssapick.server.domain.question.entity.QQuestion.*;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssapick.server.domain.pick.entity.QPick;
 import com.ssapick.server.domain.question.entity.Question;
 
 @Repository
@@ -14,14 +16,6 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
 
 	private JPAQueryFactory queryFactory;
 
-	@Override
-	public List<Question> findQuestionsByCategory_Name(String questionCategory) {
-		return queryFactory
-			.selectFrom(question)
-			.where(question.questionCategory.name.eq(questionCategory)
-				.and(question.isDeleted.eq(false)))
-			.fetch();
-	}
 
 	@Override
 	public List<Question> findAll() {
@@ -31,4 +25,16 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
 			.fetch();
 	}
 
+	@Override
+	public List<Question> findRanking(Long userId) {
+
+		return queryFactory
+			.select(question)
+			.from(question)
+			.join(question.picks, pick).fetchJoin()
+			.where(pick.receiver.id.eq(userId))
+			.groupBy(question.id)
+			.orderBy(pick.count().desc())
+			.fetch();
+	}
 }

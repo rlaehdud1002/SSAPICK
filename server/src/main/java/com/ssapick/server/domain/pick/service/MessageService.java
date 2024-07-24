@@ -56,9 +56,12 @@ public class MessageService {
 		if (pick.isMessageSend()) {
 			throw new IllegalArgumentException("하나의 Pick에 대해서는 하나의 메시지만 보낼 수 있습니다.");
 		}
+		pick.messageSend();
 
+		if (!create.getSender().equals(pick.getReceiver())){
+			throw new IllegalArgumentException("픽을 받은 사람이 픽을 보낸 사람 대상으로 메시지를 보낼 수 있습니다.");
+		}
 		messageRepository.save(Message.of(create));
-		pickRepository.updateMessageSendTrue(create.getPick().getId());
 	}
 
 	/**
