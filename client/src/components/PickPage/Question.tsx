@@ -1,7 +1,7 @@
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import PassIcon from 'icons/PassIcon';
-import WarningIcon from 'icons/WarningIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
+import WarningModal from 'components/modals/WarningModal';
 
 interface QuestionProps {
   category: string;
@@ -23,7 +23,7 @@ const Question = ({ category }: QuestionProps) => {
         <p className="text-xs text-right text-red-400">2 of 10</p>
         <h1 className="text-center text-lg">프로젝트 같이 하고 싶은 사람</h1>
         <div className="flex flex-row justify-end mt-1">
-          <WarningIcon className="mx-1" />
+          <WarningModal />
           <PassIcon />
         </div>
         <div className="flex flex-row justify-center">
