@@ -1,6 +1,7 @@
 import MessageQuestionIcon from 'icons/MessageQuestionIcon';
 import UserPickIcon from 'icons/UserPickIcon';
 import WarningDeleteModal from 'components/modals/WarningDeleteModal';
+import PointIcon from 'icons/PointIcon';
 
 interface MessageContentProps {
   name: string;
