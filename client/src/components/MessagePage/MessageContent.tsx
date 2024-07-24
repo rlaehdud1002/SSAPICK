@@ -21,7 +21,7 @@ const MessageContent = ({
     <div className="mx-2 my-5 border-b-[1px]">
       <div className="flex flex-row justify-between">
         <div className='flex flex-row items-center'>
-          <UserPickIcon gen={gen} />
+          <UserPickIcon gen={gen} width={32} height={32}/>
           <h1 className="ms-3">{name}</h1>
         </div>
         <PointIcon />
