@@ -45,7 +45,7 @@ const WarningModal = () => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <WarningIcon />
+        <WarningIcon className='mx-1'/> 
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
