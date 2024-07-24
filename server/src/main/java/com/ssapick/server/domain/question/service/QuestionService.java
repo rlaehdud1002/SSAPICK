@@ -25,23 +25,24 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class QuestionService {
 
-	private final EntityManager em;
-	private final QuestionRepository questionRepository;
-	private final QuestionRegistrationRepository questionRegistrationRepository;
-	private final QuestionBanRepository questionBanRepository;
-	private final QuestionCategoryRepository questionCategoryRepository;
+    private final EntityManager em;
+    private final QuestionRepository questionRepository;
+    private final QuestionRegistrationRepository questionRegistrationRepository;
+    private final QuestionBanRepository questionBanRepository;
+    private final QuestionCategoryRepository questionCategoryRepository;
 
 
-	/**
-	 * 모든질문 조회
-	 * @return
-	 */
-	public List<QuestionData.Search> searchQeustions() {
-		List<Question> all = questionRepository.findAll();
-		return all.stream()
-			.map(QuestionData.Search::fromEntity)
-			.toList();
-	}
+    /**
+     * 모든질문 조회
+     *
+     * @return
+     */
+    public List<QuestionData.Search> searchQeustions() {
+        List<Question> all = questionRepository.findAll();
+        return all.stream()
+                .map(QuestionData.Search::fromEntity)
+                .toList();
+    }
 
 	/**
 	 * 카테고리별 질문 조회
@@ -53,11 +54,12 @@ public class QuestionService {
 			throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
 		});
 
-		return category.getQuestions().stream()
-			.filter(q -> !q.isDeleted())
-			.map(QuestionData.Search::fromEntity)
-			.toList();
-	}
+//		return category.getQuestions().stream()
+//			.filter(q -> !q.isDeleted())
+//			.map(QuestionData.Search::fromEntity)
+//			.toList();
+        return List.of();
+    }
 
 	/**
 	 * 질문 ID로 질문 조회
@@ -78,46 +80,48 @@ public class QuestionService {
 	 * 질문 생성 요청
 	 * @param addRequest
 	 */
-	public void createQuestion(User user, QuestionData.AddRequest addRequest) {
+	public void createQuestion(QuestionData.AddRequest addRequest) {
 
 		QuestionCategory category = questionCategoryRepository.findById(addRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
 		
-		questionRegistrationRepository.save(QuestionRegistration.of(user, category, addRequest.getContent()));
+		questionRegistrationRepository.save(QuestionRegistration.of(addRequest.getUser(), category, addRequest.getContent()));
 	}
 
-	/**
-	 * 질문 차단
-	 * @param user
-	 * @param questionId
-	 */
-	public void banQuestion(User user, Long questionId) {
-		questionBanRepository.findQByUser_IdAndQuestion_Id(questionId, user.getId())
+    /**
+     * 질문 차단
+     *
+     * @param user
+     * @param questionId
+     */
+    public void banQuestion(User user, Long questionId) {
+        questionBanRepository.findQByUser_IdAndQuestion_Id(questionId, user.getId())
 
-			.ifPresent(q -> {
-				throw new IllegalArgumentException("이미 차단한 질문입니다.");
-			});
+                .ifPresent(q -> {
+                    throw new IllegalArgumentException("이미 차단한 질문입니다.");
+                });
 
-		questionBanRepository.save(QuestionBan.of(user, em.getReference(Question.class, questionId)));
-	}
+        questionBanRepository.save(QuestionBan.of(user, em.getReference(Question.class, questionId)));
+    }
 
-	public List<QuestionData.Search> searchBanQuestions(Long userId) {
-		return questionBanRepository.findUserBanQuestion(userId)
-			.stream()
-			.map(QuestionData.Search::fromEntity)
-			.toList();
+    public List<QuestionData.Search> searchBanQuestions(Long userId) {
+        return questionBanRepository.findUserBanQuestion(userId)
+                .stream()
+                .map(QuestionData.Search::fromEntity)
+                .toList();
 
-	}
+    }
 
-	/**
-	 * 내가 지목받은 질문 수 별로 랭킹 조회
-	 * @param userId
-	 * @return
-	 */
-	public List<QuestionData.Search> searchQeustionsRank(Long userId) {
-		return questionRepository.findRanking(userId)
-			.stream()
-			.map(QuestionData.Search::fromEntity)
-			.toList();
-	}
+    /**
+     * 내가 지목받은 질문 수 별로 랭킹 조회
+     *
+     * @param userId
+     * @return
+     */
+    public List<QuestionData.Search> searchQeustionsRank(Long userId) {
+        return questionRepository.findRanking(userId)
+                .stream()
+                .map(QuestionData.Search::fromEntity)
+                .toList();
+    }
 }

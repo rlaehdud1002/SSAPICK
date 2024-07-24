@@ -36,11 +36,46 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-campus566855735"
+                  "$ref" : "#/components/schemas/api-v1-follow-userId566855735"
                 },
                 "examples" : {
                   "campus-controller-test/캠퍼스_생성_성공_테스트" : {
                     "value" : "{\r\n  \"success\" : true,\r\n  \"status\" : 201,\r\n  \"message\" : \"success\",\r\n  \"data\" : null\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow" : {
+      "get" : {
+        "tags" : [ "follow" ],
+        "summary" : "로그인된 사용자가 팔로우한 유저 목록을 조회한다.",
+        "description" : "팔로우한 유저 목록 조회 API",
+        "operationId" : "follow-controller-test/팔로우_조회_성공_테스트",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer access-token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer access-token"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-follow159469881"
+                },
+                "examples" : {
+                  "follow-controller-test/팔로우_조회_성공_테스트" : {
+                    "value" : "{\r\n  \"success\" : true,\r\n  \"status\" : 200,\r\n  \"message\" : \"success\",\r\n  \"data\" : [ {\r\n    \"userId\" : 2,\r\n    \"nickname\" : \"테스트 유저 1\",\r\n    \"campusName\" : \"광주\",\r\n    \"campusSection\" : 1,\r\n    \"campusDescription\" : \"자바 전공\",\r\n    \"profileImage\" : \"https://test-profile.com\"\r\n  }, {\r\n    \"userId\" : 3,\r\n    \"nickname\" : \"테스트 유저 2\",\r\n    \"campusName\" : \"광주\",\r\n    \"campusSection\" : 1,\r\n    \"campusDescription\" : \"자바 전공\",\r\n    \"profileImage\" : \"https://test-profile.com\"\r\n  }, {\r\n    \"userId\" : 4,\r\n    \"nickname\" : \"테스트 유저 3\",\r\n    \"campusName\" : \"광주\",\r\n    \"campusSection\" : 1,\r\n    \"campusDescription\" : \"자바 전공\",\r\n    \"profileImage\" : \"https://test-profile.com\"\r\n  } ]\r\n}"
                   }
                 }
               }
@@ -91,10 +126,161 @@
           }
         }
       }
+    },
+    "/api/v1/follow/{userId}" : {
+      "post" : {
+        "tags" : [ "follow" ],
+        "summary" : "로그인된 사용자가 다른 사용자를 팔로우한다.",
+        "description" : "팔로우 생성 API",
+        "operationId" : "follow-controller-test/팔로우_생성_성공_테스트",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "팔로우할 사용자 식별자",
+          "required" : true,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer access-token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer access-token"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "201",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-follow-userId566855735"
+                },
+                "examples" : {
+                  "follow-controller-test/팔로우_생성_성공_테스트" : {
+                    "value" : "{\r\n  \"success\" : true,\r\n  \"status\" : 200,\r\n  \"message\" : \"success\",\r\n  \"data\" : null\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "follow" ],
+        "summary" : "로그인된 사용자가 다른 사용자를 언팔로우한다.",
+        "description" : "팔로우 삭제 API",
+        "operationId" : "follow-controller-test/팔로우_삭제_성공_테스트",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "언팔로우할 사용자 식별자",
+          "required" : true,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer access-token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer access-token"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "204",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-follow-userId566855735"
+                },
+                "examples" : {
+                  "follow-controller-test/팔로우_삭제_성공_테스트" : {
+                    "value" : "{\r\n  \"success\" : true,\r\n  \"status\" : 200,\r\n  \"message\" : \"success\",\r\n  \"data\" : null\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
     "schemas" : {
+      "api-v1-follow159469881" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "description" : "팔로우한 유저 목록",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "campusSection" : {
+                  "type" : "number",
+                  "description" : "캠퍼스 반 정보"
+                },
+                "campusDescription" : {
+                  "type" : "string",
+                  "description" : "전공 관련 정보"
+                },
+                "campusName" : {
+                  "type" : "string",
+                  "description" : "캠퍼스 지역"
+                },
+                "nickname" : {
+                  "type" : "string",
+                  "description" : "유저 닉네임"
+                },
+                "profileImage" : {
+                  "type" : "string",
+                  "description" : "프로필 이미지 URL"
+                },
+                "userId" : {
+                  "type" : "number",
+                  "description" : "유저 식별자"
+                }
+              }
+            }
+          },
+          "success" : {
+            "type" : "boolean",
+            "description" : "성공 여부"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "status" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          }
+        }
+      },
+      "api-v1-follow-userId566855735" : {
+        "type" : "object",
+        "properties" : {
+          "success" : {
+            "type" : "boolean",
+            "description" : "성공 여부"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "응답 메시지"
+          },
+          "status" : {
+            "type" : "number",
+            "description" : "응답 코드"
+          }
+        }
+      },
       "api-v1-campus-1475916295" : {
         "type" : "object",
         "properties" : {
@@ -109,23 +295,6 @@
           "section" : {
             "type" : "number",
             "description" : "캠퍼스 반"
-          }
-        }
-      },
-      "api-v1-campus566855735" : {
-        "type" : "object",
-        "properties" : {
-          "success" : {
-            "type" : "boolean",
-            "description" : "성공 여부"
-          },
-          "message" : {
-            "type" : "string",
-            "description" : "응답 메시지"
-          },
-          "status" : {
-            "type" : "number",
-            "description" : "응답 코드"
           }
         }
       },

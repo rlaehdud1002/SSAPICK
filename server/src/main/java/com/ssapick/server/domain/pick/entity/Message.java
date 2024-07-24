@@ -52,13 +52,12 @@ public class Message extends TimeEntity {
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
 
-
-    public static Message of(MessageData.Create create) {
+    public static Message createMessage(User sender, User receiver, Pick pick, String content) {
         Message message = new Message();
-        message.content = create.getContent();
-        message.pick = create.getPick();
-        message.sender = create.getSender();
-        message.receiver = create.getReceiver();
+        message.sender = sender;
+        message.receiver = receiver;
+        message.pick = pick;
+        message.content = content;
         return message;
     }
 

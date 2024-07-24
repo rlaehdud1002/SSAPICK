@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,6 +46,14 @@ public abstract class RestDocsSupport extends AuthenticatedSupport {
                 .alwaysDo(restDocs)
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .build();
+    }
+
+    protected FieldDescriptor[] response(FieldDescriptor... descriptor) {
+        return Stream.concat(Arrays.stream(new FieldDescriptor[] {
+                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 코드"),
+                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+        }), Stream.of(descriptor)).toArray(FieldDescriptor[]::new);
     }
 
     protected FieldDescriptor[] response(FieldDescriptor descriptor) {

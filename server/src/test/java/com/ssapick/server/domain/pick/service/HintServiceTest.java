@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.ssapick.server.domain.question.entity.Question;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ class HintServiceTest {
 
 	@BeforeEach
 	void setUp() {
+
 		// 데이터 초기화
 		user = userCreate(1L, "test-user");
 
@@ -265,7 +268,7 @@ class HintServiceTest {
 	}
 
 	private Pick pickCreate(User mockUser) {
-		return Pick.builder().sender(mockUser).build();
+		return Pick.createPick(mockUser, mockUser, Question.createQuestion(null, "테스트 질문", mockUser));
 	}
 
 	private User userCreate(Long id, String username) {
