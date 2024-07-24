@@ -10,9 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
+import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.Campus;
+import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.CampusRepository;
+import com.ssapick.server.domain.user.repository.ProfileRepository;
+import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +31,11 @@ import lombok.extern.slf4j.Slf4j;
 public class HintService {
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
+	private final CampusRepository campusRepository;
+	private final ProfileRepository profileRepository;
+	private final UserRepository userRepository;
 
-	public Hint getRandomHintByPickId(Long pickId) {
+	public String getRandomHintByPickId(Long pickId) {
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
 			() -> new IllegalArgumentException("Pick이 존재하지 않습니다.")
 		);
@@ -42,7 +52,15 @@ public class HintService {
 
 		addHintOpenToPick(pick, openHint);
 
-		return openHint;
+		String hintContent = openHint.getContent();
+
+		if (openHint.getHintType().equals(HintType.NAME)) {
+			log.info("이름 힌트를 열었습니다.");
+			hintContent = processNameHint(hintContent);
+			log.info("Processed hintContent: {}", hintContent);
+		}
+
+		return hintContent;
 	}
 
 	public List<Long> getAvailableHintIds(Pick pick, List<Hint> hints) {
@@ -89,34 +107,74 @@ public class HintService {
 	}
 
 	@Transactional
-	public void saveHint(List<HintData.Create> request) {
+	public void saveHint(User user, HintData.Create request) {
 
-		if (request.stream().anyMatch(hint -> hint.getUser() == null)) {
-			throw new IllegalArgumentException("유저 정보가 없습니다.");
+		log.info("힌트 저장 요청: \n {}", request + "\n" + user);
+
+		if (user == null) {
+			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
 		}
 
-		if (request.stream().anyMatch(hint -> hint.getContent() == null)) {
-			throw new IllegalArgumentException("힌트 내용이 없습니다.");
+		if (request == null) {
+			throw new IllegalArgumentException("힌트가 없습니다.");
 		}
 
-		// id가 null이면 새로운 힌트 생성
-		if (request.stream().allMatch(hint -> hint.getId() == null)) {
-			List<Hint> hints = request.stream()
-				.map(HintData.Create::toEntity)
-				.collect(Collectors.toList());
+		user.updateName(request.getName());
+		user.updateGender(request.getGender());
 
-			hintRepository.saveAll(hints);
-			log.info("힌트 저장 완료");
-		}
+		Campus campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
+		Profile profile = Profile.createProfile(user, request.getChort(), campus);
 
-		// id가 null이 아니면 기존 힌트를 찾아서 업데이트
-		if (request.stream().allMatch(hint -> hint.getId() != null)) {
-			List<Hint> hints_haveId = request.stream()
-				.map(HintData.Create::toEntity)
-				.collect(Collectors.toList());
+		user.updateProfile(profile);
 
-			hintRepository.saveAll(hints_haveId);
-			log.info("힌트 업데이트 완료");
-		}
+		userRepository.save(user);
+
+		log.info(String.valueOf(user.getProfile().getCampus()));
+
+		Hint hint = Hint.createHint(user, request.getBirth(), HintType.AGE);
+
+		// hintRepository.saveAll();
+
+		log.info("힌트 저장 완료");
+
 	}
+
+	private String processNameHint(String name) {
+		StringBuilder result = new StringBuilder();
+		Random random = new Random();
+
+		result.append("X");
+
+		List<Character> initials = name.substring(1).chars()
+			.mapToObj(c -> (char)c)
+			.map(this::getInitialConsonant)
+			.collect(Collectors.toList());
+
+		int revealIndex = random.nextInt(initials.size());
+
+		for (int i = 0; i < initials.size(); i++) {
+			if (i == revealIndex) {
+				result.append(initials.get(i));
+			} else {
+				result.append("X");
+			}
+		}
+
+		return result.toString();
+	}
+
+	private boolean isHangul(char c) {
+		return c >= 0xAC00 && c <= 0xD7A3;
+	}
+
+	private char getInitialConsonant(char c) {
+		if (isHangul(c)) {
+			final char[] initials = {'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ',
+				'ㅌ', 'ㅍ', 'ㅎ'};
+			int index = (c - 0xAC00) / (21 * 28);
+			return initials[index];
+		}
+		return 'X';
+	}
+
 }

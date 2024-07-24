@@ -41,7 +41,7 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Profile profile;
 
 	@Column(nullable = false)
@@ -76,6 +76,9 @@ public class User extends BaseEntity {
 	@Column(name = "is_locked", nullable = false)
 	private boolean isLocked = false;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private final List<Hint> hints = new ArrayList<>();
+
 	/**
 	 * 사용자 생성 메서드
 	 *
@@ -96,9 +99,6 @@ public class User extends BaseEntity {
 		user.providerId = providerId;
 		return user;
 	}
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Hint> hints = new ArrayList<>();
 
 	public void mattermostConfirm() {
 		this.isMattermostConfirmed = true;
@@ -129,7 +129,11 @@ public class User extends BaseEntity {
 		this.name = newName;
 	}
 
-	public void assignProfile(Profile newProfile) {
+	public void updateGender(char newGender) {
+		this.gender = newGender;
+	}
+
+	public void updateProfile(Profile newProfile) {
 		this.profile = newProfile;
 	}
 

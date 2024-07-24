@@ -69,6 +69,7 @@ public class AuthService {
 			if (!response.getStatusCode().is2xxSuccessful()) {
 				throw new IllegalArgumentException("사용자 정보가 일치하지 않습니다.");
 			}
+
 			user.mattermostConfirm();
 			userRepository.save(user);
 
@@ -81,6 +82,14 @@ public class AuthService {
 			// byte[] profileImage = mattermostConfirmService.getProfileImage(token, userId);
 
 			// TODO: S3에 이미지 업로드
+
+			// String birthDay = null;
+			// String birthYear = null;
+			//
+			// if (user.getProviderType().equals(ProviderType.NAVER)) {
+			// 	birthDay =
+			// 	birthYear =
+			// }
 
 			return initialProfileInfo;
 

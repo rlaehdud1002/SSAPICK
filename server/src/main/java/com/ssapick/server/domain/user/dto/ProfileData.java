@@ -46,8 +46,8 @@ public class ProfileData {
 		@URL(message = "URL 형식이 아닙니다.")
 		private String profileImage;
 
-		@NotNull(message = "기수은 필수 입력 값입니다.")
-		private short cohort;
+		@NotNull(message = "닉네임은 필수 입력 값입니다.")
+		private String nickname;
 
 		@NotNull(message = "MBTI는 필수 입력 값입니다.")
 		private String mbti;

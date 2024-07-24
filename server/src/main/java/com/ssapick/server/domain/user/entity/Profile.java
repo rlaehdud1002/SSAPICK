@@ -5,6 +5,7 @@ import static lombok.AccessLevel.*;
 
 import com.ssapick.server.core.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -28,13 +29,12 @@ public class Profile extends BaseEntity {
 
 	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_profile_user_id"))
-	// @Column 어노테이션 대신 사용
 	private User user;
 
 	@Column(nullable = false, updatable = false)
 	private short cohort;
 
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "campus_id", referencedColumnName = "campus_id", foreignKey = @ForeignKey(name = "foreign_key_profile_campus_id"))
 	private Campus campus;
 
@@ -43,6 +43,16 @@ public class Profile extends BaseEntity {
 
 	@Column(nullable = false)
 	private int pickco = 0;
+
+	// FIXME 이미지 추가 해야됨
+	public static Profile createProfile(User user, short cohort, Campus campus) {
+		Profile profile = new Profile();
+		profile.user = user;
+		profile.cohort = cohort;
+		profile.campus = campus;
+		// profile.profileImage = profileImage;
+		return profile;
+	}
 
 	public void changePickco(int amount) {
 		if (pickco + amount < 0) {

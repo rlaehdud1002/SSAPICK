@@ -1,39 +1,46 @@
 package com.ssapick.server.domain.pick.dto;
 
-import com.ssapick.server.domain.pick.entity.Hint;
-import com.ssapick.server.domain.pick.entity.HintType;
-import com.ssapick.server.domain.user.entity.User;
-
-import lombok.Builder;
 import lombok.Data;
 
 public class HintData {
 
 	@Data
 	public static class Create {
-		private Long id;
-		private User user;
-		private String content;
-		private HintType hintType;
-		private boolean visibility;
+		private String name;
+		private char gender; // ---
+		private short chort; //---
+		private String campusName;
+		private short campusSection; //---
+		private String mbti;
+		private String major;
+		private String birth;
+		private String residentialArea;
+		private String interest;
 
-		public Hint toEntity() {
-			return Hint.builder()
-				.id(id)
-				.user(user)
-				.content(content)
-				.hintType(hintType)
-				.visibility(visibility)
-				.build();
-		}
+		public static Create of(
+			String name,
+			char gender,
+			short chort,
+			String campusName,
+			short campusSection,
+			String mbti,
+			String major,
+			String birth,
+			String residentialArea,
+			String interest) {
 
-		@Builder
-		public Create(Long id ,User user, String content, HintType hintType, boolean visibility) {
-			this.id = id;
-			this.user = user;
-			this.content = content;
-			this.hintType = hintType;
-			this.visibility = visibility;
+			Create create = new Create();
+			create.name = name;
+			create.gender = gender;
+			create.chort = chort;
+			create.campusName = campusName;
+			create.campusSection = campusSection;
+			create.mbti = mbti;
+			create.major = major;
+			create.birth = birth;
+			create.residentialArea = residentialArea;
+			create.interest = interest;
+			return create;
 		}
 	}
 }
