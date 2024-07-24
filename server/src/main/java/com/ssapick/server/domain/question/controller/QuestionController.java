@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssapick.server.core.annotation.CurrentUser;
@@ -38,12 +42,12 @@ public class QuestionController {
 
 	/**
 	 * 카테고리별 질문 조회 API
-	 * @param questionCategory
+	 * @param questionCategory_id
 	 * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
 	 */
 	@GetMapping("/category/{questionCategory_id}")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(Long questionCategory) {
-		List<QuestionData.Search> questions = questionService.searchQeustionsByCategory(questionCategory);
+	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(@PathVariable Long questionCategory_id) {
+		List<QuestionData.Search> questions = questionService.searchQeustionsByCategory(questionCategory_id);
 
 		return SuccessResponse.of(questions);
 	}
@@ -54,21 +58,22 @@ public class QuestionController {
 	 * @return {@link QuestionData.Search} 질문 ID로 질문 조회
 	 */
 	@GetMapping("/{questionId}")
-	public SuccessResponse<QuestionData.Search> searchQeustionsByQuestionId(Long questionId) {
+	public SuccessResponse<QuestionData.Search> searchQeustionsByQuestionId(@PathVariable Long questionId) {
 		QuestionData.Search search = questionService.searchQeustionByQuestionId(questionId);
 		return SuccessResponse.of(search);
 	}
 
 	/**
-	 * 질문 추가 API
+	 * 질문 생성 요청 API
 	 * @param user
-	 * @param categoryId
-	 * @param content
+	 * @param addRequest
 	 * @return
 	 */
-	@PostMapping("")
-	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user, Long categoryId, String content) {
-		questionService.createQuestion(user, categoryId, content);
+	@PostMapping("/add")
+	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user, @RequestBody QuestionData.AddRequest addRequest) {
+		addRequest.setUser(user);
+		questionService.createQuestion(addRequest);
+
 
 		return SuccessResponse.empty();
 	}
@@ -102,4 +107,14 @@ public class QuestionController {
 		return SuccessResponse.of(List.copyOf(searcheSet));
 	}
 
+	/**
+	 * 내가 지목받은 질문 수 별로 랭킹 조회 API
+	 * @param user
+	 * @return
+	 */
+	@GetMapping("/rank")
+	public SuccessResponse<List<QuestionData.Search>> searchQeustionsRank(@CurrentUser User user) {
+		List<QuestionData.Search> questions = questionService.searchQeustionsRank(user.getId());
+		return SuccessResponse.of(questions);
+	}
 }

@@ -76,16 +76,14 @@ public class QuestionService {
 
 	/**
 	 * 질문 생성 요청
-	 * @param user
-	 * @param categoryId
-	 * @param content
+	 * @param addRequest
 	 */
-	public void createQuestion(User user, Long categoryId, String content) {
+	public void createQuestion(QuestionData.AddRequest addRequest) {
 
-		QuestionCategory category = questionCategoryRepository.findById(categoryId)
+		QuestionCategory category = questionCategoryRepository.findById(addRequest.getCategoryId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
-
-		questionRegistrationRepository.save(QuestionRegistration.of(user, category, content));
+		
+		questionRegistrationRepository.save(QuestionRegistration.of(addRequest.getUser(), category, addRequest.getContent()));
 	}
 
 	/**
@@ -109,5 +107,17 @@ public class QuestionService {
 			.map(QuestionData.Search::fromEntity)
 			.toList();
 
+	}
+
+	/**
+	 * 내가 지목받은 질문 수 별로 랭킹 조회
+	 * @param userId
+	 * @return
+	 */
+	public List<QuestionData.Search> searchQeustionsRank(Long userId) {
+		return questionRepository.findRanking(userId)
+			.stream()
+			.map(QuestionData.Search::fromEntity)
+			.toList();
 	}
 }

@@ -38,4 +38,10 @@ public class PickData {
 		}
 	}
 
+	@Data
+	public static class Create{
+		private User user;
+		private Long receiverId;
+		private Long questionId;
+	}
 }

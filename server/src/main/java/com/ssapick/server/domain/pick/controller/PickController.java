@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,22 +27,23 @@ public class PickController {
 	private final PickService pickService;
 
 	/**
-	 * 받은 픽 조회하기
-	 * @param userId
+	 * 받은 픽 조회하는 API
+	 * @param user
 	 * @return
 	 */
 	@Authenticated
 	@GetMapping("/received")
 	@ResponseStatus(value = HttpStatus.OK)
-	public SuccessResponse<List<PickData.Search>> getReceivedPick(Long userId) {
-		return SuccessResponse.of(pickService.searchReceiver(userId));
+	public SuccessResponse<List<PickData.Search>> getReceivedPick(@CurrentUser User user) {
+		return SuccessResponse.of(pickService.searchReceiver(user.getId()));
 	}
 
 	/**
-	 * 보낸 픽 조회하기
+	 * 보낸 픽 조회하는 API
 	 * @param user
 	 * @return
 	 */
+	@Authenticated
 	@GetMapping("/sent")
 	@ResponseStatus(value = HttpStatus.OK)
 	public SuccessResponse<List<PickData.Search>> getSentPick(@CurrentUser User user) {
@@ -49,17 +51,21 @@ public class PickController {
 	}
 
 	/**
-	 * 픽 생성하기
+	 * 픽 생성하는 API
 	 * @param user
-	 * @param reciverId
-	 * @param questionId
+	 * @param create
 	 * @return
 	 */
 	@Authenticated
 	@PostMapping("")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public SuccessResponse<Void> createPick(@CurrentUser User user, Long reciverId, Long questionId) {
-		pickService.createPick(user, reciverId, questionId);
+	public SuccessResponse<Void> createPick(@CurrentUser User user,
+		@RequestBody PickData.Create create) {
+
+		create.setUser(user);
+
+		pickService.createPick(create);
+
 		return SuccessResponse.empty();
 	}
 }
