@@ -15,12 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Repeat;
 
 import com.ssapick.server.domain.pick.dto.HintData;
 import com.ssapick.server.domain.pick.entity.Hint;
@@ -268,7 +266,7 @@ class HintServiceTest {
 	}
 
 	private Pick pickCreate(User mockUser) {
-		return Pick.createPick(mockUser, mockUser, Question.createQuestion(null, "테스트 질문", mockUser));
+		return Pick.of(mockUser, mockUser, Question.createQuestion(null, "테스트 질문", mockUser));
 	}
 
 	private User userCreate(Long id, String username) {
