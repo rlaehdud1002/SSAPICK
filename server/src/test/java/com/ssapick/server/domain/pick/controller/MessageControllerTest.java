@@ -227,7 +227,7 @@ class MessageControllerTest extends RestDocsSupport {
     }
 
     private Message createMessage(User sender, User receiver, String content) {
-        Pick pick = Pick.createPick(sender, receiver, createQuestion(sender));
+        Pick pick = Pick.of(sender, receiver, createQuestion(sender));
         return Message.createMessage(sender, receiver, pick, content);
     }
 
