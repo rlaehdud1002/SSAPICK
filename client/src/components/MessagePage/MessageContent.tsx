@@ -24,7 +24,7 @@ const MessageContent = ({
           <UserPickIcon gen={gen} width={32} height={32}/>
           <h1 className="ms-3">{name}</h1>
         </div>
-        <WarningDeleteModal />
+        <WarningDeleteModal warning="신고"/>
       </div>
       <div className="text-center text-gray-500 my-4">{question}</div>
       <div className="flex flex-row items-center bg-white/50 rounded-lg p-2">

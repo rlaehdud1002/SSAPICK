@@ -11,7 +11,11 @@ import {
 
 import { useRef, useEffect, useState } from 'react';
 
-const WarningDeleteModal = () => {
+interface WarningDeleteModalProps {
+  warning: string;
+}
+
+const WarningDeleteModal = ({ warning }: WarningDeleteModalProps) => {
   const positionRef = useRef<HTMLButtonElement>(null);
   const [Position, setPosition] = useState({ top: 0, left: 0 });
 
@@ -38,7 +42,7 @@ const WarningDeleteModal = () => {
         <DialogHeader>
           <div className="flex flex-row items-center">
             <WarningIcon width={24} height={24} className="me-3" />
-            <p>신고</p>
+            <p>{warning}</p>
           </div>
           <div className="flex flex-row items-center">
             <DeleteIcon width={24} height={24} className="me-3" />
