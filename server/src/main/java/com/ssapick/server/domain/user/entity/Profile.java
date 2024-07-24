@@ -44,6 +44,15 @@ public class Profile extends BaseEntity {
 		this.pickco += amount;
 	}
 
+	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {
+		Profile profile = new Profile();
+		profile.user = user;
+		profile.cohort = cohort;
+		profile.campus = campus;
+		profile.profileImage = profileImage;
+		return profile;
+	}
+
 //	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
 //	private Set<MemberBan> bannedToProfiles = new HashSet<>();
 //

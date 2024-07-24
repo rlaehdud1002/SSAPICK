@@ -38,4 +38,9 @@ public class PickData {
 		}
 	}
 
+	@Data
+	public static class Create{
+		private Long receiverId;
+		private Long questionId;
+	}
 }
