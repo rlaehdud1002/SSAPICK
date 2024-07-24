@@ -7,7 +7,7 @@ const BackIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M12.5 5L7.5 10L12.5 15" stroke="#000855" stroke-width="2" />
+      <path d="M12.5 5L7.5 10L12.5 15" stroke="#000855" strokeWidth="2" />
     </svg>
   );
 };

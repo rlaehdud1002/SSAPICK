@@ -71,68 +71,66 @@ const MessageModal = () => {
     console.log('errors', errors);
   };
 
-  if (!isModalVisible) {
-    return null;
-  }
-
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
         <SendingIcon />
       </DialogTrigger>
-      <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
-        <DialogHeader>
-          <DialogTitle className="flex flex-start text-color-5F86E9">
-            쪽지 보내기
-          </DialogTitle>
-        </DialogHeader>
-        {step === MessageModalStep.INPUT && (
-          <div>
-            <MessageInputModal
-              register={register('message', {
-                required: '쪽지 내용을 입력해주세요.',
-                maxLength: {
-                  value: 100,
-                  message: '100글자 이하로 입력해주세요.',
-                },
-              })}
-              errors={errors}
-            />
-            <DialogFooter className="flex flex-row justify-end mt-3">
-              <Button
-                type="submit"
-                variant="ssapick"
-                size="messageButton"
-                className="flex flex-row items-center"
-                onClick={() => {
-                  handleSubmit(onSubmit, onInvalid)();
-                }}
-              >
-                <CoinIcon width={25} height={25} />
-                <h3 className="luckiest_guy ms-2 me-4 pt-1">1</h3>전송
-              </Button>
-            </DialogFooter>
-          </div>
-        )}
-        {step === MessageModalStep.CONFIRM && (
-          <div>
-            <CoinUseModal />
-            <DialogFooter className="flex flex-row justify-end mt-3">
-              <Button
-                type="submit"
-                variant="ssapick"
-                size="md"
-                onClick={() => {
-                  handleSubmit(onSubmit, onInvalid)();
-                }}
-              >
-                전송
-              </Button>
-            </DialogFooter>
-          </div>
-        )}
-        {step === MessageModalStep.ALERT && <MessageCheckModal />}
-      </DialogContent>
+      {isModalVisible && (
+        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
+          <DialogHeader>
+            <DialogTitle className="flex flex-start text-color-5F86E9">
+              쪽지 보내기
+            </DialogTitle>
+          </DialogHeader>
+          {step === MessageModalStep.INPUT && (
+            <div>
+              <MessageInputModal
+                register={register('message', {
+                  required: '쪽지 내용을 입력해주세요.',
+                  maxLength: {
+                    value: 100,
+                    message: '100글자 이하로 입력해주세요.',
+                  },
+                })}
+                errors={errors}
+              />
+              <DialogFooter className="flex flex-row justify-end mt-3">
+                <Button
+                  type="submit"
+                  variant="ssapick"
+                  size="messageButton"
+                  className="flex flex-row items-center"
+                  onClick={() => {
+                    handleSubmit(onSubmit, onInvalid)();
+                  }}
+                >
+                  <CoinIcon width={25} height={25} />
+                  <h3 className="luckiest_guy ms-2 me-4 pt-1">1</h3>전송
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+          {step === MessageModalStep.CONFIRM && (
+            <div>
+              <CoinUseModal />
+              <DialogFooter className="flex flex-row justify-end mt-3">
+                <Button
+                  type="submit"
+                  variant="ssapick"
+                  size="md"
+                  onClick={() => {
+                    handleSubmit(onSubmit, onInvalid)();
+                  }}
+                >
+                  전송
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+          {step === MessageModalStep.ALERT && <MessageCheckModal />}
+        </DialogContent>
+      )}
     </Dialog>
   );
 };
