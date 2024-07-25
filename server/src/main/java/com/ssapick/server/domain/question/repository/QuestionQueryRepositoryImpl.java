@@ -10,7 +10,7 @@ import static com.ssapick.server.domain.pick.entity.QPick.pick;
 import static com.ssapick.server.domain.question.entity.QQuestion.question;
 
 @Repository
-public class QuestionRepositoryCustomImpl implements QuestionQueryRepository {
+public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 
     private JPAQueryFactory queryFactory;
 

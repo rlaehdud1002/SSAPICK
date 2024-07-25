@@ -15,7 +15,7 @@ import java.net.URL;
 public class CommentAnalyzer {
 
 	@Value("${spring.comment-analyzer.api-key}")
-	private static String API_KEY; // 실제 API 키로 대체해야 합니다.
+	private static String API_KEY;
 
 	@Value("${spring.comment-analyzer.base-url}")
 	private static String BASE_URL ;
@@ -85,7 +85,6 @@ public class CommentAnalyzer {
 		} catch (IOException | JSONException e) {
 			e.printStackTrace();
 		}
-
 		return false;
 	}
 }
