@@ -1,0 +1,210 @@
+package com.ssapick.server.domain.pick.controller;
+
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.filter.JWTFilter;
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.pick.dto.PickData;
+import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.pick.service.PickService;
+import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.question.entity.QuestionCategory;
+import com.ssapick.server.domain.user.entity.User;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@DisplayName("싸픽 컨트롤러 테스트")
+@WebMvcTest(
+        value = PickController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JWTFilter.class)
+        }
+)
+class PickControllerTest extends RestDocsSupport {
+    @MockBean
+    private PickService pickService;
+
+    @Test
+    @DisplayName("받은 픽 조회 성공 테스트")
+    @WithMockUser(username = "test-user")
+    void 받은_픽_조회_성공_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User sender = this.createUser("보낸 사람");
+        User receiver = this.createUser("받은 사람");
+        List<PickData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
+            Question question = spy(createQuestion("테스트 질문 " + i));
+            when(question.getId()).thenReturn((long) i);
+            when(question.getCreatedAt()).thenReturn(LocalDateTime.now());
+
+            Pick pick = spy(createPick(sender, receiver, question));
+            when(pick.getId()).thenReturn((long) i);
+            when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
+            return pick;
+        }).map((pick) -> PickData.Search.fromEntity(pick, true)).toList();
+
+        when(pickService.searchReceivePick(
+                argThat(user -> user.getUsername().equals("test-user")))
+        ).thenReturn(searches);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/pick/receive"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .responseFields(response(
+                                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("픽 ID"),
+                                        fieldWithPath("data[].sender.userId").type(JsonFieldType.NULL).description("픽 보낸 사람 ID (익명 처리)"),
+                                        fieldWithPath("data[].sender.nickname").type(JsonFieldType.NULL).description("픽 보낸 사람 익명 처리"),
+                                        fieldWithPath("data[].sender.gender").type(JsonFieldType.STRING).description("픽 보낸 사람 성별"),
+                                        fieldWithPath("data[].sender.campusName").type(JsonFieldType.STRING).description("픽 보낸 사람 캠퍼스 소속"),
+                                        fieldWithPath("data[].sender.campusSection").type(JsonFieldType.NUMBER).description("픽 보낸 사람 캠퍼스 반"),
+                                        fieldWithPath("data[].sender.campusDescription").type(JsonFieldType.STRING).description("픽 보낸 사람 전공"),
+                                        fieldWithPath("data[].sender.profileImage").type(JsonFieldType.NULL).description("픽 보낸 사람 프로필 이미지 익명 처리"),
+                                        fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
+                                        fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
+                                        fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
+                                        fieldWithPath("data[].receiver.campusName").type(JsonFieldType.STRING).description("픽 받은 사람 캠퍼스 소속"),
+                                        fieldWithPath("data[].receiver.campusSection").type(JsonFieldType.NUMBER).description("픽 받은 사람 캠퍼스 반"),
+                                        fieldWithPath("data[].receiver.campusDescription").type(JsonFieldType.STRING).description("픽 받은 사람 전공"),
+                                        fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING).description("픽 받은 사람 프로필 이미지"),
+                                        fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
+                                        fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
+                                        fieldWithPath("data[].question.categoryName").type(JsonFieldType.STRING).description("질문 카테고리"),
+                                        fieldWithPath("data[].question.categoryThumbnail").type(JsonFieldType.STRING).description("질문 썸네일"),
+                                        fieldWithPath("data[].question.createdAt").type(JsonFieldType.STRING).description("질문 생성일시"),
+                                        fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
+                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
+                                ))
+                                .build())
+                ));
+
+        verify(pickService, times(1)).searchReceivePick(argThat(user -> user.getUsername().equals("test-user")));
+    }
+
+    @Test
+    @DisplayName("보낸 픽 조회 성공 테스트")
+    @WithMockUser(username = "test-user")
+    void 보낸_픽_조회_성공_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User sender = this.createUser("보낸 사람");
+        User receiver = this.createUser("받은 사람");
+        List<PickData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
+            Question question = spy(createQuestion("테스트 질문 " + i));
+            when(question.getId()).thenReturn((long) i);
+            when(question.getCreatedAt()).thenReturn(LocalDateTime.now());
+
+            Pick pick = spy(createPick(sender, receiver, question));
+            when(pick.getId()).thenReturn((long) i);
+            when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
+            return pick;
+        }).map((pick) -> PickData.Search.fromEntity(pick, false)).toList();
+
+        when(pickService.searchSendPick(
+                argThat(user -> user.getUsername().equals("test-user")))
+        ).thenReturn(searches);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/pick/send"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .responseFields(response(
+                                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("픽 ID"),
+                                        fieldWithPath("data[].sender.userId").type(JsonFieldType.NUMBER).description("픽 보낸 사람 ID (익명 처리)"),
+                                        fieldWithPath("data[].sender.nickname").type(JsonFieldType.STRING).description("픽 보낸 사람 익명 처리"),
+                                        fieldWithPath("data[].sender.gender").type(JsonFieldType.STRING).description("픽 보낸 사람 성별"),
+                                        fieldWithPath("data[].sender.campusName").type(JsonFieldType.STRING).description("픽 보낸 사람 캠퍼스 소속"),
+                                        fieldWithPath("data[].sender.campusSection").type(JsonFieldType.NUMBER).description("픽 보낸 사람 캠퍼스 반"),
+                                        fieldWithPath("data[].sender.campusDescription").type(JsonFieldType.STRING).description("픽 보낸 사람 전공"),
+                                        fieldWithPath("data[].sender.profileImage").type(JsonFieldType.STRING).description("픽 보낸 사람 프로필 이미지 익명 처리"),
+                                        fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
+                                        fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
+                                        fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
+                                        fieldWithPath("data[].receiver.campusName").type(JsonFieldType.STRING).description("픽 받은 사람 캠퍼스 소속"),
+                                        fieldWithPath("data[].receiver.campusSection").type(JsonFieldType.NUMBER).description("픽 받은 사람 캠퍼스 반"),
+                                        fieldWithPath("data[].receiver.campusDescription").type(JsonFieldType.STRING).description("픽 받은 사람 전공"),
+                                        fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING).description("픽 받은 사람 프로필 이미지"),
+                                        fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
+                                        fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
+                                        fieldWithPath("data[].question.categoryName").type(JsonFieldType.STRING).description("질문 카테고리"),
+                                        fieldWithPath("data[].question.categoryThumbnail").type(JsonFieldType.STRING).description("질문 썸네일"),
+                                        fieldWithPath("data[].question.createdAt").type(JsonFieldType.STRING).description("질문 생성일시"),
+                                        fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
+                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
+                                ))
+                                .build()
+                )));
+
+        verify(pickService, times(1)).searchSendPick(argThat(user -> user.getUsername().equals("test-user")));
+    }
+
+    @Test
+    @DisplayName("픽_선택_생성_테스트")
+    @WithMockUser(username = "test-user")
+    void 픽_선택_생성_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User receiver = this.createUser("받은 사람");
+        Question question = spy(this.createQuestion("테스트 질문"));
+        when(question.getId()).thenReturn(1L);
+
+        PickData.Create create = new PickData.Create();
+        create.setReceiverId(receiver.getId());
+        create.setQuestionId(question.getId());
+        create.setIndex(1);
+        create.setStatus(PickData.PickStatus.PICKED);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(create))
+        );
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isCreated())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .requestFields(
+                                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
+                                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+                                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+                                )
+                                .responseFields(empty())
+                                .build()
+                )));
+    }
+
+    private Pick createPick(User sender, User receiver, Question question) {
+        return Pick.createPick(sender, receiver, question);
+    }
+
+    private Question createQuestion(String content) {
+        QuestionCategory category = QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리");
+        return Question.createQuestion(category, content, createUser("author"));
+    }
+}

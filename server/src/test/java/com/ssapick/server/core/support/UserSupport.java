@@ -7,6 +7,7 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import org.mockito.Mock;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.mockito.Mockito.*;
@@ -29,6 +30,7 @@ public abstract class UserSupport {
         Profile profile = Profile.createProfile(user, (short) 1, createCampus(), "https://test-profile.com");
         lenient().when(user.getProfile()).thenReturn(profile);
         lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
+        lenient().when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         return user;
     }
 

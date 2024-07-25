@@ -6,7 +6,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 public class MessageData {
-
     @Data
     public static class Search {
         private Long id;
