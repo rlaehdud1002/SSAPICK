@@ -42,4 +42,16 @@ public class FollowController {
         followService.unfollowUser(user, userId);
         return SuccessResponse.empty();
     }
+
+    /**
+     * 추천 팔로우 목록 조회 API
+     * @param user
+     * @return
+     */
+    @Authenticated
+    @GetMapping(value = "/recommend")
+    @ResponseStatus(HttpStatus.OK)
+    public SuccessResponse<List<ProfileData.Search>> recommendFollow(@CurrentUser User user) {
+        return SuccessResponse.of(followService.recommendFollow(user));
+    }
 }

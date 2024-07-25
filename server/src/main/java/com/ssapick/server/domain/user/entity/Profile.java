@@ -1,15 +1,23 @@
 package com.ssapick.server.domain.user.entity;
 
+import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
+
+import java.util.Objects;
+
 import com.ssapick.server.core.entity.BaseEntity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -42,6 +50,21 @@ public class Profile extends BaseEntity {
 			throw new IllegalArgumentException("픽코가 부족합니다.");
 		}
 		this.pickco += amount;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Profile profile = (Profile)o;
+		return Objects.equals(id, profile.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
 	}
 
 	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {

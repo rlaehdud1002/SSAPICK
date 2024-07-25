@@ -35,4 +35,9 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
                 .orderBy(pick.count().desc())
                 .fetch();
     }
+
+    @Override
+    public List<Question> findAddedQuestionsById(Long id) {
+        return List.of();
+    }
 }

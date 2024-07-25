@@ -29,7 +29,7 @@ public class QuestionBan extends TimeEntity {
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "QUESTION question_id 외래키 참조"))
+    @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_question_ban_question_id"))
     private Question question;
 
 
