@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.user.entity.*;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Repeat;
 
@@ -29,9 +32,6 @@ import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.user.entity.ProviderType;
-import com.ssapick.server.domain.user.entity.RoleType;
-import com.ssapick.server.domain.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest {
@@ -44,7 +44,11 @@ class HintServiceTest {
 	@Mock
 	private PickRepository pickRepository;
 
+	@Mock
+	private ApplicationEventPublisher publisher;
+
 	static User user;
+	private Profile profile;
 
 	private static final Logger log = LoggerFactory.getLogger(HintServiceTest.class);
 
@@ -52,7 +56,8 @@ class HintServiceTest {
 	void setUp() {
 
 		// 데이터 초기화
-		user = userCreate(1L, "test-user");
+		user = userCreate(1L, "test-user", profile);
+		profile = mock(Profile.class);
 
 		lenient().when(hintRepository.findAllByUserId(1L))
 			.thenReturn(List.of(
@@ -66,11 +71,10 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("힌트 오픈이 0 개일때 힌트를 랜덤으로 가져오는 테스트")
 	void getRandomHintByPickId_withOpenHints0() {
 		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
-			Optional.of(pickCreate(userCreate(1L, "test")))
+			Optional.of(pickCreate(userCreate(1L, "test", profile)))
 		);
 
 		// when
@@ -78,15 +82,14 @@ class HintServiceTest {
 
 		// then
 		assertThat(findHint.getId()).isBetween(1L, 6L);
-
+		verify(publisher).publishEvent(any(PickcoEvent.class));
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("힌트 오픈이 1 개일때 힌트를 랜덤으로 가져오는 테스트")
 	void getRandomHintByPickId_withOpenHints1() {
 
-		User mockUser = userCreate(1L, "test");
+		User mockUser = userCreate(1L, "test", profile);
 		Pick mockPick = pickCreate(mockUser);
 		Hint mockHint = hintCreate(1L, "장덕동1", mockUser);
 		HintOpen mockHintOpen = hintOpencreate(mockHint, mockPick);
@@ -101,10 +104,10 @@ class HintServiceTest {
 
 		// then
 		assertThat(findHint.getId()).isNotEqualTo(1L);
+		verify(publisher).publishEvent(any(PickcoEvent.class));
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("힌트 오픈이 2 개이상 일때 에러 던지는 테스트")
 	void getRandomHintByPickId_withOpenHints2() {
 		// given
@@ -130,7 +133,6 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("hintId가 null인 유효한 데이터로 힌트 저장 테스트")
 	void saveHint() {
 		// given
@@ -157,7 +159,6 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("hintId가 null이 아닌 유효한 데이터로 힌트 업데이트 테스트")
 	void updateHint() {
 		// given
@@ -184,7 +185,6 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("유저 정보가 없을 때 예외 발생 테스트")
 	void saveHint_withNullUser() {
 		// given
@@ -207,7 +207,6 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("힌트 내용이 없을 때 예외 발생 테스트")
 	void saveHint_withNullContent() {
 		// given
@@ -228,11 +227,10 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("pickId로 hintOpens 조회 테스트")
 	void getHintOpensByPickIdTest() {
 		// given
-		User mockUser = userCreate(1L, "test");
+		User mockUser = userCreate(1L, "test", profile);
 		Pick mockPick = pickCreate(mockUser);
 		Hint mockHint = hintCreate(1L, "장덕동1", mockUser);
 		HintOpen mockHintOpen = hintOpencreate(mockHint, mockPick);
@@ -251,7 +249,6 @@ class HintServiceTest {
 	}
 
 	@Test
-	@WithMockUser
 	@DisplayName("userId로 hint 조회 테스트")
 	void getHintsByUserIdTest() {
 		// given
@@ -271,10 +268,11 @@ class HintServiceTest {
 		return Pick.createPick(mockUser, mockUser, Question.createQuestion(null, "테스트 질문", mockUser));
 	}
 
-	private User userCreate(Long id, String username) {
+	private User userCreate(Long id, String username, Profile profile) {
 		return User.builder()
 			.id(id)
 			.username(username)
+				.profile(profile)
 			.name("이름")
 			.email("이메일")
 			.providerType(ProviderType.GOOGLE)

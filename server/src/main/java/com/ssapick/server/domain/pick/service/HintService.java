@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HintService {
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
+	private final ApplicationEventPublisher publisher;
 
 	public Hint getRandomHintByPickId(Long pickId) {
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
@@ -41,6 +45,13 @@ public class HintService {
 		Hint openHint = findHintById(hints, openHintId);
 
 		addHintOpenToPick(pick, openHint);
+
+		publisher.publishEvent(new PickcoEvent(
+				pick.getSender(),
+				PickcoLogType.HINT_OPEN,
+				-1,
+				pick.getSender().getProfile().getPickco()
+		));
 
 		return openHint;
 	}
