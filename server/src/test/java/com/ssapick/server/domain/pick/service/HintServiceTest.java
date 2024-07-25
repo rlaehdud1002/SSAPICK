@@ -33,6 +33,13 @@ import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.ProfileRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest extends HintServiceTestSupport {
@@ -113,7 +120,7 @@ class HintServiceTest extends HintServiceTestSupport {
 		HintOpen mockHintOpen = this.createMockHintOpen(mockHint, mockPick);
 
 		mockPick.getHintOpens().add(mockHintOpen);
-		//
+
 		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
 			Optional.of(mockPick));
 
@@ -136,14 +143,14 @@ class HintServiceTest extends HintServiceTestSupport {
 		HintOpen mockHintOpen1 = this.createMockHintOpen(mockHint1, mockPick);
 		HintOpen mockHintOpen2 = this.createMockHintOpen(mockHint2, mockPick);
 
-		mockPick.getHintOpens().add(mockHintOpen1);
-		mockPick.getHintOpens().add(mockHintOpen2);
+        mockPick.getHintOpens().add(mockHintOpen1);
+        mockPick.getHintOpens().add(mockHintOpen2);
 
-		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
-			Optional.of(mockPick));
+        when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+                Optional.of(mockPick));
 
-		// when
-		Runnable runnable = () -> hintService.getRandomHintByPickId(1L);
+        // when
+        Runnable runnable = () -> hintService.getRandomHintByPickId(1L);
 
 		// then
 		assertThatThrownBy(runnable::run)
@@ -265,11 +272,11 @@ class HintServiceTest extends HintServiceTestSupport {
 		// when
 		Runnable runnable = () -> hintService.saveHint(null, hintWithNullUser);
 
-		// then
-		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("사용자를 찾을 수 없습니다.");
-	}
+        // then
+        assertThatThrownBy(runnable::run)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("유저 정보가 없습니다.");
+    }
 
 	@Test
 	@WithMockUser
@@ -308,13 +315,13 @@ class HintServiceTest extends HintServiceTestSupport {
 		Hint mockHint = createMockHint(7L, user, "장덕동1");
 		HintOpen mockHintOpen = createMockHintOpen(mockHint, mockPick);
 
-		mockPick.getHintOpens().add(mockHintOpen);
+        mockPick.getHintOpens().add(mockHintOpen);
 
-		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
-			Optional.of(mockPick));
+        when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+                Optional.of(mockPick));
 
-		// when
-		List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
+        // when
+        List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
 
 		// then
 		assertThat(hintOpens).hasSize(1);
@@ -327,11 +334,11 @@ class HintServiceTest extends HintServiceTestSupport {
 	void getHintsByUserIdTest() {
 		// given
 
-		// when
-		List<Hint> hints = hintService.getHintsByUserId(1L);
+        // when
+        List<Hint> hints = hintService.getHintsByUserId(1L);
 
-		// then
-		assertThat(hints).hasSize(6);
-	}
+        // then
+        assertThat(hints).hasSize(6);
+    }
 
 }

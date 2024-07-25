@@ -53,7 +53,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User receiver = this.createUser("받는 사람");
         User sender = this.createUser("보낸 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
         List<Pick> picks = Stream.of(1, 2, 3).map(i -> {
             Pick pick = spy(this.createPick(sender, receiver, question));
@@ -79,7 +79,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User receiver = this.createUser("받는 사람");
         User sender = this.createUser("보낸 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
         List<Pick> picks = Stream.of(1, 2, 3).map(i -> {
             Pick pick = spy(this.createPick(sender, receiver, question));
@@ -105,7 +105,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("보낸 사람");
         User receiver = this.createUser("받는 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
 
         PickData.Create create = new PickData.Create();
@@ -137,7 +137,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("보낸 사람");
         User receiver = this.createUser("받는 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
 
         PickData.Create create = new PickData.Create();
@@ -163,7 +163,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("보낸 사람");
         User receiver = this.createUser("받는 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
 
         PickData.Create create = new PickData.Create();
@@ -195,7 +195,7 @@ class PickServiceTest extends UserSupport {
         int incorrectId = 2;
         User sender = this.createUser("보낸 사람");
         User receiver = this.createUser("받는 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
 
         PickData.Create create = new PickData.Create();
@@ -221,7 +221,7 @@ class PickServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("보낸 사람");
         User receiver = this.createUser("받는 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
+        Question question = spy(this.createQuestion());
         when(question.getId()).thenReturn(1L);
 
         PickData.Create create = new PickData.Create();
@@ -246,8 +246,8 @@ class PickServiceTest extends UserSupport {
         return Pick.createPick(sender, receiver, question);
     }
 
-    private Question createQuestion(String content) {
+    private Question createQuestion() {
         QuestionCategory category = QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리");
-        return Question.createQuestion(category, content, createUser("author"));
+        return Question.createQuestion(category, "테스트 질문", createUser("author"));
     }
 }

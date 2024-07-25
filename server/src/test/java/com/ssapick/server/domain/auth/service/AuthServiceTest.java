@@ -29,6 +29,7 @@ import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
+@DisplayName("인증 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest extends AuthenticatedSupport {
 
