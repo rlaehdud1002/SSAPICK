@@ -30,13 +30,12 @@ public class QuestionService {
 	private final QuestionBanRepository questionBanRepository;
 	private final QuestionCategoryRepository questionCategoryRepository;
 
-
 	/**
 	 * 모든질문 조회
 	 *
 	 * @return
 	 */
-	public List<QuestionData.Search> searchQuestions() {
+	public List<QuestionData.Search> searchQeustions() {
 		List<Question> all = questionRepository.findAll();
 		return all.stream()
 			.map(QuestionData.Search::fromEntity)
@@ -48,7 +47,7 @@ public class QuestionService {
 	 * @param questionCategoryId
 	 * @return
 	 */
-	public List<QuestionData.Search> searchQuestionsByCategory(Long questionCategoryId) {
+	public List<QuestionData.Search> searchQeustionsByCategory(Long questionCategoryId) {
 		QuestionCategory category = questionCategoryRepository.findById(questionCategoryId).orElseGet(() -> {
 			throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
 		});
@@ -64,7 +63,7 @@ public class QuestionService {
 	 * @param questionId
 	 * @return
 	 */
-	public QuestionData.Search searchQuestionByQuestionId(Long questionId) {
+	public QuestionData.Search searchQeustionByQuestionId(Long questionId) {
 		Question question = questionRepository.findById(questionId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
 
@@ -112,40 +111,25 @@ public class QuestionService {
 
 	/**
 	 * 내가 지목받은 질문 수 별로 랭킹 조회
+	 *
 	 * @param userId
 	 * @return
 	 */
-	public List<QuestionData.Search> searchMyQuestionsRank(Long userId) {
+	public List<QuestionData.Search> searchQeustionsRank(Long userId) {
 		return questionRepository.findRanking(userId)
 			.stream()
 			.map(QuestionData.Search::fromEntity)
 			.toList();
 	}
 
-	/**
-	 * 사용자에게 뿌려줄 질문 리스트 (전체 질문 - 차단 질문)
-	 * @param user
-	 * @return
-	 */
-	public List<QuestionData.Search> searchQuestionList(User user) {
+	public List<QuestionData.Search> searchQeustionList(User user) {
 
-		List<QuestionData.Search> searches = searchQuestions();
+		List<QuestionData.Search> searches = searchQeustions();
 		List<QuestionData.Search> banQuestions = searchBanQuestions(user.getId());
 
 		searches.removeAll(banQuestions);
 
 		return searches;
-	}
 
-	/**
-	 * 사용자가 등록한 질문 조회
-	 * @param id
-	 * @return
-	 */
-	public List<QuestionData.Search> searchMyAddedQuestions(Long id) {
-		return questionRepository.findAddedQuestionsById(id)
-			.stream()
-			.map(QuestionData.Search::fromEntity)
-			.toList();
 	}
 }
