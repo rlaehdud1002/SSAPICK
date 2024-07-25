@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.pick.entity.Hint;
 
 import jakarta.persistence.CascadeType;
@@ -37,52 +38,54 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
+	private Long id;
 
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Profile profile;
 
-    @Column(nullable = false)
-    private String username;
+	@Column(nullable = false)
+	private String username;
 
-    @Column(nullable = false)
-    private char gender;
+	@Column(nullable = false)
+	private char gender;
 
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(name = "provider_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProviderType providerType;
 
-    @Column(name = "provider_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private RoleType roleType = RoleType.USER;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType = RoleType.USER;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
+	private List<Follow> followers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
-    private List<Follow> followers = new ArrayList<>();
+	@Column(name = "provider_id", nullable = false)
+	private String providerId;
 
-    @Column(name = "provider_id", nullable = false)
-    private String providerId;
+	@Column(name = "is_mattermost_confirmed", nullable = false)
+	private boolean isMattermostConfirmed = false;
 
-    @Column(name = "is_mattermost_confirmed", nullable = false)
-    private boolean isMattermostConfirmed = false;
-
-    @Column(name = "is_locked", nullable = false)
-    private boolean isLocked = false;
+	@Column(name = "is_locked", nullable = false)
+	private boolean isLocked = false;
 
 	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
 	private List<UserBan> bannedUser = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Hint> hints = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Attendance> attendances = new ArrayList<>();
 
 	@Override
 	public boolean equals(Object o) {
@@ -119,7 +122,6 @@ public class User extends BaseEntity {
 		user.providerId = providerId;
 		return user;
 	}
-
 
 	public void mattermostConfirm() {
 		this.isMattermostConfirmed = true;
