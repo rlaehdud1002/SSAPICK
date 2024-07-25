@@ -76,7 +76,7 @@ public class User extends BaseEntity {
 	@Column(name = "is_locked", nullable = false)
 	private boolean isLocked = false;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Hint> hints = new ArrayList<>();
 
 	/**
@@ -118,6 +118,10 @@ public class User extends BaseEntity {
 		this.providerId = providerId;
 		this.isMattermostConfirmed = isMattermostConfirmed;
 		this.isLocked = isLocked;
+	}
+
+	public void setTestId(Long id) {
+		this.id = id;
 	}
 
 	public void updateUser(String username, String name) {

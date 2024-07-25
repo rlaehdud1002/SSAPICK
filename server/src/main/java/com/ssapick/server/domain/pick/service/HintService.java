@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 public class HintService {
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
+	private final UserRepository userRepository;
 	private final CampusRepository campusRepository;
 	private final ProfileRepository profileRepository;
-	private final UserRepository userRepository;
 
 	public String getRandomHintByPickId(Long pickId) {
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
@@ -47,9 +48,12 @@ public class HintService {
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
-		Long openHintId = selectRandomHintId(availableHints);
-		Hint openHint = findHintById(hints, openHintId);
+		log.info("Available hints: {}", availableHints);
 
+		Long openHintId = selectRandomHintId(availableHints);
+		log.info("Selected hintId: {}", openHintId);
+		Hint openHint = findHintById(hints, openHintId);
+		log.info("Selected hint: {}", openHint);
 		addHintOpenToPick(pick, openHint);
 
 		String hintContent = openHint.getContent();
@@ -115,28 +119,79 @@ public class HintService {
 			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
 		}
 
-		if (request == null) {
-			throw new IllegalArgumentException("힌트가 없습니다.");
+		if (request == null ||
+			request.getName() == null ||
+			request.getChort() == 0 ||
+			request.getCampusName() == null ||
+			request.getCampusSection() == 0 || // 기본값 체크
+			request.getMbti() == null ||
+			request.getMajor() == null ||
+			request.getBirth() == null ||
+			request.getResidentialArea() == null ||
+			request.getInterest() == null) {
+			throw new IllegalArgumentException("힌트 데이터의 필드 중 null인 값이 있습니다.");
 		}
 
 		user.updateName(request.getName());
 		user.updateGender(request.getGender());
 
-		Campus campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
-		Profile profile = Profile.createProfile(user, request.getChort(), campus);
+		Profile profile = user.getProfile();
+		if (profile != null) {
+			Campus campus = profile.getCampus();
+			if (campus != null) {
+				campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(),
+					campus.getDescription());
+			} else {
+				campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
+			}
+			profile = Profile.createProfile(user, request.getChort(), campus);
+		} else {
+			Campus campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
+			profile = Profile.createProfile(user, request.getChort(), campus);
+		}
+
+		campusRepository.save(profile.getCampus());
+
+		profileRepository.save(profile);
 
 		user.updateProfile(profile);
-
 		userRepository.save(user);
 
-		log.info(String.valueOf(user.getProfile().getCampus()));
+		log.info("Campus : {}", String.valueOf(user.getProfile().getCampus()));
+		log.info("Profile : {}", String.valueOf(user.getProfile()));
 
-		Hint hint = Hint.createHint(user, request.getBirth(), HintType.AGE);
+		List<Hint> hints = List.of(
+			Hint.createHint(user, request.getName(), HintType.NAME),
+			Hint.createHint(user, String.valueOf(request.getGender()), HintType.GENDER),
+			Hint.createHint(user, String.valueOf(request.getChort()), HintType.CHORT),
+			Hint.createHint(user, request.getCampusName(), HintType.CAMPUS_NAME),
+			Hint.createHint(user, String.valueOf(request.getCampusSection()), HintType.CAMPUS_SECTION),
+			Hint.createHint(user, request.getMbti(), HintType.MBTI),
+			Hint.createHint(user, request.getMajor(), HintType.MAJOR),
+			Hint.createHint(user, request.getBirth(), HintType.AGE),
+			Hint.createHint(user, request.getResidentialArea(), HintType.RESIDENTIAL_AREA),
+			Hint.createHint(user, request.getInterest(), HintType.INTEREST)
+		);
 
-		// hintRepository.saveAll();
-
-		log.info("힌트 저장 완료");
-
+		for (Hint hint : hints) {
+			log.info("유저 아이디: {}", user.getId());
+			log.info("힌트 타입: {}", hint.getHintType());
+			Optional<Hint> existingHintOptional = hintRepository.findByUserIdAndHintType(user.getId(),
+				hint.getHintType());
+			log.info("기존 힌트 조회 결과: {}", existingHintOptional);
+			if (existingHintOptional.isPresent()) {
+				Hint existingHint = existingHintOptional.get();
+				if (!existingHint.getContent().equals(hint.getContent())) {
+					existingHint.updateContent(hint.getContent());
+					hintRepository.save(existingHint);
+					log.info("바뀐 힌트 내용 : {}", hint.getContent());
+					log.info("힌트 업데이트 완료");
+				}
+			} else {
+				hintRepository.save(hint);
+				log.info("힌트 저장 완료");
+			}
+		}
 	}
 
 	private String processNameHint(String name) {

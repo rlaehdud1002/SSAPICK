@@ -41,6 +41,10 @@ public class Campus {
 	@Column
 	private String description;
 
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
 	public static Campus createCampus(String name, short section, String description) {
 		Campus campus = new Campus();
 		campus.name = name;

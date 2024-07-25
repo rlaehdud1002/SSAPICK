@@ -41,6 +41,14 @@ public class Hint extends TimeEntity {
 	@Column(nullable = false)
 	private boolean visibility = false;
 
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
+
 	public static Hint createHint(User user, String content, HintType hintType) {
 		Hint hint = new Hint();
 		hint.user = user;

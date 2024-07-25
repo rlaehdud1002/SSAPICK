@@ -44,6 +44,10 @@ public class Profile extends BaseEntity {
 	@Column(nullable = false)
 	private int pickco = 0;
 
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
 	// FIXME 이미지 추가 해야됨
 	public static Profile createProfile(User user, short cohort, Campus campus) {
 		Profile profile = new Profile();
