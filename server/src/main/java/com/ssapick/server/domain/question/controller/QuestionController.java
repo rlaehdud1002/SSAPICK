@@ -1,23 +1,17 @@
 package com.ssapick.server.domain.question.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
-import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
 
@@ -46,7 +40,8 @@ public class QuestionController {
 	 * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
 	 */
 	@GetMapping("/category/{questionCategory_id}")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(@PathVariable Long questionCategory_id) {
+	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(
+		@PathVariable Long questionCategory_id) {
 		List<QuestionData.Search> questions = questionService.searchQeustionsByCategory(questionCategory_id);
 
 		return SuccessResponse.of(questions);
@@ -70,9 +65,9 @@ public class QuestionController {
 	 * @return
 	 */
 	@PostMapping("/add")
-	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user, @RequestBody QuestionData.AddRequest addRequest) {
+	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user,
+		@RequestBody QuestionData.AddRequest addRequest) {
 		questionService.createQuestion(user, addRequest);
-
 
 		return SuccessResponse.empty();
 	}
@@ -105,8 +100,17 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/rank")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsRank(@CurrentUser User user) {
-		List<QuestionData.Search> questions = questionService.searchQeustionsRank(user.getId());
+	public SuccessResponse<List<QuestionData.Search>> searchMyQeustionsRank(@CurrentUser User user) {
+		List<QuestionData.Search> questions = questionService.searchMyQeustionsRank(user.getId());
+		return SuccessResponse.of(questions);
+	}
+
+	/**
+	 * 내가 등록한 질문 조회 API
+	 */
+	@GetMapping("/my-added")
+	public SuccessResponse<List<QuestionData.Search>> searchMyAddedQuestions(@CurrentUser User user) {
+		List<QuestionData.Search> questions = questionService.searchMyAddedQuestions(user.getId());
 		return SuccessResponse.of(questions);
 	}
 }
