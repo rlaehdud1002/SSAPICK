@@ -29,8 +29,8 @@ public class QuestionController {
 	 * @return {@link List<QuestionData.Search>} 모든 질문 조회
 	 */
 	@GetMapping("")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustions() {
-		List<QuestionData.Search> questions = questionService.searchQeustions();
+	public SuccessResponse<List<QuestionData.Search>> searchQuestions() {
+		List<QuestionData.Search> questions = questionService.searchQuestions();
 		return SuccessResponse.of(questions);
 	}
 
@@ -40,9 +40,9 @@ public class QuestionController {
 	 * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
 	 */
 	@GetMapping("/category/{questionCategory_id}")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(
+	public SuccessResponse<List<QuestionData.Search>> searchQuestionsByCategory(
 		@PathVariable Long questionCategory_id) {
-		List<QuestionData.Search> questions = questionService.searchQeustionsByCategory(questionCategory_id);
+		List<QuestionData.Search> questions = questionService.searchQuestionsByCategory(questionCategory_id);
 
 		return SuccessResponse.of(questions);
 	}
@@ -53,8 +53,8 @@ public class QuestionController {
 	 * @return {@link QuestionData.Search} 질문 ID로 질문 조회
 	 */
 	@GetMapping("/{questionId}")
-	public SuccessResponse<QuestionData.Search> searchQeustionsByQuestionId(@PathVariable Long questionId) {
-		QuestionData.Search search = questionService.searchQeustionByQuestionId(questionId);
+	public SuccessResponse<QuestionData.Search> searchQuestionsByQuestionId(@PathVariable Long questionId) {
+		QuestionData.Search search = questionService.searchQuestionByQuestionId(questionId);
 		return SuccessResponse.of(search);
 	}
 
@@ -90,8 +90,8 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/list")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsList(@CurrentUser User user) {
-		return SuccessResponse.of(List.copyOf(questionService.searchQeustionList(user)));
+	public SuccessResponse<List<QuestionData.Search>> searchQuestionsList(@CurrentUser User user) {
+		return SuccessResponse.of(List.copyOf(questionService.searchQuestionList(user)));
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class QuestionController {
 	 * @return
 	 */
 	@GetMapping("/rank")
-	public SuccessResponse<List<QuestionData.Search>> searchMyQeustionsRank(@CurrentUser User user) {
-		List<QuestionData.Search> questions = questionService.searchMyQeustionsRank(user.getId());
+	public SuccessResponse<List<QuestionData.Search>> searchMyQuestionsRank(@CurrentUser User user) {
+		List<QuestionData.Search> questions = questionService.searchMyQuestionsRank(user.getId());
 		return SuccessResponse.of(questions);
 	}
 

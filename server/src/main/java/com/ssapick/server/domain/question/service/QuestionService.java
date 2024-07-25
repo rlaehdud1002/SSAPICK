@@ -36,7 +36,7 @@ public class QuestionService {
 	 *
 	 * @return
 	 */
-	public List<QuestionData.Search> searchQeustions() {
+	public List<QuestionData.Search> searchQuestions() {
 		List<Question> all = questionRepository.findAll();
 		return all.stream()
 			.map(QuestionData.Search::fromEntity)
@@ -48,7 +48,7 @@ public class QuestionService {
 	 * @param questionCategoryId
 	 * @return
 	 */
-	public List<QuestionData.Search> searchQeustionsByCategory(Long questionCategoryId) {
+	public List<QuestionData.Search> searchQuestionsByCategory(Long questionCategoryId) {
 		QuestionCategory category = questionCategoryRepository.findById(questionCategoryId).orElseGet(() -> {
 			throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
 		});
@@ -64,7 +64,7 @@ public class QuestionService {
 	 * @param questionId
 	 * @return
 	 */
-	public QuestionData.Search searchQeustionByQuestionId(Long questionId) {
+	public QuestionData.Search searchQuestionByQuestionId(Long questionId) {
 		Question question = questionRepository.findById(questionId)
 			.orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
 
@@ -115,7 +115,7 @@ public class QuestionService {
 	 * @param userId
 	 * @return
 	 */
-	public List<QuestionData.Search> searchMyQeustionsRank(Long userId) {
+	public List<QuestionData.Search> searchMyQuestionsRank(Long userId) {
 		return questionRepository.findRanking(userId)
 			.stream()
 			.map(QuestionData.Search::fromEntity)
@@ -127,9 +127,9 @@ public class QuestionService {
 	 * @param user
 	 * @return
 	 */
-	public List<QuestionData.Search> searchQeustionList(User user) {
+	public List<QuestionData.Search> searchQuestionList(User user) {
 
-		List<QuestionData.Search> searches = searchQeustions();
+		List<QuestionData.Search> searches = searchQuestions();
 		List<QuestionData.Search> banQuestions = searchBanQuestions(user.getId());
 
 		searches.removeAll(banQuestions);
