@@ -6,6 +6,7 @@ import ModiUserInfo from 'pages/ModiUserInfo';
 import QuestionList from 'pages/QuestionList';
 import SetAccount from 'pages/SetAccount';
 import SetAlarm from 'pages/SetAlarm';
+import FriendList from 'pages/FriendList';
 import { Route, Routes } from 'react-router-dom';
 
 const ProfileRoute = () => {
@@ -14,6 +15,7 @@ const ProfileRoute = () => {
       <Route path="/modiuserinfo" element={<ModiUserInfo />} />
               <Route path="/modiuseraddinfo" element={<ModiUserAddInfo />} />
               <Route path="/setalarm" element={<SetAlarm />} />
+              <Route path="/friendlist" element={<FriendList />} />
               <Route path="/block" element={<Block />} />
               <Route path="/attendance" element={<Attendance />} />
               <Route path="/locationalarm" element={<LocationAlarm />} />

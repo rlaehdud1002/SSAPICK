@@ -1,10 +1,10 @@
 package com.ssapick.server.domain.question.dto;
 
+import java.util.Objects;
+
 import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.User;
 import lombok.Data;
 
-import java.util.Objects;
 
 public class QuestionData {
 
@@ -22,8 +22,8 @@ public class QuestionData {
             Search search = new Search();
             search.questionId = question.getId();
             search.banCount = question.getBanCount();
-//			search.questionCategoyId = question.getQuestionCategory().getId();
-//			search.questionCategoryName = question.getQuestionCategory().getName();
+			search.questionCategoyId = question.getQuestionCategory().getId();
+			search.questionCategoryName = question.getQuestionCategory().getName();
             search.authorId = question.getAuthor().getId();
             search.author = question.getAuthor().getName();
             search.content = question.getContent();
@@ -51,11 +51,10 @@ public class QuestionData {
         }
     }
 
-    @Data
-    public static class AddRequest {
-        private User user;
-        private Long categoryId;
-        private String content;
-    }
+	@Data
+	public static class AddRequest{
+		private Long categoryId;
+		private String content;
+	}
 
 }

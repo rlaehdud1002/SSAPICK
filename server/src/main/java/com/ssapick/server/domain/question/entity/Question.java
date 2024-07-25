@@ -1,6 +1,10 @@
 package com.ssapick.server.domain.question.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -12,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +45,9 @@ public class Question extends BaseEntity {
     @Column(name = "ban_count", nullable = false)
     private int banCount = 0;
 
+    @OneToMany(mappedBy = "question")
+    private List<Pick> picks = new ArrayList<>();
+
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
 
@@ -51,6 +59,13 @@ public class Question extends BaseEntity {
         question.questionCategory = category;
         question.content = content;
         question.author = author;
+        return question;
+    }
+
+    public static Question of(Long questionId, String content) {
+        Question question = new Question();
+        question.id = questionId;
+        question.content = content;
         return question;
     }
 }

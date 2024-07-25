@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -46,7 +47,11 @@ class PickServiceTest {
     void setUp() {
         receiver = userCreate(1L, "test-user1", '여');
         sender = userCreate(2L, "test-user2", '남');
+        question = Question.of(1L, "Sample Question");
         pick = pickCreate(receiver, sender);
+
+        lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+        lenient().when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
 
     }
 
@@ -90,12 +95,11 @@ class PickServiceTest {
     @DisplayName("유저1이 유저2를 픽하는 테스트")
     void setPick() {
         PickData.Create createData = new PickData.Create();
-//		createData.setReceiver(receiver);
-//		createData.setSender(sender);
-//		createData.setQuestion(question);
+        createData.setReceiverId(receiver.getId());
+        createData.setQuestionId(question.getId());
 
         // when
-        pickService.createPick(createData);
+        pickService.createPick(sender, createData);
 
         // then
         verify(pickRepository, times(1)).save(argThat(pick ->
@@ -106,7 +110,7 @@ class PickServiceTest {
     }
 
     private Pick pickCreate(User receiver, User sender) {
-        return Pick.createPick(sender, receiver, null);
+        return Pick.of(sender, receiver, null);
     }
 
     private User userCreate(Long id, String username, char gender) {

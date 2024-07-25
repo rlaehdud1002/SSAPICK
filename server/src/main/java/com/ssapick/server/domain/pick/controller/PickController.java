@@ -34,7 +34,6 @@ public class PickController {
 
     /**
      * 보낸 픽 조회하는 API
-     *
      * @param user
      * @return
      */
@@ -47,7 +46,6 @@ public class PickController {
 
     /**
      * 픽 생성하는 API
-     *
      * @param user
      * @param create
      * @return
@@ -58,7 +56,7 @@ public class PickController {
     public SuccessResponse<Void> createPick(@CurrentUser User user,
                                             @RequestBody PickData.Create create) {
 
-//		pickService.createPick(user, create);
+		pickService.createPick(user, create);
 
         return SuccessResponse.empty();
     }

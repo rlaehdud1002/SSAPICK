@@ -22,7 +22,7 @@ const ProfileContent = () => {
             <span className="luckiest_guy mx-2">96</span>
           </div>
           <div className="mx-2">
-            <FriendIcon width={22} height={22} />
+            <FriendIcon width={30} height={22} isDefault={false} />
             <div className="luckiest_guy mt-1.5">230</div>
           </div>
         </div>
