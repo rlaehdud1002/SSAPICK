@@ -37,7 +37,6 @@ const ProfileCameraIcon = ({ setUploadImage }: ProfileCameraIconProps) => {
           <img src="/icons/Camera.png" alt="camera" />
           <input accept="image/*" onChange={handleFileUpload} className="hidden" id="profile-image" type="file" />
         </label>
-
       </div>
     </div>
 
