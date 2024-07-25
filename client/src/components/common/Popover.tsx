@@ -1,25 +1,34 @@
 import PointIcon from "icons/PointIcon"
-import { Button } from "../ui/button"
+import DeleteIcon from "icons/DeleteIcon"
+import FriendBlockIcon from "icons/FriendBlockIcon"
+
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "../ui/popover"
+import BlockModal from "components/modals/BlockModal"
+import DeleteModal from "components/modals/DeleteModal"
 
 const PopOver = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        {/* <Button variant="outline">Open popover</Button> */}
         <div>
         <PointIcon/>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-32 mr-5">
-        <div className="flex flex-col">
-        <span className="my-1">차단</span>
-        <span className="my-1">삭제</span>
+      <PopoverContent className="w-28 mr-5">
+        <div className="flex flex-col items-center">
+        <div className="flex items-center">
+        <FriendBlockIcon width={22} height={22}/>
+        <BlockModal title="차단"/>
+        </div>
+        <div className="flex items-center">
+        <DeleteIcon width={22} height={22}/>
+        <DeleteModal title="삭제"/>
+        </div>
         </div>
       </PopoverContent>
     </Popover>
