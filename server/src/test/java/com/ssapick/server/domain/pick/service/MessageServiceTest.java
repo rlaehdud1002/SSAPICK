@@ -9,6 +9,7 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +35,9 @@ class MessageServiceTest extends UserSupport {
 
     @Mock
     private PickRepository pickRepository;
+
+    @Mock
+    private EntityManager em;
 
     @Test
     @DisplayName("보낸 메시지 확인 테스트")
@@ -87,7 +91,7 @@ class MessageServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("sender");
         User receiver = this.createUser("receiver");
-        Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+        Pick pick = spy(Pick.createPick(sender, receiver, createQuestion(sender)));
 
         when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
         when(pick.getId()).thenReturn(1L);
@@ -98,6 +102,7 @@ class MessageServiceTest extends UserSupport {
         create.setContent("테스트 메시지");
         create.setReceiverId(receiver.getId());
 
+        when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
 
         // * WHEN: 이걸 실행하면
         messageService.createMessage(sender, create);
@@ -137,7 +142,7 @@ class MessageServiceTest extends UserSupport {
         // * GIVEN: 이런게 주어졌을 때
         User sender = this.createUser("sender");
         User receiver = this.createUser("receiver");
-        Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+        Pick pick = spy(Pick.createPick(sender, receiver, createQuestion(sender)));
 
         when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
         when(pick.getId()).thenReturn(1L);
@@ -216,7 +221,7 @@ class MessageServiceTest extends UserSupport {
     }
 
     private Message createMessage(User sender, User receiver, String content) {
-        Pick pick = Pick.of(sender, receiver, createQuestion(sender));
+        Pick pick = Pick.createPick(sender, receiver, createQuestion(sender));
         return Message.createMessage(sender, receiver, pick, content);
     }
 

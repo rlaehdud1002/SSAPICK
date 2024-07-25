@@ -1,60 +1,57 @@
 package com.ssapick.server.domain.question.dto;
 
-import java.util.Objects;
-
 import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.question.entity.QuestionCategory;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
 public class QuestionData {
+    @Data
+    public static class Category {
+        private Long id;
+        private String name;
+        private String thumbnail;
+
+        public static Category fromEntity(QuestionCategory category) {
+            Category categoryData = new Category();
+            categoryData.id = category.getId();
+            categoryData.name = category.getName();
+            categoryData.thumbnail = category.getThumbnail();
+            return categoryData;
+        }
+    }
 
     @Data
     public static class Search {
-        private Long questionId;
-        private Integer banCount;
-        private Long questionCategoyId;
-        private String questionCategoryName;
-        private Long authorId;
-        private String author;
+        private Long id;
+        private int banCount;
+        private int skipCount;
+        private Category category;
         private String content;
 
         public static Search fromEntity(Question question) {
             Search search = new Search();
-            search.questionId = question.getId();
+            search.id = question.getId();
             search.banCount = question.getBanCount();
-			search.questionCategoyId = question.getQuestionCategory().getId();
-			search.questionCategoryName = question.getQuestionCategory().getName();
-            search.authorId = question.getAuthor().getId();
-            search.author = question.getAuthor().getName();
+            search.skipCount = question.getSkipCount();
+            search.category = Category.fromEntity(question.getQuestionCategory());
             search.content = question.getContent();
             return search;
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            Search search = (Search) o;
-            return Objects.equals(questionId, search.questionId) && Objects.equals(banCount,
-                    search.banCount) && Objects.equals(questionCategoyId, search.questionCategoyId)
-                    && Objects.equals(questionCategoryName, search.questionCategoryName) && Objects.equals(
-                    authorId, search.authorId) && Objects.equals(author, search.author) && Objects.equals(
-                    content, search.content);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(questionId, banCount, questionCategoyId, questionCategoryName, authorId, author,
-                    content);
-        }
     }
 
-	@Data
-	public static class AddRequest{
-		private Long categoryId;
-		private String content;
-	}
+    @Data
+    public static class Create {
+        @NotNull(message = "카테고리 ID는 필수입니다.")
+        private Long categoryId;
+
+        @NotNull(message = "질문 내용은 필수입니다.")
+        @Min(value = 5, message = "질문 내용은 최소 5자 이상입니다.")
+        @Max(value = 30, message = "질문 내용은 최대 30자 이하입니다.")
+        private String content;
+    }
 
 }

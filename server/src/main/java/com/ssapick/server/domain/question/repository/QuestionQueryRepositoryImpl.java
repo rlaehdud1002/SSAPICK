@@ -29,7 +29,7 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
         return queryFactory
                 .select(question)
                 .from(question)
-			.join(question.picks, pick).fetchJoin()
+//			.join(question, pick).fetchJoin()
                 .where(pick.receiver.id.eq(userId))
                 .groupBy(question.id)
                 .orderBy(pick.count().desc())

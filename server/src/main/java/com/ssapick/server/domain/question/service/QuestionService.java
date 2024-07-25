@@ -1,11 +1,5 @@
 package com.ssapick.server.domain.question.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
@@ -16,9 +10,12 @@ import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.User;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,48 +41,52 @@ public class QuestionService {
                 .toList();
     }
 
-	/**
-	 * 카테고리별 질문 조회
-	 * @param questionCategoryId
-	 * @return
-	 */
-	public List<QuestionData.Search> searchQeustionsByCategory(Long questionCategoryId) {
-		QuestionCategory category = questionCategoryRepository.findById(questionCategoryId).orElseGet(() -> {
-			throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
-		});
+    /**
+     * 카테고리별 질문 조회
+     *
+     * @param questionCategoryId
+     * @return
+     */
+    public List<QuestionData.Search> searchQeustionsByCategory(Long questionCategoryId) {
+        QuestionCategory category = questionCategoryRepository.findById(questionCategoryId).orElseGet(() -> {
+            throw new IllegalArgumentException("해당 카테고리가 존재하지 않습니다.");
+        });
 
-		return category.getQuestions().stream()
-			.filter(q -> !q.isDeleted())
-			.map(QuestionData.Search::fromEntity)
-			.toList();
+//		return category().stream()
+//			.filter(q -> !q.isDeleted())
+//			.map(QuestionData.Search::fromEntity)
+//			.toList();
+        return null;
     }
 
-	/**
-	 * 질문 ID로 질문 조회
-	 * @param questionId
-	 * @return
-	 */
-	public QuestionData.Search searchQeustionByQuestionId(Long questionId) {
-		Question question = questionRepository.findById(questionId)
-			.orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+    /**
+     * 질문 ID로 질문 조회
+     *
+     * @param questionId
+     * @return
+     */
+    public QuestionData.Search searchQeustionByQuestionId(Long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
 
-		if (question.isDeleted()) {
-			throw new IllegalArgumentException("삭제된 질문입니다.");
-		}
-		return QuestionData.Search.fromEntity(question);
-	}
+        if (question.isDeleted()) {
+            throw new IllegalArgumentException("삭제된 질문입니다.");
+        }
+        return QuestionData.Search.fromEntity(question);
+    }
 
-	/**
-	 * 질문 생성 요청
-	 * @param addRequest
-	 */
-	public void createQuestion(User user, QuestionData.AddRequest addRequest) {
+    /**
+     * 질문 생성 요청
+     *
+     * @param create
+     */
+    public void createQuestion(User user, QuestionData.Create create) {
 
-		QuestionCategory category = questionCategoryRepository.findById(addRequest.getCategoryId())
-			.orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
-		
-		questionRegistrationRepository.save(QuestionRegistration.of(user, category, addRequest.getContent()));
-	}
+        QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+
+        questionRegistrationRepository.save(QuestionRegistration.of(user, category, create.getContent()));
+    }
 
     /**
      * 질문 차단
@@ -124,14 +125,14 @@ public class QuestionService {
                 .toList();
     }
 
-	public List<QuestionData.Search> searchQeustionList(User user) {
+    public List<QuestionData.Search> searchQeustionList(User user) {
 
-		List<QuestionData.Search> searches = searchQeustions();
-		List<QuestionData.Search> banQuestions = searchBanQuestions(user.getId());
+        List<QuestionData.Search> searches = searchQeustions();
+        List<QuestionData.Search> banQuestions = searchBanQuestions(user.getId());
 
-		searches.removeAll(banQuestions);
+        searches.removeAll(banQuestions);
 
-		return searches;
+        return searches;
 
-	}
+    }
 }
