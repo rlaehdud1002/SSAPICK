@@ -12,6 +12,7 @@ public class ProfileData {
     public static class Search {
         private Long userId;
         private String nickname;
+        private char gender;
         private String campusName;
         private short campusSection;
         private String campusDescription;
@@ -20,12 +21,21 @@ public class ProfileData {
         public static Search fromEntity(Profile profile) {
             Search search = new Search();
             search.userId = profile.getUser().getId();
-            // TODO: 유저에 유저 이름에 대한 정보가 존재하지 않음. 수정 필요함.
-            search.nickname = profile.getUser().getUsername();
+            search.gender = profile.getUser().getGender();
+            search.nickname = profile.getUser().getName();
             search.campusName = profile.getCampus().getName();
             search.campusSection = profile.getCampus().getSection();
             search.campusDescription = profile.getCampus().getDescription();
             search.profileImage = profile.getProfileImage();
+            return search;
+        }
+
+        public static Search fromEntityAnonymous(Profile profile) {
+            Search search = new Search();
+            search.gender = profile.getUser().getGender();
+            search.campusName = profile.getCampus().getName();
+            search.campusSection = profile.getCampus().getSection();
+            search.campusDescription = profile.getCampus().getDescription();
             return search;
         }
     }

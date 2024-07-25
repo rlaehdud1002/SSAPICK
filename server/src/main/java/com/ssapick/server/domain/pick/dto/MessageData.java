@@ -1,12 +1,14 @@
 package com.ssapick.server.domain.pick.dto;
 
-import com.ssapick.server.domain.pick.entity.Message;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-public class MessageData {
+import com.ssapick.server.domain.pick.entity.Message;
+import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.user.entity.User;
 
+import lombok.Data;
+
+public class MessageData {
     @Data
     public static class Search {
         private Long id;

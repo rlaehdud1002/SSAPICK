@@ -9,7 +9,6 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,9 +35,6 @@ class MessageServiceTest extends UserSupport {
 
     @Mock
     private PickRepository pickRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @Mock
     private EntityManager em;
@@ -106,6 +102,7 @@ class MessageServiceTest extends UserSupport {
         create.setContent("테스트 메시지");
         create.setReceiverId(receiver.getId());
 
+        when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
 
         // * WHEN: 이걸 실행하면
         messageService.createMessage(sender, create);

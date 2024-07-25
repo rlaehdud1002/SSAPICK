@@ -54,15 +54,15 @@ const UserInfo = () => {
 
                 <InfoSelect name="gender" title="성별" register={register("gender", {
                     required: "성별을 선택해주세요."
-                })} setValue={(value: string) => setValue("gender", value)} errors={errors}/>
+                })} setValue={(value: string) => setValue("gender", value)} errors={errors} />
 
                 <InfoSelect name="th" title="기수" register={register("th", {
                     required: "기수를 선택해주세요."
-                })} setValue={(value: number) => setValue("th", value)} errors={errors}/>
+                })} setValue={(value: number) => setValue("th", value)} errors={errors} />
 
                 <InfoSelect name="campus" title="캠퍼스" register={register("campus", {
                     required: "캠퍼스를 선택해주세요."
-                })} setValue={(value: string) => setValue("campus", value)} errors={errors}/>
+                })} setValue={(value: string) => setValue("campus", value)} errors={errors} />
                 <div className="flex">
                     <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
                     <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
