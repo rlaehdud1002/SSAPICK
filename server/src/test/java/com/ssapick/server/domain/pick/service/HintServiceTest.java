@@ -6,9 +6,6 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 import java.util.Optional;
 
-import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.*;
-import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +20,16 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.ssapick.server.core.support.HintServiceTestSupport;
-import com.ssapick.server.domain.pick.dto.HintData;
+import com.ssapick.server.domain.pick.dto.UserData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.ProfileRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
@@ -157,7 +156,7 @@ class HintServiceTest extends HintServiceTestSupport {
 	@DisplayName("hintId가 null인 유효한 데이터로 힌트 저장 테스트")
 	void saveHint() {
 		// given
-		HintData.Create createMockHintCreateData = HintData.Create.of(
+		UserData.Create createMockHintCreateData = UserData.Create.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -167,7 +166,8 @@ class HintServiceTest extends HintServiceTestSupport {
 			"전공",
 			"1998-08-25",
 			"장덕동",
-			"취미");
+			"취미",
+			"imgUrl");
 
 		// when
 		hintService.saveHint(user, createMockHintCreateData);
@@ -185,7 +185,7 @@ class HintServiceTest extends HintServiceTestSupport {
 	@DisplayName("hintId가 null이 아닌 유효한 데이터로 힌트 업데이트 테스트")
 	void updateHint() {
 		// given
-		HintData.Create createMockHintCreateData = HintData.Create.of(
+		UserData.Create createMockHintCreateData = UserData.Create.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -195,10 +195,11 @@ class HintServiceTest extends HintServiceTestSupport {
 			"전공",
 			"1998-08-25",
 			"장덕동",
-			"취미"
+			"취미",
+			"imgUrl"
 		);
 
-		HintData.Create createMockHintCreateData2 = HintData.Create.of(
+		UserData.Create createMockHintCreateData2 = UserData.Create.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -208,7 +209,8 @@ class HintServiceTest extends HintServiceTestSupport {
 			"전공",
 			"1998-08-25",
 			"장덕동 ",
-			"풋살"
+			"풋살",
+			"imgUrl"
 		);
 
 		// Mock 설정
@@ -241,13 +243,12 @@ class HintServiceTest extends HintServiceTestSupport {
 		assertThat(isUpdated).isTrue();
 	}
 
-	// ! 테스트 작성 해야돼
 	@Test
 	@WithMockUser
 	@DisplayName("유저 정보가 없을 때 예외 발생 테스트")
 	void saveHint_withNullUser() {
 		// given
-		HintData.Create hintWithNullUser = HintData.Create.of(
+		UserData.Create hintWithNullUser = UserData.Create.of(
 			null,
 			'M',
 			(short)11,
@@ -257,7 +258,8 @@ class HintServiceTest extends HintServiceTestSupport {
 			"전공",
 			"1998-08-25",
 			"장덕동",
-			"취미"
+			"취미",
+			"imgUrl"
 		);
 
 		// when
@@ -274,7 +276,7 @@ class HintServiceTest extends HintServiceTestSupport {
 	@DisplayName("힌트 내용이 없을 때 예외 발생 테스트")
 	void saveHint_withNullContent() {
 		// given
-		HintData.Create hintWithNullContent = HintData.Create.of(
+		UserData.Create hintWithNullContent = UserData.Create.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -284,7 +286,8 @@ class HintServiceTest extends HintServiceTestSupport {
 			"전공",
 			"1998-08-25",
 			"장덕동",
-			null
+			null,
+			"imgUrl"
 		);
 
 		// when

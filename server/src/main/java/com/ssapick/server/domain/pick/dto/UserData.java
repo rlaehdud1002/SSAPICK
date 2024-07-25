@@ -2,7 +2,7 @@ package com.ssapick.server.domain.pick.dto;
 
 import lombok.Data;
 
-public class HintData {
+public class UserData {
 
 	@Data
 	public static class Create {
@@ -16,6 +16,7 @@ public class HintData {
 		private String birth;
 		private String residentialArea;
 		private String interest;
+		private String profileImage;
 
 		public static Create of(
 			String name,
@@ -27,7 +28,8 @@ public class HintData {
 			String major,
 			String birth,
 			String residentialArea,
-			String interest) {
+			String interest,
+			String profileImage) {
 
 			Create create = new Create();
 			create.name = name;
@@ -40,6 +42,7 @@ public class HintData {
 			create.birth = birth;
 			create.residentialArea = residentialArea;
 			create.interest = interest;
+			create.profileImage = profileImage;
 			return create;
 		}
 	}

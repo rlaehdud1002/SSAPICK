@@ -40,7 +40,7 @@ public abstract class HintServiceTestSupport {
 	}
 
 	protected Profile createMockProfile(User user, Campus campus) {
-		Profile profile = Profile.createProfile(user, (short)11, campus);
+		Profile profile = Profile.createProfile(user, (short)11, campus, "image");
 		profile.setTestId(1L);
 		return profile;
 	}

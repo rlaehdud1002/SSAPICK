@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
-import com.ssapick.server.domain.pick.dto.HintData;
+import com.ssapick.server.domain.pick.dto.UserData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.service.HintService;
@@ -68,7 +68,7 @@ public class HintController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<Void> saveHint(
 		@CurrentUser User user,
-		@RequestBody HintData.Create create) {
+		@RequestBody UserData.Create create) {
 		log.info("힌트 저장 API 요청: {}", create);
 		hintService.saveHint(user, create);
 		return SuccessResponse.created();

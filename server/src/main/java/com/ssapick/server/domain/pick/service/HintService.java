@@ -5,13 +5,11 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.ssapick.server.domain.user.entity.PickcoLogType;
-import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssapick.server.domain.pick.dto.HintData;
+import com.ssapick.server.domain.pick.dto.UserData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
@@ -19,8 +17,10 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.Campus;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.ProfileRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
@@ -119,7 +119,7 @@ public class HintService {
 	}
 
 	@Transactional
-	public void saveHint(User user, HintData.Create request) {
+	public void saveHint(User user, UserData.Create request) {
 
 		log.info("힌트 저장 요청: \n {}", request + "\n" + user);
 
@@ -152,10 +152,10 @@ public class HintService {
 			} else {
 				campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
 			}
-			profile = Profile.createProfile(user, request.getChort(), campus);
+			profile = Profile.createProfile(user, request.getChort(), campus, request.getProfileImage());
 		} else {
 			Campus campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
-			profile = Profile.createProfile(user, request.getChort(), campus);
+			profile = Profile.createProfile(user, request.getChort(), campus, null);
 		}
 
 		campusRepository.save(profile.getCampus());
