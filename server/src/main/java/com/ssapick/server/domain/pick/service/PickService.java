@@ -1,67 +1,92 @@
 package com.ssapick.server.domain.pick.service;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ssapick.server.domain.pick.dto.PickData;
+import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.pick.repository.PickCacheRepository;
+import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.question.entity.QuestionBan;
+import com.ssapick.server.domain.question.repository.QuestionBanRepository;
+import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.User;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssapick.server.domain.pick.dto.PickData;
-import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.question.repository.QuestionRepository;
-import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import static com.ssapick.server.domain.pick.repository.PickCacheRepository.NOT_EXIST;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PickService {
+    private final PickRepository pickRepository;
+    private final PickCacheRepository pickCacheRepository;
+    private final QuestionRepository questionRepository;
+    private final QuestionBanRepository questionBanRepository;
+    private final EntityManager em;
 
-	private static final Logger log = LoggerFactory.getLogger(PickService.class);
-	private final PickRepository pickRepository;
-	private final UserRepository userRepository;
-	private final QuestionRepository questionRepository;
 
+    /**
+     * 받은 픽 조회하기
+     *
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 받은 픽 리스트
+     */
+    public List<PickData.Search> searchReceivePick(User user) {
+        return pickRepository.findReceiverByUserId(user.getId()).stream()
+                .map((Pick pick) -> PickData.Search.fromEntity(pick, true))
+                .toList();
 
-	/**
-	 * 받은 픽 조회하기
-	 * @param userId
-	 * @return List<PickData.Search>
-	 */
-	public List<PickData.Search> searchReceiver(Long userId) {
-		return pickRepository.findReceiverByUserId(userId).stream()
-			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
-			.toList();
+    }
 
-	}
+    /**
+     * 보낸 픽 조회하기
+     *
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 보낸 픽 리스트
+     */
+    public List<PickData.Search> searchSendPick(User user) {
+        return pickRepository.findSenderByUserId(user.getId()).stream()
+                .map((Pick pick) -> PickData.Search.fromEntity(pick, false))
+                .toList();
+    }
 
-	/**
-	 * 보낸 픽 조회하기
-	 * @param userId
-	 * @return
-	 */
-	public List<PickData.Search> searchSender(Long userId) {
-		return pickRepository.findSenderByUserId(userId).stream()
-			.map((Pick pick) -> PickData.Search.fromEntity(pick, false))
-			.toList();
-	}
+    @Transactional
+    public void createPick(User sender, PickData.Create create) {
+        int index = pickCacheRepository.index(sender.getId());
 
-	/**
-	 * 픽 생성하기
-	 * @param sender
-	 * @param receiverId
-	 * @param questionId
-	 */
-	public void createPick(User sender, Long receiverId, Long questionId) {
+        if (index != NOT_EXIST && create.getIndex() != index) {
+            log.error("픽 인덱스가 올바르지 않습니다. index: {}, user: {}", create.getIndex(), sender);
+            throw new IllegalArgumentException("픽 인덱스가 올바르지 않습니다.");
+        }
 
-		User receiver = userRepository.findById(receiverId).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-		Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+        Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
+            log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
+            return new IllegalArgumentException("질문이 존재하지 않습니다.");
+        });
 
-		pickRepository.save(Pick.of(sender, receiver, question));
-	}
+        switch (create.getStatus()) {
+            case PICKED -> {
+                User reference = em.getReference(User.class, create.getReceiverId());
+                pickRepository.save(Pick.createPick(sender, reference, question));
+            }
+            case PASS -> {
+                question.skip();
+                log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
+            }
+            case BLOCK -> {
+                question.ban();
+                questionBanRepository.save(QuestionBan.of(sender, question));
+                log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
+            }
+        }
+
+        // 픽 인덱스 증가
+        pickCacheRepository.increment(sender.getId());
+    }
 }

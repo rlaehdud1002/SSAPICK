@@ -36,7 +36,7 @@ public class HintOpen extends TimeEntity {
 	private Hint hint;
 
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "pick_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "PICK pick_id 외래키 참조"))
+	@JoinColumn(name = "pick_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "foreign_key_hint_open_pick_id"))
 	private Pick pick;
 
 	@Builder

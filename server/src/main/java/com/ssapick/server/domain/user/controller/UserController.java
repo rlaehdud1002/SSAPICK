@@ -27,7 +27,6 @@ public class UserController {
     @Authenticated
     @GetMapping(value = "")
     public SuccessResponse<ProfileData.Search> findLoggedInUser(@CurrentUser User user) {
-        System.out.println(user);
         return SuccessResponse.of(null);
     }
 
