@@ -8,10 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
-    @Query("SELECT a FROM Attendance a WHERE a.user = :user AND DATE(a.createdAt) = :attendanceDate")
-    Optional<Attendance> findByUserAndAttendanceDate(@Param("user") User user, @Param("attendanceDate") LocalDate attendanceDate);
+
+    @Query("SELECT a FROM Attendance a WHERE a.user = :user ORDER BY a.createdAt DESC")
+    List<Attendance> findAllByUserOrderByCreatedAtDesc(@Param("user") User user);
+
+    void deleteAllByUser(User user);
+
+    boolean existByUserAndCreatedAt(User user, LocalDate today);
 }
