@@ -10,22 +10,24 @@ const Footer = () => {
   const location = useLocation().pathname.split('/')[1];
   return (
     <div className="fixed bottom-0">
-      <div className="flex flex-row justify-around h-14 bg-white px-4 py-4 items-center w-screen">
-        <Link to="/home">
-          <HomeIcon isHighlighted={location === 'home'} />
-        </Link>
-        <Link to="/ranking">
-          <RankingIcon isHighlighted={location === 'ranking'} />
-        </Link>
-        <Link to="/pick">
-          <PickIcon isHighlighted={location === 'pick'} />
-        </Link>
-        <Link to="/message">
-          <MessageIcon isHighlighted={location === 'message'} />
-        </Link>
-        <Link to="/profile">
-          <ProfileIcon isHighlighted={location === 'profile'} />
-        </Link>
+      <div className="bg-white h-[70px]">
+        <div className="flex flex-row justify-around h-14 p-4 items-center w-screen">
+          <Link to="/home">
+            <HomeIcon isHighlighted={location === 'home'} />
+          </Link>
+          <Link to="/ranking">
+            <RankingIcon isHighlighted={location === 'ranking'} />
+          </Link>
+          <Link to="/pick">
+            <PickIcon isHighlighted={location === 'pick'} />
+          </Link>
+          <Link to="/message">
+            <MessageIcon isHighlighted={location === 'message'} />
+          </Link>
+          <Link to="/profile">
+            <ProfileIcon isHighlighted={location === 'profile'} />
+          </Link>
+        </div>
       </div>
     </div>
   );

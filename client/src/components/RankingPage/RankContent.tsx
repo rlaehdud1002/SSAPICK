@@ -20,7 +20,7 @@ const RankContent = ({ title, rankList }: RankContentProps) => {
               key={rankItem.rank}
               className="flex flex-row items-center border border-white rounded-lg m-3 p-2"
             >
-              <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl">
+              <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl pt-2">
                 {rankItem.rank}
               </span>
               <span className="ms-2">{rankItem.content}</span>

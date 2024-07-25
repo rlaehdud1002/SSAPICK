@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@hookform/error-message';
 import {
   Select,
   SelectContent,
@@ -12,9 +13,11 @@ interface InfoSelectProps {
   title: string;
   register: UseFormRegisterReturn;
   setValue: any;
+  errors?: object;
+  name: string;
 }
 
-const InfoSelect = ({ title, register, setValue }: InfoSelectProps) => {
+const InfoSelect = ({ title, register, setValue, errors, name }: InfoSelectProps) => {
   const handleChange = (value: string) => {
     setValue(value);
   };
@@ -22,6 +25,8 @@ const InfoSelect = ({ title, register, setValue }: InfoSelectProps) => {
   console.log();
 
   return (
+    <div>
+    <div>
     <Select {...register} onValueChange={handleChange}>
       <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
         <SelectValue placeholder={title} />
@@ -64,7 +69,18 @@ const InfoSelect = ({ title, register, setValue }: InfoSelectProps) => {
         </SelectGroup>
       </SelectContent>
     </Select>
-
+    </div>
+    <div className='mt-1 ml-2'>
+    <ErrorMessage
+        errors={errors}
+        name={name}
+        render={({ message }) => (
+          <h6 className="text-red-400 text-xs ">
+            {message}
+          </h6>
+        )} />
+        </div>
+    </div>
   );
 };
 

@@ -22,9 +22,9 @@ const MessageIcon = ({ isHighlighted }: MessageIconProps) => {
         </svg>
       ) : (
         <svg
-          width="26"
-          height="26"
-          viewBox="0 0 26 26"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -35,12 +35,12 @@ const MessageIcon = ({ isHighlighted }: MessageIconProps) => {
             height="13"
             rx="1.02401"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
           <path
             d="M4.3335 9.75L12.817 13.9917C12.9323 14.0494 13.068 14.0494 13.1833 13.9917L21.6668 9.75"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
         </svg>
       )}

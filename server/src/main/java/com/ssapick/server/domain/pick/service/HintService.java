@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,7 @@ public class HintService {
 	private final UserRepository userRepository;
 	private final CampusRepository campusRepository;
 	private final ProfileRepository profileRepository;
+	private final ApplicationEventPublisher publisher;
 
 	public String getRandomHintByPickId(Long pickId) {
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
@@ -48,13 +52,17 @@ public class HintService {
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
-		log.info("Available hints: {}", availableHints);
-
 		Long openHintId = selectRandomHintId(availableHints);
-		log.info("Selected hintId: {}", openHintId);
 		Hint openHint = findHintById(hints, openHintId);
-		log.info("Selected hint: {}", openHint);
+
 		addHintOpenToPick(pick, openHint);
+
+		publisher.publishEvent(new PickcoEvent(
+			pick.getSender(),
+			PickcoLogType.HINT_OPEN,
+			-1,
+			pick.getSender().getProfile().getPickco()
+		));
 
 		String hintContent = openHint.getContent();
 

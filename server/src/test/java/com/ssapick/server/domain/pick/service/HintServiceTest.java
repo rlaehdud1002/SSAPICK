@@ -6,6 +6,9 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 import java.util.Optional;
 
+import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.user.entity.*;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.ssapick.server.core.support.HintServiceTestSupport;
@@ -51,8 +55,11 @@ class HintServiceTest extends HintServiceTestSupport {
 	@Mock
 	private CampusRepository campusRepository;
 
-	@Mock
 	static User user;
+	private Profile profile;
+
+	@Mock
+	private ApplicationEventPublisher publisher;
 
 	private static final Logger log = LoggerFactory.getLogger(HintServiceTest.class);
 
@@ -116,6 +123,7 @@ class HintServiceTest extends HintServiceTestSupport {
 
 		// then
 		assertThat(findHint).isNotEqualTo("장덕동");
+		verify(publisher).publishEvent(any(PickcoEvent.class));
 	}
 
 	@Test

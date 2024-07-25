@@ -4,6 +4,7 @@ import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -15,12 +16,13 @@ import static jakarta.persistence.FetchType.LAZY;
  */
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class QuestionBan extends TimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_ban_id")
     private Long id;
-
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_question_ban_user_id"))
@@ -29,4 +31,12 @@ public class QuestionBan extends TimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "QUESTION question_id 외래키 참조"))
     private Question question;
+
+
+    public static QuestionBan of(User user, Question question) {
+        QuestionBan questionBan = new QuestionBan();
+        questionBan.user = user;
+        questionBan.question = question;
+        return questionBan;
+    }
 }

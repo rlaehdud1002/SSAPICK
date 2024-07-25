@@ -18,6 +18,12 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
@@ -48,13 +54,12 @@ public class Profile extends BaseEntity {
 		this.id = id;
 	}
 
-	// FIXME 이미지 추가 해야됨
-	public static Profile createProfile(User user, short cohort, Campus campus) {
+	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {
 		Profile profile = new Profile();
 		profile.user = user;
 		profile.cohort = cohort;
 		profile.campus = campus;
-		// profile.profileImage = profileImage;
+		profile.profileImage = profileImage;
 		return profile;
 	}
 

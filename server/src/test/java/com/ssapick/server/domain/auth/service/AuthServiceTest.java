@@ -5,6 +5,11 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import com.ssapick.server.core.constants.AuthConst;
+import com.ssapick.server.domain.auth.entity.JwtToken;
+import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
+import com.ssapick.server.domain.user.entity.ProviderType;
+import com.ssapick.server.domain.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -111,9 +116,11 @@ class AuthServiceTest extends AuthenticatedSupport {
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> authService.refresh("refreshToken");
 
-		// * THEN: 이런 결과가 나와야 한다
-		assertThrows(IllegalArgumentException.class, runnable::run);
-	}
+        // * THEN: 이런 결과가 나와야 한다
+        assertThrows(IllegalArgumentException.class, runnable::run);
+    }
+
+
 
 	@Test
 	@DisplayName("MM 이름이 1학기 형식일때 성공 테스트")
@@ -181,6 +188,9 @@ class AuthServiceTest extends AuthenticatedSupport {
 		// * THEN
 		assertThrows(IllegalArgumentException.class, runnable::run);
 	}
-	
-	// 이미지 테스트 추가 예정
+
+
+	protected User createUser() {
+		return User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456");
+	}
 }

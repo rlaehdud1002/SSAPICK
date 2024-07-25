@@ -106,7 +106,7 @@ public class User extends BaseEntity {
 
 	@Builder
 	private User(Long id, String username, String name, char gender, String email, ProviderType providerType,
-		RoleType roleType, String providerId,
+		RoleType roleType, String providerId, Profile profile,
 		boolean isMattermostConfirmed, boolean isLocked) {
 		this.id = id;
 		this.username = username;
@@ -116,6 +116,7 @@ public class User extends BaseEntity {
 		this.providerType = providerType;
 		this.roleType = roleType;
 		this.providerId = providerId;
+		this.profile = profile;
 		this.isMattermostConfirmed = isMattermostConfirmed;
 		this.isLocked = isLocked;
 	}
