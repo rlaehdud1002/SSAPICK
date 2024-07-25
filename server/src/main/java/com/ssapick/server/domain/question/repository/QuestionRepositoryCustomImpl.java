@@ -10,7 +10,7 @@ import static com.ssapick.server.domain.pick.entity.QPick.pick;
 import static com.ssapick.server.domain.question.entity.QQuestion.question;
 
 @Repository
-public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
+public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
 
     private JPAQueryFactory queryFactory;
 
@@ -29,15 +29,10 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
         return queryFactory
                 .select(question)
                 .from(question)
-//			.join(question, pick).fetchJoin()
+//			.join(question.picks, pick).fetchJoin()
                 .where(pick.receiver.id.eq(userId))
                 .groupBy(question.id)
                 .orderBy(pick.count().desc())
                 .fetch();
-    }
-
-    @Override
-    public List<Question> findAddedQuestionsById(Long id) {
-        return List.of();
     }
 }

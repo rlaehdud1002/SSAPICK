@@ -10,14 +10,16 @@ import {
 
 import { Button } from 'components/ui/button';
 import { useEffect, useState } from 'react';
+import WithdrawalCheckModal from './WithdrawalCheckModal';
 import { useNavigate } from 'react-router-dom';
-import ResultCheckModal from './ResultCheckModal';
 
 
 enum WithdrawalModalStep {
   CONFIRM,
   ALERT
 }
+
+
 interface HintModalProps {
   title: string;
 }
@@ -32,7 +34,7 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
     naivgate('/home');
   }
 
-
+  
   useEffect(() => {
     if (step === WithdrawalModalStep.ALERT) {
       const timer = setTimeout(() => {
@@ -67,7 +69,7 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
       {isModalVisible && (<DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
         <DialogHeader>
           <DialogTitle className="flex flex-start text-color-5F86E9">
-            {title}
+            회원탈퇴
           </DialogTitle>
         </DialogHeader>
         {step === WithdrawalModalStep.CONFIRM && (
@@ -82,8 +84,9 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
             </DialogFooter>
           </div>
         )}
-        {step === WithdrawalModalStep.ALERT && <ResultCheckModal content="회원탈퇴가 완료되었습니다." />}
+        {step === WithdrawalModalStep.ALERT && <WithdrawalCheckModal />}
       </DialogContent>)}
+
     </Dialog>
   );
 };

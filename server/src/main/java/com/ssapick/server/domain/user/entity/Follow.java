@@ -2,12 +2,10 @@ package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter
 public class Follow extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

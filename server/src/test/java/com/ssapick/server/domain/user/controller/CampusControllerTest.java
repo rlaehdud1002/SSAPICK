@@ -22,13 +22,12 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("캠퍼스 컨트롤러 테스트")
 @WebMvcTest(
         value = CampusController.class,
         excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JWTFilter.class),
-        }
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JWTFilter.class),
+    }
 )
 class CampusControllerTest extends RestDocsSupport {
     @MockBean
@@ -52,19 +51,19 @@ class CampusControllerTest extends RestDocsSupport {
         // * THEN: 이런 결과가 나와야 한다
         perform.andExpect(status().isCreated())
                 .andDo(restDocs.document(resource(
-                                ResourceSnippetParameters.builder()
-                                        .tag("campus")
-                                        .summary("캠퍼스 생성 API")
-                                        .description("전국 캠퍼스 정보를 생성한다.")
-                                        .requestFields(
-                                                fieldWithPath("name").type(JsonFieldType.STRING).description("캠퍼스 이름"),
-                                                fieldWithPath("section").type(JsonFieldType.NUMBER).description("캠퍼스 반"),
-                                                fieldWithPath("description").type(JsonFieldType.STRING).description("반 전공")
-                                        )
-                                        .responseFields(empty())
-                                        .build()
+                        ResourceSnippetParameters.builder()
+                                .tag("campus")
+                                .summary("캠퍼스 생성 API")
+                                .description("전국 캠퍼스 정보를 생성한다.")
+                                .requestFields(
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("캠퍼스 이름"),
+                                        fieldWithPath("section").type(JsonFieldType.NUMBER).description("캠퍼스 반"),
+                                        fieldWithPath("description").type(JsonFieldType.STRING).description("반 전공")
+                                )
+                                .responseFields(empty())
+                                .build()
                         )
-                ));
+        ));
         verify(campusService).createCampus(create);
     }
 

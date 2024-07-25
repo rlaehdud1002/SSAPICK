@@ -1,20 +1,18 @@
 package com.ssapick.server.domain.pick.service;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.User;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -66,12 +64,12 @@ public class MessageService {
         if (pick.isMessageSend()) {
             throw new IllegalArgumentException("하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다.");
         }
-		pick.send();
 
         // FIXME: 유저에 대한 정보를 entity manager 를 사용해서 가져오는데 이게 올바른 방법일까?
         User receiver = em.getReference(User.class, create.getReceiverId());
 
         messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
+        pick.send();
     }
 
     /**

@@ -6,6 +6,7 @@ interface RankContentProps {
 }
 
 const RankContent = ({ title, rankList }: RankContentProps) => {
+  console.log(rankList);
   return (
     <div className='mb-10'>
       <div className="flex flex-row">

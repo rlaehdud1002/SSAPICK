@@ -3,11 +3,9 @@ package com.ssapick.server.domain.user.entity;
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PickcoLog extends TimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

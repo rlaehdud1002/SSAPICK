@@ -19,7 +19,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@DisplayName("인증 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
     @Mock

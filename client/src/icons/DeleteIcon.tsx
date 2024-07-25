@@ -1,15 +1,8 @@
-interface DeleteIconProps {
-  className?: string;
-  width: number;
-  height: number;
-}
-
-const DeleteIcon = ({ className, width, height }: DeleteIconProps) => {
+const DeleteIcon = () => {
   return (
     <svg
-      width={width}
-      height={height}
-      className={className}
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
