@@ -13,7 +13,7 @@ const ToPlusIcon = ({ isPlus, campus, th, classNum, name }: ToPlusIconProps) => 
     <div>
       <div className="mx-5 mt-5 mb-2" style={{ height: '60px', width: '60px' }}>
         <div className="relative">
-          <img width={60} height={60} src="icons/Profile.png" alt="" />
+          <img width={60} height={60} src="../icons/Profile.png" alt="" />
           {isPlus ? (
             <svg className="absolute bottom-1 -right-1 " width="16" height="16" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4.19743 9.63369L1.22243 6.65869C0.973344 6.40953 0.833441 6.07163 0.833496 5.71932C0.833551 5.36701 0.973558 5.02915 1.22272 4.78007C1.47188 4.53099 1.80978 4.39108 2.16209 4.39114C2.5144 4.39119 2.85226 4.5312 3.10134 4.78036L4.99426 6.67269L8.53859 1.94769C8.75 1.66589 9.0647 1.47961 9.41346 1.42983C9.76221 1.38006 10.1165 1.47087 10.3983 1.68228C10.6801 1.89369 10.8663 2.20838 10.9161 2.55714C10.9659 2.90589 10.8751 3.26014 10.6637 3.54194L6.20001 9.49194C6.08585 9.64436 5.94024 9.77043 5.77307 9.86161C5.60589 9.95279 5.42106 10.0069 5.23111 10.0204C5.04116 10.0338 4.85054 10.0063 4.67218 9.93953C4.49383 9.87281 4.33191 9.76851 4.19743 9.63369Z" fill="#54CC76" stroke="#54CC76" stroke-width="0.875" stroke-linejoin="round" />

@@ -19,7 +19,7 @@ const FriendList = () => {
           <div className="ml-2">친구목록</div>
         </div>
         <div className="mr-6">
-          <Link to="/FriendSearch">
+          <Link to="/profile/friendsearch">
             <SearchIcon width={20} height={20} />
           </Link>
         </div>
