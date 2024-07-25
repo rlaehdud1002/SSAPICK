@@ -2,6 +2,7 @@ package com.ssapick.server.domain.user.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.ssapick.server.core.entity.BaseEntity;
 import com.ssapick.server.domain.pick.entity.Hint;
@@ -77,6 +78,27 @@ public class User extends BaseEntity {
     @Column(name = "is_locked", nullable = false)
     private boolean isLocked = false;
 
+	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+	private List<UserBan> bannedUser = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Hint> hints = new ArrayList<>();
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		User user = (User)o;
+		return Objects.equals(id, user.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
 	/**
 	 * 사용자 생성 메서드
 	 *
@@ -96,9 +118,6 @@ public class User extends BaseEntity {
 		user.providerId = providerId;
 		return user;
 	}
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Hint> hints = new ArrayList<>();
 
 
 	public void mattermostConfirm() {
