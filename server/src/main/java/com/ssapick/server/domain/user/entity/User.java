@@ -42,8 +42,8 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Profile profile;
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Profile profile;
 
     @Column(nullable = false)
     private String username;
@@ -108,7 +108,8 @@ public class User extends BaseEntity {
 	 * @param providerId   제공자 ID
 	 * @return {@link User} 새롭게 생성한 유저 객체
 	 */
-	public static User createUser(String username, String name, char gender, ProviderType providerType, String providerId) {
+	public static User createUser(String username, String name, char gender, ProviderType providerType,
+		String providerId) {
 		User user = new User();
 		user.username = username;
 		user.name = name;
@@ -131,7 +132,7 @@ public class User extends BaseEntity {
 		this.id = id;
 		this.username = username;
 		this.name = name;
-        this.gender = gender;
+		this.gender = gender;
 		this.email = email;
 		this.providerType = providerType;
 		this.roleType = roleType;
@@ -141,8 +142,37 @@ public class User extends BaseEntity {
 		this.isLocked = isLocked;
 	}
 
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
 	public void updateUser(String username, String name) {
 		this.username = username;
 		this.name = name;
+	}
+
+	public void updateName(String newName) {
+		this.name = newName;
+	}
+
+	public void updateGender(char newGender) {
+		this.gender = newGender;
+	}
+
+	public void updateProfile(Profile newProfile) {
+		this.profile = newProfile;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", profile=" + profile +
+			", username='" + username + '\'' +
+			", gender=" + gender +
+			", name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", providerType=" + providerType +
+			'}';
 	}
 }

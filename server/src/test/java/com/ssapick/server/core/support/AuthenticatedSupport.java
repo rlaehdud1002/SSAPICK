@@ -2,6 +2,7 @@ package com.ssapick.server.core.support;
 
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
@@ -19,6 +20,22 @@ import static org.mockito.Mockito.when;
 
 @Import(UserService.class)
 public abstract class AuthenticatedSupport {
+
+	protected MattermostData.Request createMattermostRequest() {
+		return new MattermostData.Request("test", "123456");
+	}
+
+	protected MattermostData.Response createMattermostResponseOne() {
+		MattermostData.Response response = new MattermostData.Response();
+		response.setNickname("이인준[광주_2반]");
+		return response;
+	}
+
+	protected MattermostData.Response createMattermostResponseTwo() {
+		MattermostData.Response response = new MattermostData.Response();
+		response.setNickname("이인준[광주_2반_C211]");
+		return response;
+	}
     @MockBean
     private UserRepository userRepository;
 
