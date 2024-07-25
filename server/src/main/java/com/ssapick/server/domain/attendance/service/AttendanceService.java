@@ -27,7 +27,7 @@ public class AttendanceService {
     public int checkIn(User user) {
         LocalDate today = LocalDate.now();
 
-        if (attendanceRepository.existByUserAndCreatedAt(user, today)) {
+        if (attendanceRepository.existsByUserAndCreatedAt(user, today)) {
             throw new IllegalArgumentException("이미 출석했습니다.");
         }
         attendanceRepository.save(Attendance.Create(user));
