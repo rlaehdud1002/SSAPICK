@@ -1,12 +1,10 @@
 package com.ssapick.server.domain.question.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
-import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -18,12 +16,13 @@ import static jakarta.persistence.FetchType.LAZY;
  */
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class QuestionBan extends TimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_ban_id")
     private Long id;
-
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_question_ban_user_id"))

@@ -9,7 +9,6 @@ import com.ssapick.server.domain.user.entity.User;
 import lombok.Data;
 
 public class MessageData {
-
     @Data
     public static class Search {
         private Long id;

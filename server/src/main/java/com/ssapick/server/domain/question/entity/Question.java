@@ -1,33 +1,18 @@
 package com.ssapick.server.domain.question.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ssapick.server.core.entity.BaseEntity;
-import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.user.entity.User;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id", nullable = false)
     private Long id;
 
@@ -45,8 +30,8 @@ public class Question extends BaseEntity {
     @Column(name = "ban_count", nullable = false)
     private int banCount = 0;
 
-    @OneToMany(mappedBy = "question")
-    private List<Pick> picks = new ArrayList<>();
+    @Column(name = "skip_count", nullable = false)
+    private int skipCount = 0;
 
     @Column(name = "is_alarm_sent")
     private boolean isAlarmSent = false;
@@ -62,10 +47,11 @@ public class Question extends BaseEntity {
         return question;
     }
 
-    public static Question of(Long questionId, String content) {
-        Question question = new Question();
-        question.id = questionId;
-        question.content = content;
-        return question;
+    public void ban() {
+        this.banCount++;
+    }
+
+    public void skip() {
+        this.skipCount++;
     }
 }

@@ -18,10 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@DisplayName("인증 컨트롤러 테스트")
 @WebMvcTest(
         value = AuthController.class,
         excludeFilters = {
@@ -44,22 +46,21 @@ class AuthControllerTest extends RestDocsSupport {
         // * WHEN: 이걸 실행하면
         ResultActions action = this.mockMvc.perform(post("/api/v1/auth/sign-out")
                 .header("Authorization", "Bearer " + accessToken)
-                .cookie(new Cookie("refreshToken", refreshToken))
+                .cookie(new Cookie(REFRESH_TOKEN, refreshToken))
         );
 
         // * THEN: 이런 결과가 나와야 한다
         action.andExpect(status().isNoContent())
-              .andDo(restDocs.document(resource(
-                        ResourceSnippetParameters.builder()
-                                .tag("auth")
-                                .summary("로그아웃 API")
-                                .description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
-                                .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
-                                .responseHeaders(headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰 삭제를 위한 쿠키"))
-                                .build()
-                      )
-              )
-        );
+                .andDo(restDocs.document(resource(
+                                ResourceSnippetParameters.builder()
+                                        .tag("auth")
+                                        .summary("로그아웃 API")
+                                        .description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
+                                        .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
+                                        .responseHeaders(headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰 삭제를 위한 쿠키"))
+                                        .build()
+                        )
+                ));
     }
 
 

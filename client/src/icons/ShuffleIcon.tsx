@@ -1,5 +1,5 @@
 interface ShuffleIconProps {
-  className: string;
+  className?: string;
 }
 
 const ShuffleIcon = ({ className }: ShuffleIconProps) => {

@@ -2,68 +2,91 @@ package com.ssapick.server.domain.pick.service;
 
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.pick.repository.PickCacheRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.question.entity.QuestionBan;
+import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.ssapick.server.domain.pick.repository.PickCacheRepository.NOT_EXIST;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PickService {
-
-    private static final Logger log = LoggerFactory.getLogger(PickService.class);
     private final PickRepository pickRepository;
-    private final UserRepository userRepository;
+    private final PickCacheRepository pickCacheRepository;
     private final QuestionRepository questionRepository;
+    private final QuestionBanRepository questionBanRepository;
+    private final EntityManager em;
 
 
     /**
      * 받은 픽 조회하기
      *
-     * @param userId
-     * @return List<PickData.Search>
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 받은 픽 리스트
      */
-    public List<PickData.Search> searchReceiver(Long userId) {
-        return pickRepository.findReceiverByUserId(userId).stream()
-            .map((Pick pick) -> PickData.Search.fromEntity(pick, true))
-            .toList();
+    public List<PickData.Search> searchReceivePick(User user) {
+        return pickRepository.findReceiverByUserId(user.getId()).stream()
+                .map((Pick pick) -> PickData.Search.fromEntity(pick, true))
+                .toList();
 
     }
 
     /**
      * 보낸 픽 조회하기
      *
-     * @param userId
-     * @return
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 보낸 픽 리스트
      */
-    public List<PickData.Search> searchSender(Long userId) {
-        return pickRepository.findSenderByUserId(userId).stream()
-            .map((Pick pick) -> PickData.Search.fromEntity(pick, false))
-            .toList();
+    public List<PickData.Search> searchSendPick(User user) {
+        return pickRepository.findSenderByUserId(user.getId()).stream()
+                .map((Pick pick) -> PickData.Search.fromEntity(pick, false))
+                .toList();
     }
 
-    /**
-     * 픽 생성하기
-     * @param create
-     */
-    public void createPick(User user, PickData.Create create) {
-        User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(
-            () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
-        );
+    @Transactional
+    public void createPick(User sender, PickData.Create create) {
+        int index = pickCacheRepository.index(sender.getId());
 
-        Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
-            () -> new IllegalArgumentException("해당 질문이 존재하지 않습니다.")
-        );
+        if (index != NOT_EXIST && create.getIndex() != index) {
+            log.error("픽 인덱스가 올바르지 않습니다. index: {}, user: {}", create.getIndex(), sender);
+            throw new IllegalArgumentException("픽 인덱스가 올바르지 않습니다.");
+        }
 
-        pickRepository.save(Pick.of(user, receiver, question));
+        Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
+            log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
+            return new IllegalArgumentException("질문이 존재하지 않습니다.");
+        });
+
+        switch (create.getStatus()) {
+            case PICKED -> {
+                User reference = em.getReference(User.class, create.getReceiverId());
+                pickRepository.save(Pick.createPick(sender, reference, question));
+            }
+            case PASS -> {
+                question.skip();
+                log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
+            }
+            case BLOCK -> {
+                question.ban();
+                questionBanRepository.save(QuestionBan.of(sender, question));
+                log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
+            }
+        }
+
+        // 픽 인덱스 증가
+        pickCacheRepository.increment(sender.getId());
     }
 }

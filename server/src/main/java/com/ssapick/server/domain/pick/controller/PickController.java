@@ -16,48 +16,50 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/pick")
 public class PickController {
-
     private final PickService pickService;
 
     /**
      * 받은 픽 조회하는 API
      *
-     * @param user
-     * @return
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 받은 픽 리스트
      */
     @Authenticated
-    @GetMapping("/received")
+    @GetMapping("/receive")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<List<PickData.Search>> getReceivedPick(@CurrentUser User user) {
-        return SuccessResponse.of(pickService.searchReceiver(user.getId()));
+    public SuccessResponse<List<PickData.Search>> getReceivePick(@CurrentUser User user) {
+        return SuccessResponse.of(pickService.searchReceivePick(user));
     }
 
     /**
      * 보낸 픽 조회하는 API
-     * @param user
-     * @return
+     *
+     * @param user 로그인한 유저
+     * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 보낸 픽 리스트
      */
     @Authenticated
-    @GetMapping("/sent")
+    @GetMapping("/send")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<List<PickData.Search>> getSentPick(@CurrentUser User user) {
-        return SuccessResponse.of(pickService.searchSender(user.getId()));
+    public SuccessResponse<List<PickData.Search>> getSendPick(@CurrentUser User user) {
+        return SuccessResponse.of(pickService.searchSendPick(user));
     }
+
 
     /**
      * 픽 생성하는 API
-     * @param user
-     * @param create
-     * @return
+     *
+     * @param user   로그인한 유저
+     * @param create {@link com.ssapick.server.domain.pick.dto.PickData.Create} 픽 생성 정보
+     * @return 처리 성공 응답
      */
     @Authenticated
     @PostMapping("")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<Void> createPick(@CurrentUser User user,
-                                            @RequestBody PickData.Create create) {
-
-		pickService.createPick(user, create);
-
+    public SuccessResponse<Void> createPick(
+            @CurrentUser User user,
+            @RequestBody PickData.Create create
+    ) {
+        pickService.createPick(user, create);
         return SuccessResponse.empty();
     }
 }
