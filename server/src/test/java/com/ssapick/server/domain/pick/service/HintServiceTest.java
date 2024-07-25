@@ -27,20 +27,15 @@ import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.ProfileRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
-
+@DisplayName("힌트 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest extends HintServiceTestSupport {
 	@InjectMocks
@@ -72,9 +67,9 @@ class HintServiceTest extends HintServiceTestSupport {
 	@BeforeEach
 	void setUp() {
 		// 데이터 초기화
-		user = this.createMockUser();
+		user = this.createUser();
 
-		lenient().when(hintRepository.findAllByUserId(1L))
+		lenient().when(hintRepository.findAllByUserId(2L))
 			.thenReturn(List.of(
 				this.createMockHint(1L, user, "이인준"),
 				this.createMockHint(2L, user, "최재원"),
@@ -91,6 +86,8 @@ class HintServiceTest extends HintServiceTestSupport {
 	void getRandomHintByPickId_withOpenHints0() {
 
 		Pick mockPick = this.createMockPick(user);
+
+		log.info("mockPick: {}", mockPick.getId());
 
 		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
 			Optional.of(mockPick)
@@ -109,6 +106,10 @@ class HintServiceTest extends HintServiceTestSupport {
 	@WithMockUser
 	@DisplayName("힌트 오픈이 1 개일때 힌트를 랜덤으로 가져오는 테스트")
 	void getRandomHintByPickId_withOpenHints1() {
+
+		// given
+		Campus campus = Campus.createCampus("광주", (short)2, null);
+		Profile profile = Profile.createProfile(user, (short)11, campus, "imgUrl");
 
 		Pick mockPick = this.createMockPick(user);
 
@@ -143,14 +144,14 @@ class HintServiceTest extends HintServiceTestSupport {
 		HintOpen mockHintOpen1 = this.createMockHintOpen(mockHint1, mockPick);
 		HintOpen mockHintOpen2 = this.createMockHintOpen(mockHint2, mockPick);
 
-        mockPick.getHintOpens().add(mockHintOpen1);
-        mockPick.getHintOpens().add(mockHintOpen2);
+		mockPick.getHintOpens().add(mockHintOpen1);
+		mockPick.getHintOpens().add(mockHintOpen2);
 
-        when(pickRepository.findPickWithHintsById(1L)).thenReturn(
-                Optional.of(mockPick));
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(mockPick));
 
-        // when
-        Runnable runnable = () -> hintService.getRandomHintByPickId(1L);
+		// when
+		Runnable runnable = () -> hintService.getRandomHintByPickId(1L);
 
 		// then
 		assertThatThrownBy(runnable::run)
@@ -272,38 +273,10 @@ class HintServiceTest extends HintServiceTestSupport {
 		// when
 		Runnable runnable = () -> hintService.saveHint(null, hintWithNullUser);
 
-        // then
-        assertThatThrownBy(runnable::run)
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("유저 정보가 없습니다.");
-    }
-
-	@Test
-	@WithMockUser
-	@DisplayName("힌트 내용이 없을 때 예외 발생 테스트")
-	void saveHint_withNullContent() {
-		// given
-		UserData.Create hintWithNullContent = UserData.Create.of(
-			"이인준",
-			'M',
-			(short)11,
-			"광주",
-			(short)2,
-			"INTP",
-			"전공",
-			"1998-08-25",
-			"장덕동",
-			null,
-			"imgUrl"
-		);
-
-		// when
-		Runnable runnable = () -> hintService.saveHint(user, hintWithNullContent);
-
 		// then
 		assertThatThrownBy(runnable::run)
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("힌트 데이터의 필드 중 null인 값이 있습니다.");
+			.hasMessageContaining("유저 정보가 없습니다.");
 	}
 
 	@Test
@@ -315,13 +288,13 @@ class HintServiceTest extends HintServiceTestSupport {
 		Hint mockHint = createMockHint(7L, user, "장덕동1");
 		HintOpen mockHintOpen = createMockHintOpen(mockHint, mockPick);
 
-        mockPick.getHintOpens().add(mockHintOpen);
+		mockPick.getHintOpens().add(mockHintOpen);
 
-        when(pickRepository.findPickWithHintsById(1L)).thenReturn(
-                Optional.of(mockPick));
+		when(pickRepository.findPickWithHintsById(1L)).thenReturn(
+			Optional.of(mockPick));
 
-        // when
-        List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
+		// when
+		List<HintOpen> hintOpens = hintService.getHintOpensByPickId(1L);
 
 		// then
 		assertThat(hintOpens).hasSize(1);
@@ -334,11 +307,11 @@ class HintServiceTest extends HintServiceTestSupport {
 	void getHintsByUserIdTest() {
 		// given
 
-        // when
-        List<Hint> hints = hintService.getHintsByUserId(1L);
+		// when
+		List<Hint> hints = hintService.getHintsByUserId(2L);
 
-        // then
-        assertThat(hints).hasSize(6);
-    }
+		// then
+		assertThat(hints).hasSize(6);
+	}
 
 }

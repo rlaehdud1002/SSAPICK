@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -58,6 +59,11 @@ public class Pick extends TimeEntity {
 		pick.receiver = receiver;
 		pick.question = question;
 		return pick;
+	}
+
+	@Builder
+	public Pick(User sender) {
+		this.sender = sender;
 	}
 
 	public void send() {

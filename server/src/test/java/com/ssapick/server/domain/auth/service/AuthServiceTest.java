@@ -5,17 +5,14 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
-import com.ssapick.server.core.constants.AuthConst;
-import com.ssapick.server.domain.auth.entity.JwtToken;
-import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
-import com.ssapick.server.domain.user.entity.ProviderType;
-import com.ssapick.server.domain.user.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,6 +23,7 @@ import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
@@ -33,6 +31,7 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest extends AuthenticatedSupport {
 
+	private static final Logger log = LoggerFactory.getLogger(AuthServiceTest.class);
 	@Mock
 	private AuthCacheRepository authCacheRepository;
 
@@ -48,13 +47,14 @@ class AuthServiceTest extends AuthenticatedSupport {
 	@InjectMocks
 	private AuthService authService;
 
-	private User user;
-	private MattermostData.Request request;
-	private MattermostData.Response responseOne;
-	private MattermostData.Response responseTwo;
+	private static User user;
+	private static MattermostData.Request request;
+	private static MattermostData.Response responseOne;
+	private static MattermostData.Response responseTwo;
 
+	@Override
 	@BeforeEach
-	void setUp() {
+	public void setUp() {
 		user = this.createUser();
 		request = this.createMattermostRequest();
 		responseOne = this.createMattermostResponseOne();
@@ -68,6 +68,12 @@ class AuthServiceTest extends AuthenticatedSupport {
 	@DisplayName("로그아웃 정상 테스트")
 	@WithMockUser(username = "test")
 	void 로그아웃_정상_테스트() throws Exception {
+
+		log.info("user: {}", user);
+		log.info("request: {}", request);
+		log.info("responseOne: {}", responseOne);
+		log.info("responseTwo: {}", responseTwo);
+
 		// * GIVEN: 이런게 주어졌을 때
 		String refreshToken = "refreshToken";
 		when(authCacheRepository.existsByUsername(anyString())).thenReturn(false);
@@ -117,11 +123,9 @@ class AuthServiceTest extends AuthenticatedSupport {
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> authService.refresh("refreshToken");
 
-        // * THEN: 이런 결과가 나와야 한다
-        assertThrows(IllegalArgumentException.class, runnable::run);
-    }
-
-
+		// * THEN: 이런 결과가 나와야 한다
+		assertThrows(IllegalArgumentException.class, runnable::run);
+	}
 
 	@Test
 	@DisplayName("MM 이름이 1학기 형식일때 성공 테스트")
@@ -189,7 +193,6 @@ class AuthServiceTest extends AuthenticatedSupport {
 		// * THEN
 		assertThrows(IllegalArgumentException.class, runnable::run);
 	}
-
 
 	protected User createUser() {
 		return User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456");

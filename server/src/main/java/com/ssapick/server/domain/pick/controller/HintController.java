@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,7 +69,8 @@ public class HintController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<Void> saveHint(
 		@CurrentUser User user,
-		@RequestBody UserData.Create create) {
+		@Validated @RequestBody UserData.Create create,
+		Error error) {
 		log.info("힌트 저장 API 요청: {}", create);
 		hintService.saveHint(user, create);
 		return SuccessResponse.created();

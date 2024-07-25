@@ -49,10 +49,15 @@ public class HintService {
 			throw new IllegalArgumentException("힌트는 2개까지만 열 수 있습니다.");
 		}
 
+		log.info("유저 아이디: {}", pick.getSender());
+
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
+		log.info("힌트 아이디: {}", availableHints);
+
 		Long openHintId = selectRandomHintId(availableHints);
+
 		Hint openHint = findHintById(hints, openHintId);
 
 		addHintOpenToPick(pick, openHint);
@@ -67,9 +72,7 @@ public class HintService {
 		String hintContent = openHint.getContent();
 
 		if (openHint.getHintType().equals(HintType.NAME)) {
-			log.info("이름 힌트를 열었습니다.");
 			hintContent = processNameHint(hintContent);
-			log.info("Processed hintContent: {}", hintContent);
 		}
 
 		return hintContent;
@@ -121,23 +124,8 @@ public class HintService {
 	@Transactional
 	public void saveHint(User user, UserData.Create request) {
 
-		log.info("힌트 저장 요청: \n {}", request + "\n" + user);
-
 		if (user == null) {
-			throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-		}
-
-		if (request == null ||
-			request.getName() == null ||
-			request.getChort() == 0 ||
-			request.getCampusName() == null ||
-			request.getCampusSection() == 0 || // 기본값 체크
-			request.getMbti() == null ||
-			request.getMajor() == null ||
-			request.getBirth() == null ||
-			request.getResidentialArea() == null ||
-			request.getInterest() == null) {
-			throw new IllegalArgumentException("힌트 데이터의 필드 중 null인 값이 있습니다.");
+			throw new IllegalArgumentException("유저 정보가 없습니다.");
 		}
 
 		user.updateName(request.getName());
@@ -159,14 +147,9 @@ public class HintService {
 		}
 
 		campusRepository.save(profile.getCampus());
-
 		profileRepository.save(profile);
-
 		user.updateProfile(profile);
 		userRepository.save(user);
-
-		log.info("Campus : {}", String.valueOf(user.getProfile().getCampus()));
-		log.info("Profile : {}", String.valueOf(user.getProfile()));
 
 		List<Hint> hints = List.of(
 			Hint.createHint(user, request.getName(), HintType.NAME),
@@ -182,22 +165,16 @@ public class HintService {
 		);
 
 		for (Hint hint : hints) {
-			log.info("유저 아이디: {}", user.getId());
-			log.info("힌트 타입: {}", hint.getHintType());
 			Optional<Hint> existingHintOptional = hintRepository.findByUserIdAndHintType(user.getId(),
 				hint.getHintType());
-			log.info("기존 힌트 조회 결과: {}", existingHintOptional);
 			if (existingHintOptional.isPresent()) {
 				Hint existingHint = existingHintOptional.get();
 				if (!existingHint.getContent().equals(hint.getContent())) {
 					existingHint.updateContent(hint.getContent());
 					hintRepository.save(existingHint);
-					log.info("바뀐 힌트 내용 : {}", hint.getContent());
-					log.info("힌트 업데이트 완료");
 				}
 			} else {
 				hintRepository.save(hint);
-				log.info("힌트 저장 완료");
 			}
 		}
 	}
