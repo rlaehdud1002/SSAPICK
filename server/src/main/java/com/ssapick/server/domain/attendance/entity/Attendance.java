@@ -1,11 +1,14 @@
-package com.ssapick.server.domain.user.entity;
+package com.ssapick.server.domain.attendance.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
+import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Attendance extends TimeEntity {
     @Id
@@ -14,8 +17,12 @@ public class Attendance extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_attendance_user_id"))
+    @JoinColumn(name = "user", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_from_user_id"))
     private User user;
 
-    private String reward;
+    public static Attendance Create(User user) {
+        Attendance attendance = new Attendance();
+        attendance.user = user;
+        return attendance;
+    }
 }
