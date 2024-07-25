@@ -7,6 +7,7 @@ import QuestionList from 'pages/QuestionList';
 import SetAccount from 'pages/SetAccount';
 import SetAlarm from 'pages/SetAlarm';
 import FriendList from 'pages/FriendList';
+import FriendSearch from 'components/FriendListPage/FriendSeartch';
 import { Route, Routes } from 'react-router-dom';
 
 const ProfileRoute = () => {
@@ -21,6 +22,7 @@ const ProfileRoute = () => {
               <Route path="/locationalarm" element={<LocationAlarm />} />
               <Route path="/questionlist" element={<QuestionList />} />
               <Route path="/setaccount" element={<SetAccount />} />
+              <Route path="/friendsearch" element={<FriendSearch />} />
     </Routes>
 
   )
