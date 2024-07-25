@@ -32,7 +32,7 @@ const WarningDeleteModal = ({ warning }: WarningDeleteModalProps) => {
         <PointIcon />
       </DialogTrigger>
       <DialogContent
-        className="w-36 rounded-xl"
+        className="w-36 rounded-xl bg-none"
         style={{
           position: 'absolute',
           top: Position.top,
