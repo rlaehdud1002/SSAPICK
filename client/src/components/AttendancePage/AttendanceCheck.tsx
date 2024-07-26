@@ -5,7 +5,7 @@ interface AttendanceCheckProps {
 const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
   return (
     <svg
-      width="400"
+      width="350"
       height="212.58"
       viewBox="0 0 318 169"
       fill="none"
