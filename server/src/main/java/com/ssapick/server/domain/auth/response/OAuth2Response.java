@@ -3,15 +3,13 @@ package com.ssapick.server.domain.auth.response;
 import com.ssapick.server.domain.user.entity.ProviderType;
 
 public interface OAuth2Response {
-   ProviderType getProvider();
+	ProviderType getProvider();
 
-   String getProviderId();
+	String getProviderId();
 
-   String getEmail();
+	String getEmail();
 
-   String getName();
+	String getName();
 
-   String getGender();
-
-   String getImageUrl();
+	String getGender();
 }

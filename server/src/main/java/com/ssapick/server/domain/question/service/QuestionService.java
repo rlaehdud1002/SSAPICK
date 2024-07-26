@@ -28,7 +28,6 @@ public class QuestionService {
 	private final QuestionBanRepository questionBanRepository;
 	private final QuestionCategoryRepository questionCategoryRepository;
 
-
 	/**
 	 * 모든질문 조회
 	 *

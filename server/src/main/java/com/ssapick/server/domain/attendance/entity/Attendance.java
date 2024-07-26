@@ -17,7 +17,7 @@ public class Attendance extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_from_user_id"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_attendance_from_user_id"))
     private User user;
 
     public static Attendance Create(User user) {

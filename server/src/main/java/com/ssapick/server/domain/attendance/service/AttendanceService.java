@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.attendance.service;
 
+import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
@@ -21,60 +22,63 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final ApplicationEventPublisher publisher;
 
-    @Transactional
-    public void checkIn(User user) {
+    private final int ATTENDANCE_RESET_CYCLE = 14;
+
+    public AttendanceData.Status getUserAttendanceStatus(User user) {
+
         LocalDate today = LocalDate.now();
-        // 오늘 날짜 출석이 없으면 출석 생성
-        if (attendanceRepository.existByUserAndCreatedAt(user, today)) {
+
+        boolean todayChecked = attendanceRepository.existsByUserAndCreatedAt(user, today);
+
+        List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+        int streak = getStreak(today, attendances);
+        return AttendanceData.CreateStatus(streak, todayChecked);
+    }
+
+    @Transactional
+    public int checkIn(User user) {
+        LocalDate today = LocalDate.now();
+
+        if (attendanceRepository.existsByUserAndCreatedAt(user, today)) {
             throw new IllegalArgumentException("이미 출석했습니다.");
         }
         attendanceRepository.save(Attendance.Create(user));
         attendanceRepository.flush();
 
-//      출석 기록을 내림차순으로 전부 가져와서 최근 출석일이 오늘이 아니면 출석 생성
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
-        System.out.println("attendances.size() = " + attendances.size());;
+        int rewardPickcoAmount = getRewardPickcoAmount(today, attendances);
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewardPickcoAmount, user.getProfile().getPickco()));
 
-        // 누적 출석일수로 코인이벤트 발행
-        int consecutiveDays = calculateConsecutiveAttendanceDays(attendances, today, user);
-        int rewordPickcoAmount;
-
-        if (consecutiveDays == 6) {
-            rewordPickcoAmount = 5;
-        } else if (consecutiveDays == 13) {
-            rewordPickcoAmount = 10;
-        } else {
-            rewordPickcoAmount = 1;
-        }
-
-
-        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewordPickcoAmount, user.getProfile().getPickco()));
+        return rewardPickcoAmount;
     }
 
-    private int calculateConsecutiveAttendanceDays(List<Attendance> attendances, LocalDate today, User user) {
-        // 어제 출석이 없으면 1일
-        if (attendances.stream().noneMatch(attendance -> attendance.getCreatedAt().toLocalDate().isEqual(today.minusDays(1)))) {
-            attendanceRepository.deleteAllByUser(user);
-            return 1;
+    private int getRewardPickcoAmount(LocalDate today, List<Attendance> attendances) {
+        int streak = getStreak(today, attendances);
+
+        int streakInCycle = streak % ATTENDANCE_RESET_CYCLE;
+        int rewardPickcoAmount = 0;
+
+        if (streakInCycle == 7) {
+            rewardPickcoAmount = 5;
+        } else if (streakInCycle == 0) {
+            rewardPickcoAmount = 10;
+        } else {
+            rewardPickcoAmount = 1;
         }
+        return rewardPickcoAmount;
+    }
 
-        LocalDate currentDay = today;
-        int consecutiveDays = 0;
-
+    private static int getStreak(LocalDate today, List<Attendance> attendances) {
+        LocalDate date = today;
+        int streak = 0;
         for (Attendance attendance : attendances) {
-            if (attendance.getCreatedAt().toLocalDate().isEqual(currentDay)) {
-                consecutiveDays += 1;
-                currentDay = currentDay.minusDays(1);
-            } else {
-                break;
+            if (attendance.getCreatedAt().toLocalDate().isEqual(date)) {
+                streak += 1;
+                date = date.minusDays(1);
             }
         }
-
-
-        if (consecutiveDays == 13) {
-            attendanceRepository.deleteAllByUser(user);
-        }
-
-        return consecutiveDays;
+        return streak;
     }
+
 }
