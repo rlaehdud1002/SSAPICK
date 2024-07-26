@@ -19,5 +19,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
 
     void deleteAllByUser(User user);
 
-    boolean existByUserAndCreatedAt(User user, LocalDate today);
+    boolean existsByUserAndCreatedAt(User user, LocalDate today);
 }
