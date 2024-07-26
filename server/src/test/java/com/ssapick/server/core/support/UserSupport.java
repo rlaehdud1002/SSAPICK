@@ -2,6 +2,7 @@ package com.ssapick.server.core.support;
 
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.mockito.Mock;
@@ -25,15 +26,16 @@ public abstract class UserSupport {
 		return user;
 	}
 
-	protected User createUser(String name) {
-		User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
-		Profile profile = spy(Profile.createProfile(user, (short)1, createCampus(), "https://test-profile.com"));
-		lenient().when(user.getProfile()).thenReturn(profile);
-		long id = atomicLong.incrementAndGet();
-		lenient().when(user.getId()).thenReturn(id);
-		lenient().when(profile.getId()).thenReturn(id);
-		return user;
-	}
+    protected User createUser(String name) {
+        User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
+        Profile profile = spy(Profile.createProfile(user, (short) 1, createCampus(), "https://test-profile.com"));
+        long id = atomicLong.incrementAndGet();
+        lenient().when(user.getProfile()).thenReturn(profile);
+        lenient().when(profile.getId()).thenReturn(id);
+        lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
+        lenient().when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        return user;
+    }
 
 	protected Campus createCampus() {
 		return Campus.createCampus("광주", (short)1, "자바 전공");
