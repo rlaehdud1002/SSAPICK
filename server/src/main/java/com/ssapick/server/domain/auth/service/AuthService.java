@@ -44,7 +44,7 @@ public class AuthService {
             String username = jwtService.getUsername(refreshToken);
 
             if (authCacheRepository.existsByUsername(signOutKey(username))) {
-                throw new BaseException(ErrorCode.INVALID_REFRESH_TOKEN);
+                throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
             }
 
             return jwtService.refreshToken(refreshToken);
@@ -55,25 +55,22 @@ public class AuthService {
 
     @Transactional
     public ProfileData.InitialProfileInfo authenticate(User user, MattermostData.Request request) {
-        System.out.println(request);
         try {
             ResponseEntity<MattermostData.Response> response = mattermostConfirmService.authenticate(request);
+            MattermostData.Response body = response.getBody();
 
-            // * 테스트 끝나면 주석 풀것
             if (user.isMattermostConfirmed()) {
                 throw new BaseException(ErrorCode.ALREADY_AUTHORIZED, "이미 메타모스트 계정이 인증 완료되어 있습니다.");
             }
 
-            log.debug("response: {}", response);
-
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new IllegalArgumentException("사용자 정보가 일치하지 않습니다.");
+            if (!response.getStatusCode().is2xxSuccessful() || body == null) {
+                throw new BaseException(ErrorCode.INVALID_MATTERMOST_INFO);
             }
 
             user.mattermostConfirm();
 
-            String nickName = response.getBody().getNickname();
-            ProfileData.InitialProfileInfo initialProfileInfo = getInitialProfileInfo(nickName);
+            String nickname = body.getNickname();
+            ProfileData.InitialProfileInfo info = getInitialProfileInfo(nickname);
 
             // String token = "Bearer " + response.getHeaders().get("token").get(0);
             // String userId = response.getBody().getId();
@@ -90,7 +87,7 @@ public class AuthService {
             // 	birthYear =
             // }
 
-            return initialProfileInfo;
+            return info;
 
         } catch (FeignException.Unauthorized e) {
             throw new BaseException(ErrorCode.NOT_FOUND_USER, e);

@@ -1,6 +1,5 @@
 package com.ssapick.server.domain.user.service;
 
-import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
@@ -14,10 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@DisplayName("픽코 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 public class PickcoServiceTest {
 
