@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,41 @@ class AttendanceServiceTest {
 
 		today = LocalDate.now();
 	}
+
+	@Test
+	@DisplayName("오늘 출석한 사용자의 오늘 출석 여부와 연속출석 기간을 확인할 수 있다.")
+	void getTodayAttendanceStatusCheckedIn() throws Exception {
+	    // * GIVEN: 이런게 주어졌을 때
+		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 7);
+
+		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(true);
+
+	    // * WHEN: 이걸 실행하면
+		AttendanceData.Status status = attendanceService.getUserAttendanceStatus(user);
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThat(status.getStreak()).isEqualTo(7);
+		assertThat(status.isTodayChecked()).isTrue();
+	}
+
+	@Test
+	@DisplayName("오늘 출석하지 않은 사용자의 오늘 출석 여부와 연속출석 기간을 확인할 수 있다.")
+	void getTodayAttendanceStatusNotCheckedIn() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		List<Attendance> attendances = createConsecutiveAttendanceRecords(today.minusDays(1), 7);
+
+		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+
+		// * WHEN: 이걸 실행하면
+		AttendanceData.Status status = attendanceService.getUserAttendanceStatus(user);
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThat(status.getStreak()).isEqualTo(0);
+		assertThat(status.isTodayChecked()).isFalse();
+	}
+
 
 	@Test
 	@DisplayName("오늘 출석을 처음 할 때 출석을 생성하고 코인이벤트 발행")
@@ -103,7 +139,7 @@ class AttendanceServiceTest {
 	}
 
 	@Test
-	@DisplayName("8일 연속 출석을 한 경우 5코인이벤트 발행")
+	@DisplayName("8일 연속 출석을 한 경우 1코인이벤트 발행")
 	void 연속_출석_8일한_경우_1코인이벤트_발행() throws Exception {
 		// * GIVEN: 7일 연속 출석 기록을 설정
 		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 8);
@@ -120,7 +156,7 @@ class AttendanceServiceTest {
 	}
 
 	@Test
-	@DisplayName("14일 연속 출석을 한 경우 5코인이벤트 발행")
+	@DisplayName("14일 연속 출석을 한 경우 10코인이벤트 발행")
 	void 연속_출석_14일한_경우_10코인이벤트_발행() throws Exception {
 		// * GIVEN: 7일 연속 출석 기록을 설정
 		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 14);
@@ -138,7 +174,7 @@ class AttendanceServiceTest {
 	}
 
 	@Test
-	@DisplayName("15일 연속 출석을 한 경우 5코인이벤트 발행")
+	@DisplayName("15일 연속 출석을 한 경우 1코인이벤트 발행")
 	void 연속_출석_15일한_경우_1코인이벤트_발행() throws Exception {
 		// * GIVEN: 7일 연속 출석 기록을 설정
 		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 15);
