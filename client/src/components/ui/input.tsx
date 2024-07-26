@@ -10,17 +10,20 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
+
+
   ({ className, type, register }) => {
+
     return (
-      <div className='relative'>
-        <div className='absolute right-2 bottom-2'>
+      <div className='w-full relative'>
+        <button type='submit' className='absolute right-2 bottom-2'>
           <SearchIcon width={8} height={8} />
-        </div>
+        </button>
         <input
           type={type}
           autoComplete="off"
           className={cn(
-            'text-color-000855 flex w-full rounded-lg border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+            'text-color-000855 flex rounded-lg border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 pr-10 ',
             className,
           )}
           {...register}
