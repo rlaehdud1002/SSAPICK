@@ -56,7 +56,7 @@ class QuestionControllerTest extends RestDocsSupport {
                 })
                 .map(QuestionData.Search::fromEntity)
                 .toList();
-        when(questionService.searchQeustions()).thenReturn(searches);
+        when(questionService.searchQuestions()).thenReturn(searches);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(get("/api/v1/questions"));
@@ -79,7 +79,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 ))
                                 .build())
                 ));
-        verify(questionService).searchQeustions();
+        verify(questionService).searchQuestions();
     }
 
     @Test
@@ -89,7 +89,7 @@ class QuestionControllerTest extends RestDocsSupport {
         Question question = spy(createQuestion("질문 1"));
         when(question.getId()).thenReturn(1L);
         QuestionData.Search search = QuestionData.Search.fromEntity(question);
-        when(questionService.searchQeustionByQuestionId(question.getId()))
+        when(questionService.searchQuestionByQuestionId(question.getId()))
                 .thenReturn(search);
 
         // * WHEN: 이걸 실행하면
@@ -117,7 +117,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 .build())
                 ));
 
-        verify(questionService).searchQeustionByQuestionId(question.getId());
+        verify(questionService).searchQuestionByQuestionId(question.getId());
     }
 
     @Test
@@ -133,7 +133,7 @@ class QuestionControllerTest extends RestDocsSupport {
                 })
                 .map(QuestionData.Search::fromEntity)
                 .toList();
-        when(questionService.searchQeustionsByCategory(categoryId)).thenReturn(searches);
+        when(questionService.searchQuestionsByCategory(categoryId)).thenReturn(searches);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(
@@ -160,7 +160,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 .build()
                 )));
 
-        verify(questionService).searchQeustionsByCategory(categoryId);
+        verify(questionService).searchQuestionsByCategory(categoryId);
     }
 
     @Test
