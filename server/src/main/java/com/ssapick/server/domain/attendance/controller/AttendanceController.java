@@ -3,6 +3,7 @@ package com.ssapick.server.domain.attendance.controller;
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
+import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.service.AttendanceService;
 import com.ssapick.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,18 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
+    /**
+     * 출석 조회
+     * @param user
+     * @return SuccessResponse<AttendanceData.Status>
+     */
+    @Authenticated
+    @GetMapping
+    public SuccessResponse<AttendanceData.Status> getUserAttendance(
+            @CurrentUser User user
+    ) {
+        return SuccessResponse.of(attendanceService.getUserAttendanceStatus(user));
+    }
 
     /**
      * 출석 생성
