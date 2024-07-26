@@ -17,42 +17,42 @@ const WarningIcon = ({ className, width, height }: WarningIconProps) => {
       <path
         d="M19 19L5 19"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M7 19L7.83576 12.3139C7.92959 11.5633 8.56769 11 9.32417 11H14.6758C15.4323 11 16.0704 11.5633 16.1642 12.3139L17 19"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M12 4L12 7"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M20.5 9L18 10M3.5 9L6 10"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M17.5 5.5L16 7.5M6.5 5.5L8 7.5"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
       <path
         d="M12 14L13.5 14"
         stroke="#FF0000"
-        stroke-width="2"
+        strokeWidth="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />

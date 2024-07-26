@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  max-width: 400px;
+  max-height: 100vh;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -75,8 +80,7 @@
     font-weight: 700;
     font-style: normal;
     color: #000855;
-    max-width: screen;
-    max-height: screen;
+
   }
 }
 
@@ -98,8 +102,9 @@
 .background-color-5F86E9 {
   background-color: #5F86E9
 }
-.backGround-kakao{
-  background-color: #FEE500 ;
+
+.backGround-kakao {
+  background-color: #FEE500;
 }
 
 .backGround-kakao {
