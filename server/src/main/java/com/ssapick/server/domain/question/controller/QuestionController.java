@@ -27,7 +27,7 @@ public class QuestionController {
      */
     @GetMapping("")
     public SuccessResponse<List<QuestionData.Search>> searchQuestions() {
-        List<QuestionData.Search> questions = questionService.searchQeustions();
+        List<QuestionData.Search> questions = questionService.searchQuestions();
         return SuccessResponse.of(questions);
     }
 
@@ -40,7 +40,7 @@ public class QuestionController {
      */
     @GetMapping("/{questionId}")
     public SuccessResponse<QuestionData.Search> searchQuestionById(@PathVariable Long questionId) {
-        return SuccessResponse.of(questionService.searchQeustionByQuestionId(questionId));
+        return SuccessResponse.of(questionService.searchQuestionByQuestionId(questionId));
     }
 
     /**
@@ -52,7 +52,7 @@ public class QuestionController {
      */
     @GetMapping("/category/{categoryId}")
     public SuccessResponse<List<QuestionData.Search>> searchQuestionsByCategoryId(@PathVariable Long categoryId) {
-        return SuccessResponse.of(questionService.searchQeustionsByCategory(categoryId));
+        return SuccessResponse.of(questionService.searchQuestionsByCategory(categoryId));
     }
 
     /**
@@ -92,7 +92,7 @@ public class QuestionController {
      */
     @GetMapping("/rank")
     public SuccessResponse<List<QuestionData.Search>> searchQuestionsRank(@CurrentUser User user) {
-        List<QuestionData.Search> questions = questionService.searchQeustionsRank(user.getId());
+        List<QuestionData.Search> questions = questionService.searchQuestionsRank(user.getId());
         return SuccessResponse.of(questions);
     }
 }
