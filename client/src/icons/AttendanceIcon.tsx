@@ -3,7 +3,6 @@ interface AttendanceIconProps {
   height: number;
   setpage?: boolean;
 }
-
 const AttendanceIcon = ({ width, height, setpage }: AttendanceIconProps) => {
   return (
     <>
@@ -11,15 +10,15 @@ const AttendanceIcon = ({ width, height, setpage }: AttendanceIconProps) => {
         <img
           width={width}
           height={height}
-          src="icons/Attendance.png"
+          src="/icons/Attendance.png"
           alt="attendance"
         />
       ) : (
         <img
           width={width}
           height={height}
-          src="icons/Attend.png"
-          alt="attendance"
+          src="/icons/Attend.png"
+          alt="attend"
         />
       )}
     </>

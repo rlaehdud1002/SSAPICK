@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.attendance.service;
 
+import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
@@ -23,6 +24,18 @@ public class AttendanceService {
 
     private final int ATTENDANCE_RESET_CYCLE = 14;
 
+    public AttendanceData.Status getUserAttendanceStatus(User user) {
+
+        LocalDate today = LocalDate.now();
+
+        boolean todayChecked = attendanceRepository.existsByUserAndCreatedAt(user, today);
+
+        List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+        int streak = getStreak(today, attendances);
+        return AttendanceData.CreateStatus(streak, todayChecked);
+    }
+
     @Transactional
     public int checkIn(User user) {
         LocalDate today = LocalDate.now();
@@ -41,14 +54,7 @@ public class AttendanceService {
     }
 
     private int getRewardPickcoAmount(LocalDate today, List<Attendance> attendances) {
-        LocalDate date = today;
-        int streak = 0;
-        for (Attendance attendance : attendances) {
-            if (attendance.getCreatedAt().toLocalDate().isEqual(date)) {
-                streak += 1;
-                date = date.minusDays(1);
-            }
-        }
+        int streak = getStreak(today, attendances);
 
         int streakInCycle = streak % ATTENDANCE_RESET_CYCLE;
         int rewardPickcoAmount = 0;
@@ -62,4 +68,17 @@ public class AttendanceService {
         }
         return rewardPickcoAmount;
     }
+
+    private static int getStreak(LocalDate today, List<Attendance> attendances) {
+        LocalDate date = today;
+        int streak = 0;
+        for (Attendance attendance : attendances) {
+            if (attendance.getCreatedAt().toLocalDate().isEqual(date)) {
+                streak += 1;
+                date = date.minusDays(1);
+            }
+        }
+        return streak;
+    }
+
 }
