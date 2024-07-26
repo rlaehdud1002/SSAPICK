@@ -2,6 +2,7 @@ import BackIcon from 'icons/BackIcon';
 import CoinIcon from 'icons/CoinIcon';
 import AttendanceAward from 'components/AttendancePage/AttendanceAward';
 import AttendanceCheck from 'components/AttendancePage/AttendanceCheck';
+import AttendanceModal from 'components/modals/AttendanceModal';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +17,9 @@ const Attendance = () => {
         <BackIcon />
       </div>
       <div className="text-center mt-3 text-3xl">출석체크</div>
+      <div className='text-center'>
+        <AttendanceModal date={7}/>
+      </div>
       <div className="bg-[#5F86E9]/50 mt-7 rounded-xl text-white text-center w-3/5 mx-auto p-2">
         <b className="luckiest_guy">7</b>일 연속 출석중!
       </div>
