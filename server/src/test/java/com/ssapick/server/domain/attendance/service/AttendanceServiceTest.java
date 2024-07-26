@@ -1,15 +1,10 @@
 package com.ssapick.server.domain.attendance.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ssapick.server.domain.attendance.dto.AttendanceData;
+import com.ssapick.server.domain.attendance.entity.Attendance;
+import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
+import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,204 +14,173 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import com.ssapick.server.domain.attendance.entity.Attendance;
-import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
-import com.ssapick.server.domain.user.entity.Profile;
-import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.event.PickcoEvent;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@DisplayName("출석 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class AttendanceServiceTest {
-	@InjectMocks
-	private AttendanceService attendanceService;
+    @InjectMocks
+    private AttendanceService attendanceService;
 
-	@Mock
-	private AttendanceRepository attendanceRepository;
+    @Mock
+    private AttendanceRepository attendanceRepository;
 
-	@Mock
-	private ApplicationEventPublisher publisher;
+    @Mock
+    private ApplicationEventPublisher publisher;
 
-	private User user;
-	private Profile profile;
-	private LocalDate today;
+    private User user;
+    private Profile profile;
+    private LocalDate today;
 
-	@BeforeEach
-	void setup() {
-		user = mock(User.class);
-		profile = mock(Profile.class);
-		lenient().when(user.getProfile()).thenReturn(profile);
+    @BeforeEach
+    void setup() {
+        user = mock(User.class);
+        profile = mock(Profile.class);
+        lenient().when(user.getProfile()).thenReturn(profile);
 
-		today = LocalDate.now();
-	}
+        today = LocalDate.now();
+    }
 
-	@Test
-	@DisplayName("오늘 출석한 사용자의 오늘 출석 여부와 연속출석 기간을 확인할 수 있다.")
-	void getTodayAttendanceStatusCheckedIn() throws Exception {
-	    // * GIVEN: 이런게 주어졌을 때
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 7);
+    @Test
+    @DisplayName("오늘 출석을 처음 할 때 출석을 생성하고 코인이벤트 발행")
+    void firstAttendance() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        Attendance attendance = mock(Attendance.class);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today))
+                .thenReturn(false);
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user))
+                .thenReturn(List.of(attendance));
+        when(attendance.getCreatedAt())
+                .thenReturn(today.atStartOfDay());
 
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(true);
+        // * WHEN: 이걸 실행하면
+        int rewardPickco = attendanceService.checkIn(user);
 
-	    // * WHEN: 이걸 실행하면
-		AttendanceData.Status status = attendanceService.getUserAttendanceStatus(user);
+        // * THEN: 이런 결과가 나와야 한다
+        verify(attendanceRepository).save(any());
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(1);
+    }
 
-		// * THEN: 이런 결과가 나와야 한다
-		assertThat(status.getStreak()).isEqualTo(7);
-		assertThat(status.isTodayChecked()).isTrue();
-	}
+    @Test
+    @DisplayName("오늘 이미 출석을 한 경우 예외처리")
+    void alreadyMakeAttendanceToday() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today))
+                .thenReturn(true);
 
-	@Test
-	@DisplayName("오늘 출석하지 않은 사용자의 오늘 출석 여부와 연속출석 기간을 확인할 수 있다.")
-	void getTodayAttendanceStatusNotCheckedIn() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today.minusDays(1), 7);
+        // * WHEN: 이걸 실행하면
+        Runnable runnable = () -> attendanceService.checkIn(user);
 
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        // * THEN: 이런 결과가 나와야 한다
+        verify(attendanceRepository, never()).save(any());
+        assertThrows(IllegalArgumentException.class, runnable::run);
+    }
 
-		// * WHEN: 이걸 실행하면
-		AttendanceData.Status status = attendanceService.getUserAttendanceStatus(user);
+    @Test
+    @DisplayName("7일 연속 출석을 한 경우 5코인이벤트 발행")
+    void 연속_출석_7일한_경우_5코인이벤트_발행() throws Exception {
+        // * GIVEN: 7일 연속 출석 기록을 설정
+        List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 7);
 
-		// * THEN: 이런 결과가 나와야 한다
-		assertThat(status.getStreak()).isEqualTo(0);
-		assertThat(status.isTodayChecked()).isFalse();
-	}
+        // 기존 출석 기록이 있을 경우의 동작을 설정
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
 
+        // * WHEN: 출석 체크 실행
+        int rewardPickco = attendanceService.checkIn(user);
 
-	@Test
-	@DisplayName("오늘 출석을 처음 할 때 출석을 생성하고 코인이벤트 발행")
-	void firstAttendance() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		Attendance attendance = mock(Attendance.class);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today))
-			.thenReturn(false);
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user))
-			.thenReturn(List.of(attendance));
-		when(attendance.getCreatedAt())
-			.thenReturn(today.atStartOfDay());
+        // * THEN: 출석 기록 저장 및 이벤트 발행 검증
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(5);
+    }
 
-		// * WHEN: 이걸 실행하면
-		int rewardPickco = attendanceService.checkIn(user);
+    @Test
+    @DisplayName("8일 연속 출석을 한 경우 5코인이벤트 발행")
+    void 연속_출석_8일한_경우_1코인이벤트_발행() throws Exception {
+        // * GIVEN: 7일 연속 출석 기록을 설정
+        List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 8);
 
-		// * THEN: 이런 결과가 나와야 한다
-		verify(attendanceRepository).save(any());
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(1);
-	}
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
 
-	@Test
-	@DisplayName("오늘 이미 출석을 한 경우 예외처리")
-	void alreadyMakeAttendanceToday() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today))
-			.thenReturn(true);
+        // * WHEN: 출석 체크 실행
+        int rewardPickco = attendanceService.checkIn(user);
 
-		// * WHEN: 이걸 실행하면
-		Runnable runnable = () -> attendanceService.checkIn(user);
+        // * THEN: 출석 기록 저장 및 이벤트 발행 검증
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(1);
+    }
 
-		// * THEN: 이런 결과가 나와야 한다
-		verify(attendanceRepository, never()).save(any());
-		assertThrows(IllegalArgumentException.class, runnable::run);
-	}
+    @Test
+    @DisplayName("14일 연속 출석을 한 경우 5코인이벤트 발행")
+    void 연속_출석_14일한_경우_10코인이벤트_발행() throws Exception {
+        // * GIVEN: 7일 연속 출석 기록을 설정
+        List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 14);
 
-	@Test
-	@DisplayName("7일 연속 출석을 한 경우 5코인이벤트 발행")
-	void 연속_출석_7일한_경우_5코인이벤트_발행() throws Exception {
-		// * GIVEN: 7일 연속 출석 기록을 설정
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 7);
+        // 기존 출석 기록이 있을 경우의 동작을 설정
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
 
-		// 기존 출석 기록이 있을 경우의 동작을 설정
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        // * WHEN: 출석 체크 실행
+        int rewardPickco = attendanceService.checkIn(user);
 
-		// * WHEN: 출석 체크 실행
-		int rewardPickco = attendanceService.checkIn(user);
+        // * THEN: 출석 기록 저장 및 이벤트 발행 검증
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(10);
+    }
 
-		// * THEN: 출석 기록 저장 및 이벤트 발행 검증
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(5);
-	}
+    @Test
+    @DisplayName("15일 연속 출석을 한 경우 5코인이벤트 발행")
+    void 연속_출석_15일한_경우_1코인이벤트_발행() throws Exception {
+        // * GIVEN: 7일 연속 출석 기록을 설정
+        List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 15);
 
-	@Test
-	@DisplayName("8일 연속 출석을 한 경우 1코인이벤트 발행")
-	void 연속_출석_8일한_경우_1코인이벤트_발행() throws Exception {
-		// * GIVEN: 7일 연속 출석 기록을 설정
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 8);
+        // 기존 출석 기록이 있을 경우의 동작을 설정
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
 
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        // * WHEN: 출석 체크 실행
+        int rewardPickco = attendanceService.checkIn(user);
 
-		// * WHEN: 출석 체크 실행
-		int rewardPickco = attendanceService.checkIn(user);
+        // * THEN: 출석 기록 저장 및 이벤트 발행 검증
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(1);
+    }
 
-		// * THEN: 출석 기록 저장 및 이벤트 발행 검증
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(1);
-	}
+    @Test
+    @DisplayName("21일 연속 출석을 한 경우 5코인이벤트 발행")
+    void 연속_출석_21일한_경우_5코인이벤트_발행() throws Exception {
+        // * GIVEN: 7일 연속 출석 기록을 설정
+        List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 21);
 
-	@Test
-	@DisplayName("14일 연속 출석을 한 경우 10코인이벤트 발행")
-	void 연속_출석_14일한_경우_10코인이벤트_발행() throws Exception {
-		// * GIVEN: 7일 연속 출석 기록을 설정
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 14);
+        // 기존 출석 기록이 있을 경우의 동작을 설정
+        when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
+        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
 
-		// 기존 출석 기록이 있을 경우의 동작을 설정
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        // * WHEN: 출석 체크 실행
+        int rewardPickco = attendanceService.checkIn(user);
 
-		// * WHEN: 출석 체크 실행
-		int rewardPickco = attendanceService.checkIn(user);
+        // * THEN: 출석 기록 저장 및 이벤트 발행 검증
+        verify(publisher).publishEvent(any(PickcoEvent.class));
+        assertThat(rewardPickco).isEqualTo(5);
+    }
 
-		// * THEN: 출석 기록 저장 및 이벤트 발행 검증
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(10);
-	}
-
-	@Test
-	@DisplayName("15일 연속 출석을 한 경우 1코인이벤트 발행")
-	void 연속_출석_15일한_경우_1코인이벤트_발행() throws Exception {
-		// * GIVEN: 7일 연속 출석 기록을 설정
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 15);
-
-		// 기존 출석 기록이 있을 경우의 동작을 설정
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
-
-		// * WHEN: 출석 체크 실행
-		int rewardPickco = attendanceService.checkIn(user);
-
-		// * THEN: 출석 기록 저장 및 이벤트 발행 검증
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(1);
-	}
-
-	@Test
-	@DisplayName("21일 연속 출석을 한 경우 5코인이벤트 발행")
-	void 연속_출석_21일한_경우_5코인이벤트_발행() throws Exception {
-		// * GIVEN: 7일 연속 출석 기록을 설정
-		List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 21);
-
-		// 기존 출석 기록이 있을 경우의 동작을 설정
-		when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-		when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
-
-		// * WHEN: 출석 체크 실행
-		int rewardPickco = attendanceService.checkIn(user);
-
-		// * THEN: 출석 기록 저장 및 이벤트 발행 검증
-		verify(publisher).publishEvent(any(PickcoEvent.class));
-		assertThat(rewardPickco).isEqualTo(5);
-	}
-
-	private List<Attendance> createConsecutiveAttendanceRecords(LocalDate startDate, int days) {
-		List<Attendance> attendances = new ArrayList<>();
-		for (int i = 0; i < days; i++) {
-			LocalDate date = startDate.minusDays(i);
-			Attendance attendance = mock(Attendance.class);
-			when(attendance.getCreatedAt()).thenReturn(date.atStartOfDay());
-			attendances.add(attendance);
-		}
-		return attendances;
-	}
+    private List<Attendance> createConsecutiveAttendanceRecords(LocalDate startDate, int days) {
+        List<Attendance> attendances = new ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            LocalDate date = startDate.minusDays(i);
+            Attendance attendance = mock(Attendance.class);
+            when(attendance.getCreatedAt()).thenReturn(date.atStartOfDay());
+            attendances.add(attendance);
+        }
+        return attendances;
+    }
 }

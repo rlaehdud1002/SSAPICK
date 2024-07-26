@@ -56,7 +56,7 @@ class QuestionControllerTest extends RestDocsSupport {
                 })
                 .map(QuestionData.Search::fromEntity)
                 .toList();
-        when(questionService.searchQeustions()).thenReturn(searches);
+        when(questionService.searchQuestions()).thenReturn(searches);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(get("/api/v1/questions"));
@@ -79,7 +79,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 ))
                                 .build())
                 ));
-        verify(questionService).searchQeustions();
+        verify(questionService).searchQuestions();
     }
 
     @Test
@@ -89,7 +89,7 @@ class QuestionControllerTest extends RestDocsSupport {
         Question question = spy(createQuestion("질문 1"));
         when(question.getId()).thenReturn(1L);
         QuestionData.Search search = QuestionData.Search.fromEntity(question);
-        when(questionService.searchQeustionByQuestionId(question.getId()))
+        when(questionService.searchQuestionByQuestionId(question.getId()))
                 .thenReturn(search);
 
         // * WHEN: 이걸 실행하면
@@ -117,7 +117,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 .build())
                 ));
 
-        verify(questionService).searchQeustionByQuestionId(question.getId());
+        verify(questionService).searchQuestionByQuestionId(question.getId());
     }
 
     @Test
@@ -133,7 +133,7 @@ class QuestionControllerTest extends RestDocsSupport {
                 })
                 .map(QuestionData.Search::fromEntity)
                 .toList();
-        when(questionService.searchQeustionsByCategory(categoryId)).thenReturn(searches);
+        when(questionService.searchQuestionsByCategory(categoryId)).thenReturn(searches);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(
@@ -160,7 +160,7 @@ class QuestionControllerTest extends RestDocsSupport {
                                 .build()
                 )));
 
-        verify(questionService).searchQeustionsByCategory(categoryId);
+        verify(questionService).searchQuestionsByCategory(categoryId);
     }
 
     @Test
@@ -236,6 +236,41 @@ class QuestionControllerTest extends RestDocsSupport {
                 )));
 
         verify(questionService).searchQeustionList(argThat(user -> user.getUsername().equals("test-user")));
+    }
+
+    @Test
+    @DisplayName("싸픽에서 사용할 질문 조회 테스트")
+    void 싸픽에서_사용할_질문_조회_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        List<QuestionData.Search> searches = Collections.nCopies(15, 0).stream().map((i) -> {
+            Question question = spy(createQuestion("질문 " + (i + 1)));
+            when(question.getId()).thenReturn((long) i + 1);
+            return question;
+        }).map(QuestionData.Search::fromEntity).toList();
+        when(questionService.searchQeustionList(any())).thenReturn(searches);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/questions/pick"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("question")
+                                .summary("싸픽에서 사용할 질문 조회 API")
+                                .description("싸픽에서 사용할 질문들을 조회한다. 총 15개 질문 조회 (내부 중복 제거 알고리즘 적용)")
+                                .responseFields(response(
+                                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 ID"),
+                                        fieldWithPath("data[].banCount").description("질문을 차단한 횟수"),
+                                        fieldWithPath("data[].skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),
+                                        fieldWithPath("data[].category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
+                                        fieldWithPath("data[].category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
+                                        fieldWithPath("data[].category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
+                                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("질문 내용")
+                                ))
+                                .build()
+                )));
+
     }
 
     private Question createQuestion(String content) {

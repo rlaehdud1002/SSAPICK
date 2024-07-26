@@ -1,8 +1,8 @@
 package com.ssapick.server.domain.auth.service;
 
+import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.properties.JwtProperties;
 import com.ssapick.server.domain.auth.entity.JwtToken;
-import com.ssapick.server.domain.auth.response.CustomOAuth2User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static com.ssapick.server.core.exception.ErrorCode.INVALID_ACCESS_TOKEN;
+
 @Component
 @RequiredArgsConstructor
 public class JWTService {
@@ -37,9 +39,11 @@ public class JWTService {
     }
 
     /**
-     * 인증된 사용자 정보를 통해 토큰을 생성
-     * @param user {@link CustomOAuth2User} 인증된 사용자 정보
-     * @return {@link JwtToken} 토큰
+     * 신규 JWT 토큰(accessToken, refreshToken) 생성
+     *
+     * @param username    사용자 아이디
+     * @param authorities 사용자 권한
+     * @return {@link JwtToken} accessToken, refreshToken
      */
     public JwtToken generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
         String authority = authorities.stream()
@@ -78,8 +82,9 @@ public class JWTService {
      * @param accessToken JWT 토큰
      * @return 토큰의 클레임
      */
-    private Claims parseClaims(String accessToken) throws Exception {
+    private Claims parseClaims(String accessToken) {
         String message;
+        Exception exception;
         try {
             return Jwts.parser()
                     .verifyWith(secretKey)
@@ -88,14 +93,18 @@ public class JWTService {
                     .getPayload();
         } catch (ExpiredJwtException e) {
             message = "유효기간이 만료된 토큰입니다.";
+            exception = e;
         } catch (MalformedJwtException e) {
             message = "잘못된 형식의 토큰입니다.";
+            exception = e;
         } catch (IllegalArgumentException e) {
             message = "잘못된 인자입니다.";
+            exception = e;
         } catch (Exception e) {
             message = "토큰 파싱 중 에러가 발생했습니다.";
+            exception = e;
         }
-        throw new Exception(message);
+        throw new BaseException(INVALID_ACCESS_TOKEN, message, exception);
     }
 
     public String getUsername(String accessToken) throws Exception {
@@ -103,7 +112,7 @@ public class JWTService {
         return claims.getSubject();
     }
 
-    public JwtToken refreshToken(String refreshToken) throws Exception {
+    public JwtToken refreshToken(String refreshToken) {
         Claims claims = parseClaims(refreshToken);
 
         Collection<? extends GrantedAuthority> authorities =
