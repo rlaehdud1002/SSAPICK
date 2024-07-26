@@ -17,11 +17,11 @@ const SetAlarmIcon = ({
         <img
           width={width}
           height={height}
-          src="icons/SetAlarm.png"
+          src="/icons/SetAlarm.png"
           alt="alarm"
         />
       ) : (
-        <img width={width} height={height} src="icons/Alarm.png" alt="alarm" />
+        <img width={width} height={height} src="/icons/Alarm.png" alt="alarm" />
       )}
     </div>
   );
