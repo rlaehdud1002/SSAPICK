@@ -15,7 +15,7 @@ const PointIcon = () => {
         transform="rotate(-90 12 12)"
         fill="#000855"
         stroke="#000855"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="round"
       />
       <circle
@@ -25,7 +25,7 @@ const PointIcon = () => {
         transform="rotate(-90 12 18)"
         fill="#000855"
         stroke="#000855"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="round"
       />
       <circle
@@ -35,7 +35,7 @@ const PointIcon = () => {
         transform="rotate(-90 12 6)"
         fill="#000855"
         stroke="#000855"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke-linecap="round"
       />
     </svg>
