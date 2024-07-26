@@ -45,7 +45,7 @@ openapi3 {
     version = '0.0.1'
     outputFileNamePrefix = 'ssapick-api-docs'
     format = 'json'
-    outputDirectory = 'build/resources/main/static/docs'
+    outputDirectory = 'build/resources/test/docs'
 }
 
 dependencies {
