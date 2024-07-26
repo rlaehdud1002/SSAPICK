@@ -13,7 +13,6 @@ public class CustomOAuthUserFactory {
             case NAVER -> new NaverResponse(attributes);
             case GOOGLE -> new GoogleResponse(attributes);
             case KAKAO -> new KakaoResponse(attributes);
-            default -> throw new IllegalArgumentException("Invalid provider type");
         };
     }
 }
