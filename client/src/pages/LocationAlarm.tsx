@@ -2,6 +2,8 @@ import BackIcon from 'icons/BackIcon';
 import UserPickIcon from 'icons/UserPickIcon';
 import LocationCircle from 'components/LocationPage/LocationCircle';
 import LocationModal from 'components/modals/LocationModal';
+import LocationCheckModal from 'components/LocationPage/LocationCheckModal';
+import LocationWatchModal from 'components/LocationPage/LocationWatchModal';
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -9,13 +11,53 @@ import { useEffect, useState } from 'react';
 const LocationAlarm = () => {
   const nav = useNavigate();
   const [dot, setDot] = useState('');
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
+  const [watchLatitude, setwatchLatitude] = useState<number | null>(null);
+  const [watchLongitude, setwatchLongitude] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  // search text
   useEffect(() => {
     const interval = setInterval(() => {
       setDot((prevDots) => (prevDots === '...' ? '' : prevDots + '.'));
     }, 700);
 
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
+  }, []);
+
+  // 위치 정보 가져오기 (렌더링 될 때만)
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error) => {
+          setError(error.message);
+        },
+      );
+    } else {
+      setError('위치 정보를 가져올 수 없습니다.');
+    }
+  }, []);
+
+  // 위치 정보 가져오기 (지속적으로 추적)
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          setwatchLatitude(position.coords.latitude);
+          setwatchLongitude(position.coords.longitude);
+        },
+        (error) => {
+          setError(error.message);
+        },
+      );
+    } else {
+      setError('위치 정보를 가져올 수 없습니다.');
+    }
   }, []);
 
   return (
@@ -40,7 +82,14 @@ const LocationAlarm = () => {
           SEARCHING{dot}
         </span>
       </div>
-      <LocationModal />
+      <div className="flex flex-col">
+        <LocationModal />
+        <LocationCheckModal latitude={latitude} longitude={longitude} />
+        <LocationWatchModal
+          latitude={watchLatitude}
+          longitude={watchLongitude}
+        />
+      </div>
     </div>
   );
 };
