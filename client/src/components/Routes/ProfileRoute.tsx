@@ -23,12 +23,14 @@ const ProfileRoute = () => {
               <Route path="/profile/setalarm" element={<SetAlarm />} />
               <Route path="/profile/friendlist" element={<FriendList />} />
               <Route path="/profile/block" element={<Block/>}>
+                <Route path="" element={<BlockFriend/>}/>
                 <Route path="blockfriend" element={<BlockFriend/>}/>
                 <Route path="blockquestion" element={<BlockQuestion/>}/>
               </Route>
               <Route path="/profile/attendance" element={<Attendance />} />
               <Route path="/profile/locationalarm" element={<LocationAlarm />} />
               <Route path="/profile/questionlist" element={<QuestionList />}>
+                <Route path="" element={<QuestionInfo/>}/>
                 <Route path="questioninfo" element={<QuestionInfo/>}/>
                 <Route path="makequestion" element={<MakeQuestion/>}/>
               </Route>

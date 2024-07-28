@@ -9,13 +9,13 @@ const Block = () => {
           to="blockfriend"
           className={`border-b-2 w-1/2 text-center pb-3 text-lg ${location === 'blockfriend' || location === undefined ? 'text-color-5F86E9 border-[#5F86E9]' : 'text-white border-white'}`}
         >
-          차단된 친구
+          차단 친구
         </Link>
         <Link
           to="blockquestion"
           className={`border-b-2 w-1/2 text-center pb-3 text-lg ${location === 'blockquestion' ? 'text-color-5F86E9 border-[#5F86E9]' : 'text-white border-white'}`}
         >
-          차단된 질문
+          차단 질문
         </Link>
       </div>
       <div className="mt-5">

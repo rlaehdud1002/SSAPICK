@@ -1,8 +1,5 @@
 import PlusDeleteButton from "buttons/PlusDeleteButton";
-import { useState } from "react";
 import { Separator } from "@radix-ui/react-select";
-
-
 
 interface BlockFriendContentProps {
     th:number;
@@ -12,7 +9,6 @@ interface BlockFriendContentProps {
 
 const BlockFriendContent = ({th,classNum,name}:BlockFriendContentProps) => {
 
-    const [isPlus, setIsPlus] = useState<boolean>(true);
   const onEvnet = () => {
     console.log("차단리스트에서 친구 삭제")
   }
@@ -27,7 +23,8 @@ const BlockFriendContent = ({th,classNum,name}:BlockFriendContentProps) => {
         <PlusDeleteButton title="삭제" />
         </div>
     </div>
-    <Separator className="my-4 mx-4" /> 
+    {/* <Separator className="my-4 mx-4" />  */}
+    <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
     )
 }
