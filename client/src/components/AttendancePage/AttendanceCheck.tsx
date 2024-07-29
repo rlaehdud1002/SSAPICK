@@ -18,6 +18,8 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
     { cx: 288, cy: 149, num: 13 },
   ];
 
+  circleArr.map(({ cx, cy, num }) => console.log(cx, cy, num));
+
   return (
     <svg
       width="350"
@@ -27,7 +29,6 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
       xmlns="http://www.w3.org/2000/svg"
       className="mx-auto my-8"
     >
-      {/* 출석 line */}
       <line
         x1="52.9964"
         y1="20.7832"
@@ -77,14 +78,15 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
             y={cy}
             textAnchor="middle"
             dy=".3em"
-            fontSize="14"
-            className="text-white luckiest_guy"
+            fill="white"
+            fontSize="22.67"
+            className="luckiest_guy"
           >
             {num}
           </text>
         </g>
       ))}
-      
+
       {/* 7일째는 circle 크기가 다름 */}
       <circle
         cx="161"
@@ -97,8 +99,9 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
         y="85"
         textAnchor="middle"
         dy=".3em"
-        fontSize="14"
-        className="text-white luckiest_guy"
+        fill="white"
+        fontSize="15"
+        className="luckiest_guy"
       >
         SSAPICK!
       </text>

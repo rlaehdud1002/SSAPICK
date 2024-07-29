@@ -42,6 +42,17 @@ pipeline {
             }
         }
 
+        stage('build client') {
+            steps {
+                dir('client') {
+                    sh 'rm -rf node_modules'
+                    sh 'npm install'
+                    sh 'npm run build'
+                    sh 'cp build /home/ubuntu/resource/build'
+                }
+            }
+        }
+
         stage('deploy') {
             steps {
                 dir('server') {

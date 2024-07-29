@@ -10,14 +10,17 @@ import {
 } from 'components/ui/dialog';
 
 import { useEffect, useState } from 'react';
-import { DialogDescription } from '@radix-ui/react-dialog';
 
 enum WarningStep {
   CHECK,
   ALERT,
 }
 
-const WarningModal = () => {
+interface WarningModalProps {
+  question: string;
+}
+
+const WarningModal = ({ question }: WarningModalProps) => {
   const [step, setStep] = useState<WarningStep>(WarningStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
@@ -45,25 +48,23 @@ const WarningModal = () => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <WarningIcon width={20} height={20} className='mx-1' circle/>
+        <WarningIcon width={20} height={20} className="mx-1" />
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
-              질문 만들기
+              질문 신고
             </DialogTitle>
           </DialogHeader>
           {step === WarningStep.CHECK && (
             <div>
-              <DialogDescription>
-                <div className="flex flex-col items-center my-16 text-center">
-                  <p>이 질문을 신고하시겠습니까?</p>
-                  <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
-                    프로젝트 같이 하고 싶은 사람?
-                  </p>
-                </div>
-              </DialogDescription>
+              <div className="flex flex-col items-center my-16 text-center">
+                <p>이 질문을 신고하시겠습니까?</p>
+                <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
+                  {question}
+                </p>
+              </div>
               <DialogFooter className="flex flex-row justify-end">
                 <Button
                   type="submit"
@@ -76,13 +77,7 @@ const WarningModal = () => {
             </div>
           )}
           {step === WarningStep.ALERT && (
-            <div>
-              <DialogDescription>
-                <div className="text-center my-16">
-                  질문 신고가 완료되었습니다.
-                </div>
-              </DialogDescription>
-            </div>
+            <div className="text-center my-16">질문 신고가 완료되었습니다.</div>
           )}
         </DialogContent>
       )}

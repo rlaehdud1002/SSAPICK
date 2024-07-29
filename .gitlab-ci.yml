@@ -1,0 +1,23 @@
+image: node:10-alpine
+
+variables:
+  DOCS_FOLDER: "server/test/resources/docs"
+  SPEC_TO_DISPLAY: "ssapick-api-docs.json"
+
+cache:
+  paths:
+    - ./node_modules
+pages:
+  stage: deploy
+  before_script:
+    - npm install swagger-ui-dist@3.22.1
+  script:
+    - mkdir public
+    - cp -rp node_modules/swagger-ui-dist/* public
+    - cp -rp $DOCS_FOLDER/* public
+    - sed -i "s#https://petstore\.swagger\.io/v2/swagger\.json#$SPEC_TO_DISPLAY#g" public/index.html
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
