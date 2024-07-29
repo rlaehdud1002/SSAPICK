@@ -12,7 +12,7 @@ const RankedQuestion = ({title, rankList}:RankedQuestionProps) => {
     <div className='mb-10'>
       <div className="flex flex-row">
         <TrophyIcon width={25} height={25} />
-        <h1 className="ms-2">{title} <span className="luckiest_guy text-orange-400 text-lg">top 3</span></h1>
+        <h1 className="ml-2">{title} <span className="luckiest_guy text-orange-400 text-lg">top 3</span></h1>
       </div>
       {rankList.length !== 0 ? (
         rankList.map((rankItem) => {
@@ -24,7 +24,7 @@ const RankedQuestion = ({title, rankList}:RankedQuestionProps) => {
               <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl pt-2">
                 {rankItem.rank}
               </span>
-              <span className="ms-2">{rankItem.content}</span>
+              <span className="ml-2">{rankItem.content}</span>
             </div>
           );
         })

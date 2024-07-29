@@ -18,8 +18,8 @@ const QuestionInfo = () => {
   ];
 
   const testList = [
-    { question: "같이 밥먹고 싶은 사람?", gender: "여자" },
-    { question: "같이 커피 마시고 싶은 사람?", gender: "남자" },
+    { question: "같이 밥먹고 싶은 사람?", gender: "female" },
+    { question: "같이 커피 마시고 싶은 사람?", gender: "male" },
   ]
 
   return (
@@ -30,7 +30,7 @@ const QuestionInfo = () => {
       <div className="mt-5">
         <span>알림 설정한 질문</span>
         <div className="mb-20">
-          <AlarmedQuestion checkedList={[]} />
+          <AlarmedQuestion checkedList={testList} />
           {/* {[0, 1, 2, 3, 4, 5,6,6].map((index) => (
             <AlarmedQuestion key={index} gender="여자" title="같이 밥먹고 싶은 사람?"/>
           ))} */}

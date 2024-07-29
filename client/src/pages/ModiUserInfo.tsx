@@ -38,8 +38,8 @@ const ModiUserInfo = () => {
 
   return <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
 
-    <div className="ml-8 my-2">정보 수정</div>
-    <div className="bg-white ml-5 h-0.5 w-24"></div>
+    <h3 className="ml-10 my-5">정보 수정</h3>
+    {/* <div className="bg-white ml-5 h-0.5 w-24"></div> */}
     <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
       <div className="mb-10">
         <ProfileCameraIcon setUploadImage={setUploadImage} />
