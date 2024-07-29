@@ -41,11 +41,11 @@ const WarningDeleteModal = ({ warning }: WarningDeleteModalProps) => {
       >
         <DialogHeader>
           <div className="flex flex-row items-center">
-            <WarningIcon width={24} height={24} className="me-3" />
+            <WarningIcon width={24} height={24} className="mr-3" />
             <p>{warning}</p>
           </div>
           <div className="flex flex-row items-center">
-            <DeleteIcon width={24} height={24} className="me-3" />
+            <DeleteIcon width={24} height={24} className="mr-3" />
             <p>삭제</p>
           </div>
         </DialogHeader>
