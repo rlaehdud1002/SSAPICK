@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.question.service;
 
+import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,10 +63,10 @@ public class QuestionService {
      */
     public QuestionData.Search searchQuestionByQuestionId(Long questionId) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUD_QUESTION));
 
         if (question.isDeleted()) {
-            throw new IllegalArgumentException(ErrorCode.DELETED_QUESTION.getMessage());
+            throw new BaseException(ErrorCode.DELETED_QUESTION);
         }
         return QuestionData.Search.fromEntity(question);
     }
@@ -77,7 +79,7 @@ public class QuestionService {
     public void createQuestion(User user, QuestionData.Create create) {
 
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY.getMessage()));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
 
         questionRegistrationRepository.save(QuestionRegistration.of(user, category, create.getContent()));
     }
@@ -90,15 +92,17 @@ public class QuestionService {
      */
     public void banQuestion(User user, Long questionId) {
 
-        questionRepository.findById(questionId)
-            .orElseThrow(() -> new IllegalArgumentException(ErrorCode.NOT_FOUD_QUESTION.getMessage()));
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() ->
+                new BaseException(ErrorCode.NOT_FOUD_QUESTION)
+            );
 
-        questionBanRepository.findQByUser_IdAndQuestion_Id(user.getId(), questionId)
+        questionBanRepository.findQByUserIdAndQuestionId(user.getId(), questionId)
             .ifPresent(q -> {
-                    throw new IllegalArgumentException(ErrorCode.EXIST_QUESTION_BAN.getMessage());
+                throw new BaseException(ErrorCode.EXIST_QUESTION_BAN);
             });
 
-        questionBanRepository.save(QuestionBan.of(user, em.getReference(Question.class, questionId)));
+        questionBanRepository.save(QuestionBan.of(user, question));
     }
 
     /**
@@ -108,7 +112,7 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchBanQuestions(Long userId) {
-        return questionBanRepository.findQuestionBanByUser_Id(userId)
+        return questionBanRepository.findQuestionBanByUserId(userId)
                 .stream()
                 .map(QuestionData.Search::fromEntity)
                 .toList();
@@ -134,13 +138,6 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchQeustionList(User user) {
-        //
-        // List<QuestionData.Search> searches = this.searchQuestions();
-        // List<QuestionData.Search> banQuestions = this.searchBanQuestions(user.getId());
-        //
-        // searches.removeAll(banQuestions);
-        //
-        // return searches;
 
         List<QuestionData.Search> searches = new ArrayList<>(this.searchQuestions()); // 변경 가능하도록 ArrayList로 변환
         List<QuestionData.Search> banQuestions = this.searchBanQuestions(user.getId());

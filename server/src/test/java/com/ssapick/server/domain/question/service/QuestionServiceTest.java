@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -130,7 +131,7 @@ class QuestionServiceTest extends UserSupport {
 
 	    // * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(BaseException.class)
 			.hasMessage(ErrorCode.DELETED_QUESTION.getMessage());
 	}
 
@@ -176,7 +177,7 @@ class QuestionServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(BaseException.class)
 			.hasMessage(ErrorCode.NOT_FOUND_QUESTION_CATEGORY.getMessage());
 	}
 
@@ -209,27 +210,27 @@ class QuestionServiceTest extends UserSupport {
 
 	    // * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(BaseException.class)
 			.hasMessage(ErrorCode.NOT_FOUD_QUESTION.getMessage());
 	}
 
 	@Test
 	@DisplayName("이미_차단한_질문을_차단하려고_할_때_예외발생_테스트")
 	void 이미_차단한_질문을_차단하려고_할_때_예외발생_테스트() throws Exception {
-	    // * GIVEN: 이런게 주어졌을 때
+		// * GIVEN: 이런게 주어졌을 때
 		User user = createUser("test");
 		Question question = this.createQuestion(user);
 		QuestionBan questionBan = this.createQuestionBan(user, question);
 
 		when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
-		when(questionBanRepository.findQByUser_IdAndQuestion_Id(user.getId(), question.getId())).thenReturn(Optional.of(questionBan));
+		when(questionBanRepository.findQByUserIdAndQuestionId(user.getId(), question.getId())).thenReturn(Optional.of(questionBan));
 
-	    // * WHEN: 이걸 실행하면
+		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> questionService.banQuestion(user, question.getId());
 
-	    // * THEN: 이런 결과가 나와야 한다
+		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
+			.isInstanceOf(BaseException.class)
 			.hasMessage(ErrorCode.EXIST_QUESTION_BAN.getMessage());
 	}
 
@@ -241,7 +242,7 @@ class QuestionServiceTest extends UserSupport {
 		Question question = this.createQuestion(user);
 		QuestionBan questionBan = this.createQuestionBan(user, question);
 
-		when(questionBanRepository.findQuestionBanByUser_Id(user.getId())).thenReturn(List.of(question));
+		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(List.of(question));
 
 	    // * WHEN: 이걸 실행하면
 		List<QuestionData.Search> searches = questionService.searchBanQuestions(user.getId());
@@ -303,7 +304,7 @@ class QuestionServiceTest extends UserSupport {
 			List.of(question1, question2, question3, question4, question5)
 		);
 
-		when(questionBanRepository.findQuestionBanByUser_Id(user.getId())).thenReturn(
+		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(
 			List.of(question3, question4)
 		);
 		

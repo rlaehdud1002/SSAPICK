@@ -9,6 +9,6 @@ public interface QuestionQueryRepository {
 
 	List<Question> findRanking(Long userId);
 
-	List<Question> findAddedQuestionsByUser_Id(Long userId);
+	List<Question> findAddedQuestionsByUserId(Long userId);
 
 }
