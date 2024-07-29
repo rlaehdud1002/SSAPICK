@@ -6,6 +6,8 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -60,11 +62,11 @@ public class MessageService {
     @Transactional
     public void createMessage(User sender, MessageData.Create create) {
         Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 픽입니다.")
+            () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
 
         if (pick.isMessageSend()) {
-            throw new IllegalArgumentException("하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다.");
+            throw new BaseException(ErrorCode.ALREADY_SEND_MESSAGE);
         }
 		pick.send();
 
@@ -84,11 +86,11 @@ public class MessageService {
     @Transactional
     public void deleteReceiveMessage(User receiver, Long messageId) {
         Message message = messageRepository.findById(messageId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 메시지입니다.")
+            () -> new BaseException(ErrorCode.NOT_FOUND_MESSAGE)
         );
 
         if (!Objects.equals(message.getReceiver().getId(), receiver.getId())) {
-            throw new IllegalArgumentException("본인이 받은 메시지만 삭제할 수 있습니다.");
+            throw new BaseException(ErrorCode.FORBIDDEN);
         }
 
         message.deleteMessageOfReceiver();
@@ -104,11 +106,11 @@ public class MessageService {
     @Transactional
     public void deleteSendMessage(User sender, Long messageId) {
         Message message = messageRepository.findById(messageId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 메시지입니다.")
+            () -> new BaseException(ErrorCode.NOT_FOUND_MESSAGE)
         );
 
         if (!Objects.equals(message.getSender().getId(), sender.getId())) {
-            throw new IllegalArgumentException("본인이 보낸 메시지만 삭제할 수 있습니다.");
+            throw new BaseException(ErrorCode.FORBIDDEN);
         }
 
         message.deleteMessageOfSender();
