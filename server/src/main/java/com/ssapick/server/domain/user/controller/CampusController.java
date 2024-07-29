@@ -5,6 +5,7 @@ import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.user.dto.CampusData;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.service.CampusService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class CampusController {
     @IsAdmin
     @PostMapping(value = "")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<Void> createCampus(@RequestBody CampusData.Create create) {
+    public SuccessResponse<Void> createCampus(@RequestBody @Valid CampusData.Create create) {
         campusService.createCampus(create);
         return SuccessResponse.created();
     }

@@ -28,7 +28,10 @@ public enum ErrorCode {
     DELETED_QUESTION(3002, HttpStatus.BAD_REQUEST, "삭제된 질문입니다."),
     NOT_FOUND_QUESTION_CATEGORY(3003, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
     EXIST_QUESTION_BAN(3004, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
-    ;
+
+    // Attendance
+    ALREADY_CHECKIN_TODAY(4000, HttpStatus.BAD_REQUEST, "오늘 이미 출석을 하셨습니다.");
+
     private final int code;
     private final HttpStatus status;
     private final String message;
