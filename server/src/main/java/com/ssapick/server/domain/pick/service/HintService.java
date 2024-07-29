@@ -122,7 +122,7 @@ public class HintService {
 	}
 
 	@Transactional
-	public void saveHint(User user, UserData.Create request) {
+	public void saveHint(User user, UserData.Update request) {
 
 		if (user == null) {
 			throw new IllegalArgumentException("유저 정보가 없습니다.");
