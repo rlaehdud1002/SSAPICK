@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssapick.server.core.constants.AuthConst;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
@@ -31,6 +32,7 @@ public class AuthService {
 	private final AuthCacheRepository authCacheRepository;
 	private final MattermostConfirmService mattermostConfirmService;
 	private final UserRepository userRepository;
+	private final S3Service s3Service;
 
 	@Transactional
 	public void signOut(User user, String refreshToken) {
@@ -74,20 +76,11 @@ public class AuthService {
 			String nickname = body.getNickname();
 			ProfileData.InitialProfileInfo info = getInitialProfileInfo(nickname);
 
-			// String token = "Bearer " + response.getHeaders().get("token").get(0);
-			// String userId = response.getBody().getId();
-			//
-			// byte[] profileImage = mattermostConfirmService.getProfileImage(token, userId);
-
 			// TODO: S3에 이미지 업로드
-
-			// String birthDay = null;
-			// String birthYear = null;
-			//
-			// if (user.getProviderType().equals(ProviderType.NAVER)) {
-			// 	birthDay =
-			// 	birthYear =
-			// }
+			response.getHeaders();
+			log.info("Token: {}", response.getHeaders().get("Token"));
+			log.info("response: {}", response.getHeaders());
+			// mattermostConfirmService.getProfileImage(He,body.getId());
 
 			return info;
 
@@ -119,7 +112,7 @@ public class AuthService {
 
 		List<String> locations = List.of("서울", "대전", "구미", "광주", "부울경");
 
-		if (!iskorean(name) || !iskorean(campusName) || locations.contains(name) || !locations.contains(campusName)
+		if (!isKorean(name) || !isKorean(campusName) || locations.contains(name) || !locations.contains(campusName)
 			|| section < 1 || section > 30) {
 			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}
@@ -131,13 +124,12 @@ public class AuthService {
 		return initialProfileInfo;
 	}
 
-	private boolean iskorean(String name) {
+	private boolean isKorean(String name) {
 		return name.matches("^[가-힣]*$");
 	}
 
 	private String signOutKey(String username) {
 		return AuthConst.SIGN_OUT_CACHE_KEY + username;
 	}
-
 
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.mockito.Mock;
 
+import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
@@ -16,11 +17,13 @@ public abstract class UserSupport {
 	private final AtomicLong atomicLong = new AtomicLong(1);
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private S3Service s3Service;
 
 	protected User createUser() {
 		User user = spy(User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
 		Profile profile = Profile.createProfile(user, (short)1, createCampus(), "https://test-profile.com");
-		// lenient().when(user.getProfile()).thenReturn(profile);
+		lenient().when(user.getProfile()).thenReturn(profile);
 		lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
 		return user;
 	}

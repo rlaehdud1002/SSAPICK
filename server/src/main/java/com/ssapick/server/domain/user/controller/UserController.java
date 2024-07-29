@@ -52,7 +52,7 @@ public class UserController {
 			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}
 
-		userService.updateUser(user, update, String.valueOf(profileImage));
+		userService.updateUser(user, update, profileImage);
 		return SuccessResponse.of(null);
 	}
 

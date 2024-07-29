@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.user.dto.UserData;
@@ -28,10 +31,15 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 public class UserServiceTest extends UserSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(UserServiceTest.class);
+
 	@InjectMocks
 	private UserService userService;
+
 	@Mock
 	private UserRepository userRepository;
+
+	@Mock
+	private S3Service s3Service;
 
 	static User user;
 
@@ -40,6 +48,8 @@ public class UserServiceTest extends UserSupport {
 	@DisplayName("힌트_아이디가_NULL_인_유효한_데이터로_힌트_저장_테스트")
 	void 힌트_아이디가_NULL_인_유효한_데이터로_힌트_저장_테스트() {
 		// given
+		MockMultipartFile mockMultipartFile =
+			new MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".getBytes());
 		user = this.createUser();
 		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
@@ -53,8 +63,14 @@ public class UserServiceTest extends UserSupport {
 			"장덕동",
 			"취미");
 
+		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "imgUrl");
+
+		verify(s3Service, times(1)).upload(mockMultipartFile);
+
+		when(s3Service.upload(mockMultipartFile)).thenReturn(future);
+
 		// when
-		userService.updateUser(user, createMockHintCreateData, "imgUrl");
+		userService.updateUser(user, createMockHintCreateData, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
@@ -80,6 +96,10 @@ public class UserServiceTest extends UserSupport {
 	@DisplayName("힌트 ID가 널이 아닌 유효한 데이터로 힌트 업데이트 테스트")
 	void updateHint() {
 		// given
+
+		MockMultipartFile mockMultipartFile =
+			new MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".getBytes());
+
 		user = this.createUser();
 		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
@@ -107,12 +127,13 @@ public class UserServiceTest extends UserSupport {
 			"풋살"
 		);
 
-		// Mock 설정
+		when(s3Service.upload(mockMultipartFile)).thenReturn(CompletableFuture.completedFuture("imgUrl"));
+
 		lenient().when(userRepository.save(any(User.class))).thenReturn(user);
 
 		// when
-		userService.updateUser(user, createMockHintCreateData, "imgUrl");
-		userService.updateUser(user, createMockHintCreateData2, "imgUrl");
+		userService.updateUser(user, createMockHintCreateData, mockMultipartFile);
+		userService.updateUser(user, createMockHintCreateData2, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
@@ -137,6 +158,9 @@ public class UserServiceTest extends UserSupport {
 	@DisplayName("유저 정보가 없을 때 예외 발생 테스트")
 	void saveHint_withNullUser() {
 		// given
+		MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg",
+			"test image".getBytes());
+
 		user = this.createUser();
 		UserData.Update hintWithNullUser = UserData.Update.of(
 			null,
@@ -152,7 +176,7 @@ public class UserServiceTest extends UserSupport {
 		);
 
 		// when
-		Runnable runnable = () -> userService.updateUser(null, hintWithNullUser, "imgUrl");
+		Runnable runnable = () -> userService.updateUser(null, hintWithNullUser, mockMultipartFile);
 
 		// then
 		assertThatThrownBy(runnable::run)

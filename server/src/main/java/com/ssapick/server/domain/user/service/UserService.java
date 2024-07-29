@@ -1,16 +1,21 @@
 package com.ssapick.server.domain.user.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.user.dto.UserData;
@@ -27,8 +32,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
+	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 	private final ApplicationEventPublisher publisher;
 	private final UserRepository userRepository;
+	private final S3Service s3Service;
 
 	@Transactional
 	public void changePickco(Long userId, PickcoLogType type, int amount) {
@@ -41,7 +48,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(User user, UserData.Update update, String profileImage) {
+	public void updateUser(User user, UserData.Update update, MultipartFile profileImage) {
 
 		if (user == null) {
 			throw new BaseException(ErrorCode.NOT_FOUND_USER);
@@ -49,6 +56,12 @@ public class UserService {
 
 		user.updateName(update.getName());
 		user.updateGender(update.getGender());
+
+		// 이미지 업로드
+		CompletableFuture<String> future = s3Service.upload(profileImage);
+		log.info("profileImageUrl: {}", future);
+		String profileImageUrl = future.join();
+		//
 
 		Profile profile = user.getProfile();
 		if (profile != null) {
@@ -59,10 +72,10 @@ public class UserService {
 			} else {
 				campus = Campus.createCampus(update.getCampusName(), update.getCampusSection(), null);
 			}
-			profile = Profile.createProfile(user, update.getCohort(), campus, profileImage);
+			profile = Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
 		} else {
 			Campus campus = Campus.createCampus(update.getCampusName(), update.getCampusSection(), null);
-			profile = Profile.createProfile(user, update.getCohort(), campus, profileImage);
+			profile = Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
 		}
 
 		user.updateProfile(profile);
