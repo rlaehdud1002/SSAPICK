@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
@@ -47,7 +49,7 @@ public class UserController {
 	) {
 		if (errors.hasErrors()) {
 			log.error("사용자 수정 입력 값 에러 발생: {}", errors);
-			throw new IllegalArgumentException("입력 값이 올바르지 않습니다.");
+			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}
 
 		userService.updateUser(user, update, String.valueOf(profileImage));
