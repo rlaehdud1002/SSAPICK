@@ -13,7 +13,7 @@ const MessageInputModal = ({ register, errors }: MessageInputModalProps) => {
   return (
     <DialogDescription className="flex flex-col justify-center">
       <div className="my-3 flex flex-row">
-        <UserIcon />
+        <UserIcon gen="female" checked />
         <h3 className="ms-3">11기 2반</h3>
       </div>
       <Input

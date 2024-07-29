@@ -18,7 +18,7 @@ const Response = () => {
           <AccordionTrigger className="p-0">
             <div className="flex flex-col">
               <div className="flex flex-row">
-                <UserIcon />
+                <UserIcon gen="female" />
                 <h3 className="mx-3 text-color-000855">12기 2반</h3>
               </div>
             </div>
