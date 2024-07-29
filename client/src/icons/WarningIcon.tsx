@@ -6,57 +6,67 @@ interface WarningIconProps {
 
 const WarningIcon = ({ className, width, height }: WarningIconProps) => {
   return (
-    <svg
-      width={width}
-      height={height}
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M19 19L5 19"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M7 19L7.83576 12.3139C7.92959 11.5633 8.56769 11 9.32417 11H14.6758C15.4323 11 16.0704 11.5633 16.1642 12.3139L17 19"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M12 4L12 7"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M20.5 9L18 10M3.5 9L6 10"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M17.5 5.5L16 7.5M6.5 5.5L8 7.5"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M12 14L13.5 14"
-        stroke="#FF0000"
-        strokeWidth="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+      <svg
+        width={width}
+        height={height}
+        viewBox="0 0 20 20"
+        className={className}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {circle && (
+          <circle
+            cx={width / 2}
+            cy={height / 2}
+            r={width / 2}
+            fill="white"
+            fill-opacity="0.5"
+          />
+        )}
+
+        <path
+          d="M14.2619 13.762L5.59521 13.762"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M6.83337 13.762L7.35075 9.62297C7.40883 9.15828 7.80385 8.80957 8.27215 8.80957H11.5851C12.0534 8.80957 12.4484 9.15828 12.5065 9.62297L13.0238 13.762"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9.92859 4.4762L9.9286 6.33334"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M15.1904 7.57141L13.6428 8.19046M4.66663 7.57141L6.21424 8.19046"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M13.3333 5.40479L12.4048 6.64288M6.5238 5.40479L7.45237 6.64288"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9.92859 10.6666L10.8572 10.6666"
+          stroke="#FF0000"
+          stroke-width="1.2381"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
   );
 };
 
