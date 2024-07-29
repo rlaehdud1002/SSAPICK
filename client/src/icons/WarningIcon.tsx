@@ -2,9 +2,10 @@ interface WarningIconProps {
   className?: string;
   width: number;
   height: number;
+  circle?: boolean;
 }
 
-const WarningIcon = ({ className, width, height }: WarningIconProps) => {
+const WarningIcon = ({ className, width, height, circle = false }: WarningIconProps) => {
   return (
       <svg
         width={width}
