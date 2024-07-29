@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +49,11 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchQuestionsByCategory(Long questionCategoryId) {
-        return questionRepository.findQuestionsByCategory_Id(questionCategoryId)
+        QuestionCategory category = questionCategoryRepository.findById(questionCategoryId).orElseGet(() -> {
+            throw new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY);
+        });
+
+        return questionRepository.findQuestionsByQuestionCategory(category)
             .stream().map(QuestionData.Search::fromEntity)
             .toList();
     }
@@ -97,7 +100,7 @@ public class QuestionService {
                 new BaseException(ErrorCode.NOT_FOUD_QUESTION)
             );
 
-        questionBanRepository.findQByUserIdAndQuestionId(user.getId(), questionId)
+        questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), questionId)
             .ifPresent(q -> {
                 throw new BaseException(ErrorCode.EXIST_QUESTION_BAN);
             });
@@ -112,7 +115,7 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchBanQuestions(Long userId) {
-        return questionBanRepository.findQuestionBanByUserId(userId)
+        return questionBanRepository.findQBanByUserId(userId)
                 .stream()
                 .map(QuestionData.Search::fromEntity)
                 .toList();

@@ -85,7 +85,9 @@ class QuestionServiceTest extends UserSupport {
 		Question question1 = this.createQuestion(user, category1);
 		Question question2 = this.createQuestion(user, category1);
 
-		lenient().when(questionRepository.findQuestionsByCategory_Id(category1.getId())).thenReturn(
+		lenient().when(questionCategoryRepository.findById(category1.getId())).thenReturn(Optional.of(category1));
+
+		lenient().when(questionRepository.findQuestionsByQuestionCategory(category1)).thenReturn(
 			List.of(question1, question2)
 		);
 
@@ -223,7 +225,7 @@ class QuestionServiceTest extends UserSupport {
 		QuestionBan questionBan = this.createQuestionBan(user, question);
 
 		when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
-		when(questionBanRepository.findQByUserIdAndQuestionId(user.getId(), question.getId())).thenReturn(Optional.of(questionBan));
+		when(questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), question.getId())).thenReturn(Optional.of(questionBan));
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> questionService.banQuestion(user, question.getId());
@@ -242,7 +244,7 @@ class QuestionServiceTest extends UserSupport {
 		Question question = this.createQuestion(user);
 		QuestionBan questionBan = this.createQuestionBan(user, question);
 
-		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(List.of(question));
+		when(questionBanRepository.findQBanByUserId(user.getId())).thenReturn(List.of(question));
 
 	    // * WHEN: 이걸 실행하면
 		List<QuestionData.Search> searches = questionService.searchBanQuestions(user.getId());
@@ -304,7 +306,7 @@ class QuestionServiceTest extends UserSupport {
 			List.of(question1, question2, question3, question4, question5)
 		);
 
-		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(
+		when(questionBanRepository.findQBanByUserId(user.getId())).thenReturn(
 			List.of(question3, question4)
 		);
 		
