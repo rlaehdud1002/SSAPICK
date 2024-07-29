@@ -21,7 +21,7 @@ const CommonRoute = () => {
         <Route path="received" element={<Received />} />
         <Route path="send" element={<Send />} />
       </Route>
-      <Route path="/profile/" element={<Profile />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };
