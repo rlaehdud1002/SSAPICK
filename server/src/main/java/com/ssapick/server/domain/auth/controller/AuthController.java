@@ -64,6 +64,14 @@ public class AuthController {
     }
 
     @Authenticated
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public SuccessResponse<Void> deleteUser(@CurrentUser User user) {
+        authService.deleteUser(user);
+        return SuccessResponse.empty();
+    }
+
+    @Authenticated
     @GetMapping("/mattermost-confirm")
     public SuccessResponse<ProfileData.InitialProfileInfo> authenticate(
             @CurrentUser User user,

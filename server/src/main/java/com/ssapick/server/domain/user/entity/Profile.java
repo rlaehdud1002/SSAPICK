@@ -100,6 +100,9 @@ public class Profile extends BaseEntity {
 		return profile;
 	}
 
+	public void delete() {
+		this.isDeleted = true;
+	}
 
 
 	//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)

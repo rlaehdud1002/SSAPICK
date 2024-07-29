@@ -1,3 +1,5 @@
+import UserIcon from '../../icons/UserIcon';
+
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +9,6 @@ import {
 
 import HintModal from 'components/modals/HintModal';
 import MessageModal from 'components/modals/MessageModal';
-import UserMaskIcon from 'icons/UserMaskIcon';
 
 const Response = () => {
   return (
@@ -17,7 +18,7 @@ const Response = () => {
           <AccordionTrigger className="p-0">
             <div className="flex flex-col">
               <div className="flex flex-row">
-                <UserMaskIcon gen="female" />
+                <UserIcon />
                 <h3 className="mx-3 text-color-000855">12기 2반</h3>
               </div>
             </div>

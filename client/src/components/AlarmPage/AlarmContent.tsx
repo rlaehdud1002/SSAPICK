@@ -22,12 +22,12 @@ const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
           <QuestionAlarmIcon width={42} height={42} />
         )}
       </div>
-      <div className="flex flex-col ml-3">
+      <div className="flex flex-col ms-3">
         <p>{content}</p>
         <div className="flex flex-row">
           <p className="text-xs text-gray-500">1분 전</p>
           {read && (
-            <p className="text-xs text-red-500 luckiest_guy bg-white/50 rounded-full px-1 ml-1 pt-1">
+            <p className="text-xs text-red-500 luckiest_guy bg-white/50 rounded-full px-1 ms-1 pt-1">
               N
             </p>
           )}

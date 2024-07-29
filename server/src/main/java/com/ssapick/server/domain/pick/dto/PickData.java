@@ -3,8 +3,6 @@ package com.ssapick.server.domain.pick.dto;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.dto.ProfileData;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -61,13 +59,9 @@ public class PickData {
 
     @Data
     public static class Create {
-        @NotNull(message = "받는 사람 아이디는 필수 입력 값입니다.")
         private Long receiverId;
-        @NotNull(message = "질문 아이디는 필수 입력 값입니다.")
         private Long questionId;
-        @NotNull(message = "인덱스는 필수 입력 값입니다.")
         private int index;
-        @NotNull(message = "픽 상태는 필수 입력 값입니다.")
         private PickStatus status;
     }
 }
