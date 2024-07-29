@@ -14,8 +14,8 @@ const CoolTime = () => {
       <p className="text-[20px] my-2">새로운 질문 준비중</p>
       <div className="flex flex-row items-center text-[12px]">
         <p className="luckiest_guy pt-1">11</p>분{' '}
-        <p className="luckiest_guy ml-1 pt-1">19</p>초 후에{' '}
-        <p className="luckiest_guy ml-1 pt-1">ssapick</p> 할 수 있어요!
+        <p className="luckiest_guy ms-1 pt-1">19</p>초 후에{' '}
+        <p className="luckiest_guy ms-1 pt-1">ssapick</p> 할 수 있어요!
       </div>
     </div>
   );

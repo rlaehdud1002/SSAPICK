@@ -19,7 +19,7 @@ const SetAlarm = () => {
         onClick={() => nav(-1)}
       >
         <BackIcon />
-        <SetAlarmIcon width={25} height={25} alarmset className="mr-2 mt-1" />
+        <SetAlarmIcon width={25} height={25} alarmset className="me-2 mt-1" />
         <h1>알림 관리</h1>
       </div>
       <div className="bg-white/50 rounded-xl my-6 mx-8 mt-4 py-1.5 px-5 flex flex-row items-center justify-between">

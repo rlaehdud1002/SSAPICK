@@ -2,16 +2,14 @@ package com.ssapick.server.core.advice;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.response.CustomValidationError;
 import com.ssapick.server.core.response.ErrorResponse;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -31,14 +29,13 @@ public class CustomExceptionAdvice {
                 .body(ErrorResponse.of(errorCode, e.getMessage()));
     }
 
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
-//        Map<String, String> errors = new HashMap<>();
-//        ex.getConstraintViolations().forEach((violation) -> {
-//            String fieldName = violation.getPropertyPath().toString();
-//            String errorMessage = violation.getMessage();
-//            errors.put(fieldName, errorMessage);
-//        });
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-//    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomValidationError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
+        CustomValidationError customValidationError = new CustomValidationError(e.getBindingResult());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(customValidationError);
+    }
 }

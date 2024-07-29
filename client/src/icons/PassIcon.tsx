@@ -8,7 +8,7 @@ const PassIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       className="cursor-pointer"
     >
-      <circle cx="10" cy="10" r="10" fill="white" fillOpacity="0.5" />
+      <circle cx="10" cy="10" r="10" fill="white" fill-opacity="0.5" />
       <g clipPath="url(#clip0_397_677)">
         <path
           d="M7.30024 10.4991V12.2991H5.50024"

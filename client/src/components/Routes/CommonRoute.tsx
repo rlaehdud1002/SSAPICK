@@ -6,14 +6,16 @@ import Message from 'pages/Message';
 import Pick from 'pages/Pick';
 import Profile from 'pages/Profile';
 import Ranking from 'pages/Ranking';
+import Splash from 'pages/Splash';
 import { Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/splash" element={<Splash />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
       <Route path="/message" element={<Message />}>
