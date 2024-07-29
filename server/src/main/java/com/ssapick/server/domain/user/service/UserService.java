@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.user.dto.UserData;
@@ -42,7 +44,7 @@ public class UserService {
 	public void updateUser(User user, UserData.Update update, String profileImage) {
 
 		if (user == null) {
-			throw new IllegalArgumentException("유저 정보가 없습니다.");
+			throw new BaseException(ErrorCode.NOT_FOUND_USER);
 		}
 
 		user.updateName(update.getName());
@@ -86,12 +88,12 @@ public class UserService {
 	@Bean
 	public Function<UserDetails, User> fetchUser() {
 		return userDetails -> userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-			() -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
 		);
 	}
 
 	private User findUserOrThrow(Long userId) throws IllegalArgumentException {
 		return userRepository.findUserWithProfileById(userId)
-			.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
 }

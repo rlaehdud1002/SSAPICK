@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.test.context.support.WithMockUser;
 
+import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.user.dto.UserData;
@@ -69,7 +70,7 @@ public class UserServiceTest extends UserSupport {
 
 		assertThat(hints).extracting(Hint::getContent)
 			.containsExactlyInAnyOrder(
-				"이인준", "M", "11", "광주", "2", "INTP", "전공", "1998-08-25", "장덕동 ", "풋살"
+				"이인준", "M", "11", "광주", "2", "INTP", "전공", "1998-08-25", "장덕동", "취미"
 			);
 
 	}
@@ -155,8 +156,8 @@ public class UserServiceTest extends UserSupport {
 
 		// then
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("유저 정보가 없습니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessageContaining("사용자를 찾을 수 없습니다.");
 	}
 
 }
