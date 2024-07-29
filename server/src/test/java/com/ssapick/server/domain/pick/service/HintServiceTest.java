@@ -38,31 +38,23 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 @DisplayName("힌트 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class HintServiceTest extends HintServiceTestSupport {
+	private static final Logger log = LoggerFactory.getLogger(HintServiceTest.class);
+	static User user;
 	@InjectMocks
 	private HintService hintService;
-
 	@Mock
 	private HintRepository hintRepository;
-
 	@Mock
 	private PickRepository pickRepository;
-
 	@Mock
 	private UserRepository userRepository;
-
 	@Mock
 	private ProfileRepository profileRepository;
-
 	@Mock
 	private CampusRepository campusRepository;
-
-	static User user;
 	private Profile profile;
-
 	@Mock
 	private ApplicationEventPublisher publisher;
-
-	private static final Logger log = LoggerFactory.getLogger(HintServiceTest.class);
 
 	@BeforeEach
 	void setUp() {
@@ -164,7 +156,7 @@ class HintServiceTest extends HintServiceTestSupport {
 	@DisplayName("hintId가 null인 유효한 데이터로 힌트 저장 테스트")
 	void saveHint() {
 		// given
-		UserData.Create createMockHintCreateData = UserData.Create.of(
+		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -190,10 +182,10 @@ class HintServiceTest extends HintServiceTestSupport {
 
 	@Test
 	@WithMockUser
-	@DisplayName("hintId가 null이 아닌 유효한 데이터로 힌트 업데이트 테스트")
+	@DisplayName("힌트 ID가 널이 아닌 유효한 데이터로 힌트 업데이트 테스트")
 	void updateHint() {
 		// given
-		UserData.Create createMockHintCreateData = UserData.Create.of(
+		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -207,7 +199,7 @@ class HintServiceTest extends HintServiceTestSupport {
 			"imgUrl"
 		);
 
-		UserData.Create createMockHintCreateData2 = UserData.Create.of(
+		UserData.Update createMockHintCreateData2 = UserData.Update.of(
 			"이인준",
 			'M',
 			(short)11,
@@ -256,7 +248,7 @@ class HintServiceTest extends HintServiceTestSupport {
 	@DisplayName("유저 정보가 없을 때 예외 발생 테스트")
 	void saveHint_withNullUser() {
 		// given
-		UserData.Create hintWithNullUser = UserData.Create.of(
+		UserData.Update hintWithNullUser = UserData.Update.of(
 			null,
 			'M',
 			(short)11,

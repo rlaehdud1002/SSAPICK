@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from 'components/ui/select';
 import { UseFormRegisterReturn } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 interface InfoSelectProps {
   title: string;
@@ -20,6 +21,7 @@ interface InfoSelectProps {
 const InfoSelect = ({ title, register, setValue, errors, name }: InfoSelectProps) => {
   const handleChange = (value: string) => {
     setValue(value);
+
   };
 
   console.log();

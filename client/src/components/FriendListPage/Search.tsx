@@ -1,5 +1,5 @@
-import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface FriendSearchForm {
@@ -8,10 +8,17 @@ interface FriendSearchForm {
 
 const Search = () => {
 
-  const { register, handleSubmit, setValue } = useForm<FriendSearchForm>();
+  const { register, handleSubmit, reset, formState: { isSubmitSuccessful } } = useForm<FriendSearchForm>();
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset()
+    }
+  }, [isSubmitSuccessful, reset]);
 
   const onSubmit = (data: FriendSearchForm) => {
     console.log(data)
+
   }
 
   const onInvalid = (errors: any) => {
@@ -20,9 +27,10 @@ const Search = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-      <div className="flex w-80 items-center space-x-2 ml-12">
-        <Input className="bg-white/50 h-10" type="text" placeholder="친구 검색" register={register("search", {})} />
-        {/* <Button className="background-color-5F86E9" type="submit">검색</Button> */}
+      <div className="flex relative items-center space-x-2 m-auto">
+        <div className="w-4/5 flex flex-row m-auto">
+          <Input className="w-full bg-white h-10" type="text" placeholder="친구 검색" register={register("search")} />
+        </div>
       </div>
     </form>
   )

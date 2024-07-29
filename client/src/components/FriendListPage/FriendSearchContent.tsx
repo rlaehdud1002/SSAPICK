@@ -1,5 +1,6 @@
+import { Separator } from "components/ui/separator";
 import PlusDeleteButton from "buttons/PlusDeleteButton";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 interface FriendSearchContentProps {
   campus: string;
@@ -8,34 +9,33 @@ interface FriendSearchContentProps {
   name: string;
 }
 
-const FriendSearchContent = ({campus, th, classNum, name}:FriendSearchContentProps) => {
+const FriendSearchContent = ({ campus, th, classNum, name }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
   const onPlus = () => {
     isPlus ? setIsPlus(false) : setIsPlus(true);
   }
 
-  return <div>
-    <div>
-    <div className="flex items-center mt-5 ml-10 mr-10 justify-between">
+  return <Fragment>
+    <div className="flex items-center mt-5 justify-between mx-8">
       <div>
-      <img className="w-16 h-16 ml-6" src="../icons/Profile.png" alt="profile" />
+        <img className="w-14 h-14" src="../icons/Profile.png" alt="profile" />
       </div>
       <div className="">{campus}캠퍼스 {th}기 {classNum}반 {name}</div>
       <div>
-        {isPlus ?(
+        {isPlus ? (
           <div onClick={onPlus}>
-        <PlusDeleteButton title="추가" isDlete={true}/>
-        </div>
-        ):(
+            <PlusDeleteButton title="추가" isDlete={true} />
+          </div>
+        ) : (
           <div onClick={onPlus}>
-        <PlusDeleteButton title="삭제" /> 
-        </div>
+            <PlusDeleteButton title="삭제" />
+          </div>
         )}
       </div>
     </div>
-    <div className="bg-white h-px w-90 mx-8 mt-5"></div>
-  </div>
-  </div>
+    <Separator className="my-4 mx-4" />  
+    {/* <div className="bg-white h-px w-90 mx-8 mt-5"></div> */}
+  </Fragment>
 }
 
 export default FriendSearchContent;
