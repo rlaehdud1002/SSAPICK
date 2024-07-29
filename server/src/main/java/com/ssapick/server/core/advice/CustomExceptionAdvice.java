@@ -2,6 +2,7 @@ package com.ssapick.server.core.advice;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.response.CustomValidationError;
 import com.ssapick.server.core.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +35,12 @@ public class CustomExceptionAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    public ResponseEntity<CustomValidationError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
+        CustomValidationError customValidationError = new CustomValidationError(e.getBindingResult());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(customValidationError);
     }
 }
