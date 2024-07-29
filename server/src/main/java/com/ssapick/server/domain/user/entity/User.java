@@ -177,4 +177,12 @@ public class User extends BaseEntity {
 			", providerType=" + providerType +
 			'}';
 	}
+
+	public void delete() {
+		this.isDeleted = true;
+		this.profile.delete();
+		this.bannedUser.clear();
+		this.hints.clear();
+		this.hints.clear();
+	}
 }
