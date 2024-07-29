@@ -8,6 +8,7 @@ pipeline {
                 script {
                     dir('server') {
                         sh 'cp /home/ubuntu/source/secret/application-auth.properties src/main/resources'
+                        sh 'cp /home/ubuntu/source/secret/application-prod.properties src/main/resources'
                     }
                 }
             }
@@ -44,7 +45,7 @@ pipeline {
         stage('deploy') {
             steps {
                 dir('server') {
-                    sh 'cp build/libs/server-0.0.1-SNAPSHOT.jar /home/ubuntu/server-0.0.1-SNAPSHOT.jar'
+                    sh 'sudo cp build/libs/server-0.0.1-SNAPSHOT.jar /home/ubuntu/source/server-0.0.1-SNAPSHOT.jar'
                     sh 'sudo service ssapick-server restart'
                 }
             }
