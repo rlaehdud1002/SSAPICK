@@ -2,6 +2,7 @@ package com.ssapick.server.domain.pick.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponse<Void> createMessage(
             @CurrentUser User user,
-            @RequestBody MessageData.Create create
+            @RequestBody @Valid MessageData.Create create
     ) {
         messageService.createMessage(user, create);
         return SuccessResponse.empty();

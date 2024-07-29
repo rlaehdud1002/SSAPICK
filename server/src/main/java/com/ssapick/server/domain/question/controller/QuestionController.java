@@ -5,10 +5,10 @@ import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,8 +66,7 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponse<Void> requestAddQuestion(
             @CurrentUser User user,
-            @Validated @RequestBody QuestionData.Create create,
-            Errors errors
+            @Valid @RequestBody QuestionData.Create create
     ) {
         questionService.createQuestion(user, create);
         return SuccessResponse.empty();
