@@ -13,7 +13,7 @@ const QuestionInput = ({ register, errors }: QuestionInputProps) => {
     <DialogDescription className="flex flex-col justify-center">
       <Input
         type="text"
-        className="input-box border-none h-20 w-full focus:outline-none mt-6 mb-2"
+        className="input-box border-none h-20 focus:outline-none mt-6 mb-2"
         register={register}
       />
       <ErrorMessage

@@ -19,7 +19,7 @@ services:
     container_name: database-admin
     image: dpage/pgadmin4
     ports:
-      - "9090:80"
+      - "9000:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: "ssapick@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "ssapick"

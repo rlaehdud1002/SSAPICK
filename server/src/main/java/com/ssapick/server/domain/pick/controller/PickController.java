@@ -6,7 +6,6 @@ import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.user.entity.User;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,7 @@ public class PickController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public SuccessResponse<Void> createPick(
             @CurrentUser User user,
-            @RequestBody @Valid PickData.Create create
+            @RequestBody PickData.Create create
     ) {
         pickService.createPick(user, create);
         return SuccessResponse.empty();

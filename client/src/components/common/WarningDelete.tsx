@@ -13,15 +13,15 @@ const WarningDelete = () => {
       <PopoverTrigger>
         <PointIcon />
       </PopoverTrigger>
-      <PopoverContent className="mr-4 w-28 rounded-xl bg-[#E9F2FD]">
+      <PopoverContent className="me-4 w-28 rounded-xl bg-[#E9F2FD]">
         {!(location === 'send') && (
           <div className="flex flex-row">
-            <WarningIcon width={24} height={24} className="mr-3" />
+            <WarningIcon width={24} height={24} className="me-3" />
             <span>신고</span>
           </div>
         )}
         <div className="flex flex-row">
-          <DeleteIcon width={24} height={24} className="mr-3" />
+          <DeleteIcon width={24} height={24} className="me-3" />
           <span>삭제</span>
         </div>
       </PopoverContent>

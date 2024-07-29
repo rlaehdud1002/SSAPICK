@@ -14,7 +14,7 @@ const Alarm = () => {
         onClick={() => nav(-1)}
       >
         <BackIcon />
-        <AlarmIcon className="mr-2" />
+        <AlarmIcon className="me-2" />
         <h1>알림</h1>
       </div>
       <div className="m-6">
