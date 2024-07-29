@@ -1,9 +1,9 @@
-interface UserIconProps {
+interface UserMaskIconProps {
   gen: string;
   checked?: boolean;
 }
 
-const UserIcon = ({ gen, checked }: UserIconProps) => {
+const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
   let stroke;
   let fill;
 
@@ -90,4 +90,4 @@ const UserIcon = ({ gen, checked }: UserIconProps) => {
   );
 };
 
-export default UserIcon;
+export default UserMaskIcon;
