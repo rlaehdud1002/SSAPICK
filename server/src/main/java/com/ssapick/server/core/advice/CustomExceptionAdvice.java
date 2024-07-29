@@ -2,9 +2,12 @@ package com.ssapick.server.core.advice;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.response.CustomValidationError;
 import com.ssapick.server.core.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,5 +27,15 @@ public class CustomExceptionAdvice {
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(ErrorResponse.of(errorCode, e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomValidationError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
+        CustomValidationError customValidationError = new CustomValidationError(e.getBindingResult());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(customValidationError);
     }
 }
