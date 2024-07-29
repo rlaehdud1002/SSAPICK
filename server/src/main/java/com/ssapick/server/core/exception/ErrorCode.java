@@ -25,12 +25,29 @@ public enum ErrorCode {
     // Invalid Value
     INVALID_INPUT_VALUE(3000, HttpStatus.BAD_REQUEST, "올바르지 않은 입력 값입니다."),
     NOT_FOUD_QUESTION(3001, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
-    DELETED_QUESTION(3002, HttpStatus.BAD_REQUEST, "삭제된 질문입니다."),
-    NOT_FOUND_QUESTION_CATEGORY(3003, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
-    EXIST_QUESTION_BAN(3004, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
 
     // Attendance
-    ALREADY_CHECKIN_TODAY(4000, HttpStatus.BAD_REQUEST, "오늘 이미 출석을 하셨습니다.");
+    ALREADY_CHECKIN_TODAY(4000, HttpStatus.BAD_REQUEST, "오늘 이미 출석을 하셨습니다."),
+
+
+    // Question
+    DELETED_QUESTION(5001, HttpStatus.BAD_REQUEST, "삭제된 질문입니다."),
+    NOT_FOUND_QUESTION_CATEGORY(5002, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
+    EXIST_QUESTION_BAN(5003, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
+    NOT_FOUND_QUESTION(5004, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
+
+    //Pick
+    NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
+    INVALID_PICK_INDEX(6002, HttpStatus.BAD_REQUEST, "픽 인덱스가 올바르지 않습니다."),
+
+    //MESSAGE
+    ALREADY_SEND_MESSAGE(7001, HttpStatus.BAD_REQUEST, "하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다."),
+    NOT_FOUND_MESSAGE(7002, HttpStatus.NOT_FOUND, "메시지를 찾을 수 없습니다."),
+
+    ;
+
+
+
 
     private final int code;
     private final HttpStatus status;
