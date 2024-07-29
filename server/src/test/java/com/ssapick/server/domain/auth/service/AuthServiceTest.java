@@ -105,6 +105,19 @@ class AuthServiceTest extends UserSupport {
     }
 
     @Test
+    @DisplayName("회원 탈퇴에 성공하면 유저의 delete 함수 호출")
+    void deleteUserSuccess() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User user = this.createUser();
+
+        // * WHEN: 이걸 실행하면
+        authService.deleteUser(user);
+
+        // * THEN: 이런 결과가 나와야 한다
+        verify(user).delete();
+    }
+
+    @Test
     @DisplayName("MM 이름이 1학기 형식일때 성공 테스트")
     void authenticate_성공_테스트() {
         // * GIVEN

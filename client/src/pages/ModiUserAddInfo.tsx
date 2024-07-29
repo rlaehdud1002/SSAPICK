@@ -33,7 +33,7 @@ const ModiUserAddInfo = () => {
   return <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
   <div className="flex flex-col my-5">
   <div className="ml-10">
-  <h3 style={{ fontSize: 15 }}>추가 정보 수정</h3>
+  <h3 style={{ fontSize: 15 }}>추가 정보 입력</h3>
   <div style={{ fontSize: 11 }}>추후 랜덤 힌트로 사용됩니다.</div>
   <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div>
   </div>

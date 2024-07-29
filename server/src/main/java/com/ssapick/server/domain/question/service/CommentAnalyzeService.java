@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentAnalyzeService {
-    @Value("${spring.perspective.apiKey}")
+    @Value("${spring.comment-analyzer.api-key}")
     private String apiKey;
 
     private final CommentAnalyzer commentAnalyzer;

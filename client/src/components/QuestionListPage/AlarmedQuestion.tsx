@@ -1,31 +1,22 @@
-import UserMaskIcon from "icons/UserMaskIcon";
+import AlarmedIcon from "icons/AlarmedIcon"
+import { Separator } from "@radix-ui/react-select"
 
 interface AlarmedQuestionProps {
-    // gender: string;
-    checkedList: Array<{ question: string, gender: string }>;
+    gender:string
+    title:string
 }
 
-const AlarmedQuestion = ({ checkedList }: AlarmedQuestionProps) => {
+const AlarmedQuestion = ({gender,title}:AlarmedQuestionProps) =>{
     return (
-        <div className="flex flex-col mt-5 ml-5">
-            {/* <span className="ml-10">{title}</span> */}
+        <div>
+        <div className="flex mt-5 ml-5">
+            <AlarmedIcon gender={gender}/>
+            <span className="ml-10">{title}</span>
             {/* <Separator className="my-4 mx-4" />  */}
-            {checkedList.length !== 0 ? (
-                checkedList.map((checkedItem, index) => {
-                    return (
-                        <div className="flex flex-col">
-                            <div className="flex mt-5 ml-5"
-                                key={index}>
-                                <UserMaskIcon checked={true} gen={checkedItem.gender} />
-                                <span className="ml-3">{checkedItem.question}</span>
-                            </div>
-                            <div className="bg-white h-px w-90 mt-3 mr-5"></div>
-                        </div>
-                    )
-                })) :
-                (
-                    <div className='text-center text-sm my-24'>알림 설정한 질문이 없습니다.</div>)}
         </div>
+            <div className="bg-white h-px w-90 mx-2 mt-5"></div>
+        </div>
+       
     )
 }
 

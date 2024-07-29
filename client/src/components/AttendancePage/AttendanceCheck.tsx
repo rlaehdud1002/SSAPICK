@@ -29,7 +29,6 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
       xmlns="http://www.w3.org/2000/svg"
       className="mx-auto my-8"
     >
-      {/* 출석 line */}
       <line
         x1="52.9964"
         y1="20.7832"
