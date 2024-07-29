@@ -14,6 +14,7 @@ import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.service.UserService;
 
@@ -41,7 +42,7 @@ public class UserController {
 	public SuccessResponse<Void> updateProfile(
 		@CurrentUser User user,
 		@RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-		@Validated @RequestBody ProfileData.Update update,
+		@Validated @RequestBody UserData.Update update,
 		Errors errors
 	) {
 		if (errors.hasErrors()) {
@@ -49,7 +50,7 @@ public class UserController {
 			throw new IllegalArgumentException("입력 값이 올바르지 않습니다.");
 		}
 
-		userService.updateUser(user, update);
+		userService.updateUser(user, update, String.valueOf(profileImage));
 		return SuccessResponse.of(null);
 	}
 

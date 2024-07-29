@@ -43,7 +43,7 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Profile profile;
 
 	@Column(nullable = false)
@@ -81,7 +81,7 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
 	private List<UserBan> bannedUser = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Hint> hints = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -163,6 +163,14 @@ public class User extends BaseEntity {
 
 	public void updateProfile(Profile newProfile) {
 		this.profile = newProfile;
+	}
+
+	public void updateHints(List<Hint> hints) {
+		this.hints.clear();
+		this.hints.addAll(hints);
+		for (Hint hint : hints) {
+			hint.updateUser(this);
+		}
 	}
 
 	@Override

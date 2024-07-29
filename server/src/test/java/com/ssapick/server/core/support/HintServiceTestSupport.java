@@ -30,7 +30,7 @@ public abstract class HintServiceTestSupport {
 	}
 
 	protected Hint createMockHint(Long id, User user, String content) {
-		Hint hint = Hint.createHint(user, content, HintType.NAME);
+		Hint hint = Hint.createHint(content, HintType.NAME);
 		hint.setTestId(id);
 		return hint;
 	}
