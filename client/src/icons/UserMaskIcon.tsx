@@ -1,9 +1,10 @@
 interface UserMaskIconProps {
   gen: string;
   checked?: boolean;
+  fake?: boolean;
 }
 
-const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
+const UserMaskIcon = ({ gen, checked, fake }: UserMaskIconProps) => {
   let stroke;
   let fill;
 
