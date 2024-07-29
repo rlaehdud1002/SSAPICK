@@ -50,10 +50,10 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
     }
 
     @Override
-    public List<Question> findAddedQuestionsById(Long id) {
+    public List<Question> findAddedQuestionsByUser_Id(Long userId) {
         return queryFactory
             .selectFrom(question)
-            .where(question.author.id.eq(id))
+            .where(question.author.id.eq(userId))
             .fetch();
     }
 }

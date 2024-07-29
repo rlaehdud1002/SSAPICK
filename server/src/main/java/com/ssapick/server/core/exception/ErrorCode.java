@@ -24,6 +24,10 @@ public enum ErrorCode {
 
     // Invalid Value
     INVALID_INPUT_VALUE(3000, HttpStatus.BAD_REQUEST, "올바르지 않은 입력 값입니다."),
+    NOT_FOUD_QUESTION(3001, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
+    DELETED_QUESTION(3002, HttpStatus.BAD_REQUEST, "삭제된 질문입니다."),
+    NOT_FOUND_QUESTION_CATEGORY(3003, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
+    EXIST_QUESTION_BAN(3004, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
     ;
     private final int code;
     private final HttpStatus status;

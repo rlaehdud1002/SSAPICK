@@ -16,6 +16,6 @@ public interface QuestionBanRepository extends JpaRepository<QuestionBan, Long> 
 	Optional<QuestionBan> findBanByUserIdAndQuestionId(Long userId, Long questionId);
 
 
-	@Query("SELECT qb.question FROM QuestionBan qb WHERE qb.user.id = :userId")
-	List<Question> findUserBanQuestion(Long userId);
+	@Query("SELECT qb.question FROM QuestionBan qb JOIN FETCH qb.question  WHERE qb.user.id = :userId")
+	List<Question> findQuestionBanByUser_Id(Long userId);
 }
