@@ -12,7 +12,6 @@ const WarningIcon = ({
   circle,
 }: WarningIconProps) => {
   return (
-    <>
       <svg
         width={width}
         height={height}
@@ -74,7 +73,6 @@ const WarningIcon = ({
           stroke-linejoin="round"
         />
       </svg>
-    </>
   );
 };
 
