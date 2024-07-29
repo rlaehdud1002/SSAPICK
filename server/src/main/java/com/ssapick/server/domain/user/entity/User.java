@@ -180,9 +180,8 @@ public class User extends BaseEntity {
 
 	public void delete() {
 		this.isDeleted = true;
-		this.profile.delete();
+		this.getProfile().delete();
 		this.bannedUser.clear();
-		this.hints.clear();
 		this.hints.clear();
 	}
 }
