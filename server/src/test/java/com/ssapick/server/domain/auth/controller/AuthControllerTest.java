@@ -16,14 +16,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.properties.JwtProperties;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.auth.service.AuthService;
-
-import jakarta.servlet.http.Cookie;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("인증 컨트롤러 테스트")
 @WebMvcTest(
@@ -51,18 +51,26 @@ class AuthControllerTest extends RestDocsSupport {
 			.cookie(new Cookie(REFRESH_TOKEN, refreshToken))
 		);
 
-		// * THEN: 이런 결과가 나와야 한다
-		action.andExpect(status().isNoContent())
-			.andDo(restDocs.document(resource(
-					ResourceSnippetParameters.builder()
-						.tag("auth")
-						.summary("로그아웃 API")
-						.description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
-						.requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
-						.responseHeaders(headerWithName(HttpHeaders.SET_COOKIE).description("리프레시 토큰 삭제를 위한 쿠키"))
-						.build()
-				)
-			));
-	}
+    @Test
+    @DisplayName("회원탈퇴에 성공하면 성공 응답 반환")
+    void successDeleteUser() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        // * WHEN: 이걸 실행하면
+        ResultActions action = this.mockMvc.perform(delete("/api/v1/auth"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        action.andExpect(status().isNoContent())
+                .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("deleteUser")
+                                .summary("회원 탈퇴 API")
+                                .description("회원을 삭제한다.")
+                                .responseFields(empty())
+                                .build()
+                )));
+
+        verify(authService).deleteUser(any());
+    }
+
 
 }

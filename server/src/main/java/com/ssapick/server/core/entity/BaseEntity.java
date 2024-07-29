@@ -14,5 +14,5 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class BaseEntity extends TimeEntity {
 	@Column(name = "is_deleted", nullable = false)
 	@ColumnDefault("false")
-	private boolean isDeleted = false;
+    protected boolean isDeleted = false;
 }

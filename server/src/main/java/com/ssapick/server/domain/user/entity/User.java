@@ -185,4 +185,11 @@ public class User extends BaseEntity {
 			", providerType=" + providerType +
 			'}';
 	}
+
+	public void delete() {
+		this.isDeleted = true;
+		this.getProfile().delete();
+		this.bannedUser.clear();
+		this.hints.clear();
+	}
 }
