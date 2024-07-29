@@ -19,7 +19,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +64,27 @@ class AuthControllerTest extends RestDocsSupport {
                                         .build()
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("회원탈퇴에 성공하면 성공 응답 반환")
+    void successDeleteUser() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        // * WHEN: 이걸 실행하면
+        ResultActions action = this.mockMvc.perform(delete("/api/v1/auth"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        action.andExpect(status().isNoContent())
+                .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("deleteUser")
+                                .summary("회원 탈퇴 API")
+                                .description("회원을 삭제한다.")
+                                .responseFields(empty())
+                                .build()
+                )));
+
+        verify(authService).deleteUser(any());
     }
 
 

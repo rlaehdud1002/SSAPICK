@@ -96,6 +96,11 @@ public class AuthService {
 		}
 	}
 
+	@Transactional
+	public void deleteUser(User user) {
+		user.delete();
+	}
+
 	private ProfileData.InitialProfileInfo getInitialProfileInfo(String nickName) {
 		Pattern pattern = Pattern.compile("^(.+?)\\[(.+?)_(.+?)");
 		Matcher matcher = pattern.matcher(nickName);
@@ -133,4 +138,6 @@ public class AuthService {
 	private String signOutKey(String username) {
 		return AuthConst.SIGN_OUT_CACHE_KEY + username;
 	}
+
+
 }
