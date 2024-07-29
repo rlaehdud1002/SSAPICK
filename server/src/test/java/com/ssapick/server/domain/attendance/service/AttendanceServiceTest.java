@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.attendance.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -81,7 +83,10 @@ class AttendanceServiceTest {
 
         // * THEN: 이런 결과가 나와야 한다
         verify(attendanceRepository, never()).save(any());
-        assertThrows(IllegalArgumentException.class, runnable::run);
+        assertThatThrownBy(runnable::run)
+                .isInstanceOf(BaseException.class)
+                .extracting("errorCode")
+                .isEqualTo(ErrorCode.ALREADY_CHECKIN_TODAY);
     }
 
     @Test

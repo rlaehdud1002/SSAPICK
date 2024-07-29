@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.user.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

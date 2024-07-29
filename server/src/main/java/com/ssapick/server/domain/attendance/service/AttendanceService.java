@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.attendance.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
@@ -41,7 +43,7 @@ public class AttendanceService {
         LocalDate today = LocalDate.now();
 
         if (attendanceRepository.existsByUserAndCreatedAt(user, today)) {
-            throw new IllegalArgumentException("이미 출석했습니다.");
+            throw new BaseException(ErrorCode.ALREADY_CHECKIN_TODAY);
         }
         attendanceRepository.save(Attendance.Create(user));
         attendanceRepository.flush();

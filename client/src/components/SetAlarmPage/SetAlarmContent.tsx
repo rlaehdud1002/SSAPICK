@@ -20,7 +20,7 @@ const SetAlarmContent = ({
         </div>
         <Switch />
       </div>
-      <span className="text-xs text-gray-600 ms-2">{content}</span>
+      <span className="text-xs text-gray-600 ml-2">{content}</span>
     </div>
   );
 };
