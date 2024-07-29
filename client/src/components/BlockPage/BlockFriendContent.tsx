@@ -1,5 +1,4 @@
 import PlusDeleteButton from "buttons/PlusDeleteButton";
-import { Separator } from "@radix-ui/react-select";
 
 interface BlockFriendContentProps {
     th:number;

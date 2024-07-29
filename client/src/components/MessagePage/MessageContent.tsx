@@ -23,13 +23,13 @@ const MessageContent = ({
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center">
           <UserPickIcon gen={gen} width={32} height={32} />
-          <h1 className="ms-3">{name}</h1>
+          <h1 className="ml-3">{name}</h1>
         </div>
         <WarningDelete />
       </div>
       <div className="text-center text-gray-500 my-4">{question}</div>
       <div className="flex flex-row items-center bg-white/50 rounded-lg p-2">
-        <MessageQuestionIcon className="me-2" />
+        <MessageQuestionIcon className="mr-2" />
         {message}
       </div>
       <div className="text-right my-2">

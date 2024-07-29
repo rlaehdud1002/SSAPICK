@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.user.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,14 +42,8 @@ public class UserController {
 	public SuccessResponse<Void> updateProfile(
 		@CurrentUser User user,
 		@RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-		@Validated @RequestBody ProfileData.Update update,
-		Errors errors
+		@Valid @RequestBody ProfileData.Update update
 	) {
-		if (errors.hasErrors()) {
-			log.error("사용자 수정 입력 값 에러 발생: {}", errors);
-			throw new IllegalArgumentException("입력 값이 올바르지 않습니다.");
-		}
-
 		userService.updateUser(user, update);
 		return SuccessResponse.of(null);
 	}
