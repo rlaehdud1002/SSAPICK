@@ -1,5 +1,6 @@
 package com.ssapick.server.core.response;
 
+import com.nimbusds.jose.shaded.gson.Gson;
 import com.ssapick.server.core.exception.ErrorCode;
 import net.minidev.json.annotate.JsonIgnore;
 
@@ -7,7 +8,7 @@ public class ErrorResponse extends BaseResponse<Void> {
     private final static ErrorResponse EMPTY = new ErrorResponse();
 
     @JsonIgnore
-    private Object data;
+    private Void data;
 
     private ErrorResponse() {
         this.success = false;
@@ -44,5 +45,9 @@ public class ErrorResponse extends BaseResponse<Void> {
 
     public static ErrorResponse of(ErrorCode errorCode, String message) {
         return new ErrorResponse(errorCode, message);
+    }
+
+    public String toJson() {
+        return new Gson().toJson(this);
     }
 }

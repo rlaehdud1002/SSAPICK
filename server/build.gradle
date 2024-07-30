@@ -38,7 +38,8 @@ ext {
 
 openapi3 {
     servers = [
-            { url = "http://localhost:8080/api/v1" }
+            { url = "http://localhost:8080" },
+            { url = "https://www.ssapick.kro.kr" }
     ]
     title = 'SSAPICK API Documentation'
     description = '싸피 프로젝트 싸픽의 API 문서입니다.'
@@ -92,6 +93,7 @@ dependencies {
     // Documentation
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -120,8 +122,8 @@ tasks.register('openapi3-generator') {
     dependsOn 'openapi3'
 
     copy {
-        from "build/resources/main/static/docs"
-        into "src/test/resources/docs"
+        from "build/resources/test/docs"
+        into "src/main/resources/static/docs"
     }
 }
 

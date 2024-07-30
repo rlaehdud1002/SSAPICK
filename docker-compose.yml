@@ -57,3 +57,4 @@ services:
       - "6379:6379"
     entrypoint: redis-server --requirepass ssapick --maxmemory 128mb
 
+  
