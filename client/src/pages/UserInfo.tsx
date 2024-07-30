@@ -5,6 +5,7 @@ import ProfileCameraIcon from "icons/ProfileCameraIcon"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import { useRecoilValue } from "recoil"
 
 
 interface UserForm {
@@ -13,6 +14,8 @@ interface UserForm {
     th: number;
     campus: string;
 }
+
+
 
 
 const UserInfo = () => {
