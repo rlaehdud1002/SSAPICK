@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+    tools {
+        nodejs "node-18"
+    }
 
     stages {
         stage('git clone') {
@@ -47,8 +51,9 @@ pipeline {
                 dir('client') {
                     sh 'rm -rf node_modules'
                     sh 'npm install'
-                    sh 'npm run build'
-                    sh 'cp build /home/ubuntu/resource/build'
+                    sh 'CI=false npm run build'
+                    sh 'sudo rm -rf /home/ubuntu/source/build'
+                    sh 'sudo mv build /home/ubuntu/source'
                 }
             }
         }
