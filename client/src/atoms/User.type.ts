@@ -17,15 +17,27 @@ export interface JwtToken {
   }
   
   export interface User {
-    image: string;
+    profileImage: string;
     name: string;
     gender: string;
     th: number;
-    campus: string;
+    campusName: string;
     mbti: string;
     classNum: number;
     major: string;
     birth: string;
     town: string;
     hobby: string;
+  }
+
+  export interface UserCoin {
+    coin: number;
+  }
+
+  export interface UserFriend{
+    friend:number;
+  }
+
+  export interface UserPick{
+    pick:number;
   }

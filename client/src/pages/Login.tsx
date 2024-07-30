@@ -1,6 +1,11 @@
 import KakaoButton from "buttons/KakaoButton"
 import LoginIcon from "../icons/LoginIcon"
 import GoogleButton from "buttons/GoogleButton"
+import axios from "axios"
+
+interface kakaoResponse {
+    access_token: string
+}
 
 const Login = () =>{
     
