@@ -16,7 +16,7 @@ const PointIcon = () => {
         fill="#000855"
         stroke="#000855"
         strokeWidth="1.5"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
       <circle
         cx="12"
@@ -26,7 +26,7 @@ const PointIcon = () => {
         fill="#000855"
         stroke="#000855"
         strokeWidth="1.5"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
       <circle
         cx="12"
@@ -36,7 +36,7 @@ const PointIcon = () => {
         fill="#000855"
         stroke="#000855"
         strokeWidth="1.5"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
     </svg>
   );
