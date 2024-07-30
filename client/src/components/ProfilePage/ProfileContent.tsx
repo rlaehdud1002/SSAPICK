@@ -1,4 +1,4 @@
-import { userState } from "atoms/atoms";
+import { userState } from "atoms/UserAtoms";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";

@@ -1,4 +1,6 @@
-import UserIcon from '../../icons/UserIcon';
+import UserMaskIcon from 'icons/UserMaskIcon';
+import HintModal from 'components/modals/HintModal';
+import MessageModal from 'components/modals/MessageModal';
 
 import {
   Accordion,
@@ -7,10 +9,12 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-import HintModal from 'components/modals/HintModal';
-import MessageModal from 'components/modals/MessageModal';
+import { pickState } from 'atoms/PickAtoms';
+import { useRecoilValue } from 'recoil';
 
 const Response = () => {
+  const pick = useRecoilValue(pickState);
+
   return (
     <div className="rounded-lg bg-white/50 p-4">
       <Accordion type="single" collapsible>
@@ -18,14 +22,14 @@ const Response = () => {
           <AccordionTrigger className="p-0">
             <div className="flex flex-col">
               <div className="flex flex-row">
-                <UserIcon />
-                <h3 className="mx-3 text-color-000855">12기 2반</h3>
+                <UserMaskIcon gen={pick.sender.gender} />
+                <h3 className="mx-3 text-color-000855">
+                  11기 {pick.sender.campusSection}반
+                </h3>
               </div>
             </div>
           </AccordionTrigger>
-          <p className="text-center my-4">
-            나랑 같이 프로젝트 하고 싶은 사람은?
-          </p>
+          <p className="text-center my-4">{pick.question.content}</p>
           <AccordionContent>
             <div className="flex flex-row justify-center">
               <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">

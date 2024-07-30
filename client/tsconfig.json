@@ -16,13 +16,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "./src",
-  "paths": {
-    "components/*": ["./components/*"],
-    "icons/*": ["./icons/*"], 
-    "lib/*": ["./lib/*"],
+    "paths": {
+      "components/*": ["./components/*"],
+      "icons/*": ["./icons/*"],
+      "lib/*": ["./lib/*"]
+    }
   },
-  },
-  "include": [
-    "src"
-  ],
+  "include": ["src"]
 }
