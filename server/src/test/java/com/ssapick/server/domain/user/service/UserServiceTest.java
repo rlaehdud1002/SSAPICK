@@ -68,7 +68,7 @@ public class UserServiceTest extends UserSupport {
 
 		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
-		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
+//		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
 		// when(userRepository.findById(anyLong())).thenReturn(java.util.Optional.of(user));
 		when(userRepository.findById(anyLong())).thenAnswer(invocation -> {
 			Long id = invocation.getArgument(0);
@@ -140,7 +140,7 @@ public class UserServiceTest extends UserSupport {
 
 		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
-		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
+//		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
 		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
 
 		// when

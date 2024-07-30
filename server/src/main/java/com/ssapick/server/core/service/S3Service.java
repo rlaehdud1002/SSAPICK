@@ -13,9 +13,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import com.ssapick.server.domain.user.event.S3UploadEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -42,11 +47,28 @@ public class S3Service {
 	private String cloudFrontDomain;
 
 	@Async("imageExecutor")
-	public CompletableFuture<String> upload(MultipartFile image) {
-		if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
+	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void upload(S3UploadEvent event) {
+		String profileImage = event.getProfile().getProfileImage();
+		if (Objects.nonNull(profileImage)) {
+			this.deleteImageFromS3(profileImage);
+		}
+
+		if (event.getFile().isEmpty() || Objects.isNull(event.getFile().getOriginalFilename())) {
 			throw new BaseException(ErrorCode.EMPTY_FILE);
 		}
-		return CompletableFuture.completedFuture(this.uploadImage(image));
+		CompletableFuture<String> future = CompletableFuture.completedFuture(this.uploadImage(event.getFile()));
+		event.getProfile().updateProfileImage(future.join());
+	}
+
+	public void deleteImageFromS3(String imageAddress) {
+		String key = getKeyFromImageAddress(imageAddress);
+		try {
+			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
+		} catch (Exception e) {
+			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
+		}
 	}
 
 	private void validateImageFileExtention(String filename) {
@@ -111,15 +133,6 @@ public class S3Service {
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
 			return decodingKey.substring(16);
 		} catch (MalformedURLException e) {
-			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
-		}
-	}
-
-	public void deleteImageFromS3(String imageAddress) {
-		String key = getKeyFromImageAddress(imageAddress);
-		try {
-			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
-		} catch (Exception e) {
 			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
 		}
 	}

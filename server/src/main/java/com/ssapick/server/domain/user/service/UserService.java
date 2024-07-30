@@ -3,6 +3,8 @@ package com.ssapick.server.domain.user.service;
 import java.util.List;
 import java.util.function.Function;
 
+import com.ssapick.server.domain.user.event.S3UploadEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,14 +30,13 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
-	private static final Logger log = LoggerFactory.getLogger(UserService.class);
 	private final ApplicationEventPublisher publisher;
 	private final UserRepository userRepository;
-	private final S3Service s3Service;
 	private final CampusRepository campusRepository;
 
 	@Transactional
@@ -56,15 +57,15 @@ public class UserService {
 
 		Campus campus = getOrCreateCampus(update.getCampusName(), update.getCampusSection());
 
-		String profileImageUrl = handleProfileImage(user, profileImage);
-
-		Profile profile = updateOrCreateProfile(user, update, campus, profileImageUrl);
+		Profile profile = updateOrCreateProfile(user, update, campus);
 		user.updateProfile(profile);
 
 		List<Hint> hints = createHints(update);
 		user.updateHints(hints);
 
 		userRepository.save(user);
+
+		publisher.publishEvent(new S3UploadEvent(profile, profileImage));
 	}
 
 	private void updateUserDetails(User user, UserData.Update update) {
@@ -77,28 +78,14 @@ public class UserService {
 			.orElseGet(() -> campusRepository.save(Campus.createCampus(name, section, null)));
 	}
 
-	private String handleProfileImage(User user, MultipartFile profileImage) {
-		String existingProfileImageUrl = user.getProfile() != null ? user.getProfile().getProfileImage() : "NO_IMG";
-
-		if (!"NO_IMG".equals(existingProfileImageUrl)) {
-			s3Service.deleteImageFromS3(existingProfileImageUrl);
-		}
-
-		if (profileImage == null) {
-			return "NO_IMG";
-		}
-
-		return s3Service.upload(profileImage).join();
-	}
-
-	private Profile updateOrCreateProfile(User user, UserData.Update update, Campus campus, String profileImageUrl) {
+	private Profile updateOrCreateProfile(User user, UserData.Update update, Campus campus) {
 		Profile existingProfile = user.getProfile();
 
 		if (existingProfile != null) {
-			existingProfile.updateProfile(update.getCohort(), campus, profileImageUrl);
+			existingProfile.updateProfile(update.getCohort(), campus);
 			return existingProfile;
 		} else {
-			return Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
+			return Profile.createProfile(user, update.getCohort(), campus);
 		}
 	}
 

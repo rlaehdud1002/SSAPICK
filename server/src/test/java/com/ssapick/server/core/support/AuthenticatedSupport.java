@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -28,22 +29,24 @@ public abstract class AuthenticatedSupport {
 	private HintRepository hintRepository;
 
 	@MockBean
-	private S3Service s3Service;
+	private CampusRepository campusRepository;
 
 	private AtomicLong atomicLong = new AtomicLong(1);
 
 	protected User createUser() {
 		User user = spy(User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
-		Profile profile = Profile.createProfile(user, (short)1, createCampus(), "https://test-profile.com");
+		Profile profile = spy(Profile.createProfile(user, (short)1, createCampus()));
 		when(user.getProfile()).thenReturn(profile);
+		when(user.getProfile().getProfileImage()).thenReturn("테스트 프로필 이미지 URL");
 		when(user.getId()).thenReturn(atomicLong.incrementAndGet());
 		return user;
 	}
 
 	protected User createUser(String name) {
 		User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
-		Profile profile = Profile.createProfile(user, (short)1, createCampus(), "https://test-profile.com");
+		Profile profile = spy(Profile.createProfile(user, (short)1, createCampus()));
 		when(user.getProfile()).thenReturn(profile);
+		when(user.getProfile().getProfileImage()).thenReturn("테스트 프로필 이미지 URL");
 		when(user.getId()).thenReturn(atomicLong.incrementAndGet());
 		return user;
 	}

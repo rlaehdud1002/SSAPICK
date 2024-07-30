@@ -88,7 +88,7 @@ class HintServiceTest extends HintServiceTestSupport {
 
 		// given
 		Campus campus = Campus.createCampus("광주", (short)2, null);
-		Profile profile = Profile.createProfile(user, (short)11, campus, "imgUrl");
+		Profile profile = Profile.createProfile(user, (short)11, campus);
 
 		Pick mockPick = this.createMockPick(user);
 

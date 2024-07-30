@@ -57,33 +57,20 @@ public class Profile extends BaseEntity {
 		this.id = id;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		Profile profile = (Profile)o;
-		return Objects.equals(id, profile.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
-
-	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {
+	public static Profile createProfile(User user, short cohort, Campus campus) {
 		Profile profile = new Profile();
 		profile.user = user;
 		profile.cohort = cohort;
 		profile.campus = campus;
-		profile.profileImage = profileImage;
 		return profile;
 	}
 
-	public void updateProfile(Short cohort, Campus campus, String profileImage) {
+	public void updateProfile(Short cohort, Campus campus) {
 		this.cohort = cohort;
 		this.campus = campus;
+	}
+
+	public void updateProfileImage(String profileImage) {
 		this.profileImage = profileImage;
 	}
 
