@@ -1,5 +1,5 @@
 
-import { userState,userCoinState, userFriendState, userPickState } from "atoms/UserAtoms";
+import { userState,userCoinState, userFriendState, userPickState, userAddState } from "atoms/UserAtoms";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
@@ -13,8 +13,9 @@ const ProfileContent = () => {
   const friend = useRecoilValue(userFriendState);
   const coin = useRecoilValue(userCoinState);
   const pick = useRecoilValue(userPickState);
+  const profileAdd = useRecoilValue(userAddState);
 
-  const userYear: number = +profile.birth.split('-')[0];
+  const userYear: number = +profileAdd.birth.split('-')[0];
   const year = new Date().getFullYear();
   const age = year - userYear + 1;
   console.log(age);
@@ -42,8 +43,8 @@ const ProfileContent = () => {
 
       <div className="ml-5 my-6">
         <div className="my-1">{profile.name}</div>
-        <div className="my-1">{profile.campusName}캠퍼스 • {profile.th}기 • {profile.classNum}반</div>
-        <div className="my-1">{profile.gender} • {age}세 •  {profile.mbti} • {profile.major}</div>
+        <div className="my-1">{profile.campusName}캠퍼스 • {profile.th}기 • {profileAdd.classNum}반</div>
+        <div className="my-1">{profile.gender} • {age}세 •  {profileAdd.mbti} • {profileAdd.major}</div>
       </div>
     </div>
   )
