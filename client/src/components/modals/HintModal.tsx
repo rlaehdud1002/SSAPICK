@@ -38,7 +38,7 @@ const HintModal = ({ title }: HintModalProps) => {
             힌트 공개
           </DialogTitle>
           <DialogDescription className="flex justify-center">
-            <h3 className="flex flex-row my-10 items-center">
+            <h3 className="flex flex-row my-10 items-center text-color-000855">
               <CoinIcon width={25} height={25} />
               <h3 className="luckiest_guy ms-1 me-2 pt-1">1</h3>이 사용됩니다.
             </h3>

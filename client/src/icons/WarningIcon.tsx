@@ -9,7 +9,7 @@ const WarningIcon = ({
   className,
   width,
   height,
-  circle,
+  circle = false,
 }: WarningIconProps) => {
   return (
     <svg
@@ -26,7 +26,7 @@ const WarningIcon = ({
           cy={height / 2}
           r={width / 2}
           fill="white"
-          fill-opacity="0.5"
+          fillOpacity="0.5"
         />
       )}
 
