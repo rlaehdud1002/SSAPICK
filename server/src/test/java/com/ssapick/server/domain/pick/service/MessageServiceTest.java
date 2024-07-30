@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
@@ -138,8 +140,8 @@ class MessageServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("존재하지 않는 픽입니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_PICK.getMessage());
 	}
 
 	@Test
@@ -164,8 +166,8 @@ class MessageServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.ALREADY_SEND_MESSAGE.getMessage());
 	}
 
 	@Test
@@ -201,8 +203,8 @@ class MessageServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("존재하지 않는 메시지입니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_MESSAGE.getMessage());
 	}
 
 	@Test
@@ -222,8 +224,8 @@ class MessageServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("본인이 보낸 메시지만 삭제할 수 있습니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.FORBIDDEN.getMessage());
 	}
 
 	private Message createMessage(User sender, User receiver, String content) {
