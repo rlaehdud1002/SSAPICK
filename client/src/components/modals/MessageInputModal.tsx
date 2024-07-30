@@ -17,7 +17,7 @@ const MessageInputModal = ({ register, errors }: MessageInputModalProps) => {
       </div>
       <Input
         type="text"
-        className="input-box border-none h-20 focus:outline-none"
+        className="input-box border-none h-20 focus:outline-none w-full"
         register={register}
       />
       <ErrorMessage
