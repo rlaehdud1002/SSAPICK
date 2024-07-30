@@ -1,11 +1,16 @@
+import { userState } from "Recoil/atoms";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
+import { useRecoilValue } from "recoil";
 
 
 const ProfileContent = () => {
   // const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   // const accessToken = useRecoilValue(isLoginState);
+  const profile = useRecoilValue(userState);
+
+  console.log(profile);
   return (
     <div
       style={{ backgroundColor: '#000855', opacity: '80%' }}
@@ -29,9 +34,9 @@ const ProfileContent = () => {
       </div>
 
       <div className="ml-5 my-6">
-        <div className="my-1">민준수</div>
-        <div className="my-1">광주캠퍼스 • 11기 • 2반</div>
-        <div className="my-1">남자 • 26세 •  ENTJ • 정보통신학과</div>
+        <div className="my-1">{profile.name}</div>
+        <div className="my-1">{profile.campus}캠퍼스 • {profile.th}기 • {profile.classNum}반</div>
+        <div className="my-1">{profile.gender} • 26세 •  {profile.mbti} • {profile.major}</div>
       </div>
     </div>
   )
