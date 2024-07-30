@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { User } from './auth.type';
+import { User } from './User.type';
 
 // export const isLoginState = atom<boolean>({
 //   key: 'isLoginState',
