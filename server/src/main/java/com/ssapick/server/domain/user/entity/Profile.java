@@ -3,9 +3,6 @@ package com.ssapick.server.domain.user.entity;
 import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
-import static jakarta.persistence.FetchType.*;
-import static lombok.AccessLevel.*;
-
 import java.util.Objects;
 
 import com.ssapick.server.core.entity.BaseEntity;
@@ -20,24 +17,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -100,10 +81,15 @@ public class Profile extends BaseEntity {
 		return profile;
 	}
 
+	public void updateProfile(Short cohort, Campus campus, String profileImage) {
+		this.cohort = cohort;
+		this.campus = campus;
+		this.profileImage = profileImage;
+	}
+
 	public void delete() {
 		this.isDeleted = true;
 	}
-
 
 	//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
 	//	private Set<MemberBan> bannedToProfiles = new HashSet<>();

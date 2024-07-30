@@ -38,21 +38,15 @@ public class S3Service {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
+	@Value("${cloud.aws.s3.cloudFrontDomain}")
+	private String cloudFrontDomain;
+
 	@Async("imageExecutor")
 	public CompletableFuture<String> upload(MultipartFile image) {
 		if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
 			throw new BaseException(ErrorCode.EMPTY_FILE);
 		}
 		return CompletableFuture.completedFuture(this.uploadImage(image));
-	}
-
-	public void deleteImageFromS3(String imageAddress) {
-		String key = getKeyFromImageAddress(imageAddress);
-		try {
-			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
-		} catch (Exception e) {
-			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
-		}
 	}
 
 	private void validateImageFileExtention(String filename) {
@@ -104,15 +98,28 @@ public class S3Service {
 			is.close();
 		}
 
-		return s3.getUrl(bucketName, s3FileName).toString();
+		String s3Url = s3.getUrl(bucketName, s3FileName).toString();
+		String cloudFrontUrl = s3Url.replace("https://s3.ap-southeast-2.amazonaws.com/ssapick/images",
+			cloudFrontDomain);
+
+		return cloudFrontUrl;
 	}
 
 	private String getKeyFromImageAddress(String imageAddress) {
 		try {
 			URL url = new URL(imageAddress);
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
-			return decodingKey.substring(1);
+			return decodingKey.substring(16);
 		} catch (MalformedURLException e) {
+			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
+		}
+	}
+
+	public void deleteImageFromS3(String imageAddress) {
+		String key = getKeyFromImageAddress(imageAddress);
+		try {
+			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
+		} catch (Exception e) {
 			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
 		}
 	}

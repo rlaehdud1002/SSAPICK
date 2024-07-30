@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
+import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -25,6 +26,9 @@ public abstract class AuthenticatedSupport {
 
 	@MockBean
 	private HintRepository hintRepository;
+
+	@MockBean
+	private S3Service s3Service;
 
 	private AtomicLong atomicLong = new AtomicLong(1);
 

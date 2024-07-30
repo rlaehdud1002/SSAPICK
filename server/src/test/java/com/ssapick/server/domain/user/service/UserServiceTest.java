@@ -50,7 +50,10 @@ public class UserServiceTest extends UserSupport {
 		// given
 		MockMultipartFile mockMultipartFile =
 			new MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".getBytes());
+
 		user = this.createUser();
+		Long userId = user.getId();
+
 		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
 			'M',
@@ -66,13 +69,19 @@ public class UserServiceTest extends UserSupport {
 		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
 		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
-		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
-		
-		CompletableFuture<String> result = s3Service.upload(mockMultipartFile);
+		// when(userRepository.findById(anyLong())).thenReturn(java.util.Optional.of(user));
+		when(userRepository.findById(anyLong())).thenAnswer(invocation -> {
+			Long id = invocation.getArgument(0);
+			if (id == null) {
+				return java.util.Optional.of(user);
+			}
+			return java.util.Optional.of(user);
+		});
 
 		// when
-
-		userService.updateUser(user.getId(), createMockHintCreateData, mockMultipartFile);
+		log.info("user.getId() : {}", user.getId());
+		log.info("java.util.Optional.of(user) : {}", java.util.Optional.of(user));
+		userService.updateUser(userId, createMockHintCreateData, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
@@ -133,7 +142,6 @@ public class UserServiceTest extends UserSupport {
 
 		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
 		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
-		CompletableFuture<String> result = s3Service.upload(mockMultipartFile);
 
 		// when
 		userService.updateUser(user.getId(), createMockHintCreateData, mockMultipartFile);

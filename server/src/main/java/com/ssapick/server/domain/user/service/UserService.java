@@ -1,7 +1,6 @@
 package com.ssapick.server.domain.user.service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,7 @@ public class UserService {
 	private final ApplicationEventPublisher publisher;
 	private final UserRepository userRepository;
 	private final S3Service s3Service;
+	private final CampusRepository campusRepository;
 
 	@Transactional
 	public void changePickco(Long userId, PickcoLogType type, int amount) {
@@ -48,40 +49,61 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(Long user_id, UserData.Update update, MultipartFile profileImage) {
+	public void updateUser(Long userId, UserData.Update update, MultipartFile profileImage) {
+		User user = findUserOrThrow(userId);
 
-		User user = userRepository.findById(user_id).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
+		updateUserDetails(user, update);
 
-		if (user == null) {
-			throw new BaseException(ErrorCode.NOT_FOUND_USER);
-		}
+		Campus campus = getOrCreateCampus(update.getCampusName(), update.getCampusSection());
 
-		user.updateName(update.getName());
-		user.updateGender(update.getGender());
+		String profileImageUrl = handleProfileImage(user, profileImage);
 
-		// 이미지 업로드
-		CompletableFuture<String> future = s3Service.upload(profileImage);
-		String profileImageUrl = future.join();
-		//
-
-		Profile profile = user.getProfile();
-		if (profile != null) {
-			Campus campus = profile.getCampus();
-			if (campus != null) {
-				campus = Campus.createCampus(update.getCampusName(), update.getCampusSection(),
-					null);
-			} else {
-				campus = Campus.createCampus(update.getCampusName(), update.getCampusSection(), null);
-			}
-			profile = Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
-		} else {
-			Campus campus = Campus.createCampus(update.getCampusName(), update.getCampusSection(), null);
-			profile = Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
-		}
-
+		Profile profile = updateOrCreateProfile(user, update, campus, profileImageUrl);
 		user.updateProfile(profile);
 
-		List<Hint> hints = List.of(
+		List<Hint> hints = createHints(update);
+		user.updateHints(hints);
+
+		userRepository.save(user);
+	}
+
+	private void updateUserDetails(User user, UserData.Update update) {
+		user.updateName(update.getName());
+		user.updateGender(update.getGender());
+	}
+
+	private Campus getOrCreateCampus(String name, Short section) {
+		return campusRepository.findByNameAndSection(name, section)
+			.orElseGet(() -> campusRepository.save(Campus.createCampus(name, section, null)));
+	}
+
+	private String handleProfileImage(User user, MultipartFile profileImage) {
+		String existingProfileImageUrl = user.getProfile() != null ? user.getProfile().getProfileImage() : "NO_IMG";
+
+		if (!"NO_IMG".equals(existingProfileImageUrl)) {
+			s3Service.deleteImageFromS3(existingProfileImageUrl);
+		}
+
+		if (profileImage == null) {
+			return "NO_IMG";
+		}
+
+		return s3Service.upload(profileImage).join();
+	}
+
+	private Profile updateOrCreateProfile(User user, UserData.Update update, Campus campus, String profileImageUrl) {
+		Profile existingProfile = user.getProfile();
+
+		if (existingProfile != null) {
+			existingProfile.updateProfile(update.getCohort(), campus, profileImageUrl);
+			return existingProfile;
+		} else {
+			return Profile.createProfile(user, update.getCohort(), campus, profileImageUrl);
+		}
+	}
+
+	private List<Hint> createHints(UserData.Update update) {
+		return List.of(
 			Hint.createHint(update.getName(), HintType.NAME),
 			Hint.createHint(String.valueOf(update.getGender()), HintType.GENDER),
 			Hint.createHint(String.valueOf(update.getCohort()), HintType.CHORT),
@@ -93,10 +115,6 @@ public class UserService {
 			Hint.createHint(update.getResidentialArea(), HintType.RESIDENTIAL_AREA),
 			Hint.createHint(update.getInterest(), HintType.INTEREST)
 		);
-
-		user.updateHints(hints);
-
-		userRepository.save(user);
 	}
 
 	@Bean
