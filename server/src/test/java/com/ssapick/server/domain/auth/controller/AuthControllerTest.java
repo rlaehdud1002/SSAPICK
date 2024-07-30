@@ -23,12 +23,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,7 +79,7 @@ class AuthControllerTest extends RestDocsSupport {
         when(authService.authenticate(any(), any())).thenReturn(new ProfileData.InitialProfileInfo("name", "location", (short) 1));
 
         // * WHEN: 이걸 실행하면
-        ResultActions action = this.mockMvc.perform(post("/api/v1/auth/mattermost-confirm")
+        ResultActions action = this.mockMvc.perform(get("/api/v1/auth/mattermost-confirm")
                 .contentType("application/json")
                 .content(toJson(request)));
 
