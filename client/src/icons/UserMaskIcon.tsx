@@ -1,7 +1,6 @@
 interface UserMaskIconProps {
   gen: string;
   checked?: boolean;
- 
 }
 
 const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
