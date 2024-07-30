@@ -48,7 +48,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <WarningIcon width={20} height={20} className="mx-1" />
+        <WarningIcon width={20} height={20} className="mx-1" circle/>
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
@@ -59,7 +59,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
           </DialogHeader>
           {step === WarningStep.CHECK && (
             <div>
-              <div className="flex flex-col items-center my-16 text-center">
+              <div className="flex flex-col items-center my-12 text-center">
                 <p>이 질문을 신고하시겠습니까?</p>
                 <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
                   {question}
