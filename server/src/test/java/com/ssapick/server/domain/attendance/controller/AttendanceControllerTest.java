@@ -2,6 +2,8 @@ package com.ssapick.server.domain.attendance.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.attendance.dto.AttendanceData;
@@ -80,6 +82,36 @@ public class AttendanceControllerTest extends RestDocsSupport {
                                 .summary("출석 생성 API")
                                 .description("출석을 생성한다.")
                                 .responseFields(empty())
+                                .build()
+                )));
+
+        verify(attendanceService).checkIn(any());
+    }
+
+
+    @Test
+    @DisplayName("이미 출석을 해 출석에 실패하면 실패 응답을 반환한다")
+    public void attendanceFail() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        when(attendanceService.checkIn(any())).thenThrow(new BaseException(ErrorCode.ALREADY_CHECKIN_TODAY));
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(post("/api/v1/attendance")
+                .contentType(MediaType.APPLICATION_JSON));
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isBadRequest())
+                .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("attendance")
+                                .summary("출석 생성 API")
+                                .description("출석을 생성한다.")
+                                .responseFields(response(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("errors").type(JsonFieldType.NULL).description("에러 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.NULL).description("데이터")
+                                ))
                                 .build()
                 )));
 
