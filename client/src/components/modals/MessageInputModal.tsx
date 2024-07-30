@@ -12,7 +12,7 @@ const MessageInputModal = ({ register, errors }: MessageInputModalProps) => {
   return (
     <div className="flex flex-col justify-center">
       <div className="mb-3 flex flex-row">
-        <UserMaskIcon gen="female" checked />
+        <UserMaskIcon gen="female" />
         <h3 className="ml-3">11기 2반</h3>
       </div>
       <Input

@@ -1,20 +1,24 @@
 import MessageContent from 'components/MessagePage/MessageContent';
 
+import { messageState } from 'atoms/MessageAtoms';
+import { useRecoilValue } from 'recoil';
+
 const Send = () => {
+  const message = useRecoilValue(messageState);
   return (
     <div>
       <MessageContent
-        name="11기 2반"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
+        name={message.receiverName}
+        question={message.questionContent}
+        message={message.content}
+        date={message.createdAt.slice(0, 10)}
         gen="female"
       />
       <MessageContent
-        name="11기 2반"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
+        name={message.receiverName}
+        question={message.questionContent}
+        message={message.content}
+        date={message.createdAt.slice(0, 10)}
         gen="male"
       />
     </div>
