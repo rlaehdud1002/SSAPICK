@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import com.ssapick.server.domain.user.event.S3UploadEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.domain.user.event.S3UploadEvent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +50,7 @@ public class S3Service {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void upload(S3UploadEvent event) {
+		// FIXME : 이미지 클라우드 프론트 도메인으로 변경
 		String profileImage = event.getProfile().getProfileImage();
 		if (Objects.nonNull(profileImage)) {
 			this.deleteImageFromS3(profileImage);
@@ -131,7 +132,9 @@ public class S3Service {
 		try {
 			URL url = new URL(imageAddress);
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
-			return decodingKey.substring(16);
+
+			log.info(decodingKey.substring(1));
+			return decodingKey.substring(1);
 		} catch (MalformedURLException e) {
 			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
 		}
