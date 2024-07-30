@@ -1,4 +1,4 @@
-import { userState } from "Recoil/atoms";
+import { userState } from "atoms/atoms";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
@@ -9,8 +9,10 @@ const ProfileContent = () => {
   // const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   // const accessToken = useRecoilValue(isLoginState);
   const profile = useRecoilValue(userState);
-
-  console.log(profile);
+  const userYear: number = +profile.birth.split('-')[0];
+  const year = new Date().getFullYear();
+  const age = userYear - year + 1;
+  console.log();
   return (
     <div
       style={{ backgroundColor: '#000855', opacity: '80%' }}
