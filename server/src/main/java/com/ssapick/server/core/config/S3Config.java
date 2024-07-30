@@ -10,8 +10,12 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 public class S3Config {
+
 	@Value("${cloud.aws.region.static}")
 	private String region;
 
@@ -24,7 +28,8 @@ public class S3Config {
 	@Bean
 	public AmazonS3 amazonS3Client() {
 		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-		return AmazonS3ClientBuilder.standard()
+		return AmazonS3ClientBuilder
+			.standard()
 			.withRegion(region)
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.build();

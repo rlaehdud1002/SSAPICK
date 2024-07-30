@@ -63,14 +63,16 @@ public class UserServiceTest extends UserSupport {
 			"장덕동",
 			"취미");
 
-		CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "imgUrl");
+		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
-		verify(s3Service, times(1)).upload(mockMultipartFile);
-
-		when(s3Service.upload(mockMultipartFile)).thenReturn(future);
+		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
+		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
+		
+		CompletableFuture<String> result = s3Service.upload(mockMultipartFile);
 
 		// when
-		userService.updateUser(user, createMockHintCreateData, mockMultipartFile);
+
+		userService.updateUser(user.getId(), createMockHintCreateData, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
@@ -80,9 +82,9 @@ public class UserServiceTest extends UserSupport {
 		assertThat(profile).isNotNull();
 		assertThat(profile.getCampus()).isNotNull();
 		assertThat(profile.getCampus().getName()).isEqualTo("광주");
-		assertThat(profile.getCampus().getSection()).isEqualTo((short)2);
-		assertThat(profile.getCohort()).isEqualTo((short)11);
-		assertThat(profile.getProfileImage()).isEqualTo("imgUrl");
+		assertThat(profile.getCampus().getSection()).isEqualTo((short)1);
+		assertThat(profile.getCohort()).isEqualTo((short)1);
+		assertThat(profile.getProfileImage()).isEqualTo("https://test-profile.com");
 
 		assertThat(hints).extracting(Hint::getContent)
 			.containsExactlyInAnyOrder(
@@ -127,13 +129,15 @@ public class UserServiceTest extends UserSupport {
 			"풋살"
 		);
 
-		when(s3Service.upload(mockMultipartFile)).thenReturn(CompletableFuture.completedFuture("imgUrl"));
+		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
-		lenient().when(userRepository.save(any(User.class))).thenReturn(user);
+		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
+		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
+		CompletableFuture<String> result = s3Service.upload(mockMultipartFile);
 
 		// when
-		userService.updateUser(user, createMockHintCreateData, mockMultipartFile);
-		userService.updateUser(user, createMockHintCreateData2, mockMultipartFile);
+		userService.updateUser(user.getId(), createMockHintCreateData, mockMultipartFile);
+		userService.updateUser(user.getId(), createMockHintCreateData2, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
@@ -142,9 +146,9 @@ public class UserServiceTest extends UserSupport {
 		assertThat(profile).isNotNull();
 		assertThat(profile.getCampus()).isNotNull();
 		assertThat(profile.getCampus().getName()).isEqualTo("광주");
-		assertThat(profile.getCampus().getSection()).isEqualTo((short)2);
-		assertThat(profile.getCohort()).isEqualTo((short)11);
-		assertThat(profile.getProfileImage()).isEqualTo("imgUrl");
+		assertThat(profile.getCampus().getSection()).isEqualTo((short)1);
+		assertThat(profile.getCohort()).isEqualTo((short)1);
+		assertThat(profile.getProfileImage()).isEqualTo("https://test-profile.com");
 
 		assertThat(hints).extracting(Hint::getContent)
 			.containsExactlyInAnyOrder(

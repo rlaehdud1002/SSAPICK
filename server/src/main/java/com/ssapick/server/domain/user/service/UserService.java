@@ -48,7 +48,9 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(User user, UserData.Update update, MultipartFile profileImage) {
+	public void updateUser(Long user_id, UserData.Update update, MultipartFile profileImage) {
+
+		User user = userRepository.findById(user_id).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 
 		if (user == null) {
 			throw new BaseException(ErrorCode.NOT_FOUND_USER);
@@ -59,7 +61,6 @@ public class UserService {
 
 		// 이미지 업로드
 		CompletableFuture<String> future = s3Service.upload(profileImage);
-		log.info("profileImageUrl: {}", future);
 		String profileImageUrl = future.join();
 		//
 

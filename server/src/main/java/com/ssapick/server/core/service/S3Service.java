@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -39,7 +38,7 @@ public class S3Service {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
 
-	@Async("imageUploadExecutor")
+	@Async("imageExecutor")
 	public CompletableFuture<String> upload(MultipartFile image) {
 		if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
 			throw new BaseException(ErrorCode.EMPTY_FILE);
@@ -82,23 +81,23 @@ public class S3Service {
 	private String uploadToS3(MultipartFile image) throws IOException {
 		String originalFileName = image.getOriginalFilename();
 		String extention = Objects.requireNonNull(originalFileName).substring(originalFileName.lastIndexOf("."));
-
 		String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFileName;
 
 		InputStream is = image.getInputStream();
 		byte[] bytes = IOUtils.toByteArray(is);
 
 		ObjectMetadata metadata = new ObjectMetadata();
+
 		metadata.setContentType("image/" + extention);
 		metadata.setContentLength(bytes.length);
 
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
 		try {
-			PutObjectRequest putRequest = new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
-				.withCannedAcl(CannedAccessControlList.PublicRead);
+			PutObjectRequest putRequest = new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata);
 			s3.putObject(putRequest);
 		} catch (Exception e) {
+			System.out.println(e);
 			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
 		} finally {
 			byteArrayInputStream.close();
