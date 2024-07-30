@@ -21,7 +21,7 @@ const ModiUserInfo = () => {
 
   const navigate = useNavigate()
   const navigateToAddInfo = () => {
-    navigate('/ModiUserAddInfo')
+    navigate('/profile/modiuseraddinfo')
   }
 
   const onSubmit = (data: UserForm) => {

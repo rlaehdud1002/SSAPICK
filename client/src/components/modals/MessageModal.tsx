@@ -77,7 +77,7 @@ const MessageModal = () => {
         <SendingIcon />
       </DialogTrigger>
       {isModalVisible && (
-        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
+        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
               쪽지 보내기

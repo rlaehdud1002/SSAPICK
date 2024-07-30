@@ -1,165 +1,240 @@
 package com.ssapick.server.domain.pick.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.test.context.support.WithMockUser;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.ProviderType;
-import com.ssapick.server.domain.user.entity.RoleType;
+import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
 
+import jakarta.persistence.EntityManager;
+
+@DisplayName("메시지 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
-class MessageServiceTest {
-
-	 Logger log = Logger.getLogger(MessageServiceTest.class.getName());
-
+class MessageServiceTest extends UserSupport {
 	@InjectMocks
-	private  MessageService messageService;
-
+	private MessageService messageService;
 
 	@Mock
 	private MessageRepository messageRepository;
+
 	@Mock
 	private PickRepository pickRepository;
 
 	@Mock
-	private UserRepository userRepository;
+	private EntityManager em;
 
+	@Test
+	@DisplayName("보낸 메시지 확인 테스트")
+	void 보낸_메시지_확인_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
 
+		when(messageRepository.findSentMessageByUserId(sender.getId())).thenReturn(List.of(
+			this.createMessage(sender, receiver, "테스트 메시지 1"),
+			this.createMessage(sender, receiver, "테스트 메시지 2"),
+			this.createMessage(sender, receiver, "테스트 메시지 3")
+		));
 
-	static User receiver;
-	static User sender;
-	static Pick pick;
-	static Question question;
+		// * WHEN: 이걸 실행하면
+		List<MessageData.Search> searches = messageService.searchSendMessage(sender);
 
-	@BeforeEach
-	void setUp() {
-		// 1L이 2L을 픽함
-		receiver = userCreate(1L, "test-user1", '여');
-		sender = userCreate(2L, "test-user2", '남');
-		question = Question.builder().id(1L).content("질문").build();
-		pick = pickCreate(receiver, sender, question);
-		pickRepository.save(pick);
-
+		// * THEN: 이런 결과가 나와야 한다
+		assertThat(searches).hasSize(3);
+		assertThat(searches.stream().map(MessageData.Search::getContent)).contains("테스트 메시지 1", "테스트 메시지 2",
+			"테스트 메시지 3");
+		assertThat(searches.stream().map(MessageData.Search::getReceiverName)).contains("receiver", "receiver",
+			"receiver");
+		assertThat(searches.stream().map(MessageData.Search::getSenderName)).contains("sender", "sender", "sender");
 	}
 
 	@Test
-	@WithMockUser
-	@DisplayName("받은 메시지를 조회하는 테스트")
-	void searchReceiveMessage() {
-		// given
-		Message message = messageCreate(receiver, sender, pick, "메시지1");
+	@DisplayName("받은 메시지 확인 테스트")
+	void 받은_메시지_확인_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
 
-		when(messageRepository.findReceivedMessageByUserId(1L)).thenReturn(List.of(message));
-		// when
-		List<MessageData.Search> result = messageService.searchReceiveMessage(1L);
-		// then
-		verify(messageRepository).findReceivedMessageByUserId(1L);
+		when(messageRepository.findReceivedMessageByUserId(receiver.getId())).thenReturn(List.of(
+			this.createMessage(sender, receiver, "테스트 메시지 1"),
+			this.createMessage(sender, receiver, "테스트 메시지 2"),
+			this.createMessage(sender, receiver, "테스트 메시지 3")
+		));
 
-		assertThat(result.size()).isEqualTo(1);
+		// * WHEN: 이걸 실행하면
+		List<MessageData.Search> searches = messageService.searchReceiveMessage(receiver);
 
-		log.info("result : " + result);
-
-		// 받은 메시지의 보낸이는 익명으로 나타내야한다.
-		assertThat(result.get(0).getSenderName()).isEqualTo("익명");
-
-		assertThat(result.get(0).getReceiverName()).isEqualTo("test-user1");
+		// * THEN: 이런 결과가 나와야 한다
+		assertThat(searches).hasSize(3);
+		assertThat(searches.stream().map(MessageData.Search::getContent)).contains("테스트 메시지 1", "테스트 메시지 2",
+			"테스트 메시지 3");
+		assertThat(searches.stream().map(MessageData.Search::getReceiverName)).contains("receiver", "receiver",
+			"receiver");
+		assertThat(searches.stream().map(MessageData.Search::getSenderName)).contains("익명", "익명", "익명");
 	}
 
 	@Test
-	@WithMockUser
-	@DisplayName("보낸 메시지를 조회하는 테스트")
-	void searchSendMessage() {
-		// given
-		Message message = messageCreate(sender, receiver, pick, "메시지1");
+	@DisplayName("신규 메시지 생성 테스트")
+	void 신규_메시지_생성_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 
-		when(messageRepository.findSentMessageByUserId(2L)).thenReturn(List.of(message));
-		// when
-		List<MessageData.Search> result = messageService.searchSendMessage(2L);
-		// then
-		verify(messageRepository).findSentMessageByUserId(2L);
+		when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
+		when(pick.getId()).thenReturn(1L);
+		when(pick.isMessageSend()).thenReturn(false);
 
-		assertThat(result.size()).isEqualTo(1);
-
-		log.info("result : " + result);
-
-		// 보낸 메시지의 받는이는 익명으로 나타내야한다.
-		assertThat(result.get(0).getReceiverName()).isEqualTo("test-user2");
-
-		assertThat(result.get(0).getSenderName()).isEqualTo("test-user1");
-	}
-
-	@Test
-	@WithMockUser
-	@DisplayName("메시지를 생성하는 테스트")
-	void createMessage() {
-		// given
-//		MessageData.Create create = new MessageData.Create();
-//		create.setSender(sender);
-//		create.setReceiver(receiver);
-//		create.setPick(pick);
-//		create.setContent("메시지1");
-//
-//		when(pickRepository.findById(anyLong())).thenReturn(Optional.of(pick));
-		// when
-//		messageService.createMessage(create);
-		// then
-//		verify(messageRepository).save(any(Message.class));
-//		verify(pickRepository).updateMessageSendTrue(1L);
-	}
-
-
-	private User userCreate(Long id, String username, char gender) {
-		return User.builder()
-			.id(id)
-			.username(username)
-			.name(username)
-			.email("이메일")
-			.gender(gender)
-			.providerType(ProviderType.GOOGLE)
-			.roleType(RoleType.USER)
-			.providerId("프로바이더 아이디")
-			.isMattermostConfirmed(true)
-			.isLocked(false)
-			.build();
-	}
-
-
-	private Pick pickCreate(User receiver, User sender, Question question) {
-		return Pick.builder()
-			.receiver(receiver)
-			.sender(sender)
-			.question(question)
-			.build();
-	}
-
-	private Message messageCreate(User sender, User receiver, Pick pick, String content) {
 		MessageData.Create create = new MessageData.Create();
-		create.setSender(sender);
-		create.setReceiver(receiver);
-		create.setPick(pick);
-		create.setContent(content);
-		return Message.of(create);
+		create.setPickId(pick.getId());
+		create.setContent("테스트 메시지");
+		create.setReceiverId(receiver.getId());
+
+		when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
+
+		// * WHEN: 이걸 실행하면
+		messageService.createMessage(sender, create);
+
+		// * THEN: 이런 결과가 나와야 한다
+		verify(pick).send();
+		verify(messageRepository).save(any(Message.class));
 	}
 
+	@Test
+	@DisplayName("존재하지 않는 픽 ID 테스트")
+	void 존재하지_않는_픽ID_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+		Long pickId = 1L;
 
+		when(pickRepository.findById(pickId)).thenReturn(Optional.empty());
+
+		MessageData.Create create = new MessageData.Create();
+		create.setPickId(pickId);
+		create.setContent("테스트 메시지");
+		create.setReceiverId(receiver.getId());
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> messageService.createMessage(sender, create);
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_PICK.getMessage());
+	}
+
+	@Test
+	@DisplayName("이미 보낸 메시지 테스트")
+	void 이미_보낸_메시지_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+
+		when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
+		when(pick.getId()).thenReturn(1L);
+		when(pick.isMessageSend()).thenReturn(true);
+
+		MessageData.Create create = new MessageData.Create();
+		create.setPickId(pick.getId());
+		create.setContent("테스트 메시지");
+		create.setReceiverId(receiver.getId());
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> messageService.createMessage(sender, create);
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.ALREADY_SEND_MESSAGE.getMessage());
+	}
+
+	@Test
+	@DisplayName("보낸 메시지 삭제 테스트")
+	void 보낸_메시지_삭제_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+
+		Message message = spy(this.createMessage(sender, receiver, "테스트 메시지"));
+
+		when(message.getId()).thenReturn(1L);
+		when(messageRepository.findById(message.getId())).thenReturn(Optional.of(message));
+
+		// * WHEN: 이걸 실행하면
+		messageService.deleteSendMessage(sender, message.getId());
+
+		// * THEN: 이런 결과가 나와야 한다
+		verify(message).deleteMessageOfSender();
+	}
+
+	@Test
+	@DisplayName("보낸 메시지 ID 존재 X 테스트")
+	void 보낸_메시지_ID_존재_X_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		Long wrongId = 2L;
+
+		when(messageRepository.findById(wrongId)).thenReturn(Optional.empty());
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> messageService.deleteSendMessage(sender, wrongId);
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_MESSAGE.getMessage());
+	}
+
+	@Test
+	@DisplayName("타인 메시지 삭제 방지 테스트")
+	void 타인_메시지_삭제_방지_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+
+		Message message = spy(this.createMessage(sender, receiver, "테스트 메시지"));
+
+		when(message.getId()).thenReturn(1L);
+		when(messageRepository.findById(message.getId())).thenReturn(Optional.of(message));
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> messageService.deleteSendMessage(receiver, message.getId());
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.FORBIDDEN.getMessage());
+	}
+
+	private Message createMessage(User sender, User receiver, String content) {
+		Pick pick = Pick.of(sender, receiver, createQuestion(sender));
+		return Message.createMessage(sender, receiver, pick, content);
+	}
+
+	private Question createQuestion(User user) {
+		QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
+		return Question.createQuestion(category, "테스트 질문", user);
+	}
 }

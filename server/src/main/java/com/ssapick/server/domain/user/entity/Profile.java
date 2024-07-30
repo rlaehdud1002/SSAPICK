@@ -1,7 +1,35 @@
 package com.ssapick.server.domain.user.entity;
 
+import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
+
+import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
+
+import java.util.Objects;
+
 import com.ssapick.server.core.entity.BaseEntity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,13 +49,13 @@ public class Profile extends BaseEntity {
 	private Long id;
 
 	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_profile_user_id")) // @Column 어노테이션 대신 사용
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_profile_user_id"))
 	private User user;
 
 	@Column(nullable = false, updatable = false)
 	private short cohort;
 
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "campus_id", referencedColumnName = "campus_id", foreignKey = @ForeignKey(name = "foreign_key_profile_campus_id"))
 	private Campus campus;
 
@@ -44,24 +72,57 @@ public class Profile extends BaseEntity {
 		this.pickco += amount;
 	}
 
-//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
-//	private Set<MemberBan> bannedToProfiles = new HashSet<>();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<Attendance> attendances = new ArrayList<>();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<PickcoLog> pickcoLogs = new ArrayList<>();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<AlarmSetting> alarmSettings = new ArrayList();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<Hint> hints = new ArrayList<>();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<QuestionBan> questionBans = new ArrayList<>();
-//
-//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-//	private ArrayList<Notification> notifications = new ArrayList<>();
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Profile profile = (Profile)o;
+		return Objects.equals(id, profile.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {
+		Profile profile = new Profile();
+		profile.user = user;
+		profile.cohort = cohort;
+		profile.campus = campus;
+		profile.profileImage = profileImage;
+		return profile;
+	}
+
+	public void delete() {
+		this.isDeleted = true;
+	}
+
+
+	//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
+	//	private Set<MemberBan> bannedToProfiles = new HashSet<>();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<Attendance> attendances = new ArrayList<>();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<PickcoLog> pickcoLogs = new ArrayList<>();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<AlarmSetting> alarmSettings = new ArrayList();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<Hint> hints = new ArrayList<>();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<QuestionBan> questionBans = new ArrayList<>();
+	//
+	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+	//	private ArrayList<Notification> notifications = new ArrayList<>();
 }

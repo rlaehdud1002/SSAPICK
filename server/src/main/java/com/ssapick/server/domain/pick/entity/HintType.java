@@ -1,8 +1,11 @@
 package com.ssapick.server.domain.pick.entity;
 
 public enum HintType {
-	TRACK,
 	NAME,
+	GENDER,
+	CHORT,
+	CAMPUS_NAME,
+	CAMPUS_SECTION,
 	MBTI,
 	MAJOR,
 	AGE,

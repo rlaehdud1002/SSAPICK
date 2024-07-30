@@ -2,16 +2,18 @@ package com.ssapick.server.domain.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 
 public class MattermostData {
-    @Getter
-    @ToString
+    @Data
     public static class Request {
         @JsonProperty("login_id")
         private String loginId;
         private String password;
+
+        public Request(String loginId, String password) {
+            this.loginId = loginId;
+            this.password = password;
+        }
     }
 
     @Data

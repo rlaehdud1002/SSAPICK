@@ -2,8 +2,10 @@ package com.ssapick.server.domain.user.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.pick.entity.Hint;
 
 import jakarta.persistence.CascadeType;
@@ -36,46 +38,69 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
+	private Long id;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Profile profile;
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Profile profile;
 
-    @Column(nullable = false)
-    private String username;
+	@Column(nullable = false)
+	private String username;
 
-    @Column(nullable = false)
-    private char gender;
+	@Column(nullable = false)
+	private char gender;
 
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(name = "provider_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ProviderType providerType;
 
-    @Column(name = "provider_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private RoleType roleType = RoleType.USER;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType = RoleType.USER;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
+	private List<Follow> followers = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
-    private List<Follow> followers = new ArrayList<>();
+	@Column(name = "provider_id", nullable = false)
+	private String providerId;
 
-    @Column(name = "provider_id", nullable = false)
-    private String providerId;
+	@Column(name = "is_mattermost_confirmed", nullable = false)
+	private boolean isMattermostConfirmed = false;
 
-    @Column(name = "is_mattermost_confirmed", nullable = false)
-    private boolean isMattermostConfirmed = false;
+	@Column(name = "is_locked", nullable = false)
+	private boolean isLocked = false;
 
-    @Column(name = "is_locked", nullable = false)
-    private boolean isLocked = false;
+	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+	private List<UserBan> bannedUser = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Hint> hints = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Attendance> attendances = new ArrayList<>();
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		User user = (User)o;
+		return Objects.equals(id, user.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
 	/**
 	 * 사용자 생성 메서드
@@ -86,7 +111,8 @@ public class User extends BaseEntity {
 	 * @param providerId   제공자 ID
 	 * @return {@link User} 새롭게 생성한 유저 객체
 	 */
-	public static User createUser(String username, String name, char gender, ProviderType providerType, String providerId) {
+	public static User createUser(String username, String name, char gender, ProviderType providerType,
+		String providerId) {
 		User user = new User();
 		user.username = username;
 		user.name = name;
@@ -97,28 +123,29 @@ public class User extends BaseEntity {
 		return user;
 	}
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Hint> hints = new ArrayList<>();
-
-
 	public void mattermostConfirm() {
 		this.isMattermostConfirmed = true;
 	}
 
 	@Builder
 	private User(Long id, String username, String name, char gender, String email, ProviderType providerType,
-		RoleType roleType, String providerId,
+		RoleType roleType, String providerId, Profile profile,
 		boolean isMattermostConfirmed, boolean isLocked) {
 		this.id = id;
 		this.username = username;
 		this.name = name;
-        this.gender = gender;
+		this.gender = gender;
 		this.email = email;
 		this.providerType = providerType;
 		this.roleType = roleType;
 		this.providerId = providerId;
+		this.profile = profile;
 		this.isMattermostConfirmed = isMattermostConfirmed;
 		this.isLocked = isLocked;
+	}
+
+	public void setTestId(Long id) {
+		this.id = id;
 	}
 
 	public void updateUser(String username, String name) {
@@ -126,4 +153,35 @@ public class User extends BaseEntity {
 		this.name = name;
 	}
 
+	public void updateName(String newName) {
+		this.name = newName;
+	}
+
+	public void updateGender(char newGender) {
+		this.gender = newGender;
+	}
+
+	public void updateProfile(Profile newProfile) {
+		this.profile = newProfile;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", profile=" + profile +
+			", username='" + username + '\'' +
+			", gender=" + gender +
+			", name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", providerType=" + providerType +
+			'}';
+	}
+
+	public void delete() {
+		this.isDeleted = true;
+		this.getProfile().delete();
+		this.bannedUser.clear();
+		this.hints.clear();
+	}
 }

@@ -1,105 +1,98 @@
 package com.ssapick.server.domain.question.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
-import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/question")
+@RequestMapping(value = "/api/v1/questions")
 public class QuestionController {
+    private final QuestionService questionService;
 
-	private final QuestionService questionService;
+    /**
+     * 모든 질문 조회 API
+     * 질문 데이터베이스에 존재하는 모든 질문을 조회한다.
+     *
+     * @return {@link List<QuestionData.Search>} 모든 질문 조회
+     */
+    @GetMapping("")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestions() {
+        List<QuestionData.Search> questions = questionService.searchQuestions();
+        return SuccessResponse.of(questions);
+    }
 
-	/**
-	 * 모든 질문 조회  API
-	 * @return {@link List<QuestionData.Search>} 모든 질문 조회
-	 */
-	@GetMapping("")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustions() {
-		List<QuestionData.Search> questions = questionService.searchQeustions();
-		return SuccessResponse.of(questions);
-	}
+    /**
+     * 질문 ID로 질문 조회 API
+     * 입력한 질문 ID에 해당하는 질문을 조회한다.
+     *
+     * @param questionId 질문 ID
+     * @return {@link QuestionData.Search} 질문 ID로 질문 조회
+     */
+    @GetMapping("/{questionId}")
+    public SuccessResponse<QuestionData.Search> searchQuestionById(@PathVariable Long questionId) {
+        return SuccessResponse.of(questionService.searchQuestionByQuestionId(questionId));
+    }
 
-	/**
-	 * 카테고리별 질문 조회 API
-	 * @param questionCategory
-	 * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
-	 */
-	@GetMapping("/category/{questionCategory_id}")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsByCategory(Long questionCategory) {
-		List<QuestionData.Search> questions = questionService.searchQeustionsByCategory(questionCategory);
+    /**
+     * 카테고리별 질문 조회 API
+     * 입력한 카테고리 ID에 해당하는 질문을 조회한다.
+     *
+     * @param categoryId 카테고리 ID
+     * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
+     */
+    @GetMapping("/category/{categoryId}")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByCategoryId(@PathVariable Long categoryId) {
+        return SuccessResponse.of(questionService.searchQuestionsByCategory(categoryId));
+    }
 
-		return SuccessResponse.of(questions);
-	}
+    /**
+     * 질문 생성 요청 API
+     * 사용자가 자신이 원하는 질문을 생성하는 API
+     *
+     * @param user   로그인한 사용자
+     * @param create {@link com.ssapick.server.domain.question.dto.QuestionData.Create} 질문 생성 요청 데이터
+     */
+    @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponse<Void> requestAddQuestion(
+            @CurrentUser User user,
+            @Validated @RequestBody QuestionData.Create create,
+            Errors errors
+    ) {
+        questionService.createQuestion(user, create);
+        return SuccessResponse.empty();
+    }
 
-	/**
-	 * 질문 ID로 질문 조회 API
-	 * @param questionId
-	 * @return {@link QuestionData.Search} 질문 ID로 질문 조회
-	 */
-	@GetMapping("/{questionId}")
-	public SuccessResponse<QuestionData.Search> searchQeustionsByQuestionId(Long questionId) {
-		QuestionData.Search search = questionService.searchQeustionByQuestionId(questionId);
-		return SuccessResponse.of(search);
-	}
+    /**
+     * 사용자에게 질문을 뿌려주는 API (벤된 질문 제외)
+     *
+     * @param user 로그인한 사용자
+     * @return {@link List<QuestionData.Search>} 사용자에게 알맞은 질문 제공
+     */
+    @GetMapping("/pick")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestions(@CurrentUser User user) {
+        return SuccessResponse.of(List.copyOf(questionService.searchQeustionList(user)));
+    }
 
-	/**
-	 * 질문 추가 API
-	 * @param user
-	 * @param categoryId
-	 * @param content
-	 * @return
-	 */
-	@PostMapping("")
-	public SuccessResponse<Void> requestAddQuestion(@CurrentUser User user, Long categoryId, String content) {
-		questionService.createQuestion(user, categoryId, content);
-
-		return SuccessResponse.empty();
-	}
-
-	/**
-	 * 사용자가 질문을 벤하는 API
-	 * @param user
-	 * @param questionId
-	 * @return
-	 */
-	@PostMapping("/{questionId}/ban")
-	public SuccessResponse<Void> banQuestion(@CurrentUser User user, @PathVariable("questionId") Long questionId) {
-		questionService.banQuestion(user, questionId);
-		return SuccessResponse.empty();
-	}
-
-	/**
-	 * 사용자에게 질문을 뿌려주는 API (벤된 질문 제외)
-	 * @param user
-	 * @return
-	 */
-	@GetMapping("/list")
-	public SuccessResponse<List<QuestionData.Search>> searchQeustionsList(@CurrentUser User user) {
-
-		Set<QuestionData.Search> searcheSet = new HashSet<>(questionService.searchQeustions());
-
-		Set<QuestionData.Search> banSet = new HashSet<>(questionService.searchBanQuestions(user.getId()));
-
-		searcheSet.removeAll(banSet);
-
-		return SuccessResponse.of(List.copyOf(searcheSet));
-	}
-
+    /**
+     * 내가 지목받은 질문 수 별로 랭킹 조회 API
+     *
+     * @param user
+     * @return
+     */
+    @GetMapping("/rank")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestionsRank(@CurrentUser User user) {
+        List<QuestionData.Search> questions = questionService.searchQuestionsRank(user.getId());
+        return SuccessResponse.of(questions);
+    }
 }

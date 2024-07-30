@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ssapick.server.core.entity.TimeEntity;
-import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
 
@@ -54,11 +53,6 @@ public class Pick extends TimeEntity {
 	@OneToMany(mappedBy = "pick", cascade = CascadeType.ALL)
 	private List<HintOpen> hintOpens = new ArrayList<>();
 
-
-	public void messageSend() {
-		this.isMessageSend = true;
-	}
-
 	public static Pick of(User sender, User receiver, Question question) {
 		Pick pick = new Pick();
 		pick.sender = sender;
@@ -68,9 +62,11 @@ public class Pick extends TimeEntity {
 	}
 
 	@Builder
-	private Pick(User sender, User receiver, Question question) {
+	public Pick(User sender) {
 		this.sender = sender;
-		this.receiver = receiver;
-		this.question = question;
+	}
+
+	public void send() {
+		this.isMessageSend = true;
 	}
 }

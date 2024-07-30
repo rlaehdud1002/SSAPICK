@@ -23,7 +23,7 @@ module.exports = {
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        // ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -76,8 +76,10 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")
-    , function ({ addUtilities }) {
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+    require("tailwindcss-animate"),
+    function ({ addUtilities }) {
       addUtilities({
         '.bg-ssapick': {
           backgroundColor: '#5F86E9', // 원하는 HEX 값
