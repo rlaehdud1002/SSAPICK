@@ -6,8 +6,11 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.repository.CampusRepository;
+import com.ssapick.server.domain.user.repository.FollowRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
@@ -30,6 +33,12 @@ public abstract class AuthenticatedSupport {
 
 	@MockBean
 	private CampusRepository campusRepository;
+
+	@MockBean
+	private FollowRepository followRepository;
+
+	@MockBean
+	private PickRepository pickRepository;
 
 	private AtomicLong atomicLong = new AtomicLong(1);
 

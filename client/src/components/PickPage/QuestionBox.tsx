@@ -2,11 +2,12 @@ import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import WarningModal from 'components/modals/WarningModal';
 import PassIcon from 'icons/PassIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
+import WarningModal from 'components/modals/WarningModal';
 
-import { QuestionAtom } from 'atoms/pick.type';
+import { IQuestion } from 'atoms/Pick.type';
 
 interface QuestionProps {
-  questionInfo: QuestionAtom;
+  questionInfo: IQuestion;
 }
 
 const Question = ({ questionInfo }: QuestionProps) => {

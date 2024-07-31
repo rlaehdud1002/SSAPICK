@@ -8,6 +8,7 @@ import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.service.AttendanceService;
+import com.ssapick.server.domain.pick.repository.PickRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

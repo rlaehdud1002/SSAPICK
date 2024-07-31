@@ -10,13 +10,13 @@ import {
 } from 'components/ui/accordion';
 
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { getReceivePick } from 'api/pick';
-import { PickAtom } from 'atoms/pick.type';
+import { getReceivePick } from 'api/pickApi';
+import { IPick } from 'atoms/Pick.type';
 
 const Response = () => {
   const queryClient = new QueryClient();
 
-  const { data: picks, isLoading } = useQuery<PickAtom[]>({
+  const {data: picks, isLoading} = useQuery<IPick[]>({
     queryKey: ['pick', 'receive'],
     queryFn: getReceivePick
   })
