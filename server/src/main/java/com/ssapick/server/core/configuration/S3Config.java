@@ -1,4 +1,4 @@
-package com.ssapick.server.core.config;
+package com.ssapick.server.core.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

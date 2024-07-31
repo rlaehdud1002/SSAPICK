@@ -1,4 +1,4 @@
-package com.ssapick.server.core.config;
+package com.ssapick.server.core.configuration;
 
 import java.util.concurrent.Executor;
 
