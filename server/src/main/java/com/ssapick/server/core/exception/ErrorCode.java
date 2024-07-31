@@ -36,7 +36,7 @@ public enum ErrorCode {
     NOT_FOUND_QUESTION_CATEGORY(5002, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
     EXIST_QUESTION_BAN(5003, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
     NOT_FOUND_QUESTION(5004, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
-
+    EXIST_QUESTION(5005, HttpStatus.BAD_REQUEST, "이미 유사한 질문이 등록되어 있습니다."),
     //Pick
     NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
     INVALID_PICK_INDEX(6002, HttpStatus.BAD_REQUEST, "픽 인덱스가 올바르지 않습니다."),

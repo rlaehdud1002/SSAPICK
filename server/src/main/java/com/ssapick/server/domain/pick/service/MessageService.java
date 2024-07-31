@@ -3,6 +3,7 @@ package com.ssapick.server.domain.pick.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +62,7 @@ public class MessageService {
      * @param sender 보내는 사람
      * @param create {@link MessageData.Create} 메시지 생성 정보
      */
+    @Async("apiExecutor")
     @Transactional
     public void createMessage(User sender, MessageData.Create create) {
         Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(

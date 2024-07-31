@@ -20,6 +20,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,6 +88,8 @@ public class QuestionService {
      *
      * @param create
      */
+    @Async("apiExecutor")
+    @Transactional
     public void createQuestion(User user, QuestionData.Create create) {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
@@ -111,6 +114,7 @@ public class QuestionService {
      * @param user
      * @param questionId
      */
+    @Transactional
     public void banQuestion(User user, Long questionId) {
 
         Question question = questionRepository.findById(questionId)
