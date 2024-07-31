@@ -8,7 +8,6 @@ export interface Friend {
   profileImage: string;
 }
 
-
 export interface NonFriend {
   userId: number;
   nickname: string;

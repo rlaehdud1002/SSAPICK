@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   max-width: 400px;
   max-height: 100vh;
-}
+} */
 
 @layer base {
   :root {

@@ -8,25 +8,31 @@ import { useRecoilValue } from 'recoil';
 import { questionState } from 'atoms/PickAtoms';
 
 const Pick = () => {
-  const question = useRecoilValue(questionState);
+  const questions = useRecoilValue(questionState);
   return (
     <div className="relative">
       {/* <PickComplete /> */}
       {/* <CoolTime /> */}
-      <Question questionInfo={question} />
-      <div className="m-7">
-        <div className="flex flex-row justify-end">
-          <ShuffleIcon className="cursor-pointer" />
-        </div>
-        <div className="flex flex-row justify-center">
-          <Choice username="민준수" gen="M" />
-          <Choice username="이호영" gen="F" />
-        </div>
-        <div className="flex flex-row justify-center">
-          <Choice username="이인준" gen="M" />
-          <Choice username="황성민" gen="M" />
-        </div>
-      </div>
+      {questions.map((question, index) => {
+        return (
+          <div>
+            <Question questionInfo={question} />;
+            <div className="m-7">
+              <div className="flex flex-row justify-end">
+                <ShuffleIcon className="cursor-pointer" />
+              </div>
+              <div className="flex flex-row justify-center">
+                <Choice username="민준수" gen="M" />
+                <Choice username="이호영" gen="F" />
+              </div>
+              <div className="flex flex-row justify-center">
+                <Choice username="이인준" gen="M" />
+                <Choice username="황성민" gen="M" />
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
