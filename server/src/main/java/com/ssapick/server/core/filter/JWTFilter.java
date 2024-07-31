@@ -2,7 +2,6 @@ package com.ssapick.server.core.filter;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
-import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.auth.service.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,12 +22,17 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
     public final String AUTHORIZATION_HEADER = "Authorization";
-    private final AuthCacheRepository authCacheRepository;
     private final JWTService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String requestURI = request.getRequestURI();
+        if (!requestURI.startsWith("/api/v1")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         String accessToken = resolveToken(request);
         try {
             if (accessToken != null) {

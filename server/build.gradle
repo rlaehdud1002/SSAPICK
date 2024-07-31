@@ -120,7 +120,8 @@ dependencyManagement {
 
 tasks.register('openapi3-generator') {
     dependsOn 'openapi3'
-
+    delete("build/resources/test/docs")
+    
     copy {
         from "build/resources/test/docs"
         into "src/main/resources/static/docs"
