@@ -97,6 +97,10 @@ public class User extends BaseEntity {
         this.isMattermostConfirmed = true;
     }
 
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Hint> hints = new ArrayList<>();
+
     public void updateUser(String username, String name) {
         this.username = username;
         this.name = name;
@@ -127,10 +131,56 @@ public class User extends BaseEntity {
                 '}';
     }
 
-    public void delete() {
-        this.isDeleted = true;
-        this.getProfile().delete();
-        this.bannedUser.clear();
-        this.hints.clear();
-    }
+	public void mattermostConfirm() {
+		this.isMattermostConfirmed = true;
+	}
+
+	public void setTestId(Long id) {
+		this.id = id;
+	}
+
+	public void updateUser(String username, String name) {
+		this.username = username;
+		this.name = name;
+	}
+
+	public void updateName(String newName) {
+		this.name = newName;
+	}
+
+	public void updateGender(char newGender) {
+		this.gender = newGender;
+	}
+
+	public void updateProfile(Profile newProfile) {
+		this.profile = newProfile;
+	}
+
+	public void updateHints(List<Hint> hints) {
+		this.hints.clear();
+		this.hints.addAll(hints);
+		for (Hint hint : hints) {
+			hint.updateUser(this);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", profile=" + profile +
+			", username='" + username + '\'' +
+			", gender=" + gender +
+			", name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", providerType=" + providerType +
+			'}';
+	}
+
+	public void delete() {
+		this.isDeleted = true;
+		this.getProfile().delete();
+		this.bannedUser.clear();
+		this.hints.clear();
+	}
 }

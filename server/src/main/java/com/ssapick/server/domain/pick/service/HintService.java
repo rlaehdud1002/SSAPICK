@@ -1,7 +1,6 @@
 package com.ssapick.server.domain.pick.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -9,17 +8,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssapick.server.domain.pick.dto.UserData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
-import com.ssapick.server.domain.user.entity.Profile;
-import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.ProfileRepository;
@@ -119,64 +114,6 @@ public class HintService {
 		);
 
 		return pick.getHintOpens();
-	}
-
-	@Transactional
-	public void saveHint(User user, UserData.Update request) {
-
-		if (user == null) {
-			throw new IllegalArgumentException("유저 정보가 없습니다.");
-		}
-
-		user.updateName(request.getName());
-		user.updateGender(request.getGender());
-
-		Profile profile = user.getProfile();
-		if (profile != null) {
-			Campus campus = profile.getCampus();
-			if (campus != null) {
-				campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(),
-					campus.getDescription());
-			} else {
-				campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
-			}
-			profile = Profile.createProfile(user, request.getChort(), campus, request.getProfileImage());
-		} else {
-			Campus campus = Campus.createCampus(request.getCampusName(), request.getCampusSection(), null);
-			profile = Profile.createProfile(user, request.getChort(), campus, null);
-		}
-
-		campusRepository.save(profile.getCampus());
-		profileRepository.save(profile);
-		user.updateProfile(profile);
-		userRepository.save(user);
-
-		List<Hint> hints = List.of(
-			Hint.createHint(user, request.getName(), HintType.NAME),
-			Hint.createHint(user, String.valueOf(request.getGender()), HintType.GENDER),
-			Hint.createHint(user, String.valueOf(request.getChort()), HintType.CHORT),
-			Hint.createHint(user, request.getCampusName(), HintType.CAMPUS_NAME),
-			Hint.createHint(user, String.valueOf(request.getCampusSection()), HintType.CAMPUS_SECTION),
-			Hint.createHint(user, request.getMbti(), HintType.MBTI),
-			Hint.createHint(user, request.getMajor(), HintType.MAJOR),
-			Hint.createHint(user, request.getBirth(), HintType.AGE),
-			Hint.createHint(user, request.getResidentialArea(), HintType.RESIDENTIAL_AREA),
-			Hint.createHint(user, request.getInterest(), HintType.INTEREST)
-		);
-
-		for (Hint hint : hints) {
-			Optional<Hint> existingHintOptional = hintRepository.findByUserIdAndHintType(user.getId(),
-				hint.getHintType());
-			if (existingHintOptional.isPresent()) {
-				Hint existingHint = existingHintOptional.get();
-				if (!existingHint.getContent().equals(hint.getContent())) {
-					existingHint.updateContent(hint.getContent());
-					hintRepository.save(existingHint);
-				}
-			} else {
-				hintRepository.save(hint);
-			}
-		}
 	}
 
 	private String processNameHint(String name) {
