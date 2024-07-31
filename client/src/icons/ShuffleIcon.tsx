@@ -12,7 +12,7 @@ const ShuffleIcon = ({ className }: ShuffleIconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <circle cx="10" cy="10" r="10" fill="white" fill-opacity="0.5" />
+      <circle cx="10" cy="10" r="10" fill="white" fillOpacity="0.5" />
       <g clipPath="url(#clip0_637_1554)">
         <path
           d="M9.48893 8.50003C9.27495 8.21206 9.00142 7.9736 8.68697 7.80088C8.37251 7.62816 8.02452 7.52524 7.66671 7.49915H5.33337"

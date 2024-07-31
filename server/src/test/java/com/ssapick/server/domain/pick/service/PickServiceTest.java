@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -218,8 +220,8 @@ class PickServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("픽 인덱스가 올바르지 않습니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.INVALID_PICK_INDEX.getMessage());
 	}
 
 	@Test
@@ -245,8 +247,8 @@ class PickServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("질문이 존재하지 않습니다.");
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.NOT_FOUND_QUESTION.getMessage());
 	}
 
 	private Pick createPick(User sender, User receiver, Question question) {

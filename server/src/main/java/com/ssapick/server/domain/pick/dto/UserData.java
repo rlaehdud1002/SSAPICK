@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserData {
 
 	@Data
-	public static class Create {
+	public static class Update {
 
 		@NotNull(message = "이름은 필수 입력 값입니다.")
 		private String name;
@@ -31,7 +31,7 @@ public class UserData {
 
 		private String profileImage;
 
-		public static Create of(
+		public static Update of(
 			String name,
 			char gender,
 			short chort,
@@ -44,7 +44,7 @@ public class UserData {
 			String interest,
 			String profileImage) {
 
-			Create create = new Create();
+			Update create = new Update();
 			create.name = name;
 			create.gender = gender;
 			create.chort = chort;

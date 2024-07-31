@@ -7,7 +7,7 @@ const PlusIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="10" cy="10" r="10" fill="white" fill-opacity="0.5" />
+      <circle cx="10" cy="10" r="10" fill="white" fillOpacity="0.5" />
       <g opacity="0.5" clipPath="url(#clip0_815_1574)">
         <path
           d="M10 7.75V12.25"

@@ -29,9 +29,6 @@ public class QuestionCategory {
 
 	private String thumbnail;
 
-	@OneToMany(mappedBy = "questionCategory")
-	private List<Question> questions = new ArrayList<>();
-
 	public static QuestionCategory create(String name, String thumbnail) {
 		QuestionCategory questionCategory = new QuestionCategory();
 		questionCategory.name = name;

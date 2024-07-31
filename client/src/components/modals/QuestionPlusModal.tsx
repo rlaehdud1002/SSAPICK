@@ -15,6 +15,7 @@ import {
 
 import QuestionInput from 'components/modals/QuestionInput';
 import QuestionCheckModal from 'components/modals/QuestionCheckModal';
+import SelectCategory from 'components/PickPage/SelectCategory';
 
 enum NewQuestionStep {
   INPUT,
@@ -22,6 +23,7 @@ enum NewQuestionStep {
 }
 
 interface QuestionForm {
+  category: string;
   newQuestion: string;
 }
 
@@ -46,6 +48,7 @@ const QuestionPlusModal = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<QuestionForm>();
 
   const onSubmit = (data: QuestionForm) => {
@@ -78,6 +81,15 @@ const QuestionPlusModal = () => {
             </DialogHeader>
             {step === NewQuestionStep.INPUT && (
               <div>
+                <SelectCategory
+                  name="category"
+                  title="카테고리"
+                  register={register('category', {
+                    required: '카테고리를 선택해주세요.',
+                  })}
+                  setValue={(value: string) => setValue('category', value)}
+                  errors={errors}
+                />
                 <QuestionInput
                   register={register('newQuestion', {
                     required: '질문을 입력해주세요.',

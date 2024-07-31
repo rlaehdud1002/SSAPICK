@@ -19,4 +19,5 @@ public class UserBan extends TimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id", nullable = false ,foreignKey = @ForeignKey(name = "foreign_key_user_ban_to_user_id"))
     private User toUser;
+
 }

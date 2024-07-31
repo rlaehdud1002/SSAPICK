@@ -27,15 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	private final UserService userService;
 
-    /**
-     * 로그인한 사용자 정보 조회 API
-     * @return {@link ProfileData.Search} 로그인한 사용자 정보
-     */
-    @Authenticated
-    @GetMapping(value = "")
-    public SuccessResponse<ProfileData.Search> findLoggedInUser(@CurrentUser User user) {
-        return SuccessResponse.of(null);
-    }
+	/**
+	 * 로그인한 사용자 정보 조회 API
+	 * @return {@link ProfileData.Search} 로그인한 사용자 정보
+	 */
+	@Authenticated
+	@GetMapping(value = "")
+	public SuccessResponse<ProfileData.Search> findLoggedInUser(@CurrentUser User user) {
+		return SuccessResponse.of(null);
+	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")
 	public SuccessResponse<Void> updateProfile(

@@ -7,9 +7,10 @@ interface InfoInputProps {
   title: string,
   register: UseFormRegisterReturn,
   errors: object
+  value?: string
 }
 
-const InfoInput = ({ name, title, register, errors }: InfoInputProps) => {
+const InfoInput = ({ name, title, register, errors,value }: InfoInputProps) => {
   console.log(name)
   return (
     <div className='flex flex-col'>
@@ -22,6 +23,7 @@ const InfoInput = ({ name, title, register, errors }: InfoInputProps) => {
         type="text"
         id={name}
         autoComplete="off"
+        value={value}
         className="bg-transparent outline-none ml-10"
         {...register}
       />

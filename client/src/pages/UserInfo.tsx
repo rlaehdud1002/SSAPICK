@@ -1,3 +1,4 @@
+import { userState } from "atoms/UserAtoms"
 import DoneButton from "buttons/DoneButton"
 import InfoInput from "components/LoginPage/InfoInput"
 import InfoSelect from "components/LoginPage/InfoSelect"
@@ -5,17 +6,22 @@ import ProfileCameraIcon from "icons/ProfileCameraIcon"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-
+import { useSetRecoilState } from "recoil"
 
 interface UserForm {
     name: string;
     gender: string;
-    th: number;
+    th: string;
     campus: string;
 }
 
 
+
+
 const UserInfo = () => {
+    const setUserInfo = useSetRecoilState(userState)
+    
+
     const navigate = useNavigate()
     const navigateToAddInfo = () => {
         navigate('/UserAddInfo')
@@ -31,8 +37,16 @@ const UserInfo = () => {
         form.append("name", data.name)
         form.append("image", "")
         console.log(data)
-    }
 
+        setUserInfo((prev) => ({
+            ...prev,
+            name: data.name,
+            gender:data.gender,
+            th:data.th,
+            campusName:data.campus
+        }))
+        
+    }
     const onInvalid = (errors: any) => {
         console.log("error", errors)
     }
@@ -58,7 +72,7 @@ const UserInfo = () => {
 
                 <InfoSelect name="th" title="기수" register={register("th", {
                     required: "기수를 선택해주세요."
-                })} setValue={(value: number) => setValue("th", value)} errors={errors} />
+                })} setValue={(value: string) => setValue("th", value)} errors={errors} />
 
                 <InfoSelect name="campus" title="캠퍼스" register={register("campus", {
                     required: "캠퍼스를 선택해주세요."
