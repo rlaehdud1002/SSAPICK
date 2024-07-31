@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.user.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,9 @@ import com.ssapick.server.domain.user.entity.User;
 public interface CampusRepository extends JpaRepository<Campus, Long> {
 	/** 캠퍼스 이름으로 캠퍼스 검색 */
 	List<Campus> findByName(String name);
+
+	/** 캠퍼스 이름과 반으로 캠퍼스 검색 */
+	Optional<Campus> findByNameAndSection(String name, short section);
 
 	/**
 	 * 반별 특징 (전공/비전공)으로 캠퍼스 검색

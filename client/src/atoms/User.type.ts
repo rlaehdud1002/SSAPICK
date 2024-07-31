@@ -1,7 +1,3 @@
-export interface JwtToken {
-  accessToken: string;
-}
-
 export interface BaseResponse<T> {
   isSuccess: boolean;
   code: number;
@@ -22,7 +18,6 @@ export interface User {
   gender: string;
   th: string;
   campusName: string;
-
 }
 
 export interface UserAdd {

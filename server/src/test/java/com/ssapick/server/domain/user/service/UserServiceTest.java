@@ -9,6 +9,13 @@ import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +23,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +36,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.support.UserSupport;
+import com.ssapick.server.domain.pick.entity.Hint;
+import com.ssapick.server.domain.user.dto.UserData;
+import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.CampusRepository;
+import com.ssapick.server.domain.user.repository.UserRepository;
 
 @DisplayName("유저 서비스 테스트")
 @ExtendWith(MockitoExtension.class)

@@ -139,7 +139,7 @@ class FollowServiceTest extends UserSupport {
 
 	private Profile createProfile(User user) {
 
-		return Profile.createProfile(user, (short)1, createCampus(), "https://test-profile.com");
+		return Profile.createProfile(user, (short)1, createCampus());
 	}
 }
 

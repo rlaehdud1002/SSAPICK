@@ -2,12 +2,12 @@ import PopOver from 'components/common/Popover';
 
 interface FriendProps {
   campus: string;
-  th: number;
-  classNum: number;
+  campusSection: number;
   name: string;
+  campusDescription: string;
 }
 
-const Friend = ({ campus, th, classNum, name }: FriendProps) => {
+const Friend = ({ campus, campusDescription, name, campusSection }: FriendProps) => {
   return (
     <div className="flex flex-col relative">
       <div className="flex items-center ml-5 mr-5 justify-between">
@@ -18,7 +18,7 @@ const Friend = ({ campus, th, classNum, name }: FriendProps) => {
         />
         <div className="flex flex-col">
           <span>
-            {campus}캠퍼스 {th}기 {classNum}반 {name}
+            {campus}캠퍼스 {campusSection}반 {name}
           </span>
           <div className='flex flex-row'>
             <span className="text-xs bg-white/50 rounded-xl w-[56px] text-center mr-2">
