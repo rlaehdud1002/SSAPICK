@@ -1,5 +1,5 @@
-import instance from "api/client"
-import { PickAtom } from "atoms/Pick.type";
+import instance from "api/client";
+import { PickAtom } from "atoms/pick.type";
 
 export const getReceivePick = async (): Promise<PickAtom[]> => {
   const response = await instance.get<PickAtom[]>("/pick/receive");

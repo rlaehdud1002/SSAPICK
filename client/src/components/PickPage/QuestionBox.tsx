@@ -1,9 +1,9 @@
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
+import WarningModal from 'components/modals/WarningModal';
 import PassIcon from 'icons/PassIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
-import WarningModal from 'components/modals/WarningModal';
 
-import { QuestionAtom } from 'atoms/Pick.type';
+import { QuestionAtom } from 'atoms/pick.type';
 
 interface QuestionProps {
   questionInfo: QuestionAtom;

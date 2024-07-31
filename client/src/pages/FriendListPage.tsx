@@ -1,13 +1,19 @@
-import { friendListState } from "atoms/FriendAtoms";
-import Friend from "components/FriendListPage/Friend";
+import { friendListState } from "atoms/friendAtoms";
+import Friend from "components/FriendListPage/FriendBox";
 import BackIcon from "icons/BackIcon";
 import FriendIcon from "icons/FriendIcon";
 import SearchIcon from "icons/SearchIcon";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
+import { QueryClient } from '@tanstack/react-query';
+
 const FriendList = () => {
+
+  const queryClient = new QueryClient();
+
   const navigate = useNavigate();
+
 
   const friendList = useRecoilValue(friendListState);
   console.log(friendList)

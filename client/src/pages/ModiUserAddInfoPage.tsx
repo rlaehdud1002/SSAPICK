@@ -1,4 +1,4 @@
-import { userAddState } from "atoms/UserAtoms";
+import { userAddState } from "atoms/userAtoms";
 import DoneButton from "buttons/DoneButton";
 import InfoInput from "components/LoginPage/InfoInput";
 import InfoSelect from "components/LoginPage/InfoSelect";

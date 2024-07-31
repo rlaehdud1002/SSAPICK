@@ -1,5 +1,5 @@
-import { atom, selector } from 'recoil';
-import { QuestionAtom, PickAtom } from './Pick.type';
+import { atom } from 'recoil';
+import { PickAtom, QuestionAtom } from './pick.type';
 
 export const questionState = atom<QuestionAtom>({
   key: 'questionState',

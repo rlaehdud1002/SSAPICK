@@ -3,8 +3,8 @@ import AlarmIcon from '../../icons/AlarmIcon';
 import CoinIcon from '../../icons/CoinIcon';
 import Logo from '../../icons/Logo';
 
+import { userCoinState } from 'atoms/userAtoms';
 import { Link } from 'react-router-dom';
-import { userCoinState } from 'atoms/UserAtoms';
 
 
 const Header = () => {

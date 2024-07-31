@@ -1,7 +1,7 @@
-import AuthCallback from 'pages/AuthCallback';
-import Login from 'pages/Login';
-import UserAddInfo from 'pages/UserAddInfo';
-import UserInfo from 'pages/UserInfo';
+import AuthCallback from 'pages/AuthCallbackPage';
+import Login from 'pages/LoginPage';
+import UserAddInfo from 'pages/UserAddInfoPage';
+import UserInfo from 'pages/UserInfoPage';
 import { Route, Routes } from 'react-router-dom';
 
 

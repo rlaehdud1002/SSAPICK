@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { MessageAtom } from './Message.type';
+import { MessageAtom } from './message.type';
 
 export const messageState = atom<MessageAtom>({
   key: 'messageState',

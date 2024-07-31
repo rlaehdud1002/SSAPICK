@@ -1,4 +1,4 @@
-import { userState } from "atoms/UserAtoms"
+import { userState } from "atoms/userAtoms"
 import DoneButton from "buttons/DoneButton"
 import InfoInput from "components/LoginPage/InfoInput"
 import InfoSelect from "components/LoginPage/InfoSelect"
@@ -36,11 +36,11 @@ const UserInfo = () => {
         setUserInfo((prev) => ({
             ...prev,
             name: data.name,
-            gender:data.gender,
-            th:data.th,
-            campusName:data.campus
+            gender: data.gender,
+            th: data.th,
+            campusName: data.campus
         }))
-        
+
     }
     const onInvalid = (errors: any) => {
         console.log("error", errors)
