@@ -38,17 +38,17 @@ const SelectCategory = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="연애/데이트">연애/데이트</SelectItem>
-              <SelectItem value="친구">친구</SelectItem>
-              <SelectItem value="가족">가족</SelectItem>
-              <SelectItem value="학업/프로젝트">학업/프로젝트</SelectItem>
-              <SelectItem value="직장/커리어">직장/커리어</SelectItem>
-              <SelectItem value="건강/운동">건강/운동</SelectItem>
-              <SelectItem value="취미/여가">취미/여가</SelectItem>
-              <SelectItem value="기술/IT">기술/IT</SelectItem>
-              <SelectItem value="문화/예술">문화/예술</SelectItem>
-              <SelectItem value="패션/뷰티">패션/뷰티</SelectItem>
-              <SelectItem value="라이프스타일">라이프스타일</SelectItem>
+              <SelectItem value="1">연애/데이트</SelectItem>
+              <SelectItem value="2">친구</SelectItem>
+              <SelectItem value="3">가족</SelectItem>
+              <SelectItem value="4">학업/프로젝트</SelectItem>
+              <SelectItem value="5">직장/커리어</SelectItem>
+              <SelectItem value="6">건강/운동</SelectItem>
+              <SelectItem value="7">취미/여가</SelectItem>
+              <SelectItem value="8">기술/IT</SelectItem>
+              <SelectItem value="9">문화/예술</SelectItem>
+              <SelectItem value="10">패션/뷰티</SelectItem>
+              <SelectItem value="11">라이프스타일</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

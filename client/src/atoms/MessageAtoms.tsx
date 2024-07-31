@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil';
-import { Message } from './Message.type';
+import { MessageAtom } from './Message.type';
 
-export const messageState = atom<Message>({
+export const messageState = atom<MessageAtom>({
   key: 'messageState',
   default: {
     id: 1,

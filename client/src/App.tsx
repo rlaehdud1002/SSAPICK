@@ -5,13 +5,17 @@ import { useLocation } from 'react-router-dom';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 import { RecoilRoot } from 'recoil';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 function App() {
   const location = useLocation().pathname.split('/')[1];
-  console.log(location);
-
+  const queryClient = new QueryClient()
   return (
    <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
     <div className="flex flex-col relative">
       <div className="flex flex-col max-h-screen">
         {(location !== 'login' && location !== 'splash') && <Header />}
@@ -25,6 +29,7 @@ function App() {
         </div>
       </div>
     </div>
+    </QueryClientProvider>
     </RecoilRoot>
 
   );

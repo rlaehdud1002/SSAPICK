@@ -19,8 +19,6 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 
-import axios from 'axios';
-
 enum MessageModalStep {
   INPUT, // 쪽지 입력
   CONFIRM, // 쪽지 확인
@@ -31,14 +29,14 @@ interface MessageForm {
   message: string;
 }
 
-const MessageModal = () => {
+interface MessageModalProps {
+  sendMessage: () => void;
+}
+
+const MessageModal = ({ sendMessage }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
-
-  // 백엔드 BASE_URL
-  const BASE_URL = process.env.REACT_APP_BACKEND_PROD_HOST;
-  console.log(BASE_URL);
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
   useEffect(() => {
@@ -65,20 +63,6 @@ const MessageModal = () => {
     } else if (step === MessageModalStep.CONFIRM) {
       setStep(MessageModalStep.ALERT);
       reset();
-
-      // axios 요청
-      axios
-        .post(`${BASE_URL}/api/v1/message`, {
-          receiverId: 2,
-          pickId: 1,
-          content: data.message,
-        })
-        .then((response) => {
-          console.log('response', response);
-        })
-        .catch((error) => {
-          console.log('error', error);
-        });
     }
   };
 
@@ -109,8 +93,8 @@ const MessageModal = () => {
                 register={register('message', {
                   required: '쪽지 내용을 입력해주세요.',
                   maxLength: {
-                    value: 100,
-                    message: '100글자 이하로 입력해주세요.',
+                    value: 255,
+                    message: '255글자 이하로 입력해주세요.',
                   },
                 })}
                 errors={errors}
