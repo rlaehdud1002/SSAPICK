@@ -9,15 +9,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface AttendanceRepository extends JpaRepository<Attendance, Long>{
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     @Query("SELECT a FROM Attendance a WHERE a.user = :user ORDER BY a.createdAt DESC")
     List<Attendance> findAllByUserOrderByCreatedAtDesc(@Param("user") User user);
 
     void deleteAllByUser(User user);
 
-    boolean existsByUserAndCreatedAt(User user, LocalDate today);
+    @Query("SELECT COUNT(a) > 0 FROM Attendance a WHERE a.user = :user AND CAST(a.createdAt as LocalDate) = :createdAt")
+    boolean existsByUserAndCreatedAtDate(User user, LocalDate createdAt);
 }

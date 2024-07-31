@@ -32,7 +32,7 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        
+
         String accessToken = resolveToken(request);
         try {
             if (accessToken != null) {
@@ -47,6 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
             request.setAttribute("error-message", e.getMessage());
         }
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
         doFilter(request, response, filterChain);
     }
 
