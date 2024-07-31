@@ -10,12 +10,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 @Configuration
 public class AsyncConfig {
+
 	@Bean(name = "imageExecutor")
 	public Executor imageUploadExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-		int corePoolSize = 4;
-		int maxPoolSize = 8;
+		int corePoolSize = 5;
+		int maxPoolSize = 10;
 		int queueCapacity = 100;
 
 		executor.setThreadGroupName("imageExecutor");

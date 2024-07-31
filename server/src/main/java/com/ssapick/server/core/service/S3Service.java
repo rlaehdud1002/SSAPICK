@@ -50,7 +50,6 @@ public class S3Service {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void upload(S3UploadEvent event) {
-		// FIXME : 이미지 클라우드 프론트 도메인으로 변경
 		String profileImage = event.getProfile().getProfileImage();
 		if (Objects.nonNull(profileImage)) {
 			this.deleteImageFromS3(profileImage);
@@ -59,6 +58,7 @@ public class S3Service {
 		if (event.getFile().isEmpty() || Objects.isNull(event.getFile().getOriginalFilename())) {
 			throw new BaseException(ErrorCode.EMPTY_FILE);
 		}
+
 		CompletableFuture<String> future = CompletableFuture.completedFuture(this.uploadImage(event.getFile()));
 		event.getProfile().updateProfileImage(future.join());
 	}
@@ -91,6 +91,7 @@ public class S3Service {
 		try {
 			return this.uploadToS3(image);
 		} catch (IOException e) {
+			System.out.println(e);
 			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
 		}
 	}
@@ -101,6 +102,7 @@ public class S3Service {
 		String s3FileName = UUID.randomUUID().toString().substring(0, 10) + originalFileName;
 
 		InputStream is = image.getInputStream();
+
 		byte[] bytes = IOUtils.toByteArray(is);
 
 		ObjectMetadata metadata = new ObjectMetadata();
@@ -109,12 +111,10 @@ public class S3Service {
 		metadata.setContentLength(bytes.length);
 
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-
 		try {
 			PutObjectRequest putRequest = new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata);
 			s3.putObject(putRequest);
 		} catch (Exception e) {
-			System.out.println(e);
 			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
 		} finally {
 			byteArrayInputStream.close();
@@ -124,7 +124,7 @@ public class S3Service {
 		String s3Url = s3.getUrl(bucketName, s3FileName).toString();
 		String cloudFrontUrl = s3Url.replace("https://s3.ap-southeast-2.amazonaws.com/ssapick/images",
 			cloudFrontDomain);
-
+		log.info("cloudFrontUrl : {}", cloudFrontUrl);
 		return cloudFrontUrl;
 	}
 
@@ -132,9 +132,7 @@ public class S3Service {
 		try {
 			URL url = new URL(imageAddress);
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
-
-			log.info(decodingKey.substring(1));
-			return decodingKey.substring(1);
+			return decodingKey.substring(16);
 		} catch (MalformedURLException e) {
 			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
 		}
