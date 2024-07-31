@@ -6,6 +6,10 @@ import { Button } from 'components/ui/button';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
+import MessageInputModal from 'components/modals/MessageInputModal';
+import CoinUseModal from 'components/modals/CoinUseModal';
+import MessageCheckModal from 'components/modals/MessageCheckModal';
+
 import {
   Dialog,
   DialogContent,
@@ -15,9 +19,7 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 
-import MessageInputModal from 'components/modals/MessageInputModal';
-import CoinUseModal from 'components/modals/CoinUseModal';
-import MessageCheckModal from 'components/modals/MessageCheckModal';
+import axios from 'axios';
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -33,6 +35,10 @@ const MessageModal = () => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  // 백엔드 BASE_URL
+  const BASE_URL = process.env.REACT_APP_BACKEND_PROD_HOST;
+  console.log(BASE_URL);
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
   useEffect(() => {
@@ -56,9 +62,23 @@ const MessageModal = () => {
     console.log('ok', data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
-      reset();
     } else if (step === MessageModalStep.CONFIRM) {
       setStep(MessageModalStep.ALERT);
+      reset();
+
+      // axios 요청
+      axios
+        .post(`${BASE_URL}/api/v1/message`, {
+          receiverId: 2,
+          pickId: 1,
+          content: data.message,
+        })
+        .then((response) => {
+          console.log('response', response);
+        })
+        .catch((error) => {
+          console.log('error', error);
+        });
     }
   };
 
@@ -77,7 +97,7 @@ const MessageModal = () => {
         <SendingIcon />
       </DialogTrigger>
       {isModalVisible && (
-        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
+        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
               쪽지 보내기

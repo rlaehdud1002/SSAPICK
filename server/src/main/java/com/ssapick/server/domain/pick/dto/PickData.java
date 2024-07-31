@@ -1,7 +1,7 @@
 package com.ssapick.server.domain.pick.dto;
 
 import com.ssapick.server.domain.pick.entity.Pick;
-import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class PickData {
         private Long id;
         private ProfileData.Search sender;
         private ProfileData.Search receiver;
-        private SimpleQuestion question;
+        private QuestionData.Search question;
         private boolean isMessageSend;
         private LocalDateTime createdAt;
 
@@ -31,29 +31,10 @@ public class PickData {
                 search.receiver = ProfileData.Search.fromEntity(pick.getReceiver().getProfile());
             }
             search.id = pick.getId();
-            search.question = SimpleQuestion.fromEntity(pick.getQuestion());
+            search.question = QuestionData.Search.fromEntity(pick.getQuestion());
             search.isMessageSend = pick.isMessageSend();
             search.createdAt = pick.getCreatedAt();
             return search;
-        }
-    }
-
-    @Data
-    public static class SimpleQuestion {
-        private Long id;
-        private String content;
-        private String categoryName;
-        private String categoryThumbnail;
-        private LocalDateTime createdAt;
-
-        public static SimpleQuestion fromEntity(Question question) {
-            SimpleQuestion simpleQuestion = new SimpleQuestion();
-            simpleQuestion.id = question.getId();
-            simpleQuestion.content = question.getContent();
-            simpleQuestion.categoryName = question.getQuestionCategory().getName();
-            simpleQuestion.categoryThumbnail = question.getQuestionCategory().getThumbnail();
-            simpleQuestion.createdAt = question.getCreatedAt();
-            return simpleQuestion;
         }
     }
 
