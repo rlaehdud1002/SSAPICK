@@ -15,13 +15,8 @@ interface UserForm {
     campus: string;
 }
 
-
-
-
 const UserInfo = () => {
     const setUserInfo = useSetRecoilState(userState)
-    
-
     const navigate = useNavigate()
     const navigateToAddInfo = () => {
         navigate('/UserAddInfo')
