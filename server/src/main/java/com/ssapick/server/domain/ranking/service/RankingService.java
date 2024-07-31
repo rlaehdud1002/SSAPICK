@@ -5,8 +5,10 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.ranking.dto.RankingData;
+import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.PickcoLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,30 +26,41 @@ public class RankingService {
 
     private final PickRepository pickRepository;
     private final MessageRepository messageRepository;
+    private final PickcoLogRepository pickcoLogRepository;
 
     public RankingData.Response getAllRanking() {
 
         List<Pick> picks = pickRepository.findAllWithReceiverAndSenderAndQuestion();
-
-        List<RankingData.UserCount> topPickReceivers = getTopPickReceivers(picks);
-        List<RankingData.UserCount> topPickSenders = getTopPickSenders(picks);
-
         List<Message> messages = messageRepository.findAllWithReceiverAndSender();
+        List<PickcoLog> pickcoLogs = pickcoLogRepository.findAllSpendWithUser();
 
 
+        List<RankingData.UserCount> topPickReceivers = getTopUsers(picks, Pick::getReceiver);
+        List<RankingData.UserCount> topPickSenders = getTopUsers(picks, Pick::getSender);
+        List<RankingData.UserCount> topMessageReceivers = getTopUsers(messages, Message::getReceiver);
+        List<RankingData.UserCount> topMessageSenders = getTopUsers(messages, Message::getSender);
 
-        return new RankingData.Response(topPickReceivers, topPickSenders);
+        List<RankingData.UserCount> topSpendPickcoUsers = getTopSpendPickcoUsers(pickcoLogs);
+
+        return new RankingData.Response(
+                topPickReceivers,
+                topPickSenders,
+                topMessageReceivers,
+                topMessageSenders,
+                topSpendPickcoUsers
+        );
     }
 
-    private List<RankingData.UserCount> getTopPickSenders(List<Pick> picks) {
-        Map<RankingData.UserRankingProfile, Long> pickReceiverCount = picks.stream()
+    private <T> List<RankingData.UserCount> getTopUsers(List<T> items, Function<T, User> userExtractor) {
+
+        Map<RankingData.UserRankingProfile, Long> userCountMap = items.stream()
                 .collect(Collectors.groupingBy(
-                        pick -> {
-                            User receiver = pick.getSender();
-                            Profile profile = receiver.getProfile();
+                        item -> {
+                            User user = userExtractor.apply(item);
+                            Profile profile = user.getProfile();
 
                             return new RankingData.UserRankingProfile(
-                                    receiver.getName(),
+                                    user.getName(),
                                     profile.getCohort(),
                                     profile.getCampus(),
                                     profile.getProfileImage());
@@ -54,37 +68,35 @@ public class RankingService {
                         Collectors.counting()
                 ));
 
-        List<RankingData.UserCount> topPickSenders = pickReceiverCount.entrySet().stream()
+        return userCountMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .limit(3)
                 .map(entry -> new RankingData.UserCount(entry.getKey(), entry.getValue()))
-                .toList();
-
-        return topPickSenders;
+                .collect(Collectors.toList());
     }
 
-    private static List<RankingData.UserCount> getTopPickReceivers(List<Pick> picks) {
-        Map<RankingData.UserRankingProfile, Long> pickReceiverCount = picks.stream()
-                .collect(Collectors.groupingBy(
-                        pick -> {
-                            User receiver = pick.getReceiver();
-                            Profile profile = receiver.getProfile();
+    private List<RankingData.UserCount> getTopSpendPickcoUsers(List<PickcoLog> pickcoLogs) {
 
+        Map<RankingData.UserRankingProfile, Integer> userSpendMap = pickcoLogs.stream()
+                .collect(Collectors.groupingBy(
+                        log -> {
+                            User user = log.getUser();
+                            Profile profile = user.getProfile();
                             return new RankingData.UserRankingProfile(
-                                    receiver.getName(),
+                                    user.getName(),
                                     profile.getCohort(),
                                     profile.getCampus(),
-                                    profile.getProfileImage());
+                                    profile.getProfileImage()
+                            );
                         },
-                        Collectors.counting()
+                        Collectors.summingInt(log -> -log.getChange())  // Convert negative values to positive
                 ));
 
-        List<RankingData.UserCount> topPickReceivers = pickReceiverCount.entrySet().stream()
+        // Sorting the map by values in descending order and limiting to top 3
+        return userSpendMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .limit(3)
-                .map(entry -> new RankingData.UserCount(entry.getKey(), entry.getValue()))
-                .toList();
-
-        return topPickReceivers;
+                .map(entry -> new RankingData.UserCount(entry.getKey(), entry.getValue().longValue()))
+                .collect(Collectors.toList());
     }
 }
