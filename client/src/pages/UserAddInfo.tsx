@@ -1,20 +1,22 @@
+import { userAddState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import InfoSelect from 'components/LoginPage/InfoSelect';
-import { useNavigate } from 'react-router-dom';
-
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
 interface AddUserForm {
   mbti: string;
+  class: number;
   major: string;
-  birth: Date;
+  birth: string;
   town: string;
   hobby: string;
-  class: number;
 }
 
 const UserAddInfo = () => {
+  const setUserAddInfo = useSetRecoilState(userAddState)
   const navigate = useNavigate();
 
   const {
@@ -26,6 +28,16 @@ const UserAddInfo = () => {
 
   const onSubmit = (data: AddUserForm) => {
     console.log(data);
+
+    setUserAddInfo((prev) => ({
+      ...prev,
+      mbti: data.mbti,
+      classNum: Number(data.class),
+      major: data.major,
+      birth: data.birth,
+      location: data.town,
+      interest: data.hobby,
+    }))
     navigate('/home');
   };
 

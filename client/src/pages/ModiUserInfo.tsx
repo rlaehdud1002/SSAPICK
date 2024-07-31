@@ -1,3 +1,4 @@
+import { userState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import InfoSelect from 'components/LoginPage/InfoSelect';
@@ -5,21 +6,32 @@ import ProfileCameraIcon from 'icons/ProfileCameraIcon';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 interface UserForm {
   name: string;
   gender: string;
-  th: number;
+  th: string;
   campus: string;
 }
 
 const ModiUserInfo = () => {
+  const [UserInfo, setUserInfo] = useRecoilState(userState)
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<UserForm>();
+  } = useForm<UserForm>({
+    defaultValues: {
+        name: UserInfo.name,
+        gender: UserInfo.gender,
+        th: UserInfo.th,
+        campus: UserInfo.campusName,
+    }
+});
+
+
   const [setUploadImage] = useState<File | undefined>(undefined);
 
   const navigate = useNavigate();
@@ -33,6 +45,14 @@ const ModiUserInfo = () => {
     form.append('name', data.name);
     form.append('image', '');
     console.log(data);
+    // recoil state 변경
+    setUserInfo((prev) => ({
+      ...prev,
+      name: data.name,
+      gender:data.gender,
+      th:data.th,
+      campusName:data.campus
+  }))
   };
 
   const onInvalid = (errors: any) => {
@@ -57,6 +77,7 @@ const ModiUserInfo = () => {
             maxLength: { value: 10, message: '10글자로 입력해주세요.' },
           })}
           errors={errors}
+          value={UserInfo.name}
         />
 
         <InfoSelect
@@ -67,6 +88,7 @@ const ModiUserInfo = () => {
           })}
           setValue={(value: string) => setValue('gender', value)}
           errors={errors}
+          defaultValue={UserInfo.gender}
         />
 
         <InfoSelect
@@ -75,8 +97,9 @@ const ModiUserInfo = () => {
           register={register('th', {
             required: '기수를 선택해주세요.',
           })}
-          setValue={(value: number) => setValue('th', value)}
+          setValue={(value: string) => setValue('th', value)}
           errors={errors}
+          defaultValue={UserInfo.th}
         />
 
         <InfoSelect
@@ -87,6 +110,7 @@ const ModiUserInfo = () => {
           })}
           setValue={(value: string) => setValue('campus', value)}
           errors={errors}
+          defaultValue={UserInfo.campusName}
         />
         <div className="flex">
           <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>

@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { User } from './User.type';
+import { User, UserAdd } from './User.type';
 
 // export const isLoginState = atom<boolean>({
 //   key: 'isLoginState',
@@ -22,21 +22,29 @@ export const isLoginState = selector<boolean>({
 export const userState = atom<User>({
   key: 'userState',
   default: {
-    profileImage:"icons/Profile.png",
-    name:"민준수", 
-    gender:"여자",
-    th:12,
-    campusName:"광주",
-    mbti:"ENFP",
-    classNum:2,
-    major:"컴퓨터공학과",
-    birth:"1996-01-07",
-    town:"장덕동",
-    hobby:"로아",
+    profileImage: "icons/Profile.png",
+    name: "박싸피",
+    gender: "남자",
+    th: "11",
+    campusName: "서울",
+
   },
 });
 
-export const userCoinState = atom<number>({ 
+export const userAddState = atom<UserAdd>({
+  key: 'userAddState',
+  default: {
+    mbti: "",
+    classNum: 1,
+    major: "",
+    birth: "",
+    location: "",
+    interest: ""
+  },
+});
+
+
+export const userCoinState = atom<number>({
   key: 'userCoinState',
   default: 0,
 });
