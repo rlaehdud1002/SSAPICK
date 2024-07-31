@@ -1,16 +1,6 @@
 import { atom, selector } from 'recoil';
 import { User, UserAdd } from './User.type';
 
-// export const isLoginState = atom<boolean>({
-//   key: 'isLoginState',
-//   default: false,
-// });
-
-export const accessTokenState = atom<string | undefined>({
-  key: 'accessTokenState',
-  default: undefined,
-});
-
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
   get: ({ get }) => {
@@ -18,6 +8,12 @@ export const isLoginState = selector<boolean>({
     return accessToken !== undefined && accessToken !== '';
   },
 });
+
+export const accessTokenState = atom<string>({
+  key: 'accessTokenState',
+  default: "",
+});
+
 
 export const userState = atom<User>({
   key: 'userState',

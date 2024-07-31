@@ -8,11 +8,8 @@ import FriendRecommendContent from "./FriendRecommendContent";
 import FriendSearchContent from "./FriendSearchContent";
 import Search from "./Search";
 
-
-
 const FriendSearch = () => {
   const navigate = useNavigate();
-
 
   return (
 
