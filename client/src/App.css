@@ -10,3 +10,8 @@
   padding-left: 20px;
   padding-top: 20px;
 }
+
+#root{
+  max-width: 400px;
+  max-height: 100vh;
+}
