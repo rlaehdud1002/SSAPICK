@@ -20,7 +20,7 @@ const CommonRoute = () => {
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
       <Route path="/message" element={<Message />}>
-        <Route path="" element={<Received />} />
+        <Route index element={<Received />} />
         <Route path="received" element={<Received />} />
         <Route path="send" element={<Send />} />
       </Route>

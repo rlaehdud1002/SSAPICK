@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.pick.dto;
+package com.ssapick.server.domain.user.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class UserData {
 		@NotNull(message = "성별은 필수 입력 값입니다.")
 		private char gender;
 		@NotNull(message = "학번은 필수 입력 값입니다.")
-		private short chort;
+		private short cohort;
 		@NotNull(message = "캠퍼스 이름은 필수 입력 값입니다.")
 		private String campusName;
 		@NotNull(message = "캠퍼스 반은 필수 입력 값입니다.")
@@ -29,25 +29,22 @@ public class UserData {
 		@NotNull(message = "관심사는 필수 입력 값입니다.")
 		private String interest;
 
-		private String profileImage;
-
 		public static Update of(
 			String name,
 			char gender,
-			short chort,
+			short cohort,
 			String campusName,
 			short campusSection,
 			String mbti,
 			String major,
 			String birth,
 			String residentialArea,
-			String interest,
-			String profileImage) {
+			String interest) {
 
 			Update create = new Update();
 			create.name = name;
 			create.gender = gender;
-			create.chort = chort;
+			create.cohort = cohort;
 			create.campusName = campusName;
 			create.campusSection = campusSection;
 			create.mbti = mbti;
@@ -55,7 +52,6 @@ public class UserData {
 			create.birth = birth;
 			create.residentialArea = residentialArea;
 			create.interest = interest;
-			create.profileImage = profileImage;
 			return create;
 		}
 	}

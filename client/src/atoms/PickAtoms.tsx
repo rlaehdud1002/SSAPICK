@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil';
-import { Question, Pick } from './Pick.type';
+import { QuestionAtom, PickAtom } from './Pick.type';
 
-export const questionState = atom<Question>({
+export const questionState = atom<QuestionAtom>({
   key: 'questionState',
   default: {
     id: 1,
@@ -17,12 +17,12 @@ export const questionState = atom<Question>({
   },
 });
 
-export const pickState = atom<Pick>({
+export const pickState = atom<PickAtom[]>({
   key: 'pickState',
-  default: {
+  default: [{
     id: 1,
     sender: {
-      gender: 'male',
+      gender: 'M',
       campusName: '광주',
       campusSection: 1,
       campusDescription: '자바 전공',
@@ -30,7 +30,7 @@ export const pickState = atom<Pick>({
     receiver: {
       userId: 3,
       nickname: '받은 사람',
-      gender: 'male',
+      gender: 'M',
       campusName: '광주',
       campusSection: 1,
       campusDescription: '자바 전공',
@@ -48,5 +48,5 @@ export const pickState = atom<Pick>({
     },
     createdAt: '2024-07-26T16:26:05.1184801',
     messageSend: false,
-  },
+  }],
 });

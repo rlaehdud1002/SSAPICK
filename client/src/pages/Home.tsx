@@ -1,7 +1,11 @@
+import { accessTokenState } from "atoms/UserAtoms";
 import Response from "components/MainPage/Response";
+import { useRecoilValue } from "recoil";
 
 
 const Home = () => {
+  const accessToken = useRecoilValue(accessTokenState);
+  console.log(accessToken);
   return (
     <div className="m-6">
       <Response />

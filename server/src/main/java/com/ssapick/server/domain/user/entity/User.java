@@ -114,18 +114,26 @@ public class User extends BaseEntity {
         this.profile = newProfile;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", profile=" + profile +
-                ", username='" + username + '\'' +
-                ", gender=" + gender +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", providerType=" + providerType +
-                '}';
-    }
+	public void updateHints(List<Hint> hints) {
+		this.hints.clear();
+		this.hints.addAll(hints);
+		for (Hint hint : hints) {
+			hint.updateUser(this);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", profile=" + profile +
+			", username='" + username + '\'' +
+			", gender=" + gender +
+			", name='" + name + '\'' +
+			", email='" + email + '\'' +
+			", providerType=" + providerType +
+			'}';
+	}
 
     public void delete() {
         this.isDeleted = true;

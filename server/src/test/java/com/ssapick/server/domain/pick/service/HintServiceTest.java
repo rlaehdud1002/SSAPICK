@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,10 +19,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.ssapick.server.core.support.HintServiceTestSupport;
-import com.ssapick.server.domain.pick.dto.UserData;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
-import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
@@ -31,9 +28,6 @@ import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
-import com.ssapick.server.domain.user.repository.CampusRepository;
-import com.ssapick.server.domain.user.repository.ProfileRepository;
-import com.ssapick.server.domain.user.repository.UserRepository;
 
 @DisplayName("힌트 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -46,13 +40,6 @@ class HintServiceTest extends HintServiceTestSupport {
 	private HintRepository hintRepository;
 	@Mock
 	private PickRepository pickRepository;
-	@Mock
-	private UserRepository userRepository;
-	@Mock
-	private ProfileRepository profileRepository;
-	@Mock
-	private CampusRepository campusRepository;
-	private Profile profile;
 	@Mock
 	private ApplicationEventPublisher publisher;
 
@@ -101,7 +88,7 @@ class HintServiceTest extends HintServiceTestSupport {
 
 		// given
 		Campus campus = Campus.createCampus("광주", (short)2, null);
-		Profile profile = Profile.createProfile(user, (short)11, campus, "imgUrl");
+		Profile profile = Profile.createProfile(user, (short)11, campus);
 
 		Pick mockPick = this.createMockPick(user);
 
@@ -149,126 +136,6 @@ class HintServiceTest extends HintServiceTestSupport {
 		assertThatThrownBy(runnable::run)
 			.isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("힌트는 2개까지만 열 수 있습니다.");
-	}
-
-	@Test
-	@WithMockUser
-	@DisplayName("hintId가 null인 유효한 데이터로 힌트 저장 테스트")
-	void saveHint() {
-		// given
-		UserData.Update createMockHintCreateData = UserData.Update.of(
-			"이인준",
-			'M',
-			(short)11,
-			"광주",
-			(short)2,
-			"INTP",
-			"전공",
-			"1998-08-25",
-			"장덕동",
-			"취미",
-			"imgUrl");
-
-		// when
-		hintService.saveHint(user, createMockHintCreateData);
-
-		// then
-		ArgumentCaptor<Hint> captor = ArgumentCaptor.forClass(Hint.class);
-		verify(hintRepository, times(10)).save(captor.capture());
-
-		List<Hint> capturedHints = captor.getAllValues();
-		assertThat(capturedHints).hasSize(10);
-	}
-
-	@Test
-	@WithMockUser
-	@DisplayName("힌트 ID가 널이 아닌 유효한 데이터로 힌트 업데이트 테스트")
-	void updateHint() {
-		// given
-		UserData.Update createMockHintCreateData = UserData.Update.of(
-			"이인준",
-			'M',
-			(short)11,
-			"광주",
-			(short)2,
-			"INTP",
-			"전공",
-			"1998-08-25",
-			"장덕동",
-			"취미",
-			"imgUrl"
-		);
-
-		UserData.Update createMockHintCreateData2 = UserData.Update.of(
-			"이인준",
-			'M',
-			(short)11,
-			"광주",
-			(short)2,
-			"INTP",
-			"전공",
-			"1998-08-25",
-			"장덕동 ",
-			"풋살",
-			"imgUrl"
-		);
-
-		// Mock 설정
-		when(userRepository.save(any(User.class))).thenReturn(user);
-
-		// HintRepository의 findByUserIdAndHintType 메서드 호출 순서에 따라 반환 값을 다르게 설정
-		when(hintRepository.findByUserIdAndHintType(anyLong(), any(HintType.class)))
-			.thenAnswer(invocation -> {
-				Long userId = invocation.getArgument(0);
-				HintType hintType = invocation.getArgument(1);
-				if (hintType == HintType.INTEREST) {
-					return Optional.of(Hint.createHint(user, "취미", HintType.INTEREST));
-				}
-				return Optional.empty();
-			});
-
-		// when
-		hintService.saveHint(user, createMockHintCreateData);
-		hintService.saveHint(user, createMockHintCreateData2);
-
-		// then
-		ArgumentCaptor<Hint> captor = ArgumentCaptor.forClass(Hint.class);
-		verify(hintRepository, times(19)).save(captor.capture());
-
-		List<Hint> capturedHints = captor.getAllValues();
-		assertThat(capturedHints).hasSize(19);
-
-		boolean isUpdated = capturedHints.stream()
-			.anyMatch(hint -> hint.getContent().equals("풋살") && hint.getHintType() == HintType.INTEREST);
-		assertThat(isUpdated).isTrue();
-	}
-
-	@Test
-	@WithMockUser
-	@DisplayName("유저 정보가 없을 때 예외 발생 테스트")
-	void saveHint_withNullUser() {
-		// given
-		UserData.Update hintWithNullUser = UserData.Update.of(
-			null,
-			'M',
-			(short)11,
-			"광주",
-			(short)2,
-			"INTP",
-			"전공",
-			"1998-08-25",
-			"장덕동",
-			"취미",
-			"imgUrl"
-		);
-
-		// when
-		Runnable runnable = () -> hintService.saveHint(null, hintWithNullUser);
-
-		// then
-		assertThatThrownBy(runnable::run)
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("유저 정보가 없습니다.");
 	}
 
 	@Test
