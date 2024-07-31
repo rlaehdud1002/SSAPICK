@@ -2,6 +2,9 @@ package com.ssapick.server.domain.question.service;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.CommentAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
@@ -11,9 +14,12 @@ import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.core.service.SentenceSimilarityAnalyzer;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QuestionService {
@@ -29,7 +36,8 @@ public class QuestionService {
     private final QuestionRegistrationRepository questionRegistrationRepository;
     private final QuestionBanRepository questionBanRepository;
     private final QuestionCategoryRepository questionCategoryRepository;
-
+    private final SentenceSimilarityAnalyzerService sentenceSimilarityAnalyzerService;
+    private final CommentAnalyzerService commentAnalyzerService;
     /**
      * 모든질문 조회
      *
@@ -80,9 +88,19 @@ public class QuestionService {
      * @param create
      */
     public void createQuestion(User user, QuestionData.Create create) {
-
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
+
+        // 욕설 모욕 검사
+        if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
+            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        }
+
+        // 기존 질문과 유사도 분석
+        SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(create.getContent());
+        if (similarity.getValue() > 0.6) {
+            throw new BaseException(ErrorCode.EXIST_QUESTION, "기존의 질문 : " + similarity.getDescription());
+        }
 
         questionRegistrationRepository.save(QuestionRegistration.of(user, category, create.getContent()));
     }
