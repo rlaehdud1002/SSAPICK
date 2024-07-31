@@ -1,4 +1,5 @@
 import { ErrorMessage } from '@hookform/error-message';
+import { Label } from 'components/ui/label';
 import {
   Select,
   SelectContent,
@@ -37,11 +38,19 @@ const InfoSelect = ({
   return (
     <div>
       <div>
+        {/* <label htmlFor="class">class</label>
+        <select name="" id="" title='class'>
+          <optgroup label='class'>
+            <option value="">3</option>
+            <option value="">4</option>
+          </optgroup>
+        </select> */}
         <Select
           defaultValue={defaultValue}
           {...register} onValueChange={handleChange}>
           <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
-            <SelectValue placeholder={title} />
+            <Label htmlFor={title}>{title}</Label>
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>

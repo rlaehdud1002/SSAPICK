@@ -69,9 +69,16 @@ const ModiUserAddInfo = () => {
                     pattern: { value: /^[E,I,N,S,T,F,P,J]{4}$/, message: "대문자 MBTI 유형으로 입력해주세요." }
                 })} errors={errors} />
 
-                <InfoSelect name="class" title="반" register={register("class", {
-                    required: "반을 선택해주세요."
-                })} setValue={(value: number) => setValue("class", value)} errors={errors} />
+                <InfoSelect
+                    name="class"
+                    title="반"
+                    register={register("class", {
+                        required: "반을 선택해주세요."
+                    })}
+                    setValue={(value: number) => setValue("class", value)}
+                    errors={errors}
+                    defaultValue={String(UserAddInfo.classNum)}
+                />
 
 
                 <InfoInput name="major" title="전공" register={register("major", {
