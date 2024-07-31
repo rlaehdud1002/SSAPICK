@@ -13,9 +13,10 @@ import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.core.service.CommentAnalyzerService;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserRepository;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,7 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final PickRepository pickRepository;
-    private final EntityManager em;
+    private final CommentAnalyzerService commentAnalyzer;
+    private final UserRepository userRepository;
 
     /**
      * 보낸 메시지 조회하기
@@ -65,13 +67,20 @@ public class MessageService {
             () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
 
+        // 모욕 욕설 검사
+        if (commentAnalyzer.isCommentOffensive(create.getContent())) {
+            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        }
+
         if (pick.isMessageSend()) {
             throw new BaseException(ErrorCode.ALREADY_SEND_MESSAGE);
         }
 		pick.send();
 
-        // FIXME: 유저에 대한 정보를 entity manager 를 사용해서 가져오는데 이게 올바른 방법일까?
-        User receiver = em.getReference(User.class, create.getReceiverId());
+
+        User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOUND_USER)
+        );
 
         messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
     }
