@@ -58,7 +58,7 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}
+    <Dialog open={open} onOpenChange={(open) => !open && onClose()} 
     >
       <DialogTrigger
         className="ml-2"

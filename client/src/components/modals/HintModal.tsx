@@ -11,6 +11,7 @@ import {
 import { Button } from 'components/ui/button';
 
 import CoinIcon from 'icons/CoinIcon';
+
 import { useState } from 'react';
 
 interface HintModalProps {

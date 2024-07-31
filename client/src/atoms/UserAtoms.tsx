@@ -17,8 +17,7 @@ export const isLoginState = selector<boolean>({
     const accessToken = get(accessTokenState);
     return accessToken !== undefined && accessToken !== '';
   },
-})
-
+});
 
 export const userState = atom<User>({
   key: 'userState',

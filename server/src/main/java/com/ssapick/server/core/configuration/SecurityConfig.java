@@ -2,9 +2,10 @@ package com.ssapick.server.core.configuration;
 
 
 import com.ssapick.server.core.filter.JWTFilter;
+import com.ssapick.server.domain.auth.handler.CustomAuthenticationDeniedHandler;
+import com.ssapick.server.domain.auth.handler.CustomAuthenticationEntryPoint;
 import com.ssapick.server.domain.auth.handler.CustomSuccessHandler;
 import com.ssapick.server.domain.auth.service.CustomOAuth2UserService;
-import com.ssapick.server.domain.auth.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -22,11 +22,13 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAuthenticationDeniedHandler authenticationDeniedHandler;
     private final JWTFilter jwtFilter;
 
     @Bean
@@ -41,15 +43,21 @@ public class SecurityConfig {
                     configuration.setExposedHeaders(List.of("Set-Cookie", "Authorization"));
                     return configuration;
                 }))
+                .exceptionHandling(configurer -> configurer
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(authenticationDeniedHandler)
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
                 .oauth2Login((oauth2) -> oauth2
+                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
+                        .redirectionEndpoint(redirection -> redirection.baseUri("/*/oauth2/code/*"))
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig.userService(customOAuth2UserService))
                         .successHandler(customSuccessHandler)
                 )
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

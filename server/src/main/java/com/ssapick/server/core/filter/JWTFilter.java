@@ -1,6 +1,7 @@
 package com.ssapick.server.core.filter;
 
-import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.auth.service.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,25 +21,31 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
-    private final AuthCacheRepository authCacheRepository;
     public final String AUTHORIZATION_HEADER = "Authorization";
     private final JWTService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String requestURI = request.getRequestURI();
+        if (!requestURI.startsWith("/api/v1")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         String accessToken = resolveToken(request);
-        if (accessToken != null) {
-            try {
+        try {
+            if (accessToken != null) {
                 Authentication authentication = jwtService.parseAuthentication(accessToken);
                 validateToken(request, authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception e) {
-                log.error("errors: ", e);
-                // FIXME: 뭔가 문제가 있었는데 기억이 안남.
-                SecurityContextHolder.clearContext();
-                request.setAttribute("error-message", e.getMessage());
+            } else {
+                throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
             }
+        } catch (Exception e) {
+            log.error("errors: {}", e.getMessage());
+            SecurityContextHolder.clearContext();
+            request.setAttribute("error-message", e.getMessage());
         }
         doFilter(request, response, filterChain);
     }
