@@ -32,3 +32,8 @@ services:
       - "6379:6379"
     entrypoint: redis-server --requirepass ssapick --maxmemory 128mb
 
+  korean_sentence_similarity:
+    image : ssafysm/ssapick_fast_api:1.1
+    container_name: ssapick-korean-sentence-similarity
+    ports:
+      - "8000:8000"
