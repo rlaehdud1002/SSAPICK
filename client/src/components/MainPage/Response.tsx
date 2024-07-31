@@ -1,6 +1,6 @@
-import UserMaskIcon from 'icons/UserMaskIcon';
 import HintModal from 'components/modals/HintModal';
 import MessageModal from 'components/modals/MessageModal';
+import UserMaskIcon from 'icons/UserMaskIcon';
 
 import {
   Accordion,
@@ -9,10 +9,6 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-import { pickState } from 'atoms/PickAtoms';
-import { useRecoilState } from 'recoil';
-
-import axios from 'axios';
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import { getReceivePick } from 'api/pickApi';
 import { IPick } from 'atoms/Pick.type';
@@ -42,38 +38,38 @@ const Response = () => {
 
   return (
     <div className="rounded-lg bg-white/50 p-4">
-      { picks && picks.map((pick, index) => (
-          <Accordion key={index} type="single" collapsible>
-        <AccordionItem value="item-1" className="border-none">
-          <AccordionTrigger className="p-0">
-            <div className="flex flex-col">
-              <div className="flex flex-row">
-                <UserMaskIcon gen={pick.sender.gender} />
-                <h3 className="mx-3 text-color-000855">
-                  11기 {pick.sender.campusSection}반
-                </h3>
+      {picks && picks.map((pick, index) => (
+        <Accordion key={index} type="single" collapsible>
+          <AccordionItem value="item-1" className="border-none">
+            <AccordionTrigger className="p-0">
+              <div className="flex flex-col">
+                <div className="flex flex-row">
+                  <UserMaskIcon gen={pick.sender.gender} />
+                  <h3 className="mx-3 text-color-000855">
+                    11기 {pick.sender.campusSection}반
+                  </h3>
+                </div>
               </div>
-            </div>
-          </AccordionTrigger>
-          <p className="text-center my-4">{pick.question.content}</p>
-          <AccordionContent>
-            <div className="flex flex-row justify-center">
-              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                <HintModal title="?" />
+            </AccordionTrigger>
+            <p className="text-center my-4">{pick.question.content}</p>
+            <AccordionContent>
+              <div className="flex flex-row justify-center">
+                <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                  <HintModal title="?" />
+                </div>
+                <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                  <HintModal title="?" />
+                </div>
               </div>
-              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                <HintModal title="?" />
-              </div>
-            </div>
-            {!pick.messageSend && (
-              <div className="float-end">
-                <MessageModal sendMessage={sendMessage} />
-              </div>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-        ))
+              {!pick.messageSend && (
+                <div className="float-end">
+                  <MessageModal sendMessage={sendMessage} />
+                </div>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ))
       }
     </div>
   );

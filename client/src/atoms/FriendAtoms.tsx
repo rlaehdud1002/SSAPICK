@@ -1,8 +1,8 @@
-import { dummyFriends } from 'dummy/friends';
 import { atom } from 'recoil';
-import { Friend, NonFriend } from './Friend.type';
+import { IFriend } from './friend.type';
 
-export const friendListState = atom<Friend[]>({
+
+export const friendListState = atom<IFriend[]>({
   key: 'friendListState',
   default: [
     {
@@ -27,7 +27,7 @@ export const friendListState = atom<Friend[]>({
 });
 
 
-const nonFriendListState = atom<NonFriend[]>({
-  key: 'nonFriendListState',
-  default: dummyFriends
-});
+// const nonFriendListState = atom<IFriend[]>({
+//   key: 'nonFriendListState',
+//   default: dummyFriends
+// });

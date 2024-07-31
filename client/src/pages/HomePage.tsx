@@ -1,4 +1,4 @@
-import { accessTokenState } from "atoms/UserAtoms";
+import { accessTokenState } from "atoms/userAtoms";
 import Response from "components/MainPage/Response";
 import { useRecoilValue } from "recoil";
 

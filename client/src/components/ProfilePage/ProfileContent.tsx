@@ -1,5 +1,5 @@
 
-import { userState,userCoinState, userFriendState, userPickState, userAddState } from "atoms/UserAtoms";
+import { userAddState, userCoinState, userFriendState, userPickState, userState } from "atoms/userAtoms";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";

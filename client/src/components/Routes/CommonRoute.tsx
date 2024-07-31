@@ -1,13 +1,13 @@
 import Received from 'components/MessagePage/Received';
 import Send from 'components/MessagePage/Send';
-import Alarm from 'pages/Alarm';
-import Home from 'pages/Home';
-import Login from 'pages/Login';
-import Message from 'pages/Message';
-import Pick from 'pages/Pick';
-import Profile from 'pages/Profile';
-import Ranking from 'pages/Ranking';
-import Splash from 'pages/Splash';
+import Alarm from 'pages/AlarmPage';
+import Home from 'pages/HomePage';
+import Login from 'pages/LoginPage';
+import Message from 'pages/MessagePage';
+import Pick from 'pages/PickPage';
+import Profile from 'pages/ProfilePage';
+import Ranking from 'pages/RankingPage';
+import Splash from 'pages/SplashPage';
 import { Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {

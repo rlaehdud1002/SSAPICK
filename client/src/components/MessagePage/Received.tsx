@@ -1,6 +1,6 @@
 import MessageContent from 'components/MessagePage/MessageContent';
 
-import { messageState } from 'atoms/MessageAtoms';
+import { messageState } from 'atoms/messageAtoms';
 import { useRecoilValue } from 'recoil';
 
 const Received = () => {

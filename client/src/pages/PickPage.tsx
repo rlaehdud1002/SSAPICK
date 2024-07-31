@@ -1,11 +1,11 @@
-import Question from 'components/PickPage/Question';
-import Choice from 'components/PickPage/Choice';
+import Question from 'components/PickPage/QuestionBox';
+import Choice from 'components/PickPage/ChoiceBox';
 import ShuffleIcon from 'icons/ShuffleIcon';
 // import CoolTime from 'components/PickPage/CoolTime';
 // import PickComplete from "components/PickPage/PickComplete";
 
 import { useRecoilValue } from 'recoil';
-import { questionState } from 'atoms/PickAtoms';
+import { questionState } from 'atoms/pickAtoms';
 
 const Pick = () => {
   const questions = useRecoilValue(questionState);

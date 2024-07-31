@@ -1,5 +1,8 @@
 import { atom, selector } from 'recoil';
-import { User, UserAdd } from './User.type';
+import { User, UserAdd } from './user.type';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist()
 
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
@@ -12,6 +15,7 @@ export const isLoginState = selector<boolean>({
 export const accessTokenState = atom<string>({
   key: 'accessTokenState',
   default: "",
+  effects_UNSTABLE: [persistAtom],
 });
 
 
