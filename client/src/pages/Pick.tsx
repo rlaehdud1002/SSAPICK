@@ -16,6 +16,7 @@ const Pick = () => {
       {questions.map((question, index) => {
         return (
           <div>
+            <Question questionInfo={question} />;
             <div className="m-7">
               <div className="flex flex-row justify-end">
                 <ShuffleIcon className="cursor-pointer" />
@@ -29,7 +30,6 @@ const Pick = () => {
                 <Choice username="황성민" gen="M" />
               </div>
             </div>
-            <Question questionInfo={question} />;
           </div>
         );
       })}
