@@ -32,19 +32,10 @@ const InfoSelect = ({
   const handleChange = (value: string) => {
     setValue(value);
   };
-
-  console.log(defaultValue);
-
+  // console.log(defaultValue);
   return (
     <div>
       <div>
-        {/* <label htmlFor="class">class</label>
-        <select name="" id="" title='class'>
-          <optgroup label='class'>
-            <option value="">3</option>
-            <option value="">4</option>
-          </optgroup>
-        </select> */}
         <Select
           defaultValue={defaultValue}
           {...register} onValueChange={handleChange}>

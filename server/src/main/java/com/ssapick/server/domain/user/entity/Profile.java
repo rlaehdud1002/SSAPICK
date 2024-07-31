@@ -1,18 +1,11 @@
 package com.ssapick.server.domain.user.entity;
 
-import static jakarta.persistence.FetchType.*;
-import static lombok.AccessLevel.*;
-
-import static jakarta.persistence.FetchType.*;
-import static lombok.AccessLevel.*;
-
-import java.util.Objects;
-
 import com.ssapick.server.core.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,27 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
-
 @Entity
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Profile extends BaseEntity {
 	@Id
@@ -48,14 +26,14 @@ public class Profile extends BaseEntity {
 	@Column(name = "profile_id")
 	private Long id;
 
-	@OneToOne(fetch = LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_profile_user_id"))
 	private User user;
 
-	@Column(nullable = false, updatable = false)
+	@Column(updatable = false)
 	private short cohort;
 
-	@ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "campus_id", referencedColumnName = "campus_id", foreignKey = @ForeignKey(name = "foreign_key_profile_campus_id"))
 	private Campus campus;
 
@@ -64,6 +42,20 @@ public class Profile extends BaseEntity {
 
 	@Column(nullable = false)
 	private int pickco = 0;
+
+	public static Profile createEmptyProfile(User user) {
+		Profile profile = new Profile();
+		profile.user = user;
+		return profile;
+	}
+
+	public static Profile createProfile(User user, short cohort, Campus campus) {
+		Profile profile = new Profile();
+		profile.user = user;
+		profile.cohort = cohort;
+		profile.campus = campus;
+		return profile;
+	}
 
 	public void changePickco(int amount) {
 		if (pickco + amount < 0) {
@@ -76,34 +68,18 @@ public class Profile extends BaseEntity {
 		this.id = id;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		Profile profile = (Profile)o;
-		return Objects.equals(id, profile.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
-
-	public static Profile createProfile(User user, short cohort, Campus campus, String profileImage) {
-		Profile profile = new Profile();
-		profile.user = user;
-		profile.cohort = cohort;
-		profile.campus = campus;
-		profile.profileImage = profileImage;
-		return profile;
-	}
-
 	public void delete() {
 		this.isDeleted = true;
 	}
 
+	public void updateProfile(Short cohort, Campus campus) {
+		this.cohort = cohort;
+		this.campus = campus;
+	}
+
+	public void updateProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
 
 	//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
 	//	private Set<MemberBan> bannedToProfiles = new HashSet<>();

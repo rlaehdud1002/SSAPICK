@@ -1,27 +1,23 @@
 import MessageContent from 'components/MessagePage/MessageContent';
 
-import { messageState } from 'atoms/MessageAtoms';
+import { messageState } from 'atoms/messageAtoms';
 import { useRecoilValue } from 'recoil';
 
 const Received = () => {
-  const message = useRecoilValue(messageState);
-  console.log(message.createdAt.slice(0, 10))
+  const messages = useRecoilValue(messageState);
   return (
     <div>
-      <MessageContent
-        name={message.senderName}
-        question={message.questionContent}
-        message={message.content}
-        date={message.createdAt.slice(0, 10)}
-        gen="female"
-      />
-      <MessageContent
-        name={message.senderName}
-        question={message.questionContent}
-        message={message.content}
-        date={message.createdAt.slice(0, 10)}
-        gen="male"
-      />
+      {messages.map((message, index) => {
+        return (
+          <MessageContent
+            name={message.senderName}
+            question={message.questionContent}
+            message={message.content}
+            date={message.createdAt.slice(0, 10)}
+            gen="F"
+          />
+        );
+      })}
     </div>
   );
 };

@@ -55,7 +55,7 @@ class AttendanceServiceTest {
     void firstAttendance() throws Exception {
         // * GIVEN: 이런게 주어졌을 때
         Attendance attendance = mock(Attendance.class);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today))
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today))
                 .thenReturn(false);
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user))
                 .thenReturn(List.of(attendance));
@@ -75,7 +75,7 @@ class AttendanceServiceTest {
     @DisplayName("오늘 이미 출석을 한 경우 예외처리")
     void alreadyMakeAttendanceToday() throws Exception {
         // * GIVEN: 이런게 주어졌을 때
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today))
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today))
                 .thenReturn(true);
 
         // * WHEN: 이걸 실행하면
@@ -97,7 +97,7 @@ class AttendanceServiceTest {
 
         // 기존 출석 기록이 있을 경우의 동작을 설정
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today)).thenReturn(false);
 
         // * WHEN: 출석 체크 실행
         int rewardPickco = attendanceService.checkIn(user);
@@ -114,7 +114,7 @@ class AttendanceServiceTest {
         List<Attendance> attendances = createConsecutiveAttendanceRecords(today, 8);
 
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today)).thenReturn(false);
 
         // * WHEN: 출석 체크 실행
         int rewardPickco = attendanceService.checkIn(user);
@@ -132,7 +132,7 @@ class AttendanceServiceTest {
 
         // 기존 출석 기록이 있을 경우의 동작을 설정
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today)).thenReturn(false);
 
         // * WHEN: 출석 체크 실행
         int rewardPickco = attendanceService.checkIn(user);
@@ -150,7 +150,7 @@ class AttendanceServiceTest {
 
         // 기존 출석 기록이 있을 경우의 동작을 설정
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today)).thenReturn(false);
 
         // * WHEN: 출석 체크 실행
         int rewardPickco = attendanceService.checkIn(user);
@@ -168,7 +168,7 @@ class AttendanceServiceTest {
 
         // 기존 출석 기록이 있을 경우의 동작을 설정
         when(attendanceRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(attendances);
-        when(attendanceRepository.existsByUserAndCreatedAt(user, today)).thenReturn(false);
+        when(attendanceRepository.existsByUserAndCreatedAtDate(user, today)).thenReturn(false);
 
         // * WHEN: 출석 체크 실행
         int rewardPickco = attendanceService.checkIn(user);

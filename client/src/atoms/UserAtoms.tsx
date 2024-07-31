@@ -1,15 +1,8 @@
 import { atom, selector } from 'recoil';
-import { User, UserAdd } from './User.type';
+import { User, UserAdd } from './user.type';
+import { recoilPersist } from 'recoil-persist';
 
-// export const isLoginState = atom<boolean>({
-//   key: 'isLoginState',
-//   default: false,
-// });
-
-export const accessTokenState = atom<string | undefined>({
-  key: 'accessTokenState',
-  default: undefined,
-});
+const { persistAtom } = recoilPersist()
 
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
@@ -19,30 +12,35 @@ export const isLoginState = selector<boolean>({
   },
 });
 
+export const accessTokenState = atom<string>({
+  key: 'accessTokenState',
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});
+
+
 export const userState = atom<User>({
   key: 'userState',
   default: {
-    profileImage: "icons/Profile.png",
-    name: "박싸피",
-    gender: "남자",
-    th: "11",
-    campusName: "서울",
-
+    profileImage: 'icons/Profile.png',
+    name: '박싸피',
+    gender: '남자',
+    th: '11',
+    campusName: '서울',
   },
 });
 
 export const userAddState = atom<UserAdd>({
   key: 'userAddState',
   default: {
-    mbti: "",
+    mbti: '',
     classNum: 1,
-    major: "",
-    birth: "",
-    location: "",
-    interest: ""
+    major: '',
+    birth: '',
+    location: '',
+    interest: '',
   },
 });
-
 
 export const userCoinState = atom<number>({
   key: 'userCoinState',

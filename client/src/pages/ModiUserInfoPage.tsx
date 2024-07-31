@@ -1,4 +1,4 @@
-import { userState } from 'atoms/UserAtoms';
+import { userState } from 'atoms/userAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import InfoSelect from 'components/LoginPage/InfoSelect';
@@ -24,12 +24,12 @@ const ModiUserInfo = () => {
     formState: { errors },
   } = useForm<UserForm>({
     defaultValues: {
-        name: UserInfo.name,
-        gender: UserInfo.gender,
-        th: UserInfo.th,
-        campus: UserInfo.campusName,
+      name: UserInfo.name,
+      gender: UserInfo.gender,
+      th: UserInfo.th,
+      campus: UserInfo.campusName,
     }
-});
+  });
 
 
   const [setUploadImage] = useState<File | undefined>(undefined);
@@ -49,10 +49,10 @@ const ModiUserInfo = () => {
     setUserInfo((prev) => ({
       ...prev,
       name: data.name,
-      gender:data.gender,
-      th:data.th,
-      campusName:data.campus
-  }))
+      gender: data.gender,
+      th: data.th,
+      campusName: data.campus
+    }))
   };
 
   const onInvalid = (errors: any) => {

@@ -1,28 +1,28 @@
-export interface Question {
+export interface IQuestion {
   id: number;
   banCount?: number;
   skipCount?: number;
   content: string;
-  category: Category;
-  createdAt: string;
+  category: ICategory;
+  createdAt?: string;
 }
 
-export interface Category {
+export interface ICategory {
   id: number;
   name: string;
   thumbnail?: string;
 }
 
-export interface Pick {
+export interface IPick {
   id: number;
-  sender: PickUser;
-  receiver: PickUser;
+  sender: IPickUser;
+  receiver: IPickUser;
   createdAt: string;
   messageSend: boolean;
-  question: Question;
+  question: IQuestion;
 }
 
-export interface PickUser {
+export interface IPickUser {
   userId?: number;
   nickname?: string;
   gender: string;
@@ -30,4 +30,16 @@ export interface PickUser {
   campusSection: number;
   campusDescription: string;
   profileImage?: string;
+}
+
+export interface IPickCreate {
+  receiverId: number;
+  questionId: number;
+  index: number;
+  status: string;
+}
+
+export interface ICreateQuestion {
+  categoryId: number;
+  content: string;
 }

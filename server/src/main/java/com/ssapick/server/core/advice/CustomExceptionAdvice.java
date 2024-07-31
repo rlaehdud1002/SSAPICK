@@ -43,9 +43,7 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomValidationError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-
         CustomValidationError customValidationError = new CustomValidationError(e.getBindingResult());
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(customValidationError);

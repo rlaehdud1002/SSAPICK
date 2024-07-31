@@ -1,12 +1,22 @@
-import Friend from "components/FriendListPage/Friend";
+import { friendListState } from "atoms/friendAtoms";
+import Friend from "components/FriendListPage/FriendBox";
 import BackIcon from "icons/BackIcon";
 import FriendIcon from "icons/FriendIcon";
 import SearchIcon from "icons/SearchIcon";
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
+import { QueryClient } from '@tanstack/react-query';
 
 const FriendList = () => {
+
+  const queryClient = new QueryClient();
+
   const navigate = useNavigate();
+
+
+  const friendList = useRecoilValue(friendListState);
+  console.log(friendList)
 
   return (
     <div>
@@ -24,9 +34,11 @@ const FriendList = () => {
           </Link>
         </div>
       </div>
-      <div className="mt-6">
-        <Friend campus="광주" th={11} classNum={2} name="민준수" />
-      </div>
+      {friendList.map((friend) => (
+        <div className="mt-6">
+          <Friend key={friend.userId} campus={friend.campusName} campusSection={friend.campusSection} campusDescription={friend.campusDescription} name={friend.nickname} />
+        </div>
+      ))}
     </div>
   )
 }

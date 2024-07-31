@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { Input } from 'components/ui/input';
+import { Textarea } from 'components/ui/textarea';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface QuestionInputProps {
@@ -11,8 +11,7 @@ interface QuestionInputProps {
 const QuestionInput = ({ register, errors }: QuestionInputProps) => {
   return (
     <DialogDescription className="flex flex-col justify-center">
-      <Input
-        type="text"
+      <Textarea
         className="input-box border-none w-full h-20 focus:outline-none mt-1 mb-2"
         register={register}
       />
