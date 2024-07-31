@@ -22,27 +22,25 @@ export const isLoginState = selector<boolean>({
 export const userState = atom<User>({
   key: 'userState',
   default: {
-    profileImage: "icons/Profile.png",
-    name: "박싸피",
-    gender: "남자",
-    th: "11",
-    campusName: "서울",
-
+    profileImage: 'icons/Profile.png',
+    name: '박싸피',
+    gender: '남자',
+    th: '11',
+    campusName: '서울',
   },
 });
 
 export const userAddState = atom<UserAdd>({
   key: 'userAddState',
   default: {
-    mbti: "",
+    mbti: '',
     classNum: 1,
-    major: "",
-    birth: "",
-    location: "",
-    interest: ""
+    major: '',
+    birth: '',
+    location: '',
+    interest: '',
   },
 });
-
 
 export const userCoinState = atom<number>({
   key: 'userCoinState',

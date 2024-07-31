@@ -80,7 +80,6 @@ body {
     font-weight: 700;
     font-style: normal;
     color: #000855;
-
   }
 }
 
@@ -100,11 +99,11 @@ body {
 }
 
 .background-color-5F86E9 {
-  background-color: #5F86E9
+  background-color: #5f86e9;
 }
 
 .backGround-kakao {
-  background-color: #FEE500;
+  background-color: #fee500;
 }
 
 .backGround-kakao {
@@ -113,4 +112,8 @@ body {
 
 .background-google {
   background-color: white;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

@@ -1,4 +1,4 @@
-export interface Message {
+export interface MessageAtom {
   id: number;
   senderName: string;
   receiverName: string;

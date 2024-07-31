@@ -1,28 +1,28 @@
-export interface Question {
+export interface QuestionAtom {
   id: number;
   banCount?: number;
   skipCount?: number;
   content: string;
-  category: Category;
+  category: CategoryAtom;
   createdAt: string;
 }
 
-export interface Category {
+export interface CategoryAtom {
   id: number;
   name: string;
   thumbnail?: string;
 }
 
-export interface Pick {
+export interface PickAtom {
   id: number;
-  sender: PickUser;
-  receiver: PickUser;
+  sender: PickUserAtom;
+  receiver: PickUserAtom;
   createdAt: string;
   messageSend: boolean;
-  question: Question;
+  question: QuestionAtom;
 }
 
-export interface PickUser {
+export interface PickUserAtom {
   userId?: number;
   nickname?: string;
   gender: string;
