@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickCacheRepository;
@@ -63,12 +65,12 @@ public class PickService {
 
 		if (index != NOT_EXIST && create.getIndex() != index) {
 			log.error("픽 인덱스가 올바르지 않습니다. index: {}, user: {}", create.getIndex(), sender);
-			throw new IllegalArgumentException("픽 인덱스가 올바르지 않습니다.");
+			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
 		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
 			log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
-			return new IllegalArgumentException("질문이 존재하지 않습니다.");
+			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
 		});
 
 		switch (create.getStatus()) {

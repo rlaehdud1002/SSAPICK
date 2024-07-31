@@ -2,6 +2,8 @@ package com.ssapick.server.domain.user.dto;
 
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import com.ssapick.server.domain.user.entity.Profile;
@@ -43,6 +45,8 @@ public class ProfileData {
 	}
 
 	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class InitialProfileInfo {
 
 		private String name;

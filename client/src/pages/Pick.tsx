@@ -9,7 +9,7 @@ const Pick = () => {
     <div className='relative'>
       {/* <PickComplete /> */}
       {/* <CoolTime /> */}
-      <Question category="프로젝트" />
+      <Question />
       <div className="m-7">
         <div className='flex flex-row justify-end'>
           <ShuffleIcon className="cursor-pointer" />

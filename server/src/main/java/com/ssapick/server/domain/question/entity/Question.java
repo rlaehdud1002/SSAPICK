@@ -64,6 +64,9 @@ public class Question extends BaseEntity {
 		return question;
 	}
 
+	public void delete() {
+		isDeleted = true;
+	}
 	public void ban() {
 		this.banCount++;
 	}
