@@ -16,6 +16,6 @@ public interface MattermostConfirmService {
 	ResponseEntity<MattermostData.Response> authenticate(@RequestBody MattermostData.Request request);
 
 	@GetMapping("/{user_id}/image")
-	byte[] getProfileImage(@RequestHeader("Authorization") String authorizationHeader,
+	ResponseEntity<byte[]> getProfileImage(@RequestHeader("Authorization") String authorizationHeader,
 		@PathVariable("user_id") String userId);
 }

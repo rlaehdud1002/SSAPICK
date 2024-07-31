@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.DisplayName;
@@ -18,12 +19,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.ssapick.server.core.exception.BaseException;
-import com.ssapick.server.core.service.S3Service;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 @DisplayName("유저 서비스 테스트")
@@ -39,20 +40,19 @@ public class UserServiceTest extends UserSupport {
 	private UserRepository userRepository;
 
 	@Mock
-	private S3Service s3Service;
+	private CampusRepository campusRepository;
 
 	static User user;
 
 	@Test
-	@WithMockUser
-	@DisplayName("힌트_아이디가_NULL_인_유효한_데이터로_힌트_저장_테스트")
+	@WithMockUser(username = "test-user")
+	@DisplayName("힌트 아이디가 NULL 인 유효한 데이터로 힌트 저장 테스트")
 	void 힌트_아이디가_NULL_인_유효한_데이터로_힌트_저장_테스트() {
 		// given
 		MockMultipartFile mockMultipartFile =
 			new MockMultipartFile("file", "test.jpg", "image/jpeg", "test image".getBytes());
 
-		user = this.createUser();
-		Long userId = user.getId();
+		User user = createUser();
 
 		UserData.Update createMockHintCreateData = UserData.Update.of(
 			"이인준",
@@ -66,40 +66,28 @@ public class UserServiceTest extends UserSupport {
 			"장덕동",
 			"취미");
 
-		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
-
-//		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
-		// when(userRepository.findById(anyLong())).thenReturn(java.util.Optional.of(user));
-		when(userRepository.findById(anyLong())).thenAnswer(invocation -> {
-			Long id = invocation.getArgument(0);
-			if (id == null) {
-				return java.util.Optional.of(user);
-			}
-			return java.util.Optional.of(user);
-		});
+		when(userRepository.findUserWithProfileById(2L)).thenReturn(Optional.of(user));
+		when(campusRepository.findByNameAndSection("광주", (short)2)).thenReturn(
+			Optional.of(user.getProfile().getCampus()));
 
 		// when
-		log.info("user.getId() : {}", user.getId());
-		log.info("java.util.Optional.of(user) : {}", java.util.Optional.of(user));
-		userService.updateUser(userId, createMockHintCreateData, mockMultipartFile);
+		userService.updateUser(2L, createMockHintCreateData, mockMultipartFile);
 
 		// then
 		List<Hint> hints = user.getHints();
-		// Validate profile
 		Profile profile = user.getProfile();
 
 		assertThat(profile).isNotNull();
 		assertThat(profile.getCampus()).isNotNull();
 		assertThat(profile.getCampus().getName()).isEqualTo("광주");
-		assertThat(profile.getCampus().getSection()).isEqualTo((short)1);
-		assertThat(profile.getCohort()).isEqualTo((short)1);
+		assertThat(profile.getCampus().getSection()).isEqualTo((short)2);
+		assertThat(profile.getCohort()).isEqualTo((short)11);
 		assertThat(profile.getProfileImage()).isEqualTo("https://test-profile.com");
 
 		assertThat(hints).extracting(Hint::getContent)
 			.containsExactlyInAnyOrder(
 				"이인준", "M", "11", "광주", "2", "INTP", "전공", "1998-08-25", "장덕동", "취미"
 			);
-
 	}
 
 	@Test
@@ -140,7 +128,7 @@ public class UserServiceTest extends UserSupport {
 
 		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("https://test-profile.com");
 
-//		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
+		//		when(s3Service.upload(mockMultipartFile)).thenReturn(completableFuture);
 		when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
 
 		// when
@@ -195,5 +183,4 @@ public class UserServiceTest extends UserSupport {
 			.isInstanceOf(BaseException.class)
 			.hasMessageContaining("사용자를 찾을 수 없습니다.");
 	}
-
 }

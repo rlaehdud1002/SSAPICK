@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssapick.server.core.constants.AuthConst;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
-import com.ssapick.server.core.service.S3Service;
+import com.ssapick.server.core.util.MultipartFileConverter;
 import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import feign.FeignException;
@@ -32,7 +35,7 @@ public class AuthService {
 	private final AuthCacheRepository authCacheRepository;
 	private final MattermostConfirmService mattermostConfirmService;
 	private final UserRepository userRepository;
-	private final S3Service s3Service;
+	private final ApplicationEventPublisher publisher;
 
 	@Transactional
 	public void signOut(User user, String refreshToken) {
@@ -76,11 +79,17 @@ public class AuthService {
 			String nickname = body.getNickname();
 			ProfileData.InitialProfileInfo info = getInitialProfileInfo(nickname);
 
-			// TODO: S3에 이미지 업로드
-			response.getHeaders();
-			log.info("Token: {}", response.getHeaders().get("Token"));
-			log.info("response: {}", response.getHeaders());
-			// mattermostConfirmService.getProfileImage(He,body.getId());
+			String token = "Bearer " + response.getHeaders().get("Token").get(0);
+			ResponseEntity<byte[]> profileImageByte = mattermostConfirmService.getProfileImage(token,
+				body.getId());
+
+			String fileName = info.getName() + ".png";
+			String contentType = "image/png";
+
+			MultipartFile profileImage = MultipartFileConverter.convertToFile(profileImageByte.getBody(), fileName,
+				contentType);
+
+			publisher.publishEvent(new S3UploadEvent(user.getProfile(), profileImage));
 
 			return info;
 
