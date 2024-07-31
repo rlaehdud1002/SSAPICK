@@ -1,0 +1,38 @@
+export const dummyFriends = [
+  {
+    userId: 4,
+    nickname: '김도영',
+    gender: "F",
+    campusName: "광주",
+    campusSection: 8,
+    campusDescription: "자바 전공",
+    profileImage: "./icons/ProfileIcon.png",
+  },
+  {
+    userId: 6,
+    nickname: '이인준',
+    gender: "M",
+    campusName: "서울",
+    campusSection: 8,
+    campusDescription: "자바 전공",
+    profileImage: "./icons/ProfileIcon.png",
+  },
+  {
+    userId: 9,
+    nickname: '황성민',
+    gender: "F",
+    campusName: "광주",
+    campusSection: 10,
+    campusDescription: "비전공",
+    profileImage: "./icons/ProfileIcon.png",
+  },
+  {
+    userId: 12,
+    nickname: '최재원',
+    gender: "F",
+    campusName: "광주",
+    campusSection: 8,
+    campusDescription: "자바 전공",
+    profileImage: "./icons/ProfileIcon.png",
+  },
+]
