@@ -18,7 +18,6 @@ export interface User {
   gender: string;
   th: string;
   campusName: string;
-
 }
 
 export interface UserAdd {

@@ -6,13 +6,12 @@ import WarningDeleteModal from 'components/modals/WarningDeleteModal';
 
 const WarningDelete = () => {
   const location = useLocation().pathname.split('/')[2];
-  console.log(location);
   return (
     <Popover>
       <PopoverTrigger>
         <PointIcon />
       </PopoverTrigger>
-      <PopoverContent className="me-4 w-28 rounded-xl bg-[#E9F2FD]">
+      <PopoverContent className="mr-4 w-[102px] rounded-xl bg-[#E9F2FD] flex flex-col justify-center">
         {!(location === 'send') && (
           <WarningDeleteModal
             title="신고"

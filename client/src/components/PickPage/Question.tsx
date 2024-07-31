@@ -3,12 +3,13 @@ import PassIcon from 'icons/PassIcon';
 import QuestionImageIcon from 'icons/QuestionIcon';
 import WarningModal from 'components/modals/WarningModal';
 
-import { questionState } from 'atoms/PickAtoms';
-import { useRecoilValue } from 'recoil';
+import { QuestionAtom } from 'atoms/Pick.type';
 
-const Question = () => {
-  const question = useRecoilValue(questionState);
+interface QuestionProps {
+  questionInfo: QuestionAtom;
+}
 
+const Question = ({ questionInfo }: QuestionProps) => {
   return (
     <div
       className="text-white mx-4 rounded-lg p-3 pb-1"
@@ -16,15 +17,15 @@ const Question = () => {
     >
       <div className="flex flex-row justify-between items-center">
         <p className="px-2 py-1 text-xs bg-white rounded-xl text-color-000855">
-          {question.category.name}
+          {questionInfo.category.name}
         </p>
         <QuestionPlusModal />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <p className="text-xs text-right text-red-400">2 of 10</p>
-        <h1 className="text-center text-lg">{question.content}</h1>
+        <h1 className="text-center text-lg">{questionInfo.content}</h1>
         <div className="flex flex-row justify-end mt-1">
-          <WarningModal question={question.content} />
+          <WarningModal question={questionInfo.content} />
           <PassIcon />
         </div>
         <div className="flex flex-row justify-center">

@@ -1,7 +1,7 @@
 import { ErrorMessage } from '@hookform/error-message';
-import { Input } from 'components/ui/input';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import UserMaskIcon from 'icons/UserMaskIcon';
+import { Textarea } from 'components/ui/textarea';
 
 interface MessageInputModalProps {
   register: UseFormRegisterReturn;
@@ -12,11 +12,10 @@ const MessageInputModal = ({ register, errors }: MessageInputModalProps) => {
   return (
     <div className="flex flex-col justify-center">
       <div className="mb-3 flex flex-row">
-        <UserMaskIcon gen="female" />
+        <UserMaskIcon gen="F" />
         <h3 className="ml-3">11기 2반</h3>
       </div>
-      <Input
-        type="text"
+      <Textarea
         className="input-box border-none h-20 focus:outline-none w-full"
         register={register}
       />
