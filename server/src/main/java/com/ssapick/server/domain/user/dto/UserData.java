@@ -1,12 +1,78 @@
 package com.ssapick.server.domain.user.dto;
 
+import com.ssapick.server.domain.pick.entity.Hint;
+import com.ssapick.server.domain.pick.entity.HintType;
+import com.ssapick.server.domain.user.entity.Campus;
+import com.ssapick.server.domain.user.entity.Profile;
+import com.ssapick.server.domain.user.entity.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
+
 public class UserData {
 
-	@Data
-	public static class Update {
+    @Data
+    public static class UserInfo {
+        private String name;
+        private String profileImage;
+        private char gender;
+        private short chort;
+
+        private String campusName;
+        private short section;
+
+        private int pickco;
+        private int pickCount;
+        private int followingCount;
+
+        private List<HintData> hints;
+
+        public static UserInfo createUserInfo(User user, int pickCount, int followingCount) {
+            Profile profile = user.getProfile();
+            profile.getProfileImage();
+
+            profile.getCampus().getSection();
+
+            UserInfo userInfo = new UserInfo();
+            userInfo.name = user.getName();
+            userInfo.profileImage = profile.getProfileImage();
+            userInfo.gender = user.getGender();
+            userInfo.chort = profile.getCohort();
+            userInfo.campusName = profile.getCampus().getName();
+            userInfo.section = profile.getCampus().getSection();
+
+            userInfo.hints = HintData.of(user.getHints());
+
+            userInfo.pickCount = pickCount;
+            userInfo.pickco = profile.getPickco();
+            userInfo.followingCount = followingCount;
+
+            return userInfo;
+        }
+
+    }
+
+    @Data
+    public static class HintData {
+        private HintType hintType;
+        private String content;
+
+        public static List<HintData> of(List<Hint> hints) {
+            return hints.stream()
+                    .map(hint -> {
+                        HintData hintData = new HintData();
+                        hintData.hintType = hint.getHintType();
+                        hintData.content = hint.getContent();
+                        return hintData;
+                    })
+                    .toList();
+        }
+    }
+
+
+    @Data
+    public static class Update {
 
 		@NotNull(message = "이름은 필수 입력 값입니다.")
 		private String name;

@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.user.controller;
 
+import com.ssapick.server.domain.pick.dto.UserData;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,12 +36,13 @@ public class UserController {
 
 	/**
 	 * 로그인한 사용자 정보 조회 API
+	 *
 	 * @return {@link ProfileData.Search} 로그인한 사용자 정보
 	 */
 	@Authenticated
-	@GetMapping(value = "")
-	public SuccessResponse<ProfileData.Search> findLoggedInUser(@CurrentUser User user) {
-		return SuccessResponse.of(null);
+	@GetMapping(value = "/me")
+	public SuccessResponse<UserData.UserInfo> findLoggedInUser(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getUserInfo(user));
 	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")

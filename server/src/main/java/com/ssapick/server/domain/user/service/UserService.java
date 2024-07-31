@@ -3,6 +3,10 @@ package com.ssapick.server.domain.user.service;
 import java.util.List;
 import java.util.function.Function;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.repository.FollowRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +38,19 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	private final ApplicationEventPublisher publisher;
 	private final UserRepository userRepository;
+	private final PickRepository pickRepository;
+	private final FollowRepository followRepository;
 	private final CampusRepository campusRepository;
+
+	public UserData.UserInfo getUserInfo(User user) {
+		User findUser = userRepository.findUserWithProfileById(user.getId())
+			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
+
+		int pickReceivedCount = pickRepository.findReceiverByUserId(findUser.getId()).size();
+		int followingsCount = followRepository.findByFollowingUser(findUser).size();
+
+		return UserData.UserInfo.createUserInfo(findUser, pickReceivedCount, followingsCount);
+	}
 
 	@Transactional
 	public void changePickco(Long userId, PickcoLogType type, int amount) {
@@ -112,4 +128,5 @@ public class UserService {
 		return userRepository.findUserWithProfileById(userId)
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
+
 }
