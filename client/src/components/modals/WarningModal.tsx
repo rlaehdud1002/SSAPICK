@@ -1,5 +1,8 @@
-import { Button } from 'components/ui/button';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 import WarningIcon from 'icons/WarningIcon';
+
+import { Button } from 'components/ui/button';
+
 import {
   Dialog,
   DialogContent,
@@ -48,7 +51,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <WarningIcon width={20} height={20} className="mx-1" circle/>
+        <WarningIcon width={20} height={20} className="mx-1" circle />
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
@@ -77,7 +80,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
             </div>
           )}
           {step === WarningStep.ALERT && (
-            <div className="text-center my-16">질문 신고가 완료되었습니다.</div>
+            <ResultCheckModal content="질문 신고가 완료되었습니다." />
           )}
         </DialogContent>
       )}

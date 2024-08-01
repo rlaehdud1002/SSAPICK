@@ -6,9 +6,9 @@ import { Button } from 'components/ui/button';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-import MessageInputModal from 'components/modals/MessageInputModal';
 import CoinUseModal from 'components/modals/CoinUseModal';
-import MessageCheckModal from 'components/modals/MessageCheckModal';
+import InputModal from 'components/modals/InputModal';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 
 import {
   Dialog,
@@ -60,6 +60,7 @@ const MessageModal = ({ sendMessage }: MessageModalProps) => {
     console.log('ok', data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
+      sendMessage();
     } else if (step === MessageModalStep.CONFIRM) {
       setStep(MessageModalStep.ALERT);
       reset();
@@ -89,7 +90,9 @@ const MessageModal = ({ sendMessage }: MessageModalProps) => {
           </DialogHeader>
           {step === MessageModalStep.INPUT && (
             <div>
-              <MessageInputModal
+              <InputModal
+                title="messageSend"
+                name="message"
                 register={register('message', {
                   required: '쪽지 내용을 입력해주세요.',
                   maxLength: {
@@ -117,7 +120,7 @@ const MessageModal = ({ sendMessage }: MessageModalProps) => {
           )}
           {step === MessageModalStep.CONFIRM && (
             <div>
-              <CoinUseModal />
+              <CoinUseModal coin={1} />
               <DialogFooter className="flex flex-row justify-end mt-3">
                 <Button
                   type="submit"
@@ -132,7 +135,9 @@ const MessageModal = ({ sendMessage }: MessageModalProps) => {
               </DialogFooter>
             </div>
           )}
-          {step === MessageModalStep.ALERT && <MessageCheckModal />}
+          {step === MessageModalStep.ALERT && (
+            <ResultCheckModal content="전송이 완료되었습니다." />
+          )}
         </DialogContent>
       )}
     </Dialog>

@@ -16,7 +16,7 @@ const Pick = () => {
       {questions.map((question, index) => {
         return (
           <div>
-            <Question questionInfo={question} />;
+            <Question questionInfo={question} />
             <div className="m-7">
               <div className="flex flex-row justify-end">
                 <ShuffleIcon className="cursor-pointer" />
