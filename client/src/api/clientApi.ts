@@ -40,10 +40,14 @@ instance.interceptors.response.use(
 
 export default instance;
 
+// * 이거 사용자 생성 ( mm인증 해야됨 )이 지금 안되서 테스트 못해봄
 export const SignOut = async () => {
+  console.log(
+    "로그아웃인데 이게 지금 사용자 생성이 안되서 테스트 못해봐요 사용자 생성이 되고 DB랑 연결되면 그떄 테스트해보세요"
+  );
   try {
     await instance.post("auth/sign-out");
-    // 여기에 로그아웃 성공시 처리를 넣어주세요.
+    // * 여기에 로그아웃 성공시 처리를 넣어주세요 ~
     window.location.href = "/";
   } catch (error) {
     console.error("로그아웃 실패:", error);
