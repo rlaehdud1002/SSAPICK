@@ -55,9 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		if (isNew.get()) {
 			log.debug("New user has been created: {}", user);
 		}
-
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, 100));
-
 		return new CustomOAuth2User(user);
 	}
 }

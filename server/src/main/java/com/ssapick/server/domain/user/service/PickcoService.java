@@ -30,9 +30,8 @@ public class PickcoService {
      * 픽코 이벤트 발생 시 픽코 로그 생성
      * @param event
      */
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @EventListener
     public void createPickcoLog(PickcoEvent event) {
-
         User user = userRepository.findByUsername(event.getUser().getUsername()).orElseThrow(
                 () -> new BaseException(ErrorCode.NOT_FOUND_USER));
 
