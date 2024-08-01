@@ -25,6 +25,9 @@ public class User extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
     private final List<Follow> followers = new ArrayList<>();
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followingUser")
+	private final List<Follow> followings = new ArrayList<>();
+
     @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
     private final List<UserBan> bannedUser = new ArrayList<>();
 

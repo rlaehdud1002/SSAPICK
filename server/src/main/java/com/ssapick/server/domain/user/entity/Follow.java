@@ -2,12 +2,19 @@ package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
+import jakarta.validation.Constraint;
 import lombok.Getter;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
+@Table(
+    name = "follow",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"follower_id", "following_id"})
+    }
+)
 public class Follow extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

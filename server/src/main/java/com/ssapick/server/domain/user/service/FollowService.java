@@ -31,23 +31,23 @@ public class FollowService {
     }
 
     @Transactional
-    public void followUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(
+    public void followUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(
                 () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
 
-        followRepository.findByFollowingUserAndFollowUser(user, followUser).ifPresent(follow -> {
+        followRepository.findByFollowUserAndFollowingUser(user, followingUser).ifPresent(follow -> {
             throw new IllegalArgumentException("이미 팔로우한 사용자입니다.");
         });
 
-        followRepository.save(Follow.follow(user, followUser));
+        followRepository.save(Follow.follow(user, followingUser));
     }
 
     @Transactional
-    public void unfollowUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    public void unfollowUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        Follow follow = followRepository.findByFollowingUserAndFollowUser(user, followUser).orElseThrow(
+        Follow follow = followRepository.findByFollowUserAndFollowingUser(user, followingUser).orElseThrow(
                 () -> new IllegalArgumentException("팔로우한 사용자가 아닙니다.")
         );
 

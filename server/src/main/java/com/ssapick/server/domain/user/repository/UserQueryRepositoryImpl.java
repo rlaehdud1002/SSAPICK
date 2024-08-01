@@ -24,24 +24,32 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
         return Stream.concat(findUserByCampusId(userId).stream(), findUserByFollow(userId).stream())
                 .distinct()
                 .toList();
+
     }
 
     private List<User> findUserByCampusId(Long userId) {
         return queryFactory.select(user)
-                .from(user)
-                .where(user.profile.campus.in(
-                        JPAExpressions.select(user.profile.campus)
-                                .from(user)
-                                .where(user.id.eq(userId))
-                )).fetch();
+            .from(user)
+            .where(user.profile.campus.in(
+                JPAExpressions.select(user.profile.campus)
+                    .from(user)
+                    .where(user.id.eq(userId))
+            ))
+            .where(user.id.ne(userId))  // 현재 사용자 ID를 제외
+            .fetch();
     }
 
     private List<User> findUserByFollow(Long userId) {
-        return queryFactory.select(user)
-                .from(user)
-                .join(user.followers, follow)
-                .leftJoin(user.profile).fetchJoin()
-                .where(user.id.eq(userId))
+        // return queryFactory.select(user)
+        //         .from(user)
+        //         .join(user.followers, follow)
+        //         .leftJoin(user.profile).fetchJoin()
+        //         .where(user.id.eq(userId))
+        //         .fetch();
+        //
+        return queryFactory.select(follow.followingUser)
+                .from(follow)
+                .where(follow.followUser.id.eq(userId))
                 .fetch();
     }
 }
