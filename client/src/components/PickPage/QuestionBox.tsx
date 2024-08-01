@@ -16,7 +16,7 @@ const Question = ({ questionInfo }: QuestionProps) => {
       style={{ backgroundColor: '#000855', opacity: '80%' }}
     >
       <div className="flex flex-row justify-between items-center">
-        <p className="px-2 py-1 text-xs bg-white rounded-xl text-color-000855">
+        <p className="px-2 py-1 text-xs bg-white rounded-lg text-color-000855">
           {questionInfo.category.name}
         </p>
         <QuestionPlusModal />

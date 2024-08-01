@@ -3,7 +3,7 @@ import TrophyIcon from 'icons/TrophyIcon';
 
 const AttendanceAward = () => {
   return (
-    <div className="bg-white/50 rounded-xl w-[90%] mx-auto p-4">
+    <div className="bg-white/50 rounded-lg w-[90%] mx-auto p-4">
       <div className="flex flex-row justify-center pb-3">
         <AttendanceIcon width={30} height={30} setpage />
         <span className="mx-2">출석 보상</span>
