@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
+
 	private final JWTService jwtService;
 	private final AuthCacheRepository authCacheRepository;
 	private final MattermostConfirmService mattermostConfirmService;
@@ -39,18 +40,17 @@ public class AuthService {
 
 	@Transactional
 	public void signOut(User user, String refreshToken) {
-		if (authCacheRepository.existsByUsername(signOutKey(user.getUsername()))) {
+		if (authCacheRepository.existsByUsername(getSignOutKey(user.getUsername()))) {
 			throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
 		}
-
-		authCacheRepository.save(signOutKey(user.getUsername()), refreshToken);
+		authCacheRepository.save(getSignOutKey(user.getUsername()), refreshToken);
 	}
 
 	public JwtToken refresh(String refreshToken) {
 		try {
 			String username = jwtService.getUsername(refreshToken);
 
-			if (authCacheRepository.existsByUsername(signOutKey(username))) {
+			if (authCacheRepository.existsByUsername(getSignOutKey(username))) {
 				throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
 			}
 
@@ -76,18 +76,9 @@ public class AuthService {
 
 			user.mattermostConfirm();
 
-			String nickname = body.getNickname();
-			ProfileData.InitialProfileInfo info = getInitialProfileInfo(nickname);
+			ProfileData.InitialProfileInfo info = extractProfileInfo(body.getNickname());
 
-			String token = "Bearer " + response.getHeaders().get("Token").get(0);
-			ResponseEntity<byte[]> profileImageByte = mattermostConfirmService.getProfileImage(token,
-				body.getId());
-
-			String fileName = info.getName() + ".png";
-			String contentType = "image/png";
-
-			MultipartFile profileImage = MultipartFileConverter.convertToFile(profileImageByte.getBody(), fileName,
-				contentType);
+			MultipartFile profileImage = getProfileImage(response, body.getId(), info.getName());
 
 			publisher.publishEvent(new S3UploadEvent(user.getProfile(), profileImage));
 
@@ -103,29 +94,38 @@ public class AuthService {
 		user.delete();
 	}
 
-	private ProfileData.InitialProfileInfo getInitialProfileInfo(String nickName) {
-		Pattern pattern = Pattern.compile("^(.+?)\\[(.+?)_(.+?)");
-		Matcher matcher = pattern.matcher(nickName);
+	private ProfileData.InitialProfileInfo extractProfileInfo(String nickName) {
+		Matcher matcher = getNicknameMatcher(nickName);
 
 		log.debug("nickName: {}", nickName);
-		boolean isMatch = matcher.find();
-		log.debug("isMatch: {}", isMatch);
-
-		if (!isMatch) {
+		if (!matcher.find()) {
 			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}
 
-		String name = matcher.group(1); // 구글은 이름이 커스텀 가능하니까 MM 이름 보내줘야할 듯
+		String name = matcher.group(1);
 		String campusName = matcher.group(2);
 		short section = Short.parseShort(matcher.group(3).split("")[0]);
 
+		validateProfileInfo(name, campusName, section);
+
+		return buildProfileInfo(name, campusName, section);
+	}
+
+	private Matcher getNicknameMatcher(String nickName) {
+		Pattern pattern = Pattern.compile("^(.+?)\\[(.+?)_(.+?)");
+		return pattern.matcher(nickName);
+	}
+
+	private void validateProfileInfo(String name, String campusName, short section) {
 		List<String> locations = List.of("서울", "대전", "구미", "광주", "부울경");
 
 		if (!isKorean(name) || !isKorean(campusName) || locations.contains(name) || !locations.contains(campusName)
 			|| section < 1 || section > 30) {
 			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}
+	}
 
+	private ProfileData.InitialProfileInfo buildProfileInfo(String name, String campusName, short section) {
 		ProfileData.InitialProfileInfo initialProfileInfo = new ProfileData.InitialProfileInfo();
 		initialProfileInfo.setName(name);
 		initialProfileInfo.setLocation(campusName);
@@ -133,12 +133,22 @@ public class AuthService {
 		return initialProfileInfo;
 	}
 
-	private boolean isKorean(String name) {
-		return name.matches("^[가-힣]*$");
+	private MultipartFile getProfileImage(ResponseEntity<MattermostData.Response> response, String userId,
+		String name) {
+		String token = "Bearer " + response.getHeaders().get("Token").get(0);
+		ResponseEntity<byte[]> profileImageByte = mattermostConfirmService.getProfileImage(token, userId);
+
+		String fileName = name + ".png";
+		String contentType = "image/png";
+
+		return MultipartFileConverter.convertToFile(profileImageByte.getBody(), fileName, contentType);
 	}
 
-	private String signOutKey(String username) {
+	private boolean isKorean(String text) {
+		return text.matches("^[가-힣]*$");
+	}
+
+	private String getSignOutKey(String username) {
 		return AuthConst.SIGN_OUT_CACHE_KEY + username;
 	}
-
 }
