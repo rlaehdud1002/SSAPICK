@@ -12,9 +12,4 @@ public class PickcoEvent {
     private User user;
     private PickcoLogType type;
     private int amount;
-    private int current;
-
-    public PickcoLog toEntity() {
-        return PickcoLog.createPickcoLog(user, type, amount, current + amount);
-    }
 }

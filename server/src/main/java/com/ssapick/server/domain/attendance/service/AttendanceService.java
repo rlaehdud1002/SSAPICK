@@ -61,7 +61,7 @@ public class AttendanceService {
 
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
         int rewardPickcoAmount = getRewardPickcoAmount(today, attendances);
-        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewardPickcoAmount, user.getProfile().getPickco()));
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewardPickcoAmount));
 
         return rewardPickcoAmount;
     }
@@ -73,11 +73,11 @@ public class AttendanceService {
         int rewardPickcoAmount = 0;
 
         if (streakInCycle == 7) {
-            rewardPickcoAmount = 5;
-        } else if (streakInCycle == 0) {
             rewardPickcoAmount = 10;
+        } else if (streakInCycle == 0) {
+            rewardPickcoAmount = 20;
         } else {
-            rewardPickcoAmount = 1;
+            rewardPickcoAmount = 2;
         }
         return rewardPickcoAmount;
     }

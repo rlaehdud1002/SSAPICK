@@ -44,7 +44,7 @@ public class PickcoServiceTest {
         int changeAmount = -5;
         when(profile.getPickco()).thenReturn(initialPickco);
 
-        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount, initialPickco);
+        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
         // When
         pickcoService.createPickcoLog(event);
@@ -64,7 +64,7 @@ public class PickcoServiceTest {
         int changeAmount = -5;
         when(profile.getPickco()).thenReturn(initialPickco);
 
-        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount, initialPickco + changeAmount);
+        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
         // When
         assertThrows(IllegalArgumentException.class, () -> {
