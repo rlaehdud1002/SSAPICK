@@ -1,12 +1,9 @@
-import React from 'react';
+// import { KAKAO_AUTH_URL } from "api/clientApi";
 
 const KakaoButton = () => {
   const onClick = () => {
-    const clientId = process.env.REACT_APP_API_KEY;
-    const redirectUri = 'http://localhost:3000';
-    
-    window.location.href =
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+    window.location.href = `https://www.ssapick.kro.kr/oauth2/authorization/kakao`;
+    // window.location.href = KAKAO_AUTH_URL;
   };
 
   return (

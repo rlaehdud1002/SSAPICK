@@ -18,8 +18,6 @@ const AttendanceCheck = ({ date }: AttendanceCheckProps) => {
     { cx: 288, cy: 149, num: 13 },
   ];
 
-  circleArr.map(({ cx, cy, num }) => console.log(cx, cy, num));
-
   return (
     <svg
       width="350"

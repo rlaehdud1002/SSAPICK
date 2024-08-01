@@ -1,13 +1,14 @@
-import Received from 'components/MessagePage/Received';
-import Send from 'components/MessagePage/Send';
-import Alarm from 'pages/Alarm';
-import Home from 'pages/Home';
-import Message from 'pages/Message';
-import Pick from 'pages/Pick';
-import Profile from 'pages/Profile';
-import Ranking from 'pages/Ranking';
-import Splash from 'pages/Splash';
-import { Route, Routes } from 'react-router-dom';
+import Received from "components/MessagePage/Received";
+import Send from "components/MessagePage/Send";
+import Alarm from "pages/AlarmPage";
+import Home from "pages/HomePage";
+import Login from "pages/LoginPage";
+import Message from "pages/MessagePage";
+import Pick from "pages/PickPage";
+import Profile from "pages/ProfilePage";
+import Ranking from "pages/RankingPage";
+import Splash from "pages/SplashPage";
+import { Route, Routes } from "react-router-dom";
 
 const CommonRoute = () => {
   return (
@@ -15,11 +16,11 @@ const CommonRoute = () => {
       <Route path="/splash" element={<Splash />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Login />} />
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
       <Route path="/message" element={<Message />}>
-        <Route path="" element={<Received />} />
+        <Route index element={<Received />} />
         <Route path="received" element={<Received />} />
         <Route path="send" element={<Send />} />
       </Route>

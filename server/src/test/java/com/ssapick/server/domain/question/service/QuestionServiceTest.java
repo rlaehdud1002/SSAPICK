@@ -17,6 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.CommentAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityResponse;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.dto.QuestionData;
@@ -48,6 +51,10 @@ class QuestionServiceTest extends UserSupport {
 	private QuestionBanRepository questionBanRepository;
 	@Mock
 	private QuestionCategoryRepository questionCategoryRepository;
+	@Mock
+	private CommentAnalyzerService commentAnalyzerService;
+	@Mock
+	private SentenceSimilarityAnalyzerService sentenceSimilarityAnalyzerService;
 
 	private final AtomicLong atomicLong = new AtomicLong(1);
 
@@ -145,6 +152,8 @@ class QuestionServiceTest extends UserSupport {
 		QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
 
 		when(questionCategoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
+		when(sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(any())).thenReturn( new SentenceSimilarityResponse(0.1, "테스트"));
 
 		QuestionData.Create create = new QuestionData.Create();
 
@@ -158,6 +167,58 @@ class QuestionServiceTest extends UserSupport {
 		verify(questionRegistrationRepository).save(any(QuestionRegistration.class));
 	}
 
+	@Test
+	@DisplayName("질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트")
+	void 질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User user = createUser("test");
+		QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
+
+		when(questionCategoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
+		lenient().when(sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(any())).thenReturn( new SentenceSimilarityResponse(0.1, "테스트"));
+
+		QuestionData.Create create = new QuestionData.Create();
+
+		create.setCategoryId(category.getId());
+		create.setContent("테스트 질문");
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> questionService.createQuestion(user, create);
+
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
+	}
+
+	@Test
+	@DisplayName("질문_생성_요청_시_중복된_질문_포함시_예외발생_테스트")
+	void 질문_생성_요청_시_중복된_질문_포함시_예외발생_테스트() throws Exception {
+
+		// * GIVEN: 이런게 주어졌을 때
+		User user = createUser("test");
+		QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
+
+		when(questionCategoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
+		lenient().when(sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(any())).thenReturn( new SentenceSimilarityResponse(0.78, "테스트"));
+
+		QuestionData.Create create = new QuestionData.Create();
+
+		create.setCategoryId(category.getId());
+		create.setContent("테스트 질문");
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> questionService.createQuestion(user, create);
+
+
+		// * THEN: 이런 결과가 나와야 한다
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage("이미 존재하는 질문 입니다. \n 기존의 질문 : " + "테스트");
+	}
 
 	@Test
 	@DisplayName("없는_카테고리_입력_시_질문_생성_요청_테스트")
@@ -213,7 +274,7 @@ class QuestionServiceTest extends UserSupport {
 	    // * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
 			.isInstanceOf(BaseException.class)
-			.hasMessage(ErrorCode.NOT_FOUD_QUESTION.getMessage());
+			.hasMessage(ErrorCode.NOT_FOUND_QUESTION.getMessage());
 	}
 
 	@Test

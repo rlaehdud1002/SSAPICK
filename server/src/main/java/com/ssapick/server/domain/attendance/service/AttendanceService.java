@@ -26,14 +26,25 @@ public class AttendanceService {
 
     private final int ATTENDANCE_RESET_CYCLE = 14;
 
-    public AttendanceData.Status getUserAttendanceStatus(User user) {
+    private static int getStreak(LocalDate today, List<Attendance> attendances) {
+        LocalDate date = today;
+        int streak = 0;
+        for (Attendance attendance : attendances) {
+            if (attendance.getCreatedAt().toLocalDate().isEqual(date)) {
+                streak += 1;
+                date = date.minusDays(1);
+            }
+        }
+        return streak;
+    }
 
+    public AttendanceData.Status getUserAttendanceStatus(User user) {
         LocalDate today = LocalDate.now();
 
-        boolean todayChecked = attendanceRepository.existsByUserAndCreatedAt(user, today);
+        boolean todayChecked = attendanceRepository.existsByUserAndCreatedAtDate(user, today);
 
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
-
+        System.out.println(attendances);
         int streak = getStreak(today, attendances);
         return AttendanceData.CreateStatus(streak, todayChecked);
     }
@@ -42,7 +53,7 @@ public class AttendanceService {
     public int checkIn(User user) {
         LocalDate today = LocalDate.now();
 
-        if (attendanceRepository.existsByUserAndCreatedAt(user, today)) {
+        if (attendanceRepository.existsByUserAndCreatedAtDate(user, today)) {
             throw new BaseException(ErrorCode.ALREADY_CHECKIN_TODAY);
         }
         attendanceRepository.save(Attendance.Create(user));
@@ -50,7 +61,7 @@ public class AttendanceService {
 
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
         int rewardPickcoAmount = getRewardPickcoAmount(today, attendances);
-        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewardPickcoAmount, user.getProfile().getPickco()));
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.ATTENDANCE, rewardPickcoAmount));
 
         return rewardPickcoAmount;
     }
@@ -62,25 +73,13 @@ public class AttendanceService {
         int rewardPickcoAmount = 0;
 
         if (streakInCycle == 7) {
-            rewardPickcoAmount = 5;
-        } else if (streakInCycle == 0) {
             rewardPickcoAmount = 10;
+        } else if (streakInCycle == 0) {
+            rewardPickcoAmount = 20;
         } else {
-            rewardPickcoAmount = 1;
+            rewardPickcoAmount = 2;
         }
         return rewardPickcoAmount;
-    }
-
-    private static int getStreak(LocalDate today, List<Attendance> attendances) {
-        LocalDate date = today;
-        int streak = 0;
-        for (Attendance attendance : attendances) {
-            if (attendance.getCreatedAt().toLocalDate().isEqual(date)) {
-                streak += 1;
-                date = date.minusDays(1);
-            }
-        }
-        return streak;
     }
 
 }

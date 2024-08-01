@@ -4,6 +4,7 @@ import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import org.mockito.Mock;
 
@@ -18,9 +19,12 @@ public abstract class UserSupport {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private CampusRepository campusRepository;
+
     protected User createUser() {
         User user = spy(User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
-        Profile profile = Profile.createProfile(user, (short) 1, createCampus(), "https://test-profile.com");
+        Profile profile = Profile.createProfile(user, (short) 1, createCampus());
         lenient().when(user.getProfile()).thenReturn(profile);
         lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
         return user;
@@ -28,7 +32,7 @@ public abstract class UserSupport {
 
     protected User createUser(String name) {
         User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
-        Profile profile = spy(Profile.createProfile(user, (short) 1, createCampus(), "https://test-profile.com"));
+        Profile profile = spy(Profile.createProfile(user, (short) 1, createCampus()));
         long id = atomicLong.incrementAndGet();
         lenient().when(user.getProfile()).thenReturn(profile);
         lenient().when(profile.getId()).thenReturn(id);

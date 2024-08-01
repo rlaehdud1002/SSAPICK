@@ -1,8 +1,8 @@
 import WarningDelete from 'components/common/WarningDelete';
 import MessageQuestionIcon from 'icons/MessageQuestionIcon';
 import UserPickIcon from 'icons/UserPickIcon';
-
 interface MessageContentProps {
+  id: number;
   name: string;
   question: string;
   message: string;
@@ -11,13 +11,13 @@ interface MessageContentProps {
 }
 
 const MessageContent = ({
+  id,
   name,
   question,
   message,
   date,
   gen,
 }: MessageContentProps) => {
-
   return (
     <div className="mx-2 my-5 border-b-[1px]">
       <div className="flex flex-row justify-between">

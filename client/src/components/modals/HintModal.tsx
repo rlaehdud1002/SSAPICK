@@ -11,7 +11,9 @@ import {
 import { Button } from 'components/ui/button';
 
 import CoinIcon from 'icons/CoinIcon';
+
 import { useState } from 'react';
+import CoinUseModal from 'components/modals/CoinUseModal';
 
 interface HintModalProps {
   title: string;
@@ -36,12 +38,7 @@ const HintModal = ({ title }: HintModalProps) => {
           <DialogTitle className="flex flex-start text-color-5F86E9">
             힌트 공개
           </DialogTitle>
-          <DialogDescription className="flex justify-center">
-            <h3 className="flex flex-row my-10 items-center text-color-000855">
-              <CoinIcon width={25} height={25} />
-              <h3 className="luckiest_guy ms-1 me-2 pt-1">1</h3>이 사용됩니다.
-            </h3>
-          </DialogDescription>
+          <CoinUseModal coin={1} />
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end">
           <Button variant="ssapick" size="md" onClick={() => setOpen(false)}>

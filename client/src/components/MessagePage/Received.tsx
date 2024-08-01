@@ -1,22 +1,30 @@
+import { useQuery } from '@tanstack/react-query';
+import { getReceivedMessage } from 'api/messageApi';
+import { IMessage } from 'atoms/Message.type';
 import MessageContent from 'components/MessagePage/MessageContent';
 
 const Received = () => {
+  const { data: messages, isLoading } = useQuery<IMessage[]>({
+    queryKey: ['message', 'receive'],
+    queryFn: getReceivedMessage,
+  });
+
   return (
     <div>
-      <MessageContent
-        name="김도영"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
-        gen="female"
-      />
-      <MessageContent
-        name="민준수"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
-        gen="male"
-      />
+      {messages &&
+        messages.map((message, index) => {
+          return (
+            <MessageContent
+              key={index}
+              id={message.id}
+              name={message.senderName}
+              question={message.questionContent}
+              message={message.content}
+              date={message.createdAt.slice(0, 10)}
+              gen="F"
+            />
+          );
+        })}
     </div>
   );
 };

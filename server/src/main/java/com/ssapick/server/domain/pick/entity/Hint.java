@@ -49,11 +49,14 @@ public class Hint extends TimeEntity {
 		this.content = content;
 	}
 
-	public static Hint createHint(User user, String content, HintType hintType) {
+	public static Hint createHint(String content, HintType hintType) {
 		Hint hint = new Hint();
-		hint.user = user;
 		hint.content = content;
 		hint.hintType = hintType;
 		return hint;
+	}
+
+	public void updateUser(User user) {
+		this.user = user;
 	}
 }
