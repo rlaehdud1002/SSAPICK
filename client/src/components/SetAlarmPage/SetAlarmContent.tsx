@@ -13,7 +13,7 @@ const SetAlarmContent = ({
 }: SetAlarmContentProps) => {
   return (
     <div className='mb-5'>
-      <div className="bg-white/50 rounded-xl flex flex-row justify-between items-center p-4">
+      <div className="bg-white/50 rounded-lg flex flex-row justify-between items-center p-4">
         <div className="flex flex-row items-center">
           {children}
           <span className="mx-6">{title}</span>

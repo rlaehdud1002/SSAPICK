@@ -11,7 +11,7 @@ const WarningDelete = () => {
       <PopoverTrigger>
         <PointIcon />
       </PopoverTrigger>
-      <PopoverContent className="mr-4 w-[102px] rounded-xl bg-[#E9F2FD] flex flex-col justify-center">
+      <PopoverContent className="mr-4 w-[102px] rounded-lg bg-[#E9F2FD] flex flex-col justify-center">
         {!(location === 'send') && (
           <WarningDeleteModal
             title="신고"

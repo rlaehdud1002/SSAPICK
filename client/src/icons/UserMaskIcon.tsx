@@ -1,31 +1,18 @@
+import { useEffect, useState } from "react";
+
 interface UserMaskIconProps {
   gen: string;
   checked?: boolean;
 }
 
 const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
-  let stroke;
-  let fill;
+  const [stroke, setStroke] = useState<string>('white');
+  const [fill, setFill] = useState<string>('none');
 
-  const strokeFillCheck = () => {
-    if (checked) {
-      stroke = 'white';
-      if (gen === 'M') {
-        fill = '#7EAFFF';
-      } else {
-        fill = '#FF9798';
-      }
-    } else {
-      fill = 'none';
-      if (gen === 'M') {
-        stroke = '#7EAFFF';
-      } else {
-        stroke = '#FF9798';
-      }
-    }
-  };
-
-  strokeFillCheck();
+  useEffect(() => {
+    setStroke(checked ? 'white' : gen === 'M' ? '#7EAFFF' : '#FF9798');
+    setFill(checked ? (gen === 'M' ? '#7EAFFF' : '#FF9798') : 'none');
+  }, [setStroke, setFill, checked, gen]);
 
   return (
     <>
