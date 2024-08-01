@@ -1,5 +1,5 @@
-import { IFriend } from "atoms/friend.type";
-import instance from "./client";
+import instance from "api/clientApi";
+import { IFriend } from "atoms/Friend.type";
 
 
 // 친구 목록 get

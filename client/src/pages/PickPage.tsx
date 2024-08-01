@@ -5,7 +5,7 @@ import ShuffleIcon from 'icons/ShuffleIcon';
 // import PickComplete from "components/PickPage/PickComplete";
 
 import { useRecoilValue } from 'recoil';
-import { questionState } from 'atoms/pickAtoms';
+import { questionState } from 'atoms/PickAtoms';
 
 const Pick = () => {
   const questions = useRecoilValue(questionState);
