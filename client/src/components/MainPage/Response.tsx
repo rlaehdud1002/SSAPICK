@@ -9,8 +9,6 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 
-import { QueryClient, useMutation } from '@tanstack/react-query';
-import { getReceivePick } from 'api/pickApi';
 import { IPick } from 'atoms/Pick.type';
 
 interface ResponseProps {
@@ -18,23 +16,6 @@ interface ResponseProps {
   isLoading: boolean;
 }
 const Response = ({ picks, isLoading }: ResponseProps) => {
-  const queryClient = new QueryClient();
-
-  const mutation = useMutation({
-    mutationKey: ['pick', 'send'],
-    mutationFn: getReceivePick,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['pick', 'receive'],
-      });
-    },
-  });
-
-  // 쪽지 보내면 messaeSend를 true로 바꿈
-  const sendMessage = () => {
-    mutation.mutate();
-  };
-
   return (
     <div className="rounded-lg bg-white/50 p-4">
       {picks.map((pick, index) => (
@@ -62,7 +43,10 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
               </div>
               {!pick.messageSend && (
                 <div className="float-end">
-                  <MessageModal sendMessage={sendMessage} />
+                  <MessageModal
+                    receiverId={pick.receiver.userId}
+                    pickId={pick.id}
+                  />
                 </div>
               )}
             </AccordionContent>

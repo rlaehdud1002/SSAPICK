@@ -14,11 +14,13 @@ const WarningDelete = () => {
       <PopoverContent className="mr-4 w-[102px] rounded-lg bg-[#E9F2FD] flex flex-col justify-center">
         {!(location === 'send') && (
           <WarningDeleteModal
+            messageId={1}
             title="신고"
             message="쪽지 내용"
+            location={location}
           />
         )}
-        <WarningDeleteModal title="삭제" />
+        <WarningDeleteModal messageId={1} title="삭제" location={location} />
       </PopoverContent>
     </Popover>
   );

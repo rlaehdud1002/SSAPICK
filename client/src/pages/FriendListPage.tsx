@@ -1,26 +1,22 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { getFriendsList } from "api/friendApi";
-import { IFriend } from "atoms/Friend.type";
-import Friend from "components/FriendListPage/FriendBox";
-import BackIcon from "icons/BackIcon";
-import FriendIcon from "icons/FriendIcon";
-import SearchIcon from "icons/SearchIcon";
-import { Link, useNavigate } from "react-router-dom";
-
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { getFriendsList } from 'api/friendApi';
+import { IFriend } from 'atoms/Friend.type';
+import Friend from 'components/FriendListPage/FriendBox';
+import BackIcon from 'icons/BackIcon';
+import FriendIcon from 'icons/FriendIcon';
+import SearchIcon from 'icons/SearchIcon';
+import { Link, useNavigate } from 'react-router-dom';
 
 const FriendList = () => {
   const queryClient = new QueryClient();
   const { data: friends, isLoading } = useQuery<IFriend[]>({
     queryKey: ['friends'],
-    queryFn: async () => await getFriendsList()
-  })
-
-  
-
+    queryFn: async () => await getFriendsList(),
+  });
 
   const navigate = useNavigate();
 
-  console.log(friends, isLoading)
+  console.log(friends, isLoading);
 
   return (
     <div>
@@ -38,13 +34,20 @@ const FriendList = () => {
           </Link>
         </div>
       </div>
-      {friends && friends.map((friend) => (
-        <div className="mt-6">
-          <Friend key={friend.userId} campus={friend.campusName} campusSection={friend.campusSection} campusDescription={friend.campusDescription} name={friend.nickname} />
-        </div>
-      ))}
+      {friends &&
+        friends.map((friend) => (
+          <div className="mt-6">
+            <Friend
+              key={friend.userId}
+              campus={friend.campusName}
+              campusSection={friend.campusSection}
+              campusDescription={friend.campusDescription}
+              name={friend.nickname}
+            />
+          </div>
+        ))}
     </div>
-  )
-}
+  );
+};
 
 export default FriendList;
