@@ -1,14 +1,13 @@
 package com.ssapick.server.domain.user.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.List;
-
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.SimpleType;
+import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.filter.JWTFilter;
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.service.FollowService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,14 +19,15 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.SimpleType;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.user.dto.ProfileData;
-import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.service.FollowService;
+import java.util.List;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("팔로우 컨트롤러 테스트")
 @WebMvcTest(
@@ -83,7 +83,7 @@ class FollowControllerTest extends RestDocsSupport {
 	}
 
 	@Test
-	@DisplayName("팔로우_생성_성공_테스트")
+	@DisplayName("팔로우 생성 성공 테스트")
 	void 팔로우_생성_성공_테스트() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
 		Long userId = 1L;
@@ -91,7 +91,6 @@ class FollowControllerTest extends RestDocsSupport {
 		// * WHEN: 이걸 실행하면
 		ResultActions perform = this.mockMvc.perform(post("/api/v1/follow/{userId}", userId)
 			.contentType(MediaType.APPLICATION_JSON)
-			.header("Authorization", "Bearer access-token")
 		);
 
 		// * THEN: 이런 결과가 나와야 한다

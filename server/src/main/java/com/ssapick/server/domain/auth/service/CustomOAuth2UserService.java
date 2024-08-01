@@ -2,6 +2,9 @@ package com.ssapick.server.domain.auth.service;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -23,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	private final UserRepository userRepository;
+	private final ApplicationEventPublisher publisher;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -51,7 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		if (isNew.get()) {
 			log.debug("New user has been created: {}", user);
 		}
-
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, 100));
 		return new CustomOAuth2User(user);
 	}
 }

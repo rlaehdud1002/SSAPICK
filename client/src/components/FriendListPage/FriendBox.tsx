@@ -22,10 +22,10 @@ const Friend = ({ campus, campusDescription, name, campusSection }: FriendProps)
             {campus}캠퍼스 {campusSection}반 {name}
           </span>
           <div className='flex flex-row'>
-            <span className="text-xs bg-white/50 rounded-xl w-[56px] text-center mr-2">
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mr-2">
               반 친구
             </span>
-            <span className="text-xs bg-white/50 rounded-xl w-[56px] text-center">
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center">
               찐친
             </span>
           </div>

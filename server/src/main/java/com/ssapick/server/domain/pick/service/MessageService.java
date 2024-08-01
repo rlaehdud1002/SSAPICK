@@ -3,28 +3,31 @@ package com.ssapick.server.domain.pick.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.CommentAnalyzerService;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserRepository;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageService {
-	private final MessageRepository messageRepository;
-	private final PickRepository pickRepository;
-	private final EntityManager em;
+    private final MessageRepository messageRepository;
+    private final PickRepository pickRepository;
+    private final CommentAnalyzerService commentAnalyzer;
+    private final UserRepository userRepository;
 
 	/**
 	 * 보낸 메시지 조회하기
@@ -52,26 +55,34 @@ public class MessageService {
 			.toList();
 	}
 
-	/**
-	 * 메시지 보내기
-	 * 메시지를 보내고 픽의 메시지 전송 여부를 true 로 변경한다.
-	 *
-	 * @param sender 보내는 사람
-	 * @param create {@link MessageData.Create} 메시지 생성 정보
-	 */
-	@Transactional
-	public void createMessage(User sender, MessageData.Create create) {
-		Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
-			() -> new BaseException(ErrorCode.NOT_FOUND_PICK)
-		);
+    /**
+     * 메시지 보내기
+     * 메시지를 보내고 픽의 메시지 전송 여부를 true 로 변경한다.
+     *
+     * @param sender 보내는 사람
+     * @param create {@link MessageData.Create} 메시지 생성 정보
+     */
+    @Async("apiExecutor")
+    @Transactional
+    public void createMessage(User sender, MessageData.Create create) {
+        Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
+            () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
+        );
 
 		if (pick.isMessageSend()) {
 			throw new BaseException(ErrorCode.ALREADY_SEND_MESSAGE);
 		}
 		pick.send();
 
-		// FIXME: 유저에 대한 정보를 entity manager 를 사용해서 가져오는데 이게 올바른 방법일까?
-		User receiver = em.getReference(User.class, create.getReceiverId());
+
+        User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOUND_USER)
+        );
+
+
+        if (commentAnalyzer.isCommentOffensive(create.getContent())){
+            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        }
 
 		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 	}

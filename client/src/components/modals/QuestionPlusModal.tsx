@@ -13,9 +13,9 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 
-import QuestionInput from 'components/modals/QuestionInput';
-import QuestionCheckModal from 'components/modals/QuestionCheckModal';
 import SelectCategory from 'components/PickPage/SelectCategory';
+import InputModal from 'components/modals/InputModal';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 
 enum NewQuestionStep {
   INPUT,
@@ -90,7 +90,8 @@ const QuestionPlusModal = () => {
                   setValue={(value: string) => setValue('category', value)}
                   errors={errors}
                 />
-                <QuestionInput
+                <InputModal
+                  name="newQuestion"
                   register={register('newQuestion', {
                     required: '질문을 입력해주세요.',
                     maxLength: {
@@ -100,7 +101,7 @@ const QuestionPlusModal = () => {
                   })}
                   errors={errors}
                 />
-                <DialogFooter className="flex flex-row justify-end">
+                <DialogFooter className="flex flex-row justify-end mt-2">
                   <Button
                     type="submit"
                     variant="ssapick"
@@ -111,7 +112,9 @@ const QuestionPlusModal = () => {
                 </DialogFooter>
               </div>
             )}
-            {step === NewQuestionStep.ALERT && <QuestionCheckModal />}
+            {step === NewQuestionStep.ALERT && (
+              <ResultCheckModal content="질문 생성 신청이 완료되었습니다." />
+            )}
           </DialogContent>
         )}
       </Dialog>

@@ -10,9 +10,9 @@ const TrophyIcon = ({ width, height }: TrophyIconProps) => {
       width={width}
       height={height}
       src="/icons/Trophy.png"
-      alt="trophy"
+      alt="Trophy"
     />
-  )
-}
+  );
+};
 
-export default TrophyIcon 
+export default TrophyIcon;
