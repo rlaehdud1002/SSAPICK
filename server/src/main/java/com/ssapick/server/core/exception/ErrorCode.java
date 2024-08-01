@@ -1,8 +1,9 @@
 package com.ssapick.server.core.exception;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public enum ErrorCode {
 	EMPTY_FILE(8000, HttpStatus.BAD_REQUEST, "파일이 비어있습니다."),
 	FAIL_TO_DELETE_FILE(8001, HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패하였습니다."),
 	NOT_SUPPORTED_EXTENTION(8002, HttpStatus.BAD_REQUEST, "지원하지 않는 확장자입니다."),
-	FAIL_TO_CREATE_FILE(8003, HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패하였습니다.");
+	FAIL_TO_CREATE_FILE(8003, HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패하였습니다."),
 
 	//AI
 	OFFENSIVE_CONTENT(9001, HttpStatus.BAD_REQUEST, "부적절한 내용을 포함하고 있습니다.");
