@@ -102,7 +102,7 @@ public class QuestionService {
         // 기존 질문과 유사도 분석
         SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(create.getContent());
         if (similarity.getValue() > 0.6) {
-            throw new BaseException(ErrorCode.EXIST_QUESTION, "기존의 질문 : " + similarity.getDescription());
+            throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
         questionRegistrationRepository.save(QuestionRegistration.of(user, category, create.getContent()));

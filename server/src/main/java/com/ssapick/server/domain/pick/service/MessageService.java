@@ -79,6 +79,11 @@ public class MessageService {
             () -> new BaseException(ErrorCode.NOT_FOUND_USER)
         );
 
+
+        if (commentAnalyzer.isCommentOffensive(create.getContent())){
+            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        }
+
         messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
     }
 

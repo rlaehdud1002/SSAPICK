@@ -2,6 +2,9 @@ package com.ssapick.server.domain.pick.service;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.CommentAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
+import com.ssapick.server.core.service.SentenceSimilarityResponse;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
@@ -11,7 +14,11 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserRepository;
+
 import jakarta.persistence.EntityManager;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +47,10 @@ class MessageServiceTest extends UserSupport {
 
 	@Mock
 	private EntityManager em;
+	@Mock
+	private CommentAnalyzerService commentAnalyzerService;
+	@Mock
+	private UserRepository userRepository;
 
 	@Test
 	@DisplayName("보낸 메시지 확인 테스트")
@@ -103,12 +114,14 @@ class MessageServiceTest extends UserSupport {
 		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
 		when(pick.isMessageSend()).thenReturn(false);
 
+		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
+
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
 
-		when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
+		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		// * WHEN: 이걸 실행하면
 		messageService. createMessage(sender, create);
@@ -116,6 +129,37 @@ class MessageServiceTest extends UserSupport {
 		// * THEN: 이런 결과가 나와야 한다
 		verify(pick).send();
 		verify(messageRepository).save(any(Message.class));
+	}
+
+	@Test
+	@DisplayName("메시지_생성_시_부적합한_내용_포함시_예외발생_테스트")
+	void 메시지_생성_시_부적합한_내용_포함시_예외발생_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("sender");
+		User receiver = this.createUser("receiver");
+		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+
+		when(pick.getId()).thenReturn(1L);
+		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
+		when(pick.isMessageSend()).thenReturn(false);
+
+		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
+
+		MessageData.Create create = new MessageData.Create();
+		create.setPickId(pick.getId());
+		create.setContent("테스트 메시지");
+		create.setReceiverId(receiver.getId());
+
+		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> messageService.createMessage(sender, create);
+
+		// * THEN: 이런 결과가 나와야 한다
+
+		assertThatThrownBy(runnable::run)
+			.isInstanceOf(BaseException.class)
+			.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
 	}
 
 	@Test
