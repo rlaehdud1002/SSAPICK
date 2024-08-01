@@ -10,3 +10,4 @@ export const pickState = atom<IPick[]>({
   key: 'pickState',
   default: [],
 });
+
