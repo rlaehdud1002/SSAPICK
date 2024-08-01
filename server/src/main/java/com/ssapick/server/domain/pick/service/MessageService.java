@@ -1,11 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.dto.MessageData;
@@ -14,9 +8,13 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.User;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,7 @@ public class MessageService {
     @Transactional
     public void createMessage(User sender, MessageData.Create create) {
         Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
-            () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
+            () -> new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
 
         if (pick.isMessageSend()) {
