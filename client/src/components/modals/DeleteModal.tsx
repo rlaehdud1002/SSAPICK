@@ -12,6 +12,8 @@ import { Button } from 'components/ui/button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ResultCheckModal from './ResultCheckModal';
+import { QueryClient, useMutation } from '@tanstack/react-query';
+import { deleteFriend } from 'api/friendApi';
 
 enum DeletelStep {
   CONFIRM,
@@ -23,14 +25,36 @@ interface DeleteModalProps {
 }
 
 const DeleteModal = ({ title }: DeleteModalProps) => {
+
+  const queryClient = new QueryClient();
+  // 친구 삭제 mutation
+  const mutation = useMutation({
+    mutationKey: ['friends', 'delete'],
+    mutationFn: deleteFriend,
+    // 친구 삭제 후 친구 목록 새로 고침
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['friends']
+      })
+    }
+  })
+
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<DeletelStep>(DeletelStep.CONFIRM);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const naivgate = useNavigate();
+  
   const navigateToFriendList = () => {
     naivgate('/friendlist');
+<<<<<<< HEAD
   };
+=======
+    mutation.mutate(4);
+    
+  }
+
+>>>>>>> c9da6581871af195f52bf505764153048a525e49
 
   useEffect(() => {
     if (step === DeletelStep.ALERT) {

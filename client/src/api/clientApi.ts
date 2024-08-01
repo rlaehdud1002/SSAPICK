@@ -1,4 +1,6 @@
+import { accessTokenState } from 'atoms/UserAtoms';
 import axios from 'axios';
+import { getRecoil } from 'recoil-nexus';
 
 const BASE_URL = process.env.REACT_APP_BACKEND_PROD_HOST;
 
@@ -12,6 +14,20 @@ const instance = axios.create({
     Accept: 'application/json',
   },
 });
+
+instance.interceptors.request.use(
+  (config) => {
+    const accessToken = getRecoil(accessTokenState);
+    console.log(accessToken);
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 instance.interceptors.response.use(
   (response) => {
