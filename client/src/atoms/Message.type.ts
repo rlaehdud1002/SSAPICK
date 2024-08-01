@@ -6,3 +6,9 @@ export interface IMessage {
   content: string;
   questionContent: string;
 }
+
+export interface ISendMessage {
+  receiverId: number;
+  pickId: number;
+  content: string;
+}
