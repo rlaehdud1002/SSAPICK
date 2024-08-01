@@ -1,12 +1,10 @@
 package com.ssapick.server.core.support;
 
-import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.CampusRepository;
-import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import org.mockito.Mock;
 
@@ -20,12 +18,6 @@ public abstract class UserSupport {
     private final AtomicLong atomicLong = new AtomicLong(1);
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private PickRepository pickRepository;
-
-    @Mock
-    private FollowRepository followRepository;
 
     @Mock
     private CampusRepository campusRepository;

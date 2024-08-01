@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.core.service.CommentAnalyzerService;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.core.service.CommentAnalyzerService;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
@@ -68,11 +68,6 @@ public class MessageService {
         Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
             () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
-
-        // 모욕 욕설 검사
-        if (commentAnalyzer.isCommentOffensive(create.getContent())) {
-            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
-        }
 
         if (pick.isMessageSend()) {
             throw new BaseException(ErrorCode.ALREADY_SEND_MESSAGE);

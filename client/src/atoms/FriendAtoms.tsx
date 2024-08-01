@@ -1,5 +1,5 @@
+import { IFriend } from 'atoms/Friend.type';
 import { atom } from 'recoil';
-import { IFriend } from './friend.type';
 
 
 export const friendListState = atom<IFriend[]>({

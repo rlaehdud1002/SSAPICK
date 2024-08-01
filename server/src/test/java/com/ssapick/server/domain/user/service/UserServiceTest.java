@@ -4,7 +4,6 @@ import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.FollowRepository;
@@ -20,9 +19,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @DisplayName("유저 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -61,14 +59,14 @@ class UserServiceTest extends UserSupport {
         );
 
 
-//        when(userRepository.findUserWithProfileById(me.getId())).thenReturn(Optional.of(me));
-//        when(pickRepository.findReceiverByUserId(me.getId())).thenReturn(picks);
-//        when(followRepository.findByFollowingUser(me)).thenReturn(followings);
-//
-//        // When
+        lenient().when(userRepository.findUserWithProfileById(me.getId())).thenReturn(Optional.of(me));
+        lenient().when(pickRepository.findReceiverByUserId(me.getId())).thenReturn(picks);
+        lenient().when(followRepository.findByFollowingUser(me)).thenReturn(followings);
+
+        // When
 //        UserData.UserInfo userInfo = userService.getUserInfo(me);
 
-        // Then
+//         Then
 //        assertThat(userInfo.getName()).isEqualTo(me.getName());
 //        assertThat(userInfo.getPickCount()).isEqualTo(picks.size());
 //        assertThat(userInfo.getFollowingCount()).isEqualTo(followings.size());
