@@ -44,7 +44,6 @@ public class PickService {
 		return pickRepository.findReceiverByUserId(user.getId()).stream()
 			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
 			.toList();
-
 	}
 
 	/**
