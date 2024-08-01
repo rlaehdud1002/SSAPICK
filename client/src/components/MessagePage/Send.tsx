@@ -1,6 +1,6 @@
 import MessageContent from 'components/MessagePage/MessageContent';
 
-import { messageState } from 'atoms/messageAtoms';
+import { messageState } from 'atoms/MessageAtoms';
 import { useRecoilValue } from 'recoil';
 
 const Send = () => {
