@@ -25,7 +25,6 @@ interface DeleteModalProps {
 }
 
 const DeleteModal = ({ title }: DeleteModalProps) => {
-
   const queryClient = new QueryClient();
   // 친구 삭제 mutation
   const mutation = useMutation({
@@ -34,23 +33,21 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
     // 친구 삭제 후 친구 목록 새로 고침
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['friends']
-      })
-    }
-  })
+        queryKey: ['friends'],
+      });
+    },
+  });
 
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<DeletelStep>(DeletelStep.CONFIRM);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const naivgate = useNavigate();
-  
+
   const navigateToFriendList = () => {
     naivgate('/friendlist');
     mutation.mutate(4);
-    
-  }
-
+  };
 
   useEffect(() => {
     if (step === DeletelStep.ALERT) {
