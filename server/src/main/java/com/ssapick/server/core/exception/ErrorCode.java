@@ -53,7 +53,10 @@ public enum ErrorCode {
 	FAIL_TO_CREATE_FILE(8003, HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패하였습니다."),
 
 	//AI
-	OFFENSIVE_CONTENT(9001, HttpStatus.BAD_REQUEST, "부적절한 내용을 포함하고 있습니다.");
+	OFFENSIVE_CONTENT(9001, HttpStatus.BAD_REQUEST, "부적절한 내용을 포함하고 있습니다."),
+
+	// PICKCO
+	SHORT_OF_PICKCO(10000, HttpStatus.BAD_REQUEST, "픽코가 부족합니다.");
 
 	private final int code;
 	private final HttpStatus status;
