@@ -1,6 +1,6 @@
 import instance from 'api/clientApi';
+import { IPick, IPickCreate } from 'atoms/Pick.type';
 import { BaseResponse } from 'atoms/User.type';
-import { IPick, IPickCreate } from 'atoms/pick.type';
 
 // 받은 pick 조회
 export const getReceivePick = async (): Promise<IPick[]> => {

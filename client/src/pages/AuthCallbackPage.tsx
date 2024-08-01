@@ -1,4 +1,4 @@
-import { accessTokenState } from "atoms/userAtoms";
+import { accessTokenState } from "atoms/UserAtoms";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
