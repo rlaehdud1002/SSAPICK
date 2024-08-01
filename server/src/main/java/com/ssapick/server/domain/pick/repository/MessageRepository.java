@@ -15,13 +15,15 @@ public interface MessageRepository extends JpaRepository<Message, Long>, Message
      */
     List<Message> findAll();
 
-    @Query("SELECT m FROM Message m " +
-            "JOIN FETCH m.receiver r " +
-            "JOIN FETCH m.sender s " +
-            "JOIN FETCH r.profile rp " +
-            "JOIN FETCH s.profile sp " +
-            "JOIN FETCH rp.campus rc " +
-            "JOIN FETCH sp.campus sc")
+    @Query("""
+            SELECT m FROM Message m 
+            JOIN FETCH m.receiver r 
+            JOIN FETCH m.sender s 
+            JOIN FETCH r.profile rp 
+            JOIN FETCH s.profile sp 
+            JOIN FETCH rp.campus rc 
+            JOIN FETCH sp.campus sc
+            """)
     List<Message> findAllWithReceiverAndSender();
 
 

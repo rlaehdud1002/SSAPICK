@@ -12,6 +12,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 
     /**
      * 받은 Pick 조회
+     *
      * @param userId
      * @retrun {@link List<Pick>} Pick 리스트 반환 (존재하지 않으면, 빈 리스트 반환)
      */
@@ -29,6 +30,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 
     /**
      * 메시지를 보냈을 때 픽의 메시지 전송 여부 true로 변경하기
+     *
      * @param pickId
      */
     @Modifying
@@ -39,13 +41,15 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
     @Query("SELECT p FROM Pick p JOIN FETCH p.hintOpens WHERE p.id = :pickId")
     Optional<Pick> findPickWithHintsById(Long pickId);
 
-    @Query("SELECT p FROM Pick p " +
-            "JOIN FETCH p.receiver r " +
-            "JOIN FETCH p.sender s " +
-            "JOIN FETCH p.question " +
-            "JOIN FETCH r.profile rp " +
-            "JOIN FETCH s.profile sp " +
-            "JOIN FETCH rp.campus rc " +
-            "JOIN FETCH sp.campus sc ")
+    @Query("""
+            SELECT p FROM Pick p 
+            JOIN FETCH p.receiver r 
+            JOIN FETCH p.sender s 
+            JOIN FETCH p.question 
+            JOIN FETCH r.profile rp 
+            JOIN FETCH s.profile sp 
+            JOIN FETCH rp.campus rc 
+            JOIN FETCH sp.campus sc
+            """)
     List<Pick> findAllWithReceiverAndSenderAndQuestion();
 }
