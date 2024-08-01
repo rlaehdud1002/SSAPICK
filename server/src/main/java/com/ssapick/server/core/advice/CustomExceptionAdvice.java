@@ -34,7 +34,7 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> baseException(BaseException e) {
-        log.error("message: {}", e.getMessage(), e);
+        log.error("message: {}", e.getMessage());
         ErrorCode errorCode = e.getErrorCode();
         return ResponseEntity
                 .status(errorCode.getStatus())

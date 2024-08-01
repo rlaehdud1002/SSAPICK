@@ -53,16 +53,6 @@ public class UserService {
 	}
 
 	@Transactional
-	public void changePickco(Long userId, PickcoLogType type, int amount) {
-		User user = findUserOrThrow(userId);
-		Profile profile = user.getProfile();
-
-		profile.changePickco(amount);
-
-		publisher.publishEvent(new PickcoEvent(user, type, amount, profile.getPickco()));
-	}
-
-	@Transactional
 	public void updateUser(Long userId, UserData.Update update, MultipartFile profileImage) {
 		User user = findUserOrThrow(userId);
 
