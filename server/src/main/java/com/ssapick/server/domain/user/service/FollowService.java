@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.user.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -33,22 +35,22 @@ public class FollowService {
     @Transactional
     public void followUser(User user, Long followUserId) {
         User followUser = userRepository.findById(followUserId).orElseThrow(
-                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+                () -> new BaseException(ErrorCode.NOT_FOUND_USER)
         );
 
-        followRepository.findByFollowingUserAndFollowUser(user, followUser).ifPresent(follow -> {
-            throw new IllegalArgumentException("이미 팔로우한 사용자입니다.");
+        followRepository.findByFollowUserAndFollowingUser(user, followUser).ifPresent(follow -> {
+            throw new BaseException(ErrorCode.ALREADY_FOLLOWED_USER);
         });
 
-        followRepository.save(Follow.follow(user, followUser));
+            followRepository.save(Follow.follow(user, followUser));
     }
 
     @Transactional
     public void unfollowUser(User user, Long followUserId) {
         User followUser = userRepository.findById(followUserId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        Follow follow = followRepository.findByFollowingUserAndFollowUser(user, followUser).orElseThrow(
-                () -> new IllegalArgumentException("팔로우한 사용자가 아닙니다.")
+        Follow follow = followRepository.findByFollowUserAndFollowingUser(user, followUser).orElseThrow(
+                () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER)
         );
 
         followRepository.delete(follow);
