@@ -2,13 +2,15 @@ interface UserPickIconProps {
   gen: string;
   width: number;
   height: number;
+  className? : string;
 }
 
-const UserPickIcon = ({ gen, width, height }: UserPickIconProps) => {
+const UserPickIcon = ({ gen, width, height, className }: UserPickIconProps) => {
   return (
     <svg
       width={width}
       height={height}
+      className={className}
       viewBox="0 0 35 35"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -12,7 +12,7 @@ export interface PageResponse<T> {
   hasNext: boolean;
 }
 
-export interface User {
+export interface IUser {
   profileImage: string;
   name: string;
   gender: string;
@@ -20,7 +20,7 @@ export interface User {
   campusName: string;
 }
 
-export interface UserAdd {
+export interface IUserAdd {
   mbti: string;
   classNum: number;
   major: string;
@@ -28,14 +28,19 @@ export interface UserAdd {
   location: string;
   interest: string;
 }
-export interface UserCoin {
+export interface IUserCoin {
   coin: number;
 }
 
-export interface UserFriend {
+export interface IUserFriend {
   friend: number;
 }
 
-export interface UserPick {
+export interface IUserPick {
   pick: number;
+}
+
+export interface IUserAttendance {
+  streak: number;
+  todayChecked: boolean;
 }

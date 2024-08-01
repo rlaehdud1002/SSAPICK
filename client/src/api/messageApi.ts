@@ -1,8 +1,13 @@
 import instance from 'api/clientApi';
-import { IMessage } from 'atoms/Message.type';
+import { IMessage, ISendMessage } from 'atoms/Message.type';
+
+// 메시지 보내기
+export const postMessageSend = async (messageData: ISendMessage): Promise<void> => {
+  await instance.post('message', messageData);
+};
 
 // 받은 메시지 조회
-export const getReceivedMessages = async (): Promise<IMessage[]> => {
+export const getReceivedMessage = async (): Promise<IMessage[]> => {
   const {
     data: { success, message, data },
   } = await instance.get('/message/receive');
@@ -15,7 +20,7 @@ export const getReceivedMessages = async (): Promise<IMessage[]> => {
 };
 
 // 보낸 메시지 조회
-export const getSendMessages = async (): Promise<IMessage[]> => {
+export const getSendMessage = async (): Promise<IMessage[]> => {
   const {
     data: { success, message, data },
   } = await instance.get('/message/send');
@@ -28,11 +33,13 @@ export const getSendMessages = async (): Promise<IMessage[]> => {
 };
 
 // 받은 메시지 삭제
-export const deleteReceivedMessage = async (messageId: number): Promise<void> => {
+export const deleteReceivedMessage = async (
+  messageId: number,
+): Promise<void> => {
   await instance.delete(`/message/${messageId}/receive`);
 };
 
-// 보낸 메시지 삭제 
+// 보낸 메시지 삭제
 export const deleteSendMessage = async (messageId: number): Promise<void> => {
   await instance.delete(`/message/${messageId}/send`);
 };

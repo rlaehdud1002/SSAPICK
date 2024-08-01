@@ -24,7 +24,6 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
         return Stream.concat(findUserByCampusId(userId).stream(), findUserByFollow(userId).stream())
                 .distinct()
                 .toList();
-
     }
 
     private List<User> findUserByCampusId(Long userId) {

@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "fastApi", url = "${spring.localhost}")
 public interface SentenceSimilarityAnalyzer {
 	@GetMapping("/v1/similarity")
-	String analyzeSentenceSimilarity(@RequestParam String text);
+	String analyzeSentenceSimilarity(@RequestParam("text") String text);
 }

@@ -23,7 +23,7 @@ export interface IPick {
 }
 
 export interface IPickUser {
-  userId?: number;
+  userId: number;
   nickname?: string;
   gender: string;
   campusName: string;

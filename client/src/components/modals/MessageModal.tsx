@@ -5,6 +5,9 @@ import { Button } from 'components/ui/button';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';
 import InputModal from 'components/modals/InputModal';
@@ -30,13 +33,26 @@ interface MessageForm {
 }
 
 interface MessageModalProps {
-  sendMessage: () => void;
+  receiverId: number;
+  pickId: number;
 }
 
-const MessageModal = ({ sendMessage }: MessageModalProps) => {
+const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  const navigate = useNavigate();
+
+  // 쪽지 전송 mutation
+  const mutation = useMutation({
+    mutationKey: ['message', 'send'],
+    mutationFn: postMessageSend,
+    // 쪽지 전송 성공 시
+    onSuccess: () => {
+      navigate(0);
+    },
+  });
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
   useEffect(() => {
@@ -60,9 +76,9 @@ const MessageModal = ({ sendMessage }: MessageModalProps) => {
     console.log('ok', data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
-      sendMessage();
     } else if (step === MessageModalStep.CONFIRM) {
       setStep(MessageModalStep.ALERT);
+      mutation.mutate({ receiverId, pickId, content: data.message });
       reset();
     }
   };

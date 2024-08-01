@@ -60,8 +60,7 @@ public class HintService {
 		publisher.publishEvent(new PickcoEvent(
 			pick.getSender(),
 			PickcoLogType.HINT_OPEN,
-			-1,
-			pick.getSender().getProfile().getPickco()
+			-1
 		));
 
 		String hintContent = openHint.getContent();

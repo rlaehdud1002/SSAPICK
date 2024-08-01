@@ -1,4 +1,4 @@
-import { User, UserAdd } from 'atoms/User.type';
+import { IUser, IUserAdd } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
@@ -19,7 +19,7 @@ export const accessTokenState = atom<string>({
 });
 
 
-export const userState = atom<User>({
+export const userState = atom<IUser>({
   key: 'userState',
   default: {
     profileImage: 'icons/Profile.png',
@@ -30,7 +30,7 @@ export const userState = atom<User>({
   },
 });
 
-export const userAddState = atom<UserAdd>({
+export const userAddState = atom<IUserAdd>({
   key: 'userAddState',
   default: {
     mbti: '',

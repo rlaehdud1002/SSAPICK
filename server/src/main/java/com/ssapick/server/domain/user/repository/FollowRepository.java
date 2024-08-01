@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.User;
-import org.springframework.data.repository.query.Param;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     Optional<Follow> findByFollowUserAndFollowingUser(User user, User followingUser);
