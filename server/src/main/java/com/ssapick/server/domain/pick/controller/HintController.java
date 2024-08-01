@@ -26,9 +26,7 @@ public class HintController {
 	 */
 	@GetMapping(value = "/random")
 	public SuccessResponse<String> getRandomHintByPickId(@RequestParam Long pickId) {
-		String hint = hintService.getRandomHintByPickId(pickId);
-		System.out.println("hint = " + hint);
-		return SuccessResponse.of(hint);
+      return SuccessResponse.of(hintService.getRandomHintByPickId(pickId));
 	}
 
 }
