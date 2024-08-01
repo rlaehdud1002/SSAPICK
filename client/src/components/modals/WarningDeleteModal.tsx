@@ -1,3 +1,4 @@
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 import { Button } from 'components/ui/button';
 import {
   Dialog,
@@ -87,9 +88,7 @@ const WarningDeleteModal = ({ title, message }: WarningDeleteModalProps) => {
             </div>
           )}
           {step === WarningDeleteStep.ALERT && (
-            <div className="text-center my-16">
-              쪽지 {title}가 완료되었습니다.
-            </div>
+            <ResultCheckModal content={`쪽지 ${title}가 완료되었습니다.`} />
           )}
         </DialogContent>
       )}
