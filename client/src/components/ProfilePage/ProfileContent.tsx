@@ -22,7 +22,7 @@ const ProfileContent = () => {
   return (
     <div
       style={{ backgroundColor: '#000855', opacity: '80%' }}
-      className=" text-white mx-4 rounded-xl h-72 p-3">
+      className=" text-white mx-4 rounded-lg h-72 p-3">
       <div className="flex justify-between">
         <img className="w-28 h-28 mt-6 ml-2" src={profile.profileImage} alt="profile" />
         <div className="flex items-center mr-2">

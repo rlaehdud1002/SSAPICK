@@ -1,9 +1,14 @@
-package com.ssapick.server.domain.question.dto;
+package com.ssapick.server.core.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonKey;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 public class PerspectiveData {
 
@@ -14,14 +19,15 @@ public class PerspectiveData {
     }
 
     @Data
+    @AllArgsConstructor
     public static class Comment {
         private String text;
     }
 
     @Data
     public static class RequestedAttributes {
-        private Attribute INSULT;
-        private Attribute PROFANITY;
+        private Object INSULT;
+        private Object PROFANITY;
     }
 
     @Data
@@ -54,6 +60,4 @@ public class PerspectiveData {
         private List<SpanScore> spanScores;
         private Score summaryScore;
     }
-
-
 }
