@@ -26,7 +26,6 @@ public enum ErrorCode {
 
 	// Invalid Value
 	INVALID_INPUT_VALUE(3000, HttpStatus.BAD_REQUEST, "올바르지 않은 입력 값입니다."),
-	NOT_FOUD_QUESTION(3001, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
 
 	// Attendance
 	ALREADY_CHECKIN_TODAY(4000, HttpStatus.BAD_REQUEST, "오늘 이미 출석을 하셨습니다."),

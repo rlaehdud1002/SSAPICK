@@ -274,7 +274,7 @@ class QuestionServiceTest extends UserSupport {
 	    // * THEN: 이런 결과가 나와야 한다
 		assertThatThrownBy(runnable::run)
 			.isInstanceOf(BaseException.class)
-			.hasMessage(ErrorCode.NOT_FOUD_QUESTION.getMessage());
+			.hasMessage(ErrorCode.NOT_FOUND_QUESTION.getMessage());
 	}
 
 	@Test

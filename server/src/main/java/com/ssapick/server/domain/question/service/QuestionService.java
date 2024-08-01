@@ -75,7 +75,7 @@ public class QuestionService {
      */
     public QuestionData.Search searchQuestionByQuestionId(Long questionId) {
         Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUD_QUESTION));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
 
         if (question.isDeleted()) {
             throw new BaseException(ErrorCode.DELETED_QUESTION);
@@ -119,7 +119,7 @@ public class QuestionService {
 
         Question question = questionRepository.findById(questionId)
             .orElseThrow(() ->
-                new BaseException(ErrorCode.NOT_FOUD_QUESTION)
+                new BaseException(ErrorCode.NOT_FOUND_QUESTION)
             );
 
         questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), questionId)
