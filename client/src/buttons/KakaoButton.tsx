@@ -1,8 +1,9 @@
+// import { KAKAO_AUTH_URL } from "api/clientApi";
 
 const KakaoButton = () => {
   const onClick = () => {
-    window.location.href =
-      `https://www.ssapick.kro.kr/oauth2/authorization/kakao`;
+    window.location.href = `https://www.ssapick.kro.kr/oauth2/authorization/kakao`;
+    // window.location.href = KAKAO_AUTH_URL;
   };
 
   return (
