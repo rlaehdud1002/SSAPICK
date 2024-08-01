@@ -1,4 +1,4 @@
-import { userState } from "atoms/userAtoms"
+import { userState } from "atoms/UserAtoms"
 import DoneButton from "buttons/DoneButton"
 import InfoInput from "components/LoginPage/InfoInput"
 import InfoSelect from "components/LoginPage/InfoSelect"

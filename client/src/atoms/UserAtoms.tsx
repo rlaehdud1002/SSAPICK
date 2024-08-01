@@ -1,5 +1,5 @@
+import { User, UserAdd } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
-import { User, UserAdd } from './user.type';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist()

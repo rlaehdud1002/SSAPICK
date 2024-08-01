@@ -1,4 +1,4 @@
-import { friendListState } from "atoms/friendAtoms";
+import { friendListState } from "atoms/FriendAtoms";
 import Friend from "components/FriendListPage/FriendBox";
 import BackIcon from "icons/BackIcon";
 import FriendIcon from "icons/FriendIcon";
