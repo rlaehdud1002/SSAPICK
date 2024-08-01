@@ -1,7 +1,5 @@
 package com.ssapick.server.core.exception;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -38,7 +36,7 @@ public enum ErrorCode {
     NOT_FOUND_QUESTION_CATEGORY(5002, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
     EXIST_QUESTION_BAN(5003, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
     NOT_FOUND_QUESTION(5004, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
-
+    EXIST_QUESTION(5005, HttpStatus.BAD_REQUEST, "이미 유사한 질문이 등록되어 있습니다."),
     //Pick
     NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
     INVALID_PICK_INDEX(6002, HttpStatus.BAD_REQUEST, "픽 인덱스가 올바르지 않습니다."),
@@ -51,7 +49,11 @@ public enum ErrorCode {
 	EMPTY_FILE(5000, HttpStatus.BAD_REQUEST, "파일이 비어있습니다."),
 	FAIL_TO_DELETE_FILE(5001, HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패하였습니다."),
 	NOT_SUPPORTED_EXTENTION(5002, HttpStatus.BAD_REQUEST, "지원하지 않는 확장자입니다."),
-	FAIL_TO_CREATE_FILE(5003, HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패하였습니다.");
+	FAIL_TO_CREATE_FILE(5003, HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패하였습니다."),
+
+    //AI
+    OFFENSIVE_CONTENT(8001, HttpStatus.BAD_REQUEST, "부적절한 내용을 포함하고 있습니다.");
+
 
     private final int code;
     private final HttpStatus status;
