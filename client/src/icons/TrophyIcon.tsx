@@ -9,7 +9,7 @@ const TrophyIcon = ({ width, height }: TrophyIconProps) => {
       className="cursor-pointer"
       width={width}
       height={height}
-      src="/icons/trophy.png"
+      src="/icons/Trophy.png"
       alt="trophy"
     />
   )
