@@ -24,12 +24,18 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.ssapick.server.core.entity.QBaseEntity _super = new com.ssapick.server.core.entity.QBaseEntity(this);
 
+    public final ListPath<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance> attendances = this.<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance>createList("attendances", com.ssapick.server.domain.attendance.entity.Attendance.class, com.ssapick.server.domain.attendance.entity.QAttendance.class, PathInits.DIRECT2);
+
+    public final ListPath<UserBan, QUserBan> bannedUser = this.<UserBan, QUserBan>createList("bannedUser", UserBan.class, QUserBan.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath email = createString("email");
 
     public final ListPath<Follow, QFollow> followers = this.<Follow, QFollow>createList("followers", Follow.class, QFollow.class, PathInits.DIRECT2);
+
+    public final ListPath<Follow, QFollow> followings = this.<Follow, QFollow>createList("followings", Follow.class, QFollow.class, PathInits.DIRECT2);
 
     public final ComparablePath<Character> gender = createComparable("gender", Character.class);
 
