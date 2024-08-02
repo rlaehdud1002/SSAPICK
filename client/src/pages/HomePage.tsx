@@ -1,9 +1,9 @@
 import Response from 'components/MainPage/Response';
+import Initial from 'components/MainPage/Initial';
 
 import { useQuery } from '@tanstack/react-query';
 import { getReceivePick } from 'api/pickApi';
 import { IPick } from 'atoms/Pick.type';
-import Initial from 'components/MainPage/Initial';
 
 const Home = () => {
   const { data: picks, isLoading } = useQuery<IPick[]>({

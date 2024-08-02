@@ -11,15 +11,14 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-
-
-  ({ className, type, register, search }) => {
-
+  ({ className, type, register, search, ...props }, ref) => {
     return (
-      <div className='w-full relative'>
-        {search && (<button type='submit' className='absolute right-2 bottom-2'>
-          <SearchIcon width={8} height={8} />
-        </button>)}
+      <div className="w-full relative">
+        {search && (
+          <button type="submit" className="absolute right-2 bottom-2">
+            <SearchIcon width={8} height={8} />
+          </button>
+        )}
         <input
           type={type}
           autoComplete="off"
@@ -28,6 +27,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className,
           )}
           {...register}
+          {...props}
+          {...ref}
         />
       </div>
     );
@@ -36,4 +37,3 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input';
 
 export { Input };
-
