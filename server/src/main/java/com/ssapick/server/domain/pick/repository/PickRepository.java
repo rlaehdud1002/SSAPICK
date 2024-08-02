@@ -53,7 +53,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
             SELECT p FROM Pick p 
             JOIN FETCH p.receiver r 
             JOIN FETCH p.sender s 
-            JOIN FETCH p.question 
+            JOIN FETCH p.question q
             JOIN FETCH r.profile rp 
             JOIN FETCH s.profile sp 
             JOIN FETCH rp.campus rc 
