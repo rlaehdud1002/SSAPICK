@@ -4,6 +4,7 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
         LEFT JOIN FETCH ho.hint h 
         WHERE p.receiver.id = :userId
         """)
-    List<Pick> findReceiverByUserId(Long userId);
+    List<Pick> findReceiverByUserId(@Param("userId") Long userId);
 
     /**
      * 보낸 Pick 조회
@@ -34,7 +35,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
      * @return {@link List<Pick>} Pick 리스트 반환 (존재하지 않으면, 빈 리스트 반환)
      */
     @Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.question JOIN FETCH p.question.questionCategory WHERE p.sender.id = :userId")
-    List<Pick> findSenderByUserId(Long userId);
+    List<Pick> findSenderByUserId(@Param("userId") Long userId);
 
     /**
      * 메시지를 보냈을 때 픽의 메시지 전송 여부 true로 변경하기
@@ -43,11 +44,11 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
      */
     @Modifying
     @Query("UPDATE Pick p SET p.isMessageSend = true WHERE p.id = :pickId")
-    void updateMessageSendTrue(Long pickId);
+    void updateMessageSendTrue(@Param("pickId") Long pickId);
 
 
     @Query("SELECT p FROM Pick p JOIN FETCH p.hintOpens WHERE p.id = :pickId")
-    Optional<Pick> findPickWithHintsById(Long pickId);
+    Optional<Pick> findPickWithHintsById(@Param("pickId") Long pickId);
 
     @Query("""
             SELECT p FROM Pick p 

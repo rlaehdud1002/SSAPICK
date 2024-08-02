@@ -39,7 +39,7 @@ public class QuestionController {
      * @return {@link QuestionData.Search} 질문 ID로 질문 조회
      */
     @GetMapping("/{questionId}")
-    public SuccessResponse<QuestionData.Search> searchQuestionById(@PathVariable Long questionId) {
+    public SuccessResponse<QuestionData.Search> searchQuestionById(@PathVariable("questionId") Long questionId) {
         return SuccessResponse.of(questionService.searchQuestionByQuestionId(questionId));
     }
 
@@ -51,7 +51,7 @@ public class QuestionController {
      * @return {@link List<QuestionData.Search>} 카테고리별 질문 조회
      */
     @GetMapping("/category/{categoryId}")
-    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByCategoryId(@PathVariable Long categoryId) {
+    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByCategoryId(@PathVariable("categoryId") Long categoryId) {
         return SuccessResponse.of(questionService.searchQuestionsByCategory(categoryId));
     }
 

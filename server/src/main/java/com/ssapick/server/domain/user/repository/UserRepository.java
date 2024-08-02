@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserQueryRepo
      * @return {@link User} 사용자 엔티티 (존재하지 않으면, {@link Optional#empty()} 반환)
      */
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.profile WHERE u.username = :username")
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(@Param("username") String username);
 
     /**
      * 사용자 ID로 사용자 조회 (프로필 정보 포함)
