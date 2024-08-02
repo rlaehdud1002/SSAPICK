@@ -145,7 +145,7 @@ class MessageServiceTest extends UserSupport {
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
 
-		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
