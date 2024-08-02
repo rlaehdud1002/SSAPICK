@@ -77,6 +77,10 @@ public class Profile extends BaseEntity {
 		this.campus = campus;
 	}
 
+	public void updateCampus(Campus campus) {
+		this.campus = campus;
+	}
+
 	public void updateProfileImage(String profileImage) {
 		this.profileImage = profileImage;
 	}
