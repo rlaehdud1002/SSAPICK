@@ -22,9 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -75,6 +75,8 @@ class AuthControllerTest extends RestDocsSupport {
 	@WithMockUser(username = "test-user")
 	void checkMattermostAuthenticate() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
+		when(authService.isUserAuthenticated(argThat(user -> user.getUsername().equals("test-user"))))
+				.thenReturn(true);
 
 		// * WHEN: 이걸 실행하면
 		ResultActions action = this.mockMvc.perform(get("/api/v1/auth/mattermost-confirm")
@@ -127,8 +129,10 @@ class AuthControllerTest extends RestDocsSupport {
 
 	@Test
 	@DisplayName("회원 삭제에 성공하면 성공 응답을 반환한다.")
+	@WithMockUser(value = "test-user")
 	void successDeleteUser() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
+
 		// * WHEN: 이걸 실행하면
 		ResultActions action = this.mockMvc.perform(delete("/api/v1/auth"));
 
@@ -143,7 +147,7 @@ class AuthControllerTest extends RestDocsSupport {
 					.build()
 			)));
 
-		verify(authService).deleteUser(any());
+		verify(authService).deleteUser(argThat(user -> user.getUsername().equals("test-user")));
 	}
 
 }

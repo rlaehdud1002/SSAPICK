@@ -79,3 +79,21 @@ self.addEventListener("message", (event) => {
 });
 
 // Any other custom service worker logic can go here.
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  const URL_WHITE_LIST = [
+    '/api',
+    '/oauth2',
+    '/login',
+    '/docs',
+  ]
+
+  if (URL_WHITE_LIST.some((path) => url.pathname.startsWith(path))) return;
+
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});
