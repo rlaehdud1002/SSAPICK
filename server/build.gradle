@@ -109,9 +109,8 @@ dependencies {
     // Test Container
     testImplementation "org.testcontainers:testcontainers:1.19.0"
     testImplementation "org.testcontainers:junit-jupiter:1.19.0"
-
-    // JSON
-    implementation 'org.json:json:20210307'
+    testImplementation "org.testcontainers:postgresql:1.17.6"
+//    testImplementation 'org.testcontainers:jdbc:1.16.0'
 
     // AWS
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
