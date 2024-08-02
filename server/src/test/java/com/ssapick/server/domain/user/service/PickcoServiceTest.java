@@ -2,7 +2,6 @@ package com.ssapick.server.domain.user.service;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
-import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
@@ -20,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @DisplayName("픽코 서비스 테스트")
@@ -52,8 +50,8 @@ public class PickcoServiceTest {
         // Given
         int initialPickco = 10;
         int changeAmount = -5;
-        when(profile.getPickco()).thenReturn(initialPickco);
-        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        lenient().when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
 
         PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
@@ -71,8 +69,8 @@ public class PickcoServiceTest {
         // Given
         int initialPickco = 3;
         int changeAmount = -5;
-        when(profile.getPickco()).thenReturn(initialPickco);
-        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        lenient().when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
 
         PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
