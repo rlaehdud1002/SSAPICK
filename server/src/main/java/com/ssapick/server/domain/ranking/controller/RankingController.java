@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/ranking")
 public class RankingController {
 
-    private final RankingService rankingService;
     private final RankingScheduler rankingScheduler;
 
     @GetMapping("/all")
