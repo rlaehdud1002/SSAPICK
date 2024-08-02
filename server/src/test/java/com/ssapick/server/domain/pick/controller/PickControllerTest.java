@@ -5,6 +5,9 @@ import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.PickData;
+import com.ssapick.server.domain.pick.entity.Hint;
+import com.ssapick.server.domain.pick.entity.HintOpen;
+import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.question.entity.Question;
@@ -55,6 +58,8 @@ class PickControllerTest extends RestDocsSupport {
         List<PickData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
             Question question = spy(createQuestion("테스트 질문 " + i));
             QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리 썸네일"));
+
+
             when(category.getId()).thenReturn((long) i);
             when(question.getQuestionCategory()).thenReturn(category);
             when(question.getId()).thenReturn((long) i);
@@ -63,6 +68,12 @@ class PickControllerTest extends RestDocsSupport {
             Pick pick = spy(createPick(sender, receiver, question));
             when(pick.getId()).thenReturn((long) i);
             when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
+            when(pick.getHintOpens()).thenReturn(List.of(
+                HintOpen.builder()
+                    .hint(Hint.createHint("힌트1", HintType.CHORT))
+                    .pick(pick)
+                    .build()
+            ));
             return pick;
         }).map((pick) -> PickData.Search.fromEntity(pick, true)).toList();
 
@@ -111,7 +122,7 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].question.category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
                                         fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
                                         fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
-                                        fieldWithPath("data[].openedHints").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
+                                        fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
@@ -189,7 +200,6 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
                                         fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
-                                        fieldWithPath("data[].openedHints").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
                                 ))
