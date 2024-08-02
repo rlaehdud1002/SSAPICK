@@ -1,32 +1,30 @@
-import { IAuth } from "atoms/Auth.type";
-import instance from "./clientApi";
-import { useRecoilValue } from "recoil";
-import { accessTokenState } from "atoms/UserAtoms";
+import { IAuth } from 'atoms/Auth.type';
+import instance from './clientApi';
+import { useRecoilValue } from 'recoil';
+import { accessTokenState } from 'atoms/UserAtoms';
 
-// mm 인증 요청 
+// mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
-  const { data: { success, data, message }
+  const {
+    data: { success, data, message },
   } = await instance.post('/auth/mattermost-confirm', authData);
   if (!success) {
     console.log(Error(message));
-    throw new Error(message); 
-
-  };
+    throw new Error(message);
+  }
   return data;
-}
+};
 
 // 로그아웃 요청
 export const signOut = async (authToken: string): Promise<void> => {
-  const { data: { success, data, message }
+  const {
+    data: { success, data, message },
   } = await instance.post('/auth/sign-out', authToken);
   if (!success) {
     throw new Error(message);
-
-  };
+  }
   return data;
-}
-
-
+};
 
 // // * 이거 사용자 생성 ( mm인증 해야됨 )이 지금 안되서 테스트 못해봄
 // export const signOut = async (authorizationToken:string) => {

@@ -82,7 +82,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
       mutation.mutate({ receiverId, pickId, content: data.message });
       reset();
     }
-  };
+  };  
 
   const onClose = () => {
     setOpen(false);

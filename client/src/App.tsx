@@ -7,7 +7,7 @@ import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
-import NotFoundPage from 'pages/NotFoundPage';
+import AuthCallback from 'pages/AuthCallbackPage';
 
 // ! FIXED NotFoundPage 렌더링 이상하게 됨
 

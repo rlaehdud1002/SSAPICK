@@ -1,4 +1,3 @@
-import AuthCallback from 'pages/AuthCallbackPage';
 import UserAddInfo from 'pages/UserAddInfoPage';
 import UserInfo from 'pages/UserInfoPage';
 import { Route, Routes } from 'react-router-dom';
@@ -8,7 +7,6 @@ const LoginRoute = () => {
     <Routes>
       <Route path="/userinfo" element={<UserInfo />} />
       <Route path="/useraddinfo" element={<UserAddInfo />} />
-      <Route path="/auth/callback" element={<AuthCallback />} />
     </Routes>
   );
 };
