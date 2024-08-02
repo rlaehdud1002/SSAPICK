@@ -17,8 +17,9 @@ import org.springframework.context.annotation.Import;
 
 import java.util.Optional;
 
+@DisplayName("유저 레포지토리 테스트")
 @DataJpaTest
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({JpaTestConfig.class})
 class UserRepositoryTest extends TestDatabaseContainer {
     @Autowired
