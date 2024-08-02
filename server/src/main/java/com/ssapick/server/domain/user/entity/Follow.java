@@ -15,7 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(
     name = "follow",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"follower_id", "following_id"})
+        @UniqueConstraint(name= "unique_follow", columnNames = {"follower_id", "following_id"})
     }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
