@@ -65,7 +65,7 @@ class CampusControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("캠퍼스")
+                                .tag("유저")
                                 .summary("캠퍼스 조회 API")
                                 .description("특정 캠퍼스에 해당된 유저 정보를 조회한다.")
                                 .pathParameters(
@@ -114,7 +114,7 @@ class CampusControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("캠퍼스")
+                                .tag("유저")
                                 .summary("캠퍼스 조회 API")
                                 .description("특정 캠퍼스에 해당된 반 정보를 캠퍼스 이름으로 조회한다.")
                                 .queryParameters(
@@ -155,7 +155,7 @@ class CampusControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("캠퍼스")
+                                .tag("유저")
                                 .summary("캠퍼스 반 조회 API")
                                 .description("특정 캠퍼스에 해당된 반 설명으로 반 정보를 조회한다.")
                                 .queryParameters(
@@ -190,7 +190,7 @@ class CampusControllerTest extends RestDocsSupport {
         perform.andExpect(status().isCreated())
                 .andDo(restDocs.document(resource(
                                 ResourceSnippetParameters.builder()
-                                        .tag("캠퍼스")
+                                        .tag("유저")
                                         .summary("캠퍼스 생성 API")
                                         .description("전국 캠퍼스 정보를 생성한다.")
                                         .requestFields(
