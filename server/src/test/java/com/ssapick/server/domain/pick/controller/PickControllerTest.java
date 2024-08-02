@@ -199,6 +199,7 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].question.category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
                                         fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
                                         fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
+                                    fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
