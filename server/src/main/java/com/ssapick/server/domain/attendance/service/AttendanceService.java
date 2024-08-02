@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.ssapick.server.core.constants.PickConst.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -70,14 +72,14 @@ public class AttendanceService {
         int streak = getStreak(today, attendances);
 
         int streakInCycle = streak % ATTENDANCE_RESET_CYCLE;
-        int rewardPickcoAmount = 0;
+        int rewardPickcoAmount;
 
         if (streakInCycle == 7) {
-            rewardPickcoAmount = 10;
+            rewardPickcoAmount = WEEK_ATTENDANCE_COIN;
         } else if (streakInCycle == 0) {
-            rewardPickcoAmount = 20;
+            rewardPickcoAmount = TWO_WEEK_ATTENDANCE_COIN;
         } else {
-            rewardPickcoAmount = 2;
+            rewardPickcoAmount = DAILY_ATTENDANCE_COIN;
         }
         return rewardPickcoAmount;
     }
