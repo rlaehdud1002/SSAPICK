@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 public class MattermostData {
@@ -25,5 +26,11 @@ public class MattermostData {
         private String first_name;
         private String last_name;
         private String locale;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Authenticated {
+        private boolean authenticated;
     }
 }

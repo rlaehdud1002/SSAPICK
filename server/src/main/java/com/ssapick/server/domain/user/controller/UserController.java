@@ -1,14 +1,5 @@
 package com.ssapick.server.domain.user.controller;
 
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
@@ -20,9 +11,12 @@ import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -41,6 +35,7 @@ public class UserController {
 	@Authenticated
 	@GetMapping(value = "/me")
 	public SuccessResponse<UserData.UserInfo> findLoggedInUser(@CurrentUser User user) {
+		System.out.println(user);
 		return SuccessResponse.of(userService.getUserInfo(user));
 	}
 

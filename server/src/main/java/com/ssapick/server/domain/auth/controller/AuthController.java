@@ -1,13 +1,5 @@
 package com.ssapick.server.domain.auth.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.constants.AuthConst;
@@ -20,12 +12,13 @@ import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.service.AuthService;
 import com.ssapick.server.domain.user.entity.User;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -86,5 +79,13 @@ public class AuthController {
 		log.debug("user = {}", user);
 		authService.authenticate(user, request);
 		return SuccessResponse.empty();
+	}
+
+	@Authenticated
+	@GetMapping("/mattermost-confirm")
+	public SuccessResponse<MattermostData.Authenticated> isAuthenticated(
+			@CurrentUser User user
+	) {
+		return SuccessResponse.of(new MattermostData.Authenticated(authService.isUserAuthenticated(user)));
 	}
 }

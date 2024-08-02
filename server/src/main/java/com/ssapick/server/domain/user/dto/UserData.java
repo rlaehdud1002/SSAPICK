@@ -29,9 +29,6 @@ public class UserData {
 
         public static UserInfo createUserInfo(User user, int pickCount, int followingCount) {
             Profile profile = user.getProfile();
-            profile.getProfileImage();
-
-            profile.getCampus().getSection();
 
             UserInfo userInfo = new UserInfo();
             userInfo.name = user.getName();

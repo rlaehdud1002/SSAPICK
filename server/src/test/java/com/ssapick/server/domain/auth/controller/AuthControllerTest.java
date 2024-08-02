@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,8 +26,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("인증 컨트롤러 테스트")
@@ -67,6 +68,32 @@ class AuthControllerTest extends RestDocsSupport {
 						.build()
 				)
 			));
+	}
+
+	@Test
+	@DisplayName("mattermost 인증에 성공한 유저 정보 응답")
+	@WithMockUser(username = "test-user")
+	void checkMattermostAuthenticate() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+
+		// * WHEN: 이걸 실행하면
+		ResultActions action = this.mockMvc.perform(get("/api/v1/auth/mattermost-confirm")
+				.contentType("application/json"));
+
+		// * THEN: 이런 결과가 나와야 한다
+		action.andExpect(status().isOk())
+				.andDo(restDocs.document(resource(
+						ResourceSnippetParameters.builder()
+								.tag("인증")
+								.summary("메타모스트 인증 API")
+								.description("현재 로그인된 사용자가 메타모스트 인증을 받았는지 확인한다.")
+								.responseFields(response(
+										fieldWithPath("data.authenticated").type(JsonFieldType.BOOLEAN).description("사용자 메타모스트 인증 여부")
+								))
+								.build()
+				)));
+
+		verify(authService).isUserAuthenticated(argThat(user -> user.getUsername().equals("test-user")));
 	}
 
 	@Test

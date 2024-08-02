@@ -1,15 +1,5 @@
 package com.ssapick.server.domain.auth.service;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.ssapick.server.core.constants.AuthConst;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
@@ -23,17 +13,24 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
-
 	private final JWTService jwtService;
 	private final AuthCacheRepository authCacheRepository;
 	private final MattermostConfirmService mattermostConfirmService;
@@ -47,6 +44,10 @@ public class AuthService {
 			throw new BaseException(ErrorCode.EXPIRED_REFRESH_TOKEN);
 		}
 		authCacheRepository.save(getSignOutKey(user.getUsername()), refreshToken);
+	}
+
+	public Boolean isUserAuthenticated(User user) {
+		return userRepository.isUserAuthenticated(user.getId());
 	}
 
 	public JwtToken refresh(String refreshToken) {
