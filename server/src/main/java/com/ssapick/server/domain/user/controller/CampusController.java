@@ -18,7 +18,7 @@ public class CampusController {
     private final CampusService campusService;
 
     /**
-     * 캠퍼스에 해당된 반 정보들을 조회하는 API
+     * 캠퍼스에 해당된 사용자 정보들을 조회하는 API
      * @param campusId 조회할 캠퍼스 ID
      * @return {@link ProfileData.Search} 조회된 캠퍼스 반에 속한 사용자 리스트
      */

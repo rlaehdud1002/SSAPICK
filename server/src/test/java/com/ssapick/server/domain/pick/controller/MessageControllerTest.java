@@ -73,13 +73,15 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("받은 메시지 목록 조회 API")
 					.description("받은 메시지 목록을 조회한다.")
 					.responseFields(response(
 						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
 						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (익명 처리)"),
+						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
 						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
+						fieldWithPath("data[].receiverGender").type(JsonFieldType.STRING).description("받은 사람 성별"),
 						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("받은 일시"),
 						fieldWithPath("data[].questionContent").type(JsonFieldType.STRING).description("메시지 받은 질문 내용"),
 						fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용")
@@ -112,13 +114,15 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("보낸 메시지 목록 조회 API")
 					.description("보낸 메시지 목록을 조회한다.")
 					.responseFields(response(
 						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
 						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (본인)"),
-						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (실명 처리)"),
+						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
+						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
+						fieldWithPath("data[].receiverGender").type(JsonFieldType.STRING).description("받은 사람 성별"),
 						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("받은 일시"),
 						fieldWithPath("data[].questionContent").type(JsonFieldType.STRING).description("메시지 받은 질문 내용"),
 						fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용")
@@ -149,7 +153,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isCreated())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("메시지 보내기 API")
 					.description("자신이 받은 픽 기반으로 메시지를 보낸다. (픽 1개당 메시지 1번 가능)")
 					.requestFields(
@@ -183,7 +187,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isNoContent())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("받은 메시지 삭제 API")
 					.description("자신이 받은 메시지를 삭제한다.")
 					.pathParameters(parameterWithName("messageId").type(SimpleType.NUMBER).description("메시지 ID"))
@@ -211,7 +215,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isNoContent())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("보낸 메시지 삭제 API")
 					.description("자신이 보낸 메시지를 삭제한다.")
 					.pathParameters(parameterWithName("messageId").type(SimpleType.NUMBER).description("메시지 ID"))

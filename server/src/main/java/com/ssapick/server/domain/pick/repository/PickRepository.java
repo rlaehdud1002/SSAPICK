@@ -16,7 +16,15 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
      * @param userId
      * @retrun {@link List<Pick>} Pick 리스트 반환 (존재하지 않으면, 빈 리스트 반환)
      */
-    @Query("SELECT p FROM Pick p JOIN FETCH p.receiver JOIN FETCH p.question JOIN FETCH p.hintOpens WHERE p.receiver.id = :userId")
+    @Query("""
+        SELECT p FROM Pick p 
+        JOIN FETCH p.receiver 
+        JOIN FETCH p.question 
+        JOIN FETCH p.question.questionCategory 
+        LEFT JOIN FETCH p.hintOpens ho 
+        LEFT JOIN FETCH ho.hint h 
+        WHERE p.receiver.id = :userId
+        """)
     List<Pick> findReceiverByUserId(Long userId);
 
     /**

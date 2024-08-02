@@ -14,10 +14,10 @@ import { Route, Routes } from "react-router-dom";
 const CommonRoute = () => {
   return (
     <Routes>
+      <Route path="/" element={<Login />} />
       <Route path="/splash" element={<Splash />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/" element={<Login />} />
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
       <Route path="/message" element={<Message />}>

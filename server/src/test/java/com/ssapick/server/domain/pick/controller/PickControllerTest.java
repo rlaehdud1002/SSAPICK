@@ -77,7 +77,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("받은 픽 조회 API")
                                 .description("로그인된 사용자가 받은 픽을 조회한다.")
                                 .responseFields(response(
@@ -111,6 +111,7 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].question.category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
                                         fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
                                         fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
+                                        fieldWithPath("data[].openedHints").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
@@ -153,7 +154,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("보낸 픽 조회 API")
                                 .description("로그인된 사용자가 보낸 픽을 조회한다.")
                                 .responseFields(response(
@@ -188,6 +189,7 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
                                         fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
+                                        fieldWithPath("data[].openedHints").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
                                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
                                 ))
@@ -222,7 +224,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isCreated())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("픽 생성 API")
                                 .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
                                 .requestFields(
