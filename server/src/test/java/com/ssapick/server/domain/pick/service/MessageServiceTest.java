@@ -110,18 +110,16 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 
-		when(pick.getId()).thenReturn(1L);
-		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
-		when(pick.isMessageSend()).thenReturn(false);
-
-		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
+		// 실제 사용되는 스텁만 설정
+		lenient().when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
+		lenient().when(pick.isMessageSend()).thenReturn(false);
+		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
+		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
-
-		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		// * WHEN: 이걸 실행하면
 		messageService. createMessage(sender, create);
@@ -138,11 +136,12 @@ class MessageServiceTest extends UserSupport {
 		User sender = this.createUser("sender");
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
-		when(pick.getId()).thenReturn(1L);
-		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
-		when(pick.isMessageSend()).thenReturn(false);
-		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
-		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
+
+		// 실제 사용되는 스텁만 설정
+		lenient().when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
+		lenient().when(pick.isMessageSend()).thenReturn(false);
+		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
