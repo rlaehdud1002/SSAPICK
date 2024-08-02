@@ -23,10 +23,13 @@ import java.util.List;
 import static com.ssapick.server.domain.pick.entity.QPick.pick;
 import static com.ssapick.server.domain.question.entity.QQuestion.question;
 
+import lombok.RequiredArgsConstructor;
+
 @Repository
+@RequiredArgsConstructor
 public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 
-	private JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
 	@Override
 	public List<Question> findAll() {

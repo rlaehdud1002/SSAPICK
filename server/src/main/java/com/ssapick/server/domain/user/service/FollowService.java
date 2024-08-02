@@ -33,25 +33,24 @@ public class FollowService {
     }
 
     @Transactional
-    public void followUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(
-                () -> new BaseException(ErrorCode.NOT_FOUND_USER)
-        );
+    public void followUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER));
 
-        followRepository.findByFollowUserAndFollowingUser(user, followUser).ifPresent(follow -> {
+
+        followRepository.findByFollowUserAndFollowingUser(user, followingUser).ifPresent(follow -> {
             throw new BaseException(ErrorCode.ALREADY_FOLLOWED_USER);
         });
 
-            followRepository.save(Follow.follow(user, followUser));
+        followRepository.save(Follow.follow(user, followingUser));
     }
 
     @Transactional
-    public void unfollowUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    public void unfollowUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 
-        Follow follow = followRepository.findByFollowUserAndFollowingUser(user, followUser).orElseThrow(
-                () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER)
-        );
+        Follow follow = followRepository.findByFollowUserAndFollowingUser(user, followingUser).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER));
 
         followRepository.delete(follow);
     }
@@ -65,33 +64,33 @@ public class FollowService {
     public List<ProfileData.Search> recommendFollow(User user) {
         // 현재 사용자의 친구 목록을 가져온다.
         List<Profile> friends = followRepository.findByFollowUser(user).stream()
-                .map(follow -> follow.getFollowingUser().getProfile())
-                .toList();
+            .map(follow -> follow.getFollowingUser().getProfile())
+            .toList();
 
         // 현재 사용자가 벤한 친구 목록을 가져온다.
         List<Profile> bannedProfiles = userBanRepository.findByFromUser(user).stream()
-                .map(User::getProfile)
-                .toList();
+            .map(User::getProfile)
+            .toList();
 
 
         Map<Profile, Integer> recommendationMap = new HashMap<>();
 
         // 친구의 친구를 순회하며 추천 후보를 찾는다. (차단한 유저 제외)
         friends.stream()
-                .flatMap(friend -> followRepository.findByFollowUser(friend.getUser()).stream())
-                .map(follow -> follow.getFollowingUser().getProfile())
-                .filter(profile -> !friends.contains(profile) && !profile.equals(user.getProfile()) && !bannedProfiles.contains(profile))
-                .forEach(profile -> recommendationMap.merge(profile, 1, Integer::sum));
+            .flatMap(friend -> followRepository.findByFollowUser(friend.getUser()).stream())
+            .map(follow -> follow.getFollowingUser().getProfile())
+            .filter(profile -> !friends.contains(profile) && !profile.equals(user.getProfile()) && !bannedProfiles.contains(profile))
+            .forEach(profile -> recommendationMap.merge(profile, 1, Integer::sum));
 
         // 추천 후보를 중복 횟수에 따라 정렬
         List<Profile> recommendedProfiles = recommendationMap.entrySet().stream()
-                .sorted(Map.Entry.<Profile, Integer>comparingByValue().reversed())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+            .sorted(Map.Entry.<Profile, Integer>comparingByValue().reversed())
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
 
         // ProfileData.Search로 변환
         return recommendedProfiles.stream()
-                .map(ProfileData.Search::fromEntity)
-                .collect(Collectors.toList());
+            .map(ProfileData.Search::fromEntity)
+            .collect(Collectors.toList());
     }
 }

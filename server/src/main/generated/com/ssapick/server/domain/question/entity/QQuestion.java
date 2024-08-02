@@ -39,6 +39,8 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
+    public final ListPath<com.ssapick.server.domain.pick.entity.Pick, com.ssapick.server.domain.pick.entity.QPick> picks = this.<com.ssapick.server.domain.pick.entity.Pick, com.ssapick.server.domain.pick.entity.QPick>createList("picks", com.ssapick.server.domain.pick.entity.Pick.class, com.ssapick.server.domain.pick.entity.QPick.class, PathInits.DIRECT2);
+
     public final QQuestionCategory questionCategory;
 
     public final NumberPath<Integer> skipCount = createNumber("skipCount", Integer.class);
