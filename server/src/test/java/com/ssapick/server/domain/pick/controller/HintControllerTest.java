@@ -46,7 +46,7 @@ public class HintControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("hint")
+                                .tag("힌트")
                                 .summary("힌트 열기 API")
                                 .description("자신이 받은 픽의 랜덤한 힌트를 얻는다.")
                                 .responseFields(response(

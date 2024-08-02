@@ -61,7 +61,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isNoContent())
                 .andDo(restDocs.document(resource(
                                 ResourceSnippetParameters.builder()
-                                        .tag("auth")
+                                        .tag("인증")
                                         .summary("로그아웃 API")
                                         .description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
                                         .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
@@ -87,7 +87,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("mattermostAuthenticate")
+                                .tag("인증")
                                 .summary("mattermost 인증 API")
                                 .description("mattermost 인증에 성공하면 성공한 유저 정보 응답")
                                 .responseFields(response(
@@ -112,7 +112,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isNoContent())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("deleteUser")
+                                .tag("인증")
                                 .summary("회원 탈퇴 API")
                                 .description("회원을 삭제한다.")
                                 .responseFields(empty())

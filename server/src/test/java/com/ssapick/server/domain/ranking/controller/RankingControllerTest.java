@@ -71,7 +71,7 @@ class RankingControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("ranking")
+                                .tag("랭킹")
                                 .summary("모든 랭킹 조회 API")
                                 .description("모든 랭킹을 조회한다.")
                                 .responseFields(response(

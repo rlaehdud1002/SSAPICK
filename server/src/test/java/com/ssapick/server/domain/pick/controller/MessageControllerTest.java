@@ -73,7 +73,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("받은 메시지 목록 조회 API")
 					.description("받은 메시지 목록을 조회한다.")
 					.responseFields(response(
@@ -114,7 +114,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("보낸 메시지 목록 조회 API")
 					.description("보낸 메시지 목록을 조회한다.")
 					.responseFields(response(
@@ -153,7 +153,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isCreated())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("메시지 보내기 API")
 					.description("자신이 받은 픽 기반으로 메시지를 보낸다. (픽 1개당 메시지 1번 가능)")
 					.requestFields(
@@ -187,7 +187,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isNoContent())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("받은 메시지 삭제 API")
 					.description("자신이 받은 메시지를 삭제한다.")
 					.pathParameters(parameterWithName("messageId").type(SimpleType.NUMBER).description("메시지 ID"))
@@ -215,7 +215,7 @@ class MessageControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isNoContent())
 			.andDo(this.restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("message")
+					.tag("쪽지")
 					.summary("보낸 메시지 삭제 API")
 					.description("자신이 보낸 메시지를 삭제한다.")
 					.pathParameters(parameterWithName("messageId").type(SimpleType.NUMBER).description("메시지 ID"))

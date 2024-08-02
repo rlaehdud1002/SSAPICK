@@ -1,11 +1,11 @@
 package com.ssapick.server.domain.user.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.filter.JWTFilter;
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.user.dto.CampusData;
+import com.ssapick.server.domain.user.service.CampusService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,12 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.user.dto.CampusData;
-import com.ssapick.server.domain.user.service.CampusService;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("캠퍼스 컨트롤러 테스트")
 @WebMvcTest(
@@ -54,7 +53,7 @@ class CampusControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isCreated())
 			.andDo(restDocs.document(resource(
 					ResourceSnippetParameters.builder()
-						.tag("campus")
+						.tag("유저")
 						.summary("캠퍼스 생성 API")
 						.description("전국 캠퍼스 정보를 생성한다.")
 						.requestFields(

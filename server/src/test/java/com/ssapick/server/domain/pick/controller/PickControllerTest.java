@@ -77,7 +77,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("받은 픽 조회 API")
                                 .description("로그인된 사용자가 받은 픽을 조회한다.")
                                 .responseFields(response(
@@ -153,7 +153,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("보낸 픽 조회 API")
                                 .description("로그인된 사용자가 보낸 픽을 조회한다.")
                                 .responseFields(response(
@@ -222,7 +222,7 @@ class PickControllerTest extends RestDocsSupport {
         perform.andExpect(status().isCreated())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("pick")
+                                .tag("픽")
                                 .summary("픽 생성 API")
                                 .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
                                 .requestFields(
