@@ -139,7 +139,6 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 		when(pick.getId()).thenReturn(1L);
-
 		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
 		when(pick.isMessageSend()).thenReturn(false);
 		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
@@ -149,7 +148,6 @@ class MessageServiceTest extends UserSupport {
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
-
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
