@@ -1,13 +1,13 @@
 package com.ssapick.server.domain.auth.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static com.ssapick.server.core.constants.AuthConst.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.ssapick.server.core.configuration.SecurityConfig;
+import com.ssapick.server.core.filter.JWTFilter;
+import com.ssapick.server.core.properties.JwtProperties;
+import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.auth.dto.MattermostData;
+import com.ssapick.server.domain.auth.service.AuthService;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,17 +16,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.properties.JwtProperties;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.auth.dto.MattermostData;
-import com.ssapick.server.domain.auth.service.AuthService;
-
-import jakarta.servlet.http.Cookie;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.ssapick.server.core.constants.AuthConst.REFRESH_TOKEN;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("인증 컨트롤러 테스트")
 @WebMvcTest(
@@ -70,6 +71,7 @@ class AuthControllerTest extends RestDocsSupport {
 
 	@Test
 	@DisplayName("mattermost 인증에 성공하면 성공한 유저 정보 응답")
+	@WithMockUser(username = "test-user")
 	void successMattermostAuthenticate() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
 		MattermostData.Request request = new MattermostData.Request("username", "password");
@@ -80,9 +82,20 @@ class AuthControllerTest extends RestDocsSupport {
 			.content(toJson(request)));
 
 		// * THEN: 이런 결과가 나와야 한다
-		action.andExpect(status().isOk());
+		action.andExpect(status().isOk())
+				.andDo(restDocs.document(resource(
+						ResourceSnippetParameters.builder()
+								.tag("인증")
+								.summary("메타모스트 인증 API")
+								.description("현재 로그인된 사용자의 정보를 메타모스트 정보로 수정한다.")
+								.responseFields(empty())
+								.build()
+				)));
 
-		verify(authService).authenticate(any(), any());
+		verify(authService).authenticate(
+				argThat(user -> user.getUsername().equals("test-user")),
+				argThat(original -> original.getLoginId().equals(request.getLoginId()) && original.getPassword().equals(request.getPassword()))
+		);
 	}
 
 	@Test
