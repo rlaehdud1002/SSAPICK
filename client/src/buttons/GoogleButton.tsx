@@ -2,8 +2,7 @@
 
 const GoogleButton = () => {
   const onClick = () => {
-    window.location.href = `https://www.ssapick.kro.kr/oauth2/authorization/kakao`;
-    // window.location.href = GOOGLE_AUTH_URL;
+    window.location.href = `https://www.ssapick.kro.kr/oauth2/authorization/google`;
   };
 
   return (
