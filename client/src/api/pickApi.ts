@@ -12,6 +12,8 @@ export const getReceivePick = async (): Promise<IPick[]> => {
     throw new Error('받은 pick 조회 실패');
   }
 
+  console.log('getReceivePick');
+
   return data;
 };
 
@@ -24,4 +26,6 @@ export const postCreatePick = async (pickData: IPickCreate): Promise<void> => {
   if (!success) {
     throw new Error('pick 생성 실패');
   }
+
+  console.log('postCreatePick');
 };

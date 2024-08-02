@@ -11,6 +11,8 @@ export const getAttendance = async (): Promise<IUserAttendance> => {
     throw new Error('출석 조회 실패');
   }
 
+  console.log('getAttendance');
+
   return data;
 };
 
@@ -23,4 +25,6 @@ export const postAttendance = async (): Promise<void> => {
   if (!success) {
     throw new Error(message);
   }
+
+  console.log('postAttendance');
 };

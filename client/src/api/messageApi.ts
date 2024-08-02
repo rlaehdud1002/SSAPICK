@@ -12,6 +12,8 @@ export const postMessageSend = async (
   if (!success) {
     throw new Error('메시지 전송 실패');
   }
+
+  console.log('postMessageSend');
 };
 
 // 받은 메시지 조회
@@ -23,6 +25,8 @@ export const getReceivedMessage = async (): Promise<IMessage[]> => {
   if (!success) {
     throw new Error('받은 메시지 조회 실패');
   }
+
+  console.log('getReceivedMessage');
 
   return data;
 };
@@ -36,6 +40,8 @@ export const getSendMessage = async (): Promise<IMessage[]> => {
   if (!success) {
     throw new Error('보낸 메시지 조회 실패');
   }
+
+  console.log('getSendMessage');
 
   return data;
 };
@@ -51,6 +57,8 @@ export const deleteReceivedMessage = async (
   if (!success) {
     throw new Error('받은 메시지 삭제 실패');
   }
+
+  console.log('deleteReceivedMessage');
 };
 
 // 보낸 메시지 삭제
@@ -62,4 +70,6 @@ export const deleteSendMessage = async (messageId: number): Promise<void> => {
   if (!success) {
     throw new Error('보낸 메시지 삭제 실패');
   }
+
+  console.log('deleteSendMessage');
 };

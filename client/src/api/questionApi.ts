@@ -11,6 +11,7 @@ export const getQuestion = async (): Promise<IQuestion[]> => {
     throw new Error('질문 조회 실패');
   }
 
+  console.log('getQuestion');
   return data;
 };
 
@@ -25,4 +26,6 @@ export const postCreateQuestion = async (
   if (!success) {
     throw new Error('질문 생성 실패');
   }
+
+  console.log('postCreateQuestion');
 };
