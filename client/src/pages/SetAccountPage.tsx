@@ -16,10 +16,8 @@ const SetAccount = () => {
     }
   });
 
-
   const handleLogout = async () => {
     console.log(accessToken)
-    // await signOut(accessToken);
     mutation.mutate(accessToken);
 
   };

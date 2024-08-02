@@ -1,7 +1,7 @@
 import { accessTokenState } from "atoms/UserAtoms";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const AuthCallback = () => {
   const [searchParam] = useSearchParams();
@@ -14,6 +14,8 @@ const AuthCallback = () => {
     if (accessToken) {
       setAccessToken(accessToken);
       navigate('/mattermost');
+      // {isAuth ? navigate('/home') : navigate('/mattermost')}
+      
     }
   }, [])
 

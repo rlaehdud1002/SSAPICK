@@ -18,7 +18,7 @@ const ProfileContent = () => {
   const userYear: number = +profileAdd.birth.split('-')[0];
   const year = new Date().getFullYear();
   const age = year - userYear + 1;
-  console.log(age);
+  // console.log(age);
   return (
     <div
       style={{ backgroundColor: '#000855', opacity: '80%' }}

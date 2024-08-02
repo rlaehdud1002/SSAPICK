@@ -12,6 +12,8 @@ import { Button } from 'components/ui/button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ResultCheckModal from './ResultCheckModal';
+import { useMutation } from '@tanstack/react-query';
+import { withdrawal } from 'api/authApi';
 
 enum WithdrawalModalStep {
   CONFIRM,
@@ -30,7 +32,7 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
 
   const naivgate = useNavigate();
   const navigateToHome = () => {
-    naivgate('/home');
+    naivgate('/');
   };
 
   useEffect(() => {
@@ -44,8 +46,19 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
     }
   });
 
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: withdrawal,
+    onSuccess: () => {
+      console.log("회원탈퇴 성공");
+      navigate("/");
+    }
+  });
+
   const onSubmit = () => {
     setStep(WithdrawalModalStep.ALERT);
+    mutation.mutate();
   };
 
   const onClose = () => {
@@ -73,6 +86,7 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
                 </h3>
               </DialogDescription>
               <DialogFooter className="flex flex-row justify-end">
+                
                 <Button variant="ssapick" size="md" onClick={onSubmit}>
                   확인
                 </Button>

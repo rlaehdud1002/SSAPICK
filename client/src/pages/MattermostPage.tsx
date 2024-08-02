@@ -1,12 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
-import { mmAuthSend } from 'api/authApi';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { mmAuthConfirm, mmAuthSend } from 'api/authApi';
 import DoneButton from 'buttons/DoneButton';
 import { useForm } from 'react-hook-form';
 import AuthInput from '../components/MattermostPage/AuthInput';
 import MattermostIcon from '../icons/MattermostIcon';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { isAuthState } from 'atoms/UserAtoms';
+import { useEffect } from 'react';
 
 interface AuthFormm {
   id: string;
@@ -15,22 +15,33 @@ interface AuthFormm {
 
 
 const Mattermost = () => {
-  const setAuthState = useSetRecoilState(isAuthState);
+  const { data: authenticated, isLoading } = useQuery({
+    queryKey: ['authenticated'],
+    queryFn: async () => await mmAuthConfirm(),
+  });
+
   const navigate = useNavigate();
+
   const mutation = useMutation({
     mutationKey: ['auth', 'send'],
     mutationFn: mmAuthSend,
     // 성공시, 유저 정보 입력 페이지로 이동
     onSuccess: () => {
-      setAuthState(true);
-      navigate('/userinfo');
+      navigate('/login/userinfo');
       console.log("성공");
     },
     // 실패시,
-    onError: () => {
-      console.log("실패");
-    }
+    // onError: () => {
+    //   // console.log(message);
+    // }
   });
+
+  useEffect(() => {
+    if (authenticated) {
+      console.log(authenticated);
+      navigate('/home');
+    }
+  }, [authenticated]);
 
   const { register, handleSubmit } = useForm<AuthFormm>();
 

@@ -1,3 +1,4 @@
+import { accessTokenState } from 'atoms/UserAtoms';
 import ProfileAlarm from 'components/ProfilePage/ProfileAlarm';
 import ProfileContent from 'components/ProfilePage/ProfileContent';
 import AccountIcon from 'icons/AccountIcon';
@@ -9,8 +10,11 @@ import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
 import SetAlarmIcon from 'icons/SetAlarmIcon';
 import UserInfoIcon from 'icons/UserInfoIcon';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 const Profile = () => {
+  const accessToken = useRecoilValue(accessTokenState);
+  console.log(accessToken);
   return (
     <div>
       <ProfileContent />
