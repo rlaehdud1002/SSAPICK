@@ -25,7 +25,7 @@ public class HintController {
 	 * @return {@link String} 랜덤한 힌트 내용
 	 */
 	@GetMapping(value = "/random")
-	public SuccessResponse<String> getRandomHintByPickId(@RequestParam Long pickId) {
+	public SuccessResponse<String> getRandomHintByPickId(@RequestParam("pickId") Long pickId) {
       return SuccessResponse.of(hintService.getRandomHintByPickId(pickId));
 	}
 
