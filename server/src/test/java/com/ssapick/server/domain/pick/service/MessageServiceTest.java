@@ -148,6 +148,7 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 		when(pick.getId()).thenReturn(1L);
+
 		when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
 		when(pick.isMessageSend()).thenReturn(false);
 		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
