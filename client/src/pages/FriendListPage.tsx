@@ -8,7 +8,6 @@ import SearchIcon from 'icons/SearchIcon';
 import { Link, useNavigate } from 'react-router-dom';
 
 const FriendList = () => {
-  const queryClient = new QueryClient();
   const { data: friends, isLoading } = useQuery<IFriend[]>({
     queryKey: ['friends'],
     queryFn: async () => await getFriendsList(),

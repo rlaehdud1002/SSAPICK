@@ -19,7 +19,7 @@ const UserInfo = () => {
     const setUserInfo = useSetRecoilState(userState)
     const navigate = useNavigate()
     const navigateToAddInfo = () => {
-        navigate('/UserAddInfo')
+        navigate('/login/UserAddInfo')
     }
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<UserForm>();
