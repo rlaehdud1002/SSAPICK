@@ -15,6 +15,7 @@ interface ResponseProps {
   picks: IPick[];
   isLoading: boolean;
 }
+
 const Response = ({ picks, isLoading }: ResponseProps) => {
   return (
     <div className="rounded-lg bg-white/50 p-4">

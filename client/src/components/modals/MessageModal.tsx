@@ -52,6 +52,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
     onSuccess: () => {
       navigate(0);
     },
+    
   });
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
@@ -81,7 +82,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
       mutation.mutate({ receiverId, pickId, content: data.message });
       reset();
     }
-  };
+  };  
 
   const onClose = () => {
     setOpen(false);

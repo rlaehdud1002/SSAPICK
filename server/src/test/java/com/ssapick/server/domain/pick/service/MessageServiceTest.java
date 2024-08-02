@@ -122,7 +122,7 @@ class MessageServiceTest extends UserSupport {
 		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
-		messageService. createMessage(sender, create);
+		messageService.createMessage(sender, create);
 
 		// * THEN: 이런 결과가 나와야 한다
 		verify(pick).send();

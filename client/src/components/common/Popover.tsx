@@ -13,21 +13,6 @@ import {
 
 
 const PopOver = () => {
-
-  // const queryClient = new QueryClient();
-
-  // // 친구 삭제 mutation
-  // const mutation = useMutation({
-  //   mutationKey: ['friends', 'delete'],
-  //   mutationFn: deleteFriend,
-  //   // 친구 삭제 후 친구 목록 새로 고침
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['friends']
-  //     })
-  //   }
-  // })
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -43,9 +28,7 @@ const PopOver = () => {
           </div>
           <div className="flex items-center">
             <DeleteIcon width={22} height={22} />
-            {/* <div onClick={mutation}> */}
             <DeleteModal title="삭제" />
-            {/* </div> */}
           </div>
         </div>
       </PopoverContent>

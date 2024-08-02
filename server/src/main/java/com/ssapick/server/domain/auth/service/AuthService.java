@@ -18,8 +18,10 @@ import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.entity.JwtToken;
 import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
 import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.S3UploadEvent;
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import feign.FeignException;
@@ -37,6 +39,7 @@ public class AuthService {
 	private final MattermostConfirmService mattermostConfirmService;
 	private final UserRepository userRepository;
 	private final ApplicationEventPublisher publisher;
+	private final CampusRepository campusRepository;
 
 	@Transactional
 	public void signOut(User user, String refreshToken) {
@@ -61,7 +64,7 @@ public class AuthService {
 	}
 
 	@Transactional
-	public ProfileData.InitialProfileInfo authenticate(User user, MattermostData.Request request) {
+	public void authenticate(User user, MattermostData.Request request) {
 		try {
 			ResponseEntity<MattermostData.Response> response = mattermostConfirmService.authenticate(request);
 			MattermostData.Response body = response.getBody();
@@ -75,18 +78,26 @@ public class AuthService {
 			}
 
 			user.mattermostConfirm();
-
 			ProfileData.InitialProfileInfo info = extractProfileInfo(body.getNickname());
+			user.updateName(info.getName());
+
+			Campus campus = getOrCreateCampus(info.getLocation(), info.getSection());
+			user.getProfile().updateCampus(campus);
+
+			userRepository.save(user);
 
 			MultipartFile profileImage = getProfileImage(response, body.getId(), info.getName());
 
 			publisher.publishEvent(new S3UploadEvent(user.getProfile(), profileImage));
 
-			return info;
-
 		} catch (FeignException.Unauthorized e) {
 			throw new BaseException(ErrorCode.NOT_FOUND_USER, e);
 		}
+	}
+
+	private Campus getOrCreateCampus(String name, Short section) {
+		return campusRepository.findByNameAndSection(name, section)
+			.orElseGet(() -> campusRepository.save(Campus.createCampus(name, section, null)));
 	}
 
 	@Transactional

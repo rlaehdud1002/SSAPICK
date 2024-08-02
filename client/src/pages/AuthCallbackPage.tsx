@@ -9,12 +9,13 @@ const AuthCallback = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log("searchParam", searchParam);
     const accessToken = searchParam.get('accessToken');
     if (accessToken) {
       setAccessToken(accessToken);
-      navigate('/home');
+      navigate('/mattermost');
     }
-  }, [searchParam])
+  }, [])
 
   return <div></div>
 }

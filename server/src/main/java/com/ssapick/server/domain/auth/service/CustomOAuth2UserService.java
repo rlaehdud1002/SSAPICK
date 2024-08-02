@@ -1,25 +1,26 @@
 package com.ssapick.server.domain.auth.service;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.ssapick.server.domain.auth.response.CustomOAuth2User;
+import com.ssapick.server.domain.auth.response.CustomOAuthUserFactory;
+import com.ssapick.server.domain.auth.response.OAuth2Response;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.entity.ProviderType;
+import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
+import com.ssapick.server.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.ssapick.server.domain.auth.response.CustomOAuth2User;
-import com.ssapick.server.domain.auth.response.CustomOAuthUserFactory;
-import com.ssapick.server.domain.auth.response.OAuth2Response;
-import com.ssapick.server.domain.user.entity.ProviderType;
-import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static com.ssapick.server.core.constants.PickConst.REGISTER_COIN;
 
 @Slf4j
 @Service
@@ -28,6 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	private final UserRepository userRepository;
 	private final ApplicationEventPublisher publisher;
 
+	@Transactional
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oauth2User = super.loadUser(userRequest);
@@ -38,6 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		ProviderType providerType = ProviderType.valueOf(registrationId.toUpperCase());
 		OAuth2Response oauth2Response = CustomOAuthUserFactory.parseOAuth2Response(providerType,
 			oauth2User.getAttributes());
+
 
 		String username = oauth2Response.getEmail();
 		AtomicBoolean isNew = new AtomicBoolean(false);
@@ -54,8 +57,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		if (isNew.get()) {
 			log.debug("New user has been created: {}", user);
+			publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, REGISTER_COIN));
 		}
-		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, 100));
 		return new CustomOAuth2User(user);
 	}
 }

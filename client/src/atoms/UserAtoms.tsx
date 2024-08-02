@@ -4,6 +4,11 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist()
 
+export const isAuthState = atom<boolean>({
+  key: 'isAuthState',
+  default: false,
+});
+
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
   get: ({ get }) => {
