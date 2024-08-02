@@ -2,7 +2,6 @@ package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
-import jakarta.validation.Constraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

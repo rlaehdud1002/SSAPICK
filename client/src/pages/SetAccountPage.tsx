@@ -3,11 +3,11 @@ import { signOut } from "api/authApi";
 import { accessTokenState } from "atoms/UserAtoms";
 import WithdrawalModal from "components/modals/WithdrawalModal";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const SetAccount = () => {
   const navigate = useNavigate();
-  const accessToken = useRecoilValue (accessTokenState);
+  const [accessToken, setAccessToken] = useRecoilState (accessTokenState);
   const mutation = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
@@ -21,6 +21,7 @@ const SetAccount = () => {
     console.log(accessToken)
     // await signOut(accessToken);
     mutation.mutate(accessToken);
+
   };
 
   return (
