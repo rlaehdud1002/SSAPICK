@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
 	@Column(nullable = false)

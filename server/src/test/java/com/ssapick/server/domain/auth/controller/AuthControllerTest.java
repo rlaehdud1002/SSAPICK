@@ -9,13 +9,6 @@ import com.ssapick.server.domain.auth.dto.MattermostData;
 import com.ssapick.server.domain.auth.service.AuthService;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import jakarta.servlet.http.Cookie;
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static com.ssapick.server.core.constants.AuthConst.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,17 +27,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.properties.JwtProperties;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.auth.service.AuthService;
-
-import jakarta.servlet.http.Cookie;
 
 @DisplayName("인증 컨트롤러 테스트")
 @WebMvcTest(
@@ -76,7 +61,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isNoContent())
                 .andDo(restDocs.document(resource(
                                 ResourceSnippetParameters.builder()
-                                        .tag("auth")
+                                        .tag("인증")
                                         .summary("로그아웃 API")
                                         .description("로그아웃을 통해 인증 토큰과 리프레시 토큰을 삭제한다.")
                                         .requestHeaders(headerWithName(HttpHeaders.AUTHORIZATION).description("발급 받은 인증 토큰"))
@@ -94,7 +79,7 @@ class AuthControllerTest extends RestDocsSupport {
         when(authService.authenticate(any(), any())).thenReturn(new ProfileData.InitialProfileInfo("name", "location", (short) 1));
 
         // * WHEN: 이걸 실행하면
-        ResultActions action = this.mockMvc.perform(get("/api/v1/auth/mattermost-confirm")
+        ResultActions action = this.mockMvc.perform(post("/api/v1/auth/mattermost-confirm")
                 .contentType("application/json")
                 .content(toJson(request)));
 
@@ -102,7 +87,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("mattermostAuthenticate")
+                                .tag("인증")
                                 .summary("mattermost 인증 API")
                                 .description("mattermost 인증에 성공하면 성공한 유저 정보 응답")
                                 .responseFields(response(
@@ -127,7 +112,7 @@ class AuthControllerTest extends RestDocsSupport {
         action.andExpect(status().isNoContent())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("deleteUser")
+                                .tag("인증")
                                 .summary("회원 탈퇴 API")
                                 .description("회원을 삭제한다.")
                                 .responseFields(empty())

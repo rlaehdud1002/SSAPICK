@@ -65,7 +65,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("모든 질문 조회 API")
                                 .description("모든 질문을 조회한다.")
                                 .responseFields(response(
@@ -101,7 +101,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("질문 ID로 질문 조회 API")
                                 .description("질문 ID로 질문을 조회한다.")
                                 .pathParameters(parameterWithName("questionId").type(SimpleType.NUMBER).description("질문 ID"))
@@ -144,7 +144,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("카테고리별 질문 조회 API")
                                 .description("카테고리 ID를 기준으로 카테고리에 속한 질문들을 조회한다.")
                                 .pathParameters(parameterWithName("categoryId").type(SimpleType.NUMBER).description("질문 ID"))
@@ -185,7 +185,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isCreated())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("질문 생성 API")
                                 .description("입력된 값을 기반으로 질문을 생성한다.")
                                 .requestFields(
@@ -220,7 +220,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("싸픽 서비스에서 사용할 질문 조회 API")
                                 .description("로그인된 사용자에게 맞는 질문(스킵하거나 차단한 질문 제외)을 조회한다.")
                                 .responseFields(response(
@@ -256,7 +256,7 @@ class QuestionControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(this.restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("question")
+                                .tag("질문")
                                 .summary("싸픽에서 사용할 질문 조회 API")
                                 .description("싸픽에서 사용할 질문들을 조회한다. 총 15개 질문 조회 (내부 중복 제거 알고리즘 적용)")
                                 .responseFields(response(

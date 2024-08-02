@@ -19,12 +19,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.ssapick.server.core.configuration.SecurityConfig;
-import com.ssapick.server.core.filter.JWTFilter;
-import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.user.dto.CampusData;
-import com.ssapick.server.domain.user.service.CampusService;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 

@@ -3,8 +3,6 @@ package com.ssapick.server.domain.pick.service;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.service.CommentAnalyzerService;
-import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
-import com.ssapick.server.core.service.SentenceSimilarityResponse;
 import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
@@ -15,10 +13,7 @@ import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import jakarta.persistence.EntityManager;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -121,7 +116,7 @@ class MessageServiceTest extends UserSupport {
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
 
-		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		// * WHEN: 이걸 실행하면
 		messageService. createMessage(sender, create);
@@ -150,7 +145,7 @@ class MessageServiceTest extends UserSupport {
 		create.setContent("테스트 메시지");
 		create.setReceiverId(receiver.getId());
 
-		when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);

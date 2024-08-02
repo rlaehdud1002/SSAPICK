@@ -65,7 +65,7 @@ class FollowControllerTest extends RestDocsSupport {
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters
 					.builder()
-					.tag("follow")
+					.tag("팔로우")
 					.description("팔로우한 유저 목록 조회 API")
 					.summary("로그인된 사용자가 팔로우한 유저 목록을 조회한다.")
 					.responseFields(response(
@@ -98,7 +98,7 @@ class FollowControllerTest extends RestDocsSupport {
 			.andDo(restDocs.document(resource(
 					ResourceSnippetParameters
 						.builder()
-						.tag("follow")
+						.tag("팔로우")
 						.description("팔로우 생성 API")
 						.summary("로그인된 사용자가 다른 사용자를 팔로우한다.")
 						.pathParameters(parameterWithName("userId").type(SimpleType.NUMBER).description("팔로우할 사용자 식별자"))
@@ -125,7 +125,7 @@ class FollowControllerTest extends RestDocsSupport {
 			.andDo(restDocs.document(resource(
 					ResourceSnippetParameters
 						.builder()
-						.tag("follow")
+						.tag("팔로우")
 						.description("팔로우 삭제 API")
 						.summary("로그인된 사용자가 다른 사용자를 언팔로우한다.")
 						.pathParameters(parameterWithName("userId").type(SimpleType.NUMBER).description("언팔로우할 사용자 식별자"))

@@ -8,7 +8,6 @@ import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.attendance.dto.AttendanceData;
 import com.ssapick.server.domain.attendance.service.AttendanceService;
-import com.ssapick.server.domain.pick.repository.PickRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,7 +22,8 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +54,7 @@ public class AttendanceControllerTest extends RestDocsSupport {
         perform.andExpect(status().isOk())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("attendance")
+                                .tag("유저")
                                 .summary("출석상태 조회 API")
                                 .description("사용자의 출석상태를 조회한다")
                                 .responseFields(response(
@@ -79,7 +78,7 @@ public class AttendanceControllerTest extends RestDocsSupport {
         perform.andExpect(status().isCreated())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("attendance")
+                                .tag("유저")
                                 .summary("출석 생성 API")
                                 .description("출석을 생성한다.")
                                 .responseFields(empty())
@@ -103,7 +102,7 @@ public class AttendanceControllerTest extends RestDocsSupport {
         perform.andExpect(status().isBadRequest())
                 .andDo(restDocs.document(resource(
                         ResourceSnippetParameters.builder()
-                                .tag("attendance")
+                                .tag("유저")
                                 .summary("출석 생성 API")
                                 .description("출석을 생성한다.")
                                 .responseFields(response(

@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.user.repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssapick.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +25,15 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     }
 
     private List<User> findUserByCampusId(Long userId) {
-//        return queryFactory.select(user)
-//                .from(user)
-//                .where(user.profile.campus.in(JPAExpressions.select(user.profile.campus)
-//                        .from(user)
-//                        .where(user.id.eq(userId))
-//                ))
-//                .leftJoin(user.profile).fetchJoin()
-//                .leftJoin(user.profile.campus).fetchJoin()
-//                .fetch();
-        return List.of();
+        return queryFactory.select(user)
+                .from(user)
+                .where(user.profile.campus.in(JPAExpressions.select(user.profile.campus)
+                        .from(user)
+                        .where(user.id.eq(userId))
+                ))
+                .leftJoin(user.profile).fetchJoin()
+                .leftJoin(user.profile.campus).fetchJoin()
+                .fetch();
     }
 
     private List<User> findUserByFollow(Long userId) {

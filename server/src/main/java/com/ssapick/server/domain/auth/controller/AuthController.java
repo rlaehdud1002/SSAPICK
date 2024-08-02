@@ -72,7 +72,7 @@ public class AuthController {
     }
 
     @Authenticated
-    @GetMapping("/mattermost-confirm")
+    @PostMapping("/mattermost-confirm")
     public SuccessResponse<ProfileData.InitialProfileInfo> authenticate(
             @CurrentUser User user,
             @RequestBody MattermostData.Request request

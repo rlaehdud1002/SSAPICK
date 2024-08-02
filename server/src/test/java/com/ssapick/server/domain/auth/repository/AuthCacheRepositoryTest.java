@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 
 
+@DisplayName("인증 캐시 레포 테스트")
 @Import({RedisTestConfig.class})
 class AuthCacheRepositoryTest {
     @Test
