@@ -12,7 +12,7 @@ const AuthCallback = () => {
     const accessToken = searchParam.get('accessToken');
     if (accessToken) {
       setAccessToken(accessToken);
-      navigate('/home');
+      navigate('/mattermost');
     }
   }, [searchParam])
 

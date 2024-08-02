@@ -34,6 +34,7 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['friends'],
+      
       });
     },
   });
@@ -45,8 +46,7 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
   const naivgate = useNavigate();
 
   const navigateToFriendList = () => {
-    naivgate('/friendlist');
-    mutation.mutate(4);
+    naivgate('/profile/friendlist');
   };
 
   useEffect(() => {
@@ -58,10 +58,13 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
       }, 1000);
       return () => clearTimeout(timer);
     }
+    
   });
 
   const onSubmit = () => {
     setStep(DeletelStep.ALERT);
+     // 삭제할 userId 넣어주기
+     mutation.mutate(4);
   };
 
   const onClose = () => {
