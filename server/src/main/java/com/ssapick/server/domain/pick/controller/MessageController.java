@@ -56,7 +56,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> deleteFromMessage(
             @CurrentUser User user,
-            @PathVariable Long messageId
+            @PathVariable("messageId") Long messageId
     ) {
         messageService.deleteReceiveMessage(user, messageId);
         return SuccessResponse.empty();
@@ -67,7 +67,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> deleteToMessage(
             @CurrentUser User user,
-            @PathVariable Long messageId
+            @PathVariable("messageId") Long messageId
     ) {
         messageService.deleteSendMessage(user, messageId);
         return SuccessResponse.empty();

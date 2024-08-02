@@ -33,7 +33,7 @@ public class CampusController {
      * @return {@link CampusData.SearchResponse} 조회된 캠퍼스 반 리스트
      */
     @GetMapping(value = "/search/name")
-    public SuccessResponse<List<CampusData.SearchResponse>> searchCampusByName(@RequestParam String name) {
+    public SuccessResponse<List<CampusData.SearchResponse>> searchCampusByName(@RequestParam("name") String name) {
         return SuccessResponse.of(campusService.searchCampusByName(name));
     }
 

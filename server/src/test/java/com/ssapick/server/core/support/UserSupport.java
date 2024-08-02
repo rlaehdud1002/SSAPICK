@@ -38,7 +38,6 @@ public abstract class UserSupport {
         lenient().when(profile.getId()).thenReturn(id);
         lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
         lenient().when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-
         return user;
     }
 
