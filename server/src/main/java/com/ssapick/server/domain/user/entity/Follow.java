@@ -3,7 +3,10 @@ package com.ssapick.server.domain.user.entity;
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Constraint;
+<<<<<<< HEAD
 import lombok.AccessLevel;
+=======
+>>>>>>> 623bb77 ([FEAT] API 점검 및 수정)
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
