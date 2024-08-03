@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import org.assertj.core.api.Assertions;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,6 +29,7 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({JpaTestConfig.class})
+@Sql(scripts = "/sql/clearDB.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class AttendanceRepositoryTest extends TestDatabaseContainer {
     @Autowired
     private AttendanceRepository attendanceRepository;
