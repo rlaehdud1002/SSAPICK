@@ -31,6 +31,16 @@ const fileExtensionRegexp = new RegExp("/[^/?]+\\.[^/]+$");
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }: { request: Request; url: URL }) => {
+    const URL_WHITE_LIST = [
+      '/api',
+      '/oauth2',
+      '/login',
+      '/docs',
+    ]
+    if (URL_WHITE_LIST.some((path) => url.pathname.startsWith(path))) {
+      console.log('Skipping cache for', url.pathname);
+      return false;
+    }
     // If this isn't a navigation, skip.
     if (request.mode !== "navigate") {
       return false;
@@ -80,8 +90,8 @@ self.addEventListener("message", (event) => {
 
 // Any other custom service worker logic can go here.
 self.addEventListener('fetch', (event) => {
+  console.log("fetch event for:", event.request.url);
   const url = new URL(event.request.url);
-  
   const URL_WHITE_LIST = [
     '/api',
     '/oauth2',
@@ -89,7 +99,10 @@ self.addEventListener('fetch', (event) => {
     '/docs',
   ]
 
-  if (URL_WHITE_LIST.some((path) => url.pathname.startsWith(path))) return;
+  if (URL_WHITE_LIST.some((path) => url.pathname.startsWith(path))) {
+    console.log('Skipping cache for', url.pathname);
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((response) => {
