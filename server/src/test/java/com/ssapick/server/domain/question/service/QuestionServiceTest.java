@@ -334,7 +334,7 @@ class QuestionServiceTest extends UserSupport {
 		Pick pick5 = this.createPick(user2, user1, question3);
 		Pick pick6 = this.createPick(user2, user1, question3);
 
-		when(questionRepository.findRanking(user1.getId())).thenReturn(List.of(question3, question2, question1));
+		when(questionRepository.findQRankingByUserId(user1.getId())).thenReturn(List.of(question3, question2, question1));
 
 	    // * WHEN: 이걸 실행하면
 		List<QuestionData.Search> searches = questionService.searchQuestionsRank(user1.getId());

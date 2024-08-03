@@ -14,7 +14,6 @@ import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
-import com.ssapick.server.core.service.SentenceSimilarityAnalyzer;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -151,7 +150,7 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchQuestionsRank(Long userId) {
-        return questionRepository.findRanking(userId)
+        return questionRepository.findQRankingByUserId(userId)
                 .stream()
                 .map(QuestionData.Search::fromEntity)
                 .toList();
