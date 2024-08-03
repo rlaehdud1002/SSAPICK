@@ -31,6 +31,10 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
+	/**
+	 * 전체 질문 목록 조회(삭제된 질문 제외)
+	 * @return
+	 */
 	@Override
 	public List<Question> findAll() {
 		return queryFactory
@@ -39,21 +43,29 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 			.fetch();
 	}
 
+	/**
+	 * 사용자가 받은 질문 랭킹 조회
+	 * @param userId
+	 * @return
+	 */
 	@Override
-	public List<Question> findRanking(Long userId) {
-
-        return queryFactory
-                .select(question)
-                .from(question)
-			.join(question.picks, pick).fetchJoin()
-                .where(pick.receiver.id.eq(userId), question.isDeleted.eq(false))
-                .groupBy(question.id)
-                .orderBy(pick.count().desc())
-                .fetch();
+	public List<Question> findQRankingByUserId(Long userId) {
+		return queryFactory
+			.selectFrom(question)
+			.join(question.picks, pick)
+			.where(pick.receiver.id.eq(userId), question.isDeleted.eq(false))
+			.groupBy(question.id)
+			.orderBy(pick.count().desc())
+			.fetch();
     }
 
+	/**
+	 * 사용자가 등록한 질문 조회
+	 * @param userId
+	 * @return
+	 */
     @Override
-    public List<Question> findAddedQuestionsByUserId(Long userId) {
+    public List<Question> findAddedQsByUserId(Long userId) {
         return queryFactory
             .selectFrom(question)
             .where(question.author.id.eq(userId))
