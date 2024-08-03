@@ -56,9 +56,7 @@ public class AuthController {
 		JwtToken refreshedToken = authService.refresh(cookie.getValue());
 
 		CookieUtils.removeCookie(response, AuthConst.REFRESH_TOKEN);
-		CookieUtils.addCookie(AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(),
-			true);
-
+		CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(), true);
 		return SuccessResponse.created();
 	}
 

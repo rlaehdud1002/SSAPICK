@@ -5,6 +5,7 @@ import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.domain.auth.handler.CustomAuthenticationDeniedHandler;
 import com.ssapick.server.domain.auth.handler.CustomAuthenticationEntryPoint;
 import com.ssapick.server.domain.auth.handler.CustomSuccessHandler;
+import com.ssapick.server.domain.auth.repository.CustomAuthorizationRequestRepository;
 import com.ssapick.server.domain.auth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAuthenticationDeniedHandler authenticationDeniedHandler;
+    private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
     private final JWTFilter jwtFilter;
 
     @Bean
@@ -53,7 +55,10 @@ public class SecurityConfig {
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll())
                 .oauth2Login((oauth2) -> oauth2
-                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
+                        .authorizationEndpoint(authorization ->
+                                authorization.baseUri("/oauth2/authorization")
+                                        .authorizationRequestRepository(customAuthorizationRequestRepository)
+                        )
                         .redirectionEndpoint(redirection -> redirection.baseUri("/*/oauth2/code/*"))
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig.userService(customOAuth2UserService))
                         .successHandler(customSuccessHandler)
