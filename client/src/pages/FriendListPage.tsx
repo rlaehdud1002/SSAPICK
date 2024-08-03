@@ -34,10 +34,9 @@ const FriendList = () => {
         </div>
       </div>
       {friends &&
-        friends.map((friend) => (
-          <div className="mt-6">
+        friends.map((friend, index) => (
+          <div className="mt-6" key={index}>
             <Friend
-              key={friend.userId}
               campus={friend.campusName}
               campusSection={friend.campusSection}
               campusDescription={friend.campusDescription}
