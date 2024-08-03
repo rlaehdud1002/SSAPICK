@@ -21,6 +21,9 @@ public class ProfileData {
 		private short campusSection;
 		private String campusDescription;
 		private String profileImage;
+		private short cohort;
+
+
 
 		public static Search fromEntity(Profile profile) {
 			Search search = new Search();
@@ -31,6 +34,7 @@ public class ProfileData {
 			search.campusSection = profile.getCampus().getSection();
 			search.campusDescription = profile.getCampus().getDescription();
 			search.profileImage = profile.getProfileImage();
+			search.cohort = profile.getCohort();
 			return search;
 		}
 
@@ -40,6 +44,7 @@ public class ProfileData {
 			search.campusName = profile.getCampus().getName();
 			search.campusSection = profile.getCampus().getSection();
 			search.campusDescription = profile.getCampus().getDescription();
+			search.cohort = profile.getCohort();
 			return search;
 		}
 	}

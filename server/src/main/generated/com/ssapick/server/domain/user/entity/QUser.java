@@ -24,6 +24,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.ssapick.server.core.entity.QBaseEntity _super = new com.ssapick.server.core.entity.QBaseEntity(this);
 
+    public final QAlarm alarm;
+
     public final ListPath<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance> attendances = this.<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance>createList("attendances", com.ssapick.server.domain.attendance.entity.Attendance.class, com.ssapick.server.domain.attendance.entity.QAttendance.class, PathInits.DIRECT2);
 
     public final ListPath<UserBan, QUserBan> bannedUser = this.<UserBan, QUserBan>createList("bannedUser", UserBan.class, QUserBan.class, PathInits.DIRECT2);
@@ -83,6 +85,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.alarm = inits.isInitialized("alarm") ? new QAlarm(forProperty("alarm"), inits.get("alarm")) : null;
         this.profile = inits.isInitialized("profile") ? new QProfile(forProperty("profile"), inits.get("profile")) : null;
     }
 
