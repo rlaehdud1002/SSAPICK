@@ -1,11 +1,12 @@
 import instance from 'api/clientApi';
 import { ICreateQuestion, IQuestion } from 'atoms/Pick.type';
+import { BaseResponse } from 'atoms/User.type';
 
 // 로그인 된 사용자에게 맞는 질문 조회
 export const getQuestion = async (): Promise<IQuestion[]> => {
   const {
     data: { success, data },
-  } = await instance.get('/questions/pick');
+  } = await instance.get<BaseResponse<IQuestion[]>>('/questions/pick');
 
   if (!success) {
     throw new Error('질문 조회 실패');
@@ -21,7 +22,7 @@ export const postCreateQuestion = async (
 ): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post('/questions', questionData);
+  } = await instance.post<BaseResponse<null>>('/questions', questionData);
 
   if (!success) {
     throw new Error('질문 생성 실패');
