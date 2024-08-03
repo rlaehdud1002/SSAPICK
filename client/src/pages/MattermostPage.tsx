@@ -14,7 +14,7 @@ interface AuthFormm {
 }
 
 const Mattermost = () => {
-  const { data: authenticated, isLoading } = useQuery({
+  const { data: authenticated, isLoading } = useQuery<boolean>({
     queryKey: ['authenticated'],
     queryFn: async () => await mmAuthConfirm(),
   });
@@ -37,10 +37,9 @@ const Mattermost = () => {
 
   useEffect(() => {
     if (authenticated) {
-      console.log(authenticated);
       navigate('/home');
     }
-  }, [authenticated]);
+  }, [authenticated, navigate]);
 
   const { register, handleSubmit } = useForm<AuthFormm>();
 
