@@ -36,10 +36,18 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
             <AccordionContent>
               <div className="flex flex-row justify-center">
                 <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                  <HintModal title="?" />
+                  <HintModal
+                    title={
+                      pick.openedHints.length === 0 ? '?' : pick.openedHints[0]
+                    }
+                  />
                 </div>
                 <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                  <HintModal title="?" />
+                  <HintModal
+                    title={
+                      pick.openedHints.length === 1 ? '?' : pick.openedHints[1]
+                    }
+                  />
                 </div>
               </div>
               {!pick.messageSend && (

@@ -29,3 +29,16 @@ export const postCreatePick = async (pickData: IPickCreate): Promise<void> => {
 
   console.log('postCreatePick');
 };
+
+// 힌트 열기
+export const getHint = async (): Promise<string> => {
+  const {
+    data: { success, data },
+  } = await instance.get('/hint/random');
+
+  if (!success) {
+    throw new Error('힌트 조회 실패');
+  }
+
+  return data;
+};
