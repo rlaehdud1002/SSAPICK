@@ -2,6 +2,7 @@ package com.ssapick.server.domain.user.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class AlarmController {
 	 * {@link AlarmData.Update}
 	 */
 	@PostMapping(value = "")
-	public SuccessResponse<Void> updateAlarm(@CurrentUser User user, AlarmData.Update update) {
+	public SuccessResponse<Void> updateAlarm(@CurrentUser User user, @RequestBody AlarmData.Update update) {
 		alarmService.updateAlarm(user.getId(), update);
 		return SuccessResponse.empty();
 	}
