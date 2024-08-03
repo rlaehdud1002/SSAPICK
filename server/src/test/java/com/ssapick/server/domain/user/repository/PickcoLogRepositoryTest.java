@@ -67,6 +67,7 @@ class PickcoLogRepositoryTest {
         assertThat(findSpendPickLogs.size()).isEqualTo(3);
         assertThat(findSpendPickLogs.get(0).getPickcoLogType()).isEqualTo(PickcoLogType.HINT_OPEN);
         assertThat(findSpendPickLogs.get(0).getChange()).isEqualTo(-1);
+        assertThat(utils.isLoaded(findSpendPickLogs.get(0).getUser())).isTrue();
     }
 
 }
