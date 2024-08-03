@@ -6,14 +6,14 @@ import { BaseResponse } from 'atoms/User.type';
 
 // mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
-  console.log('mm')
+  console.log('mm');
   const {
     data: { success, data, message, status },
   } = await instance.post('/auth/mattermost-confirm', authData);
-  console.log(status)
+  console.log(status);
   if (!success) {
     console.log(message);
-    throw new Error("실패");
+    throw new Error('실패');
   }
   return data;
 };
@@ -22,9 +22,11 @@ export const mmAuthSend = async (authData: IAuth): Promise<void> => {
 export const mmAuthConfirm = async (): Promise<boolean> => {
   const {
     data: { success, data, message },
-  } = await instance.get<BaseResponse<{
-    authenticated: boolean;
-  }>>('/auth/mattermost-confirm');
+  } = await instance.get<
+    BaseResponse<{
+      authenticated: boolean;
+    }>
+  >('/auth/mattermost-confirm');
   if (!success) {
     throw new Error(message);
   }
@@ -41,13 +43,13 @@ export const signOut = async (authToken: string): Promise<void> => {
   }
   return data;
 };
- // 회원 탈퇴 요청
+// 회원 탈퇴 요청
 export const withdrawal = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.delete('/auth',);
+  } = await instance.delete('/auth');
   if (!success) {
     throw new Error(message);
   }
   return data;
-}
+};
