@@ -18,7 +18,6 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(
-        name = "question_bans",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "question_id"})
         }
