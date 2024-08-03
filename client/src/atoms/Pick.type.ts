@@ -17,9 +17,10 @@ export interface IPick {
   id: number;
   sender: IPickUser;
   receiver: IPickUser;
+  question: IQuestion;
   createdAt: string;
   messageSend: boolean;
-  question: IQuestion;
+  openedHints: Array<string>;
 }
 
 export interface IPickUser {
