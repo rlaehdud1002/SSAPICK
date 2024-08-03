@@ -42,4 +42,15 @@ public class AlarmController {
 		alarmService.updateAlarm(user.getId(), update);
 		return SuccessResponse.empty();
 	}
+
+	/**
+	 * 전체 알람 업데이트 API
+	 * @param updateAll 전체 알람 업데이트 정보
+	 */
+	@Authenticated
+	@PostMapping(value = "/all")
+	public SuccessResponse<Void> updateAllAlarm(@CurrentUser User user, @RequestBody AlarmData.UpdateAll updateAll) {
+		alarmService.updateAllAlarm(user.getId(), updateAll.isOnOff());
+		return SuccessResponse.empty();
+	}
 }

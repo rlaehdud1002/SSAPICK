@@ -30,4 +30,9 @@ public class AlarmData {
 		private boolean pickAlarm;
 		private boolean addQuestionAlarm;
 	}
+
+	@Data
+	public static class UpdateAll {
+		private boolean onOff;
+	}
 }
