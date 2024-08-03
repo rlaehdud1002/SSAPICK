@@ -305,7 +305,7 @@ class QuestionServiceTest extends UserSupport {
 		Question question = this.createQuestion(user);
 		QuestionBan questionBan = this.createQuestionBan(user, question);
 
-		when(questionBanRepository.findQBanByUserId(user.getId())).thenReturn(List.of(question));
+		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(List.of(question));
 
 	    // * WHEN: 이걸 실행하면
 		List<QuestionData.Search> searches = questionService.searchBanQuestions(user.getId());
@@ -367,7 +367,7 @@ class QuestionServiceTest extends UserSupport {
 			List.of(question1, question2, question3, question4, question5)
 		);
 
-		when(questionBanRepository.findQBanByUserId(user.getId())).thenReturn(
+		when(questionBanRepository.findQuestionBanByUserId(user.getId())).thenReturn(
 			List.of(question3, question4)
 		);
 		

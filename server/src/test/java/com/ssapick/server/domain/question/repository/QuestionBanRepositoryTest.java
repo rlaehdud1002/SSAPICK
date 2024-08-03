@@ -1,10 +1,11 @@
 package com.ssapick.server.domain.question.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import com.ssapick.server.domain.question.entity.QuestionBan;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
+
 @DisplayName("질문 벤 레포지토리 테스트")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -30,7 +34,13 @@ class QuestionBanRepositoryTest extends TestDatabaseContainer {
 	private QuestionBanRepository questionBanRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private EntityManager em;
+	private PersistenceUnitUtil utils;
+	@BeforeEach
+	void init() {
+		utils = em.getEntityManagerFactory().getPersistenceUnitUtil();
+	}
 	@Test
 	@DisplayName("유저의가_특정_질문을_벤했는지_조회하는_테스트")
 	void 유저의가_특정_질문을_벤했는지_조회하는_테스트() throws Exception {
@@ -47,10 +57,14 @@ class QuestionBanRepositoryTest extends TestDatabaseContainer {
 		Optional<QuestionBan> notExist = questionBanRepository.findBanByUserIdAndQuestionId(
 			user.getId(), 1L);
 
+
+
 		// * THEN: 이런 결과가 나와야 한다
-		assertTrue(exist1.isPresent());
-		assertTrue(exist2.isPresent());
-		assertFalse(notExist.isPresent());
+		assertThat(utils.isLoaded(exist1.get(), "question")).isTrue();
+		assertThat(utils.isLoaded(exist2.get(), "question")).isTrue();
+		assertThat(exist1).isPresent();
+		assertThat(exist2).isPresent();
+		assertThat(notExist).isEmpty();
 	}
 
 
@@ -61,10 +75,10 @@ class QuestionBanRepositoryTest extends TestDatabaseContainer {
 		User user = userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
 		// * WHEN: 이걸 실행하면
-		List<Question> result = questionBanRepository.findQBanByUserId(user.getId());
+		List<Question> result = questionBanRepository.findQuestionBanByUserId(user.getId());
 
 		// * THEN: 이런 결과가 나와야 한다
-		assertEquals(result.size(), 2);
-
+		assertThat(result.size()).isEqualTo(2);
+		assertThat(result).extracting("id").containsExactly(2L, 3L);
 	}
 }
