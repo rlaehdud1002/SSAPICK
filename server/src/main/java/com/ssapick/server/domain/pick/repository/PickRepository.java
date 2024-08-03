@@ -47,7 +47,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
     void updateMessageSendTrue(@Param("pickId") Long pickId);
 
 
-    @Query("SELECT p FROM Pick p JOIN FETCH p.hintOpens WHERE p.id = :pickId")
+    @Query("SELECT p FROM Pick p LEFT JOIN FETCH p.hintOpens WHERE p.id = :pickId")
     Optional<Pick> findPickWithHintsById(@Param("pickId") Long pickId);
 
     @Query("""
