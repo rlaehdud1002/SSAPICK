@@ -2,7 +2,7 @@ import { IUser, IUserAdd } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist()
+const { persistAtom } = recoilPersist();
 
 // export const isMMState = atom<boolean>({
 //   key: 'isMMState',
@@ -20,10 +20,9 @@ export const isLoginState = selector<boolean>({
 
 export const accessTokenState = atom<string>({
   key: 'accessTokenState',
-  default: "",
+  default: '',
   effects_UNSTABLE: [persistAtom],
 });
-
 
 export const userState = atom<IUser>({
   key: 'userState',
@@ -61,4 +60,9 @@ export const userFriendState = atom<number>({
 export const userPickState = atom<number>({
   key: 'userPickState',
   default: 0,
+});
+
+export const userAttendanceState = atom<boolean>({
+  key: 'userAttendanceState',
+  default: false,
 });

@@ -19,11 +19,11 @@ export const getAttendance = async (): Promise<IUserAttendance> => {
 // 출석 체크
 export const postAttendance = async (): Promise<void> => {
   const {
-    data: { success, message },
-  } = await instance.post<BaseResponse<null>>('/attendance');
+    data: { success, data },
+  } = await instance.post<BaseResponse<IUserAttendance>>('/attendance');
 
   if (!success) {
-    throw new Error(message);
+    throw new Error('출석 체크 실패');
   }
 
   console.log('postAttendance');
