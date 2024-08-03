@@ -1,25 +1,35 @@
 import RankContent from 'components/RankingPage/RankContent';
+import { getRankList } from 'api/rankApi';
+import { useQuery } from '@tanstack/react-query';
+import { IRank, IRankList } from 'atoms/Rank.type';
+
+interface RankTitle {
+  key: string;
+}
+
+const rankName = [
+  'topMessageReceivers',
+  'topMessageSenders',
+  'topPickReceivers',
+  'topPickSenders',
+  'topSpendPickcoUsers',
+] as const;
 
 const Ranking = () => {
-  const fakeList = [
-    {
-      rank: 1,
-      content: '질문 1',
-    },
-    {
-      rank: 2,
-      content: '질문 2',
-    },
-    {
-      rank: 3,
-      content: '질문 3',
-    },
-  ];
+  const { data: rankList, isLoading } = useQuery<IRank>({
+    queryKey: ['rank'],
+    queryFn: getRankList,
+  });
+
+  console.log('rankList', rankList, isLoading);
 
   return (
     <div className="m-6">
-      <RankContent title="가장 많이 대답한 질문?" rankList={fakeList} />
-      <RankContent title="가장 많이 대답한 질문?" rankList={[]} />
+      {rankList &&
+        rankName.map((key) => {
+          const rankItem: IRankList[] = rankList[key];
+          return <RankContent key={key} title={key} rankInfo={rankItem} />;
+        })}
     </div>
   );
 };
