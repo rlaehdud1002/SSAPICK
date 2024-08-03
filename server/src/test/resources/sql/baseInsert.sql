@@ -40,10 +40,14 @@ VALUES ('1', '연애/데이트', 'image'),
 -- users
 INSERT INTO public.users (created_at, updated_at, is_deleted, email, gender, is_locked, is_mattermost_confirmed, name,
                           provider_id, provider_type, role_type, username, user_id)
-VALUES (NOW(), NOW(), FALSE, 'user1@example.com', 'M', FALSE, TRUE, 'User One', 'provider1', 'GOOGLE', 'USER', 'user1', 1),
-       (NOW(), NOW(), FALSE, 'user2@example.com', 'F', FALSE, TRUE, 'User Two', 'provider2', 'NAVER', 'ADMIN', 'user2', 2),
+VALUES (NOW(), NOW(), FALSE, 'user1@example.com', 'M', FALSE, TRUE, 'User One', 'provider1', 'GOOGLE', 'USER', 'user1',
+        1),
+       (NOW(), NOW(), FALSE, 'user2@example.com', 'F', FALSE, TRUE, 'User Two', 'provider2', 'NAVER', 'ADMIN', 'user2',
+        2),
        (NOW(), NOW(), FALSE, 'user3@example.com', 'M', FALSE, TRUE, 'User Three', 'provider3', 'KAKAO', 'PREMIUM_USER',
-        'user3', 3);
+        'user3', 3),
+       (NOW(), NOW(), FALSE, 'user4@example.com', 'M', FALSE, FALSE, 'User Four', 'provider4', 'KAKAO', 'PREMIUM_USER',
+        'user4', 4);
 
 -- alarm
 INSERT INTO public.alarm (add_question_alarm, message_alarm, nearby_alarm, pick_alarm, user_id, alarm_id)
@@ -61,7 +65,8 @@ VALUES (NOW(), NOW(), 1, 1),
 INSERT INTO public.follow (created_at, updated_at, follower_id, following_id, follow_id)
 VALUES (NOW(), NOW(), 1, 2, 1),
        (NOW(), NOW(), 2, 3, 2),
-       (NOW(), NOW(), 3, 1, 3);
+       (NOW(), NOW(), 3, 1, 3),
+       (NOW(), NOW(), 1, 4, 4);
 
 
 -- hint
@@ -71,16 +76,19 @@ VALUES (NOW(), NOW(), '힌트 내용 A', 1, TRUE, 1, 1),
        (NOW(), NOW(), '힌트 내용 C', 3, FALSE, 3, 3);
 
 -- notification
-INSERT INTO public.notification (created_at, updated_at, is_read, notification_type, reference_id, user_id, notification_id)
+INSERT INTO public.notification (created_at, updated_at, is_read, notification_type, reference_id, user_id,
+                                 notification_id)
 VALUES (NOW(), NOW(), FALSE, 'MESSAGE', 1, 1, 1),
        (NOW(), NOW(), TRUE, 'PICK', 2, 2, 2),
        (NOW(), NOW(), FALSE, 'ADD_QUESTION', 3, 3, 3);
 
 -- profile
-INSERT INTO public.profile (created_at, updated_at, is_deleted, cohort, pickco, profile_image, campus_id, user_id, profile_id)
+INSERT INTO public.profile (created_at, updated_at, is_deleted, cohort, pickco, profile_image, campus_id, user_id,
+                            profile_id)
 VALUES (NOW(), NOW(), FALSE, 2024, 100, 'profile_image_a.png', 1, 1, 1),
        (NOW(), NOW(), FALSE, 2024, 150, 'profile_image_b.png', 2, 2, 2),
-       (NOW(), NOW(), FALSE, 2024, 200, 'profile_image_c.png', 3, 3, 3);
+       (NOW(), NOW(), FALSE, 2024, 200, 'profile_image_c.png', 1, 3, 3),
+       (NOW(), NOW(), FALSE, 2024, 200, 'profile_image_c.png', 3, 4, 4);
 
 -- question
 INSERT INTO public.question (created_at, updated_at, is_deleted, ban_count, content, is_alarm_sent, skip_count, user_id,
