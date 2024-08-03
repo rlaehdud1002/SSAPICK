@@ -1,29 +1,37 @@
 package com.ssapick.server.domain.pick.repository;
 
-import com.ssapick.server.core.support.UserSupport;
+import com.ssapick.server.core.config.JpaTestConfig;
+import com.ssapick.server.core.container.TestDatabaseContainer;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
+import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
-import com.ssapick.server.domain.ranking.dto.RankingData;
+import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserQueryRepository;
+import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
+@DisplayName("픽 레포지토리 테스트")
 @DataJpaTest
-class PickRepositoryTest extends UserSupport {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import({JpaTestConfig.class})
+class PickRepositoryTest extends TestDatabaseContainer {
 
     @Autowired
     private PickRepository pickRepository;
@@ -34,52 +42,66 @@ class PickRepositoryTest extends UserSupport {
     @Autowired
     private QuestionRepository questionRepository;
 
-//    @Test
-//    @DisplayName("픽을 많이 받은 사람 TOP3 조회")
-//    void 픽을_많이_받은_사람_TOP3_조회() throws Exception {
-//        // * GIVEN: 이런게 주어졌을 때
-//
-//        List<User> users = List.of(
-//            User.createUser("user1@example.com", "name", 'M', ProviderType.GOOGLE, "providerId"),
-//            User.createUser("user2@example.com", "name", 'M', ProviderType.GOOGLE, "providerId"),
-//            User.createUser("user3@example.com", "name", 'M', ProviderType.GOOGLE, "providerId"),
-//            User.createUser("user4@example.com", "name", 'M', ProviderType.GOOGLE, "providerId")
-//        );
-//
-//        User user1 = users.get(0);
-//        User user2 = users.get(1);
-//        User user3 = users.get(2);
-//        User user4 = users.get(3);
-//
-//        userRepository.saveAll(users);
-//
-//
-//        Question question = Question.createQuestion(
-//                QuestionCategory.create("category", "thumbnail"), "question", user1);
-//
-//
-//        questionRepository.save(question);
-//
-//        List<Pick> picks = List.of(
-//                Pick.of(user1, user3, question),
-//                Pick.of(user1, user3, question),
-//                Pick.of(user1, user3, question),
-//                Pick.of(user1, user3, question),
-//                Pick.of(user1, user2, question),
-//                Pick.of(user1, user2, question),
-//                Pick.of(user1, user2, question),
-//                Pick.of(user2, user1, question),
-//                Pick.of(user2, user1, question),
-//                Pick.of(user2, user4, question)
-//        );
-//
-//        pickRepository.saveAll(picks);
-//        // * WHEN: 이걸 실행하면
-//
-//        List<RankingData.PickReceiver> topPickReceivers = pickRepository.findTopPickReceivers();
-//
-//        // * THEN: 이런 결과가 나와야 한다
-//        assertThat(topPickReceivers).hasSize(3);
-//
-//    }
+    @Autowired
+    private QuestionCategoryRepository questionCategoryRepository;
+
+    @Autowired
+    private CampusRepository campusRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    private PersistenceUnitUtil utils;
+
+    @BeforeEach
+    void init() {
+        utils = em.getEntityManagerFactory().getPersistenceUnitUtil();
+    }
+
+    @Test
+    @DisplayName("Pick전체 조회 테스트")
+    @Sql(scripts = "/sql/question-category.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void pick_전체_조회() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User sender = createUser("sender");
+        User receiver = createUser("receiver");
+
+        Campus campus = Campus.createCampus("광주", (short) 2, "전공");
+        sender.getProfile().updateCampus(campus);
+        receiver.getProfile().updateCampus(campus);
+
+        QuestionCategory questionCategory = questionCategoryRepository.findById(1L).orElseThrow();
+        Question question = Question.createQuestion(questionCategory, "질문 내용", sender);
+
+        List<Pick> picks = List.of(
+                Pick.of(sender, receiver, question),
+                Pick.of(sender, receiver, question),
+                Pick.of(sender, receiver, question));
+
+        campusRepository.save(campus);
+        questionRepository.save(question);
+        pickRepository.saveAll(picks);
+        em.flush();
+        em.clear();
+
+
+        // * WHEN: 이걸 실행하면
+        List<Pick> findPicks = pickRepository.findAllWithReceiverAndSenderAndQuestion();
+
+        // * THEN: 이런 결과가 나와야 한다
+        assertThat(findPicks.size()).isEqualTo(3);
+        assertThat(utils.isLoaded(findPicks.get(0), "receiver")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0), "sender")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0), "question")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getReceiver(), "profile")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getSender(), "profile")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getReceiver().getProfile(), "campus")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getSender().getProfile(), "campus")).isTrue();
+    }
+
+    private User createUser(String username) {
+        User user = User.createUser(username, "테스트 유저", 'M', ProviderType.KAKAO, "123");
+
+        return userRepository.save(user);
+    }
 }
