@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.user.repository;
 
 import com.ssapick.server.core.config.JpaTestConfig;
+import com.ssapick.server.core.container.TestDatabaseContainer;
 import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.ProviderType;
@@ -26,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({JpaTestConfig.class})
-@Sql(scripts = "/sql/clear.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-class PickcoLogRepositoryTest {
+@Sql(scripts = "/sql/clearDB.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+class PickcoLogRepositoryTest extends TestDatabaseContainer {
 
     @Autowired
     private UserRepository userRepository;
