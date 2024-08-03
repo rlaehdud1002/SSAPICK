@@ -37,7 +37,7 @@ const Mattermost = () => {
 
   useEffect(() => {
     if (authenticated) {
-      navigate('/userinfo');
+      navigate('/login/userinfo');
     }
   }, [authenticated, navigate]);
 
