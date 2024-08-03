@@ -1,12 +1,9 @@
 package com.ssapick.server.domain.question.repository;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,6 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceUnitUtil;
 
 @DisplayName("질문 레포지토리 테스트")
 @DataJpaTest

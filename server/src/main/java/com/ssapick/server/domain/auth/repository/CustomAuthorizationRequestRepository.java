@@ -5,21 +5,24 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Repository;
 
 import static com.ssapick.server.core.constants.AuthConst.OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME;
 import static com.ssapick.server.core.constants.AuthConst.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+@Slf4j
 @Repository
 public class CustomAuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+    private static final int cookieExpireSeconds = 60 * 60;
+
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
         return this.loadAuthorizationRequest(request);
     }
-
-    private static final int cookieExpireSeconds = 60*60;
 
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
@@ -28,19 +31,20 @@ public class CustomAuthorizationRequestRepository implements AuthorizationReques
                 .orElse(null);
     }
 
-    //OAuth2AuthorizationRequestRedirectFilter에서 사용
     @Override
-    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {;
         if (authorizationRequest == null) {
             CookieUtils.removeCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             CookieUtils.removeCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME);
             return;
         }
 
-        CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds, true);
+        CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds, false);
+
         String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
-            CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds, true);
+            CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, cookieExpireSeconds, false);
         }
     }
 

@@ -38,6 +38,8 @@ const fileExtensionRegexp = new RegExp("/[^/?]+\\.[^/]+$");
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }: { request: Request; url: URL }) => {
+    console.log('url', url.pathname);
+    console.log('request', request);
     if (URL_WHITE_LIST.some((path) => url.pathname.startsWith(path))) {
       return false;
     }

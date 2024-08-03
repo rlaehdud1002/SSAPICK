@@ -3,10 +3,6 @@ import { getRankList } from 'api/rankApi';
 import { useQuery } from '@tanstack/react-query';
 import { IRank, IRankList } from 'atoms/Rank.type';
 
-interface RankTitle {
-  key: string;
-}
-
 const rankName = [
   'topMessageReceivers',
   'topMessageSenders',

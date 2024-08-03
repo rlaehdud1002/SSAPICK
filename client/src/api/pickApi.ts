@@ -21,11 +21,24 @@ export const getReceivePick = async (): Promise<IPick[]> => {
 export const postCreatePick = async (pickData: IPickCreate): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post('/pick', pickData);
+  } = await instance.post<BaseResponse<null>>('/pick', pickData);
 
   if (!success) {
     throw new Error('pick 생성 실패');
   }
 
   console.log('postCreatePick');
+};
+
+// 힌트 열기
+export const getHint = async (): Promise<string> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<string>>('/hint/random');
+
+  if (!success) {
+    throw new Error('힌트 조회 실패');
+  }
+
+  return data;
 };

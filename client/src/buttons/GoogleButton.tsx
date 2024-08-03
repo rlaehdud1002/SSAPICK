@@ -1,20 +1,19 @@
 // import { GOOGLE_AUTH_URL } from "api/clientApi";
 
-const GoogleButton = () => {
-  const onGoogle = () => {
-    window.location.href = `https://www.ssapick.kro.kr/oauth2/authorization/google`;
-  };
+import { GOOGLE_AUTH_URL } from "api/clientApi";
+import { Link } from "react-router-dom";
 
+const GoogleButton = () => {
   return (
-    <form>
       <button
-        onClick={onGoogle}
+        onClick={() => {
+          window.location.href = GOOGLE_AUTH_URL;
+        }}
         className=" flex my-2 items-center justify-center background-google w-72 h-14 rounded-lg"
       >
         <img className="w-7 h-7 mr-7" src="icons/Google.png" alt="google" />
         구글로 시작하기
       </button>
-    </form>
   );
 };
 

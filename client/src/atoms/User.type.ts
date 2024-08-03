@@ -3,7 +3,7 @@ export interface BaseResponse<T> {
   code: number;
   message: string;
   data: T;
-  errors: object[];
+  errors?: object[];
 }
 
 export interface PageResponse<T> {

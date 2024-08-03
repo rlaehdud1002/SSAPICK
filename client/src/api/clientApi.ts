@@ -4,8 +4,9 @@ import { getRecoil } from "recoil-nexus";
 
 const BASE_URL = process.env.REACT_APP_BACKEND_PROD_HOST;
 
-export const KAKAO_AUTH_URL = `${BASE_URL}/oauth2/authorization/kakao`;
-export const GOOGLE_AUTH_URL = `${BASE_URL}/oauth2/authorization/google`;
+export const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://www.ssapick.kro.kr";
+export const KAKAO_AUTH_URL = `${BASE_URL}/oauth2/authorization/kakao?redirect_uri=${host}`;
+export const GOOGLE_AUTH_URL = `${BASE_URL}/oauth2/authorization/google?redirect_uri=${host}`;
 
 const instance = axios.create({
   baseURL: BASE_URL + "/api/v1",

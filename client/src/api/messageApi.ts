@@ -1,5 +1,6 @@
 import instance from 'api/clientApi';
 import { IMessage, ISendMessage } from 'atoms/Message.type';
+import { BaseResponse } from 'atoms/User.type';
 
 // 메시지 보내기
 export const postMessageSend = async (
@@ -7,7 +8,7 @@ export const postMessageSend = async (
 ): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post('message', messageData);
+  } = await instance.post<BaseResponse<null>>('message', messageData);
 
   if (!success) {
     throw new Error('메시지 전송 실패');
@@ -20,7 +21,7 @@ export const postMessageSend = async (
 export const getReceivedMessage = async (): Promise<IMessage[]> => {
   const {
     data: { success, data },
-  } = await instance.get('/message/receive');
+  } = await instance.get<BaseResponse<IMessage[]>>('/message/receive');
 
   if (!success) {
     throw new Error('받은 메시지 조회 실패');
@@ -35,7 +36,7 @@ export const getReceivedMessage = async (): Promise<IMessage[]> => {
 export const getSendMessage = async (): Promise<IMessage[]> => {
   const {
     data: { success, data },
-  } = await instance.get('/message/send');
+  } = await instance.get<BaseResponse<IMessage[]>>('/message/send');
 
   if (!success) {
     throw new Error('보낸 메시지 조회 실패');
@@ -52,7 +53,9 @@ export const deleteReceivedMessage = async (
 ): Promise<void> => {
   const {
     data: { success },
-  } = await instance.delete(`/message/${messageId}/receive`);
+  } = await instance.delete<BaseResponse<null>>(
+    `/message/${messageId}/receive`,
+  );
 
   if (!success) {
     throw new Error('받은 메시지 삭제 실패');
@@ -65,7 +68,7 @@ export const deleteReceivedMessage = async (
 export const deleteSendMessage = async (messageId: number): Promise<void> => {
   const {
     data: { success },
-  } = await instance.delete(`/message/${messageId}/send`);
+  } = await instance.delete<BaseResponse<null>>(`/message/${messageId}/send`);
 
   if (!success) {
     throw new Error('보낸 메시지 삭제 실패');

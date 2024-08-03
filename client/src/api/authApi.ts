@@ -2,6 +2,7 @@ import { IAuth } from 'atoms/Auth.type';
 import instance from './clientApi';
 import { useRecoilValue } from 'recoil';
 import { accessTokenState } from 'atoms/UserAtoms';
+import { BaseResponse } from 'atoms/User.type';
 
 // mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
@@ -18,14 +19,16 @@ export const mmAuthSend = async (authData: IAuth): Promise<void> => {
 };
 
 // mm 인증 확인 요청
-export const mmAuthConfirm = async (): Promise<void> => {
+export const mmAuthConfirm = async (): Promise<boolean> => {
   const {
     data: { success, data, message },
-  } = await instance.get('/auth/mattermost-confirm');
+  } = await instance.get<BaseResponse<{
+    authenticated: boolean;
+  }>>('/auth/mattermost-confirm');
   if (!success) {
     throw new Error(message);
   }
-  return data;
+  return data.authenticated;
 };
 
 // 로그아웃 요청
