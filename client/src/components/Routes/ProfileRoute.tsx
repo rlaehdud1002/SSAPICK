@@ -14,6 +14,7 @@ import QuestionInfo from 'components/QuestionListPage/QuestionInfo';
 import MakeQuestion from 'components/QuestionListPage/MakeQuestion';
 import Profile from 'pages/ProfilePage';
 import { Routes, Route } from 'react-router-dom';
+import NotFoundPage from 'pages/NotFoundPage';
 
 const ProfileRoute = () => {
   return (
@@ -24,19 +25,21 @@ const ProfileRoute = () => {
       <Route path="/setalarm" element={<SetAlarm />} />
       <Route path="/friendlist" element={<FriendList />} />
       <Route path="/block" element={<Block />}>
-        <Route path="" element={<BlockFriend />} />
+        <Route index element={<BlockFriend />} />
         <Route path="blockfriend" element={<BlockFriend />} />
         <Route path="blockquestion" element={<BlockQuestion />} />
       </Route>
       <Route path="/attendance" element={<Attendance />} />
       <Route path="/locationalarm" element={<LocationAlarm />} />
       <Route path="/questionlist" element={<QuestionList />}>
-        <Route path="" element={<QuestionInfo />} />
+        <Route index element={<QuestionInfo />} />
         <Route path="questioninfo" element={<QuestionInfo />} />
         <Route path="makequestion" element={<MakeQuestion />} />
       </Route>
       <Route path="/setaccount" element={<SetAccount />} />
       <Route path="/friendsearch" element={<FriendSearch />} />
+      {/* 잘못된 접근일 때 */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

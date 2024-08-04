@@ -7,11 +7,7 @@ import { RecoilRoot } from 'recoil';
 import RecoilNexus from 'recoil-nexus';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
-import NotFoundPage from 'pages/NotFoundPage';
-
-// ! FIXED NotFoundPage 렌더링 이상하게 됨
-
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -20,11 +16,8 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
-
-
-
 
 function App() {
   initializeApp(firebaseConfig);
@@ -41,10 +34,8 @@ function App() {
             <div className="flex-grow">
               <Routes>
                 <Route path="/*" element={<CommonRoute />} />
-                <Route path="/login/*" element={<LoginRoute />} />
-                <Route path="/profile/*" element={<ProfileRoute />} />
-                {/* 잘못된 접근일 때
-                <Route path="*" element={<NotFoundPage />} /> */}
+                <Route path="login/*" element={<LoginRoute />} />
+                <Route path="profile/*" element={<ProfileRoute />} />
               </Routes>
               <div className="flex flex-col max-h-screen">
                 {location !== '' && location !== 'splash' && <Footer />}
