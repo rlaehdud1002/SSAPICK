@@ -29,9 +29,6 @@ class UserBanserviceTest extends UserSupport {
 	@Mock
 	private UserBanRepository userBanRepository;
 
-	@Mock
-	private UserBanRepository userRepository;
-
 
 	@Test
 	@DisplayName("차단한_유저들_조회_테스트")
@@ -39,7 +36,6 @@ class UserBanserviceTest extends UserSupport {
 	    // * GIVEN: 이런게 주어졌을 때
 		User userA = this.createUser("userA");
 		User userB = this.createUser("userB");
-		User userC = this.createUser("userC");
 		User userD = this.createUser("userD");
 
 		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(
