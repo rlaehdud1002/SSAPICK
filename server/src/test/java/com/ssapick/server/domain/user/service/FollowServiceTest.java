@@ -71,7 +71,7 @@ class FollowServiceTest extends UserSupport {
 		));
 
 		// 벤한 사용자는 없도록 설정
-		when(userBanRepository.findByFromUser(userA)).thenReturn(List.of());
+		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(List.of());
 
 		// * WHEN: 이걸 실행하면
 		List<ProfileData.Search> searches = followService.recommendFollow(userA);
@@ -119,7 +119,7 @@ class FollowServiceTest extends UserSupport {
 			this.createFollow(userD, userF)
 		));
 
-		when(userBanRepository.findByFromUser(userA)).thenReturn(List.of(userG));
+		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(List.of(userG));
 
 	    // * WHEN: 이걸 실행하면
 		List<ProfileData.Search> searches = followService.recommendFollow(userA);
