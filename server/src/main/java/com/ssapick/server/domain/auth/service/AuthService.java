@@ -66,6 +66,7 @@ public class AuthService {
 
 	@Transactional
 	public void authenticate(User user, MattermostData.Request request) {
+		log.info("authenticate request: {}", request);
 		try {
 			ResponseEntity<MattermostData.Response> response = mattermostConfirmService.authenticate(request);
 			log.info("response: {}", response);
