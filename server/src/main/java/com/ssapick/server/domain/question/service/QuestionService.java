@@ -15,6 +15,8 @@ import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserBanRepository;
+
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,8 @@ public class QuestionService {
     private final QuestionCategoryRepository questionCategoryRepository;
     private final SentenceSimilarityAnalyzerService sentenceSimilarityAnalyzerService;
     private final CommentAnalyzerService commentAnalyzerService;
+    private final UserBanRepository userBanRepository;
+
     /**
      * 모든질문 조회
      *
@@ -169,5 +173,22 @@ public class QuestionService {
         searches.removeAll(banQuestions);
 
         return searches;
+    }
+
+    /**
+     * 질문 차단 해제
+     *
+     * @param user
+     * @param questionId
+     */
+    @Transactional
+    public void unbanQuestion(User user, Long questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+            () ->new BaseException(ErrorCode.NOT_FOUND_QUESTION));
+
+        QuestionBan questionBan = questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), questionId)
+            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_BAN));
+
+        questionBanRepository.delete(questionBan);
     }
 }
