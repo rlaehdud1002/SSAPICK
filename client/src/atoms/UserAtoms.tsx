@@ -30,25 +30,18 @@ export const firebaseTokenState = atom<string>({
 
 export const userState = atom<IUser>({
   key: 'userState',
-  default: {
-    profileImage: 'icons/Profile.png',
-    name: '박싸피',
-    gender: '남자',
-    th: '11',
-    campusName: '서울',
-  },
 });
 
 export const userAddState = atom<IUserAdd>({
   key: 'userAddState',
-  default: {
-    mbti: '',
-    classNum: 1,
-    major: '',
-    birth: '',
-    location: '',
-    interest: '',
-  },
+  // default: {
+  //   mbti: '',
+  //   classNum: 1,
+  //   major: '',
+  //   birth: '',
+  //   location: '',
+  //   interest: '',
+  // },
 });
 
 export const userCoinState = atom<number>({
