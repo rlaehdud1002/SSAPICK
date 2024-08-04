@@ -31,6 +31,8 @@ public class QNotification extends EntityPathBase<Notification> {
 
     public final BooleanPath isRead = createBoolean("isRead");
 
+    public final StringPath message = createString("message");
+
     public final EnumPath<NotificationType> notificationType = createEnum("notificationType", NotificationType.class);
 
     public final NumberPath<Long> referenceId = createNumber("referenceId", Long.class);

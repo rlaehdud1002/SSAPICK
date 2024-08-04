@@ -42,8 +42,8 @@ public class User extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followingUser")
 	private final List<Follow> followings = new ArrayList<>();
 
-	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
-	private final List<UserBan> bannedUser = new ArrayList<>();
+	// @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+	// private final List<UserBan> bannedUser = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private final List<Hint> hints = new ArrayList<>();
@@ -159,7 +159,7 @@ public class User extends BaseEntity {
 	public void delete() {
 		this.isDeleted = true;
 		this.getProfile().delete();
-		this.bannedUser.clear();
+		// this.bannedUser.clear();
 		this.hints.clear();
 	}
 }

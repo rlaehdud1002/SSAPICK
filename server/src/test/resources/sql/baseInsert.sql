@@ -138,9 +138,8 @@ VALUES ('등록된 질문 A', 1, 1, 1),
 
 -- user_ban
 INSERT INTO public.user_ban (created_at, updated_at, from_user_id, to_user_id, user_ban_id)
-VALUES (NOW(), NOW(), 1, 2, 1),
-       (NOW(), NOW(), 2, 3, 2),
-       (NOW(), NOW(), 3, 1, 3);
+VALUES (NOW(), NOW(), 1, 2, 1);
+
 
 -- pickco_log
 INSERT INTO public.pickco_log (created_at, updated_at, change, pickco_log_type, remain, user_id, pickco_log_id)
