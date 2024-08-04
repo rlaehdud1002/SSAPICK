@@ -68,7 +68,7 @@ public class FollowService {
             .toList();
 
         // 현재 사용자가 벤한 친구 목록을 가져온다.
-        List<Profile> bannedProfiles = userBanRepository.findByFromUser(user).stream()
+        List<Profile> bannedProfiles = userBanRepository.findBanUsersByFromUser(user).stream()
             .map(User::getProfile)
             .toList();
 
