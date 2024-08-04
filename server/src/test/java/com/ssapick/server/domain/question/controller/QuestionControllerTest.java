@@ -296,7 +296,7 @@ class QuestionControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isCreated())
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("질문")
+					.tag("질문 차단")
 					.summary("질문 차단 API")
 					.description("질문을 차단한다.")
 					.pathParameters(parameterWithName("questionId").type(SimpleType.NUMBER).description("차단할 질문의 ID"))
@@ -320,7 +320,7 @@ class QuestionControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isNoContent())
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("질문")
+					.tag("질문 차단")
 					.summary("질문 차단 해제 API")
 					.description("질문 차단을 해제한다.")
 					.pathParameters(
@@ -352,7 +352,7 @@ class QuestionControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("질문")
+					.tag("질문 차단")
 					.summary("유저가 차단한 질문 조회 API")
 					.description("유저가 차단한 질문들을 조회한다.")
 					.responseFields(response(
