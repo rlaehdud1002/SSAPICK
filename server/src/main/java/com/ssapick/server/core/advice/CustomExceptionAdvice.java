@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionAdvice {
     @ExceptionHandler(Exception.class)
     public ErrorResponse exception(Exception e) {
+        e.printStackTrace();
         if (!e.getMessage().contains("No static resource")) {
             log.error("message: {}", e.getMessage(), e);
         }
@@ -25,6 +26,7 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler({AuthorizationDeniedException.class})
     public ResponseEntity<ErrorResponse> authenticateException(Exception e) {
+        e.printStackTrace();
         log.error("access exception: {}", e.getMessage());
         ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
         return ResponseEntity
@@ -44,6 +46,7 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomValidationError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        e.printStackTrace();
         CustomValidationError customValidationError = new CustomValidationError(e.getBindingResult());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
