@@ -105,6 +105,7 @@ class PickControllerTest extends RestDocsSupport {
                                                 .description("픽 보낸 사람 전공"),
                                         fieldWithPath("data[].sender.profileImage").type(JsonFieldType.NULL)
                                                 .description("픽 보낸 사람 프로필 이미지 익명 처리"),
+                                        fieldWithPath("data[].sender.cohort").type(JsonFieldType.NUMBER).description("픽 보낸 사람 기수"),
                                         fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
                                         fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
                                         fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
@@ -116,6 +117,7 @@ class PickControllerTest extends RestDocsSupport {
                                                 .description("픽 받은 사람 전공"),
                                         fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING)
                                                 .description("픽 받은 사람 프로필 이미지"),
+                                    fieldWithPath("data[].receiver.cohort").type(JsonFieldType.NUMBER).description("픽 받은 사람 기수"),
                                         fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
                                         fieldWithPath("data[].question.banCount").description("질문을 차단한 횟수"),
                                         fieldWithPath("data[].question.skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),
@@ -182,6 +184,7 @@ class PickControllerTest extends RestDocsSupport {
                                                 .description("픽 보낸 사람 전공"),
                                         fieldWithPath("data[].sender.profileImage").type(JsonFieldType.STRING)
                                                 .description("픽 보낸 사람 프로필 이미지 익명 처리"),
+                                    fieldWithPath("data[].sender.cohort").type(JsonFieldType.NUMBER).description("픽 보낸 사람 기수"),
                                         fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
                                         fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
                                         fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
@@ -193,6 +196,7 @@ class PickControllerTest extends RestDocsSupport {
                                                 .description("픽 받은 사람 전공"),
                                         fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING)
                                                 .description("픽 받은 사람 프로필 이미지"),
+                                    fieldWithPath("data[].receiver.cohort").type(JsonFieldType.NUMBER).description("픽 받은 사람 기수"),
                                         fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
                                         fieldWithPath("data[].question.banCount").description("질문을 차단한 횟수"),
                                         fieldWithPath("data[].question.skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),

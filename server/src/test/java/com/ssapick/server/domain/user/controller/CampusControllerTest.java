@@ -81,7 +81,8 @@ class CampusControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].campusName").type(JsonFieldType.STRING).description("캠퍼스 이름"),
                                         fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("반"),
                                         fieldWithPath("data[].campusDescription").type(JsonFieldType.STRING).description("반 설명"),
-                                        fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지")
+                                        fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지"),
+                                        fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수")
                                 ))
                                 .build()
                 )));

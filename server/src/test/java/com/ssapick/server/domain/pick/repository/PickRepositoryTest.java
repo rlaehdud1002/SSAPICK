@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import({JpaTestConfig.class})
+@Sql(scripts = "/sql/question-category.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class PickRepositoryTest extends TestDatabaseContainer {
 
     @Autowired
@@ -53,18 +54,16 @@ class PickRepositoryTest extends TestDatabaseContainer {
 
     private PersistenceUnitUtil utils;
 
-    @BeforeEach
-    void init() {
-        utils = em.getEntityManagerFactory().getPersistenceUnitUtil();
-    }
+    private List<Pick> picks;
+    private User sender;
+    private User receiver;
 
-    @Test
-    @DisplayName("Pick전체 조회 테스트")
-    @Sql(scripts = "/sql/question-category.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void pick_전체_조회() throws Exception {
-        // * GIVEN: 이런게 주어졌을 때
-        User sender = createUser("sender");
-        User receiver = createUser("receiver");
+    @BeforeEach
+    void setup() {
+        utils = em.getEntityManagerFactory().getPersistenceUnitUtil();
+
+        sender = createUser("sender");
+        receiver = createUser("receiver");
 
         Campus campus = Campus.createCampus("광주", (short) 2, "전공");
         sender.getProfile().updateCampus(campus);
@@ -73,23 +72,29 @@ class PickRepositoryTest extends TestDatabaseContainer {
         QuestionCategory questionCategory = questionCategoryRepository.findById(1L).orElseThrow();
         Question question = Question.createQuestion(questionCategory, "질문 내용", sender);
 
-        List<Pick> picks = List.of(
+        picks = List.of(
                 Pick.of(sender, receiver, question),
                 Pick.of(sender, receiver, question),
-                Pick.of(sender, receiver, question));
+                Pick.of(sender, receiver, question),
+                Pick.of(receiver, sender, question),
+                Pick.of(receiver, sender, question)
+        );
 
         campusRepository.save(campus);
         questionRepository.save(question);
         pickRepository.saveAll(picks);
         em.flush();
         em.clear();
+    }
 
-
+    @Test
+    @DisplayName("Pick전체 조회 테스트")
+    void pick_전체_조회() throws Exception {
         // * WHEN: 이걸 실행하면
         List<Pick> findPicks = pickRepository.findAllWithReceiverAndSenderAndQuestion();
 
         // * THEN: 이런 결과가 나와야 한다
-        assertThat(findPicks.size()).isEqualTo(3);
+        assertThat(findPicks.size()).isEqualTo(5);
         assertThat(utils.isLoaded(findPicks.get(0), "receiver")).isTrue();
         assertThat(utils.isLoaded(findPicks.get(0), "sender")).isTrue();
         assertThat(utils.isLoaded(findPicks.get(0), "question")).isTrue();
@@ -97,6 +102,55 @@ class PickRepositoryTest extends TestDatabaseContainer {
         assertThat(utils.isLoaded(findPicks.get(0).getSender(), "profile")).isTrue();
         assertThat(utils.isLoaded(findPicks.get(0).getReceiver().getProfile(), "campus")).isTrue();
         assertThat(utils.isLoaded(findPicks.get(0).getSender().getProfile(), "campus")).isTrue();
+    }
+
+    @Test
+    @DisplayName("유저의 받은 픽 조회")
+    void findReceiverByUserId() {
+        // * WHEN: 이걸 실행하면
+        List<Pick> findPicks = pickRepository.findReceiverByUserId(receiver.getId());
+
+        // * THEN: 이런 결과가 나와야 한다
+        assertThat(findPicks.size()).isEqualTo(3);
+        findPicks.stream().forEach(pick -> {
+            assertThat(pick.getReceiver().getId()).isEqualTo(receiver.getId());
+        });
+        assertThat(utils.isLoaded(findPicks.get(0), "receiver")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0), "question")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getQuestion(), "questionCategory")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0), "hintOpens")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getHintOpens(), "hint")).isTrue();
+    }
+
+    @Test
+    @DisplayName("유저의 보낸 픽 조회")
+    void findSenderByUserId() {
+        // * WHEN: 이걸 실행하면
+        List<Pick> findPicks = pickRepository.findSenderByUserId(receiver.getId());
+
+        // * THEN: 이런 결과가 나와야 한다
+        assertThat(findPicks.size()).isEqualTo(2);
+        findPicks.stream().forEach(pick -> {
+            assertThat(pick.getReceiver().getId()).isEqualTo(sender.getId());
+        });
+        assertThat(utils.isLoaded(findPicks.get(0), "sender")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0), "question")).isTrue();
+        assertThat(utils.isLoaded(findPicks.get(0).getQuestion(), "questionCategory")).isTrue();
+    }
+
+    @Test
+    @DisplayName("픽 아이디로 픽 찾기")
+    void findPickWithHintsById() {
+        // * GIVEN: 이런 상황이 주어지면
+        Pick pick = picks.get(0);
+
+        // * WHEN: 이걸 실행하면
+        Pick findPick = pickRepository.findPickWithHintsById(pick.getId()).orElseThrow();
+
+        // * THEN: 이런 결과가 나와야 한다
+        assertThat(findPick.getId()).isEqualTo(pick.getId());
+        assertThat(utils.isLoaded(findPick, "hintOpens")).isTrue();
+
     }
 
     private User createUser(String username) {

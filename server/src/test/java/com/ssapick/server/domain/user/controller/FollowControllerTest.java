@@ -76,7 +76,8 @@ class FollowControllerTest extends RestDocsSupport {
 						fieldWithPath("data[].campusName").type(JsonFieldType.STRING).description("캠퍼스 지역"),
 						fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
 						fieldWithPath("data[].campusDescription").type(JsonFieldType.STRING).description("전공 관련 정보"),
-						fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL")
+						fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+						fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보")
 					))
 					.build()
 			)));

@@ -136,7 +136,7 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchBanQuestions(Long userId) {
-        return questionBanRepository.findQBanByUserId(userId)
+        return questionBanRepository.findQuestionBanByUserId(userId)
                 .stream()
                 .map(QuestionData.Search::fromEntity)
                 .toList();

@@ -13,6 +13,8 @@ public class UserData {
 
     @Data
     public static class UserInfo {
+				private Long id;
+				private String username;
         private String name;
         private String profileImage;
         private char gender;
@@ -31,6 +33,8 @@ public class UserData {
             Profile profile = user.getProfile();
 
             UserInfo userInfo = new UserInfo();
+						userInfo.id = user.getId();
+						userInfo.username = user.getUsername();
             userInfo.name = user.getName();
             userInfo.profileImage = profile.getProfileImage();
             userInfo.gender = user.getGender();
