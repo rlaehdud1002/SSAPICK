@@ -68,6 +68,7 @@ public class AuthService {
 	public void authenticate(User user, MattermostData.Request request) {
 		try {
 			ResponseEntity<MattermostData.Response> response = mattermostConfirmService.authenticate(request);
+			log.info("response: {}", response);
 			MattermostData.Response body = response.getBody();
 
 			if (user.isMattermostConfirmed()) {
@@ -92,6 +93,7 @@ public class AuthService {
 			publisher.publishEvent(new S3UploadEvent(user.getProfile(), profileImage));
 
 		} catch (FeignException.Unauthorized e) {
+			e.printStackTrace();
 			throw new BaseException(ErrorCode.NOT_FOUND_USER, e);
 		}
 	}
