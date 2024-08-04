@@ -1,5 +1,15 @@
 package com.ssapick.server.domain.user.service;
 
+import java.util.List;
+import java.util.function.Function;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
@@ -13,17 +23,9 @@ import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -44,6 +46,10 @@ public class UserService {
 		int followingsCount = followRepository.findByFollowingUser(findUser).size();
 
 		return UserData.UserInfo.createUserInfo(findUser, pickReceivedCount, followingsCount);
+	}
+
+	public UserData.IsValid idValid(User user) {
+		return UserData.IsValid.of(userRepository.findById(user.getId()).orElseThrow());
 	}
 
 	@Transactional
