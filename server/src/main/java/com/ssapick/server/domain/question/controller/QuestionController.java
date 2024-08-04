@@ -33,6 +33,18 @@ public class QuestionController {
     }
 
     /**
+     * 내가 생성한 질문 조회 API
+     * 내가 생성한 질문을 조회한다.
+     *
+     *
+     */
+    @GetMapping("/me")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByUser(@CurrentUser User user) {
+        return SuccessResponse.of(questionService.getQuestionsByUser(user));
+    }
+
+
+    /**
      * 질문 ID로 질문 조회 API
      * 입력한 질문 ID에 해당하는 질문을 조회한다.
      *
