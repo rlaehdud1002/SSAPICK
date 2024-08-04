@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.question.controller;
 
+import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
@@ -88,11 +89,52 @@ public class QuestionController {
      * 내가 지목받은 질문 수 별로 랭킹 조회 API
      *
      * @param user
-     * @return
+     * @return {@link List<QuestionData.Search>} 내가 지목받은 질문 수 별로 랭킹 조회
      */
     @GetMapping("/rank")
     public SuccessResponse<List<QuestionData.Search>> searchQuestionsRank(@CurrentUser User user) {
         List<QuestionData.Search> questions = questionService.searchQuestionsRank(user.getId());
         return SuccessResponse.of(questions);
+    }
+
+    /**
+     * 질문 차단 API
+     *
+     * @param user
+     * @param questionId
+     * @return
+     */
+    @Authenticated
+    @PostMapping("{questionId}/ban")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponse<Void> banQuestion(@CurrentUser User user, @PathVariable("questionId") Long questionId) {
+        questionService.banQuestion(user, questionId);
+        return SuccessResponse.created();
+    }
+
+    /**
+     * 질문 차단 해제 API
+     *
+     * @param user
+     * @return
+     */
+    @Authenticated
+    @DeleteMapping("{questionId}/ban")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public SuccessResponse<Void> unbanQuestion(@CurrentUser User user, @PathVariable("questionId") Long questionId) {
+        questionService.unbanQuestion(user, questionId);
+        return SuccessResponse.empty();
+    }
+
+    /**
+     * 내가 차단한 질문 조회 API
+     *
+     * @param user
+     * @return {@link List<QuestionData.Search>} 내가 차단한 질문 목록
+     */
+    @Authenticated
+    @GetMapping("/bans")
+    public SuccessResponse<List<QuestionData.Search>> searchBanQuestions(@CurrentUser User user) {
+        return SuccessResponse.of(questionService.searchBanQuestions(user.getId()));
     }
 }
