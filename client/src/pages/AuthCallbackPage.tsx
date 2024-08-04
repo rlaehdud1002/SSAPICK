@@ -15,7 +15,6 @@ const AuthCallback = () => {
       setAccessToken(accessToken);
       navigate('/mattermost');
       // {isAuth ? navigate('/home') : navigate('/mattermost')}
-      
     }
   }, [])
 

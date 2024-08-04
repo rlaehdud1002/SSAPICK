@@ -5,14 +5,13 @@ import { useForm } from 'react-hook-form';
 import AuthInput from '../components/MattermostPage/AuthInput';
 import MattermostIcon from '../icons/MattermostIcon';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { useEffect } from 'react';
 
 interface AuthFormm {
   id: string;
   password: string;
 }
-
+// mm 인증 확인 -> 인증이 되어있으면, 유저 정보 입력 페이지로 이동
 const Mattermost = () => {
   const { data: authenticated, isLoading } = useQuery<boolean>({
     queryKey: ['authenticated'],
@@ -29,10 +28,6 @@ const Mattermost = () => {
       navigate('/login/userinfo');
       console.log('성공');
     },
-    // 실패시,
-    // onError: () => {
-    //   // console.log(message);
-    // }
   });
 
   useEffect(() => {

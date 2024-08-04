@@ -2,11 +2,23 @@ import { IAuth } from 'atoms/Auth.type';
 import instance from './clientApi';
 import { useRecoilValue } from 'recoil';
 import { accessTokenState } from 'atoms/UserAtoms';
-import { BaseResponse } from 'atoms/User.type';
+import { BaseResponse, IUser } from 'atoms/User.type';
+
+
+// 유저 정보 조회
+export const getUserInfo = async (): Promise<IUser[]> => {
+  const {
+    data: { success, data, message },
+  } = await instance.get<BaseResponse<IUser[]>>('/user/me');
+
+  if (!success) {
+    throw new Error('유저 정보 조회 실패');
+  }
+  return data;
+};
 
 // mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
-  console.log('mm');
   const {
     data: { success, data, message, status },
   } = await instance.post('/auth/mattermost-confirm', authData);

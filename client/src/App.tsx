@@ -29,6 +29,7 @@ const firebaseConfig = {
 function App() {
   initializeApp(firebaseConfig);
   const location = useLocation().pathname.split('/')[1];
+  console.log(location)
   const queryClient = new QueryClient();
 
   return (
@@ -37,7 +38,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <div className="flex flex-col relative">
           <div className="flex flex-col max-h-screen">
-            {location !== '' && location !== 'splash' && <Header />}
+            {location !== ''  && location !== 'splash' && location !=='mattermost' && location !=='login' && <Header />}
             <div className="flex-grow">
               <Routes>
                 <Route path="/*" element={<CommonRoute />} />
@@ -47,7 +48,7 @@ function App() {
                 <Route path="*" element={<NotFoundPage />} /> */}
               </Routes>
               <div className="flex flex-col max-h-screen">
-                {location !== '' && location !== 'splash' && <Footer />}
+                {location !== '' && location !== 'splash'&& location !=='mattermost' && location !=='login' && <Footer />}
               </div>
             </div>
           </div>
