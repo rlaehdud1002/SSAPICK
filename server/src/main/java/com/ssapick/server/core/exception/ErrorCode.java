@@ -40,6 +40,8 @@ public enum ErrorCode {
 	EXIST_QUESTION_BAN(5003, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
 	NOT_FOUND_QUESTION(5004, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
 	EXIST_QUESTION(5005, HttpStatus.BAD_REQUEST, "이미 질문이 존재합니다."),
+	NOT_FOUND_QUESTION_BAN(5006, HttpStatus.NOT_FOUND, "질문 차단을 찾을 수 없습니다."),
+
 
 	//Pick
 	NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
@@ -63,6 +65,7 @@ public enum ErrorCode {
 
 	//UserBan
 	NOT_FOUND_USER_BAN(11000, HttpStatus.NOT_FOUND, "사용자 차단을 찾을 수 없습니다.");
+
 
 	private final int code;
 	private final HttpStatus status;
