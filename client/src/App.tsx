@@ -69,8 +69,6 @@ function App() {
   }, [navigate, setValidState]);
 
   return (
-    // <RecoilRoot>
-    //   <RecoilNexus />
     <QueryClientProvider client={queryClient}>
       <div className="flex flex-col relative">
         <div className="flex flex-col max-h-screen">
@@ -96,7 +94,6 @@ function App() {
         </div>
       </div>
     </QueryClientProvider>
-    // </RecoilRoot>
   );
 }
 
