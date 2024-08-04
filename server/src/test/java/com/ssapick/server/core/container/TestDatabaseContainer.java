@@ -26,7 +26,6 @@ public class TestDatabaseContainer {
 
     @DynamicPropertySource
     public static void overrideProps(DynamicPropertyRegistry dynamicPropertyRegistry) {
-        System.out.println(postgreSQLContainer.getJdbcUrl());
         dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         dynamicPropertyRegistry.add("spring.datasource.name", () -> DATABASE_NAME);
         dynamicPropertyRegistry.add("spring.datasource.username", () -> USERNAME);

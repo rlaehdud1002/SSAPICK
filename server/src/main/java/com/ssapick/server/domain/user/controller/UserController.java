@@ -35,7 +35,6 @@ public class UserController {
 	@Authenticated
 	@GetMapping(value = "/me")
 	public SuccessResponse<UserData.UserInfo> findLoggedInUser(@CurrentUser User user) {
-		System.out.println(user);
 		return SuccessResponse.of(userService.getUserInfo(user));
 	}
 

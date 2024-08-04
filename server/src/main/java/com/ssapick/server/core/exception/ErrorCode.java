@@ -25,9 +25,11 @@ public enum ErrorCode {
     ACCESS_DENIED(2010, HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     ALREADY_FOLLOWED_USER(2011, HttpStatus.BAD_REQUEST, "이미 팔로우한 사용자입니다."),
     NOT_FOLLOWED_USER(2012, HttpStatus.BAD_REQUEST, "팔로우 되지 않은 사용자입니다."),
+	FCM_TOKEN_NOT_FOUND(2013, HttpStatus.NOT_FOUND, "FCM 토큰을 찾을 수 없습니다."),
 
 	// Invalid Value
 	INVALID_INPUT_VALUE(3000, HttpStatus.BAD_REQUEST, "올바르지 않은 입력 값입니다."),
+	NOTIFICATION_SEND_FAIL(3001, HttpStatus.BAD_REQUEST, "알림 전송에 실패하였습니다."),
 
 	// Attendance
 	ALREADY_CHECKIN_TODAY(4000, HttpStatus.BAD_REQUEST, "오늘 이미 출석을 하셨습니다."),

@@ -61,6 +61,10 @@ public class Pick extends TimeEntity {
 		return pick;
 	}
 
+	public void sendAlarm() {
+		this.isAlarmSent = true;
+	}
+
 	@Builder
 	public Pick(User sender) {
 		this.sender = sender;

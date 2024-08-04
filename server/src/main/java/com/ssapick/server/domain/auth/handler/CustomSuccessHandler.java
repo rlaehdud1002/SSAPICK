@@ -34,9 +34,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        System.out.println("CustomSuccessHandler.determineTargetUrl");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
-        System.out.println("redirectUri: " + redirectUri);
         clearAuthenticationAttributes(request, response);
         return redirectUri.orElse(getDefaultTargetUrl());
     }

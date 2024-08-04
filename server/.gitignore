@@ -39,6 +39,6 @@ data/
 
 ## Properties ##
 /src/main/resources/application-prod.properties
-src/main/resources/application-auth.properties
-
+/src/main/resources/application-auth.properties
+/src/main/resources/ssapick-certification.json
 /src/test/resources/application-auth.properties

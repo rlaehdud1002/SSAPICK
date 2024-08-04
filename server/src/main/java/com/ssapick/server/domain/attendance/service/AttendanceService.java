@@ -46,7 +46,6 @@ public class AttendanceService {
         boolean todayChecked = attendanceRepository.existsByUserAndCreatedAtDate(user, today);
 
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
-        System.out.println(attendances);
         int streak = getStreak(today, attendances);
         return AttendanceData.CreateStatus(streak, todayChecked);
     }

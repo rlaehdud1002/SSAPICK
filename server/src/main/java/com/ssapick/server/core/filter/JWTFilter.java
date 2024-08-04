@@ -47,7 +47,6 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
             request.setAttribute("error-message", e.getMessage());
         }
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
         doFilter(request, response, filterChain);
     }
 

@@ -1,8 +1,6 @@
 import { IUser, IUserAdd } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
-
-const { persistAtom } = recoilPersist()
+import { persistAtom } from './RecoilPersist';
 
 // export const isMMState = atom<boolean>({
 //   key: 'isMMState',
@@ -23,6 +21,12 @@ export const accessTokenState = atom<string>({
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
+
+export const firebaseTokenState = atom<string>({
+  key: 'firebaseTokenState',
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+})
 
 
 export const userState = atom<IUser>({

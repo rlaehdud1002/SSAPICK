@@ -43,6 +43,9 @@ public class Profile extends BaseEntity {
 	@Column(nullable = false)
 	private int pickco = 0;
 
+	@Column(name = "fcm_token", length = 300, unique = true)
+	private String fcmToken;
+
 	public static Profile createEmptyProfile(User user) {
 		Profile profile = new Profile();
 		profile.user = user;
@@ -85,24 +88,7 @@ public class Profile extends BaseEntity {
 		this.profileImage = profileImage;
 	}
 
-	//	@OneToMany(mappedBy = "fromProfile",cascade = CascadeType.ALL)
-	//	private Set<MemberBan> bannedToProfiles = new HashSet<>();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<Attendance> attendances = new ArrayList<>();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<PickcoLog> pickcoLogs = new ArrayList<>();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<AlarmSetting> alarmSettings = new ArrayList();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<Hint> hints = new ArrayList<>();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<QuestionBan> questionBans = new ArrayList<>();
-	//
-	//	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
-	//	private ArrayList<Notification> notifications = new ArrayList<>();
+	public void updateFcmToken(String fcmToken) {
+		this.fcmToken = fcmToken;
+	}
 }
