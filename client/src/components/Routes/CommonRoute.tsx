@@ -6,6 +6,7 @@ import Home from 'pages/HomePage';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
+import NotFoundPage from 'pages/NotFoundPage';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
@@ -27,6 +28,8 @@ const CommonRoute = () => {
       </Route>
       <Route path="/mattermost" element={<Mattermost />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      {/* 잘못된 접근일 때 */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
