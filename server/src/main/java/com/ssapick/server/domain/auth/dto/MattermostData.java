@@ -7,6 +7,7 @@ import lombok.Data;
 public class MattermostData {
     @Data
     public static class Request {
+        @JsonProperty("login_id")
         private String loginId;
         private String password;
 
