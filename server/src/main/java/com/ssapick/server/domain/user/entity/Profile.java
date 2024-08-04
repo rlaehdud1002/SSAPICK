@@ -2,17 +2,7 @@ package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.BaseEntity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +10,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(
+		name = "profile",
+		uniqueConstraints = {
+			@UniqueConstraint(columnNames = "fcm_token", name = "unique_fcm_token")
+		}
+)
 public class Profile extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +39,7 @@ public class Profile extends BaseEntity {
 	@Column(nullable = false)
 	private int pickco = 0;
 
-	@Column(name = "fcm_token", length = 300, unique = true)
+	@Column(name = "fcm_token", length = 300)
 	private String fcmToken;
 
 	public static Profile createEmptyProfile(User user) {
