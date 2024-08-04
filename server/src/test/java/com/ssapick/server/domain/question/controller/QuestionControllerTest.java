@@ -29,8 +29,7 @@ import java.util.stream.Stream;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -313,12 +312,12 @@ class QuestionControllerTest extends RestDocsSupport {
 		Long questionId = 2L;
 
 		// * WHEN: 이걸 실행하면
-		ResultActions perform = this.mockMvc.perform(post("/api/v1/questions/{questionId}/ban", questionId)
+		ResultActions perform = this.mockMvc.perform(delete("/api/v1/questions/{questionId}/ban", questionId)
 			.contentType("application/json")
 			.header("Authorization", "Bearer access-token"));
 
 		// * THEN: 이런 결과가 나와야 한다
-		perform.andExpect(status().isCreated())
+		perform.andExpect(status().isNoContent())
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters.builder()
 					.tag("질문")
