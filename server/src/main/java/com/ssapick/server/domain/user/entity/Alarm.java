@@ -53,4 +53,12 @@ public class Alarm {
 		this.pickAlarm = update.isPickAlarm();
 		this.addQuestionAlarm = update.isAddQuestionAlarm();
 	}
+
+	public void updateAll(boolean onOff) {
+		this.messageAlarm = onOff;
+		this.nearbyAlarm = onOff;
+		this.pickAlarm = onOff;
+		this.addQuestionAlarm = onOff;
+	}
+
 }

@@ -31,4 +31,13 @@ public class AlramService {
 	public void updateAlarm(Long userId, AlarmData.Update update) {
 		alarmRepository.findByUserId(userId).ifPresent(alarm -> alarm.update(update));
 	}
+
+	/**
+	 * 전체 알람 업데이트 API
+	 * @param userId 업데이트할 유저 아이디
+	 */
+	@Transactional
+	public void updateAllAlarm(Long userId, boolean onOff) {
+		alarmRepository.findByUserId(userId).ifPresent(alarm -> alarm.updateAll(onOff));
+	}
 }

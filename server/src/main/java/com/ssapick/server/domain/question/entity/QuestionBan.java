@@ -17,6 +17,11 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "question_id"})
+        }
+)
 public class QuestionBan extends TimeEntity {
 
     @Id

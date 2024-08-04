@@ -91,7 +91,6 @@ public class S3Service {
 		try {
 			return this.uploadToS3(image);
 		} catch (IOException e) {
-			System.out.println(e);
 			throw new BaseException(ErrorCode.FAIL_TO_CREATE_FILE);
 		}
 	}

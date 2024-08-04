@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -48,6 +49,9 @@ class PickServiceTest extends UserSupport {
 
 	@Mock
 	private EntityManager em;
+
+	@Mock
+	private ApplicationEventPublisher publisher;
 
 	@Test
 	@DisplayName("로그인한 사용자가 받은 픽 조회 테스트")
@@ -124,6 +128,9 @@ class PickServiceTest extends UserSupport {
 		when(pickCacheRepository.index(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
 		when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
+		Pick spy = spy(Pick.of(sender, receiver, question));
+		when(pickRepository.save(any())).thenReturn(spy);
+		when(spy.getId()).thenReturn(1L);
 
 		// * WHEN: 이걸 실행하면
 		pickService.createPick(sender, create);

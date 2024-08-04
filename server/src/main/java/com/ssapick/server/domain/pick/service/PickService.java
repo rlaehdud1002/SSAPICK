@@ -4,6 +4,9 @@ import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
 
+import com.ssapick.server.domain.notification.dto.FCMData;
+import com.ssapick.server.domain.notification.entity.NotificationType;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PickService {
+	private final ApplicationEventPublisher publisher;
 	private final PickRepository pickRepository;
 	private final PickCacheRepository pickCacheRepository;
 	private final QuestionRepository questionRepository;
@@ -75,7 +79,8 @@ public class PickService {
 		switch (create.getStatus()) {
 			case PICKED -> {
 				User reference = em.getReference(User.class, create.getReceiverId());
-				pickRepository.save(Pick.of(sender, reference, question));
+				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
+				publisher.publishEvent(FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!", pickEventMessage(question.getContent()), null ));
 			}
 			case PASS -> {
 				question.skip();
@@ -90,5 +95,9 @@ public class PickService {
 
 		// 픽 인덱스 증가
 		pickCacheRepository.increment(sender.getId());
+	}
+
+	private String pickEventMessage(String message) {
+		return message;
 	}
 }

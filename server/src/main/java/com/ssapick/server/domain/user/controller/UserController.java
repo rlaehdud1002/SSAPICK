@@ -32,7 +32,7 @@ public class UserController {
 	@Authenticated
 	@GetMapping(value = "/me")
 	public SuccessResponse<UserData.UserInfo> findLoggedInUser(@CurrentUser User user) {
-      return SuccessResponse.of(userService.getUserInfo(user));
+		return SuccessResponse.of(userService.getUserInfo(user));
 	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")
