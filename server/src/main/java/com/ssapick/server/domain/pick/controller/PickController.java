@@ -6,11 +6,8 @@ import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,4 +62,18 @@ public class PickController {
 		pickService.createPick(user, create);
 		return SuccessResponse.empty();
 	}
+
+    /**
+     * 픽 알람설정 API
+     *
+     *
+     */
+    @PatchMapping("/{pickId}")
+    public SuccessResponse<Void> updatePickAlarm(
+            @CurrentUser User user,
+            @PathVariable("pickId") Long pickId
+    ) {
+        pickService.updatePickAlarm(user, pickId);
+        return SuccessResponse.empty();
+    }
 }

@@ -3,9 +3,7 @@ package com.ssapick.server.domain.pick.service;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
-
-import com.ssapick.server.domain.notification.dto.FCMData;
-import com.ssapick.server.domain.notification.entity.NotificationType;
+import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.domain.notification.dto.FCMData;
+import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickCacheRepository;
@@ -82,8 +82,6 @@ public class PickService {
 			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
 		});
 
-
-
 		switch (create.getStatus()) {
 			case PICKED -> {
 				User reference = em.getReference(User.class, create.getReceiverId());
@@ -111,7 +109,30 @@ public class PickService {
 		log.info("============================================================끝");
 }
 
-private String pickEventMessage(String message) {
-	return message;
-}
+    private String pickEventMessage(String message) {
+        return message;
+    }
+
+    @Transactional
+    public void updatePickAlarm(User user, Long pickId) {
+        Pick pick = pickRepository.findById(pickId).orElseThrow(() -> {
+            throw new BaseException(ErrorCode.NOT_FOUND_PICK);
+        });
+
+        if (!pick.getReceiver().getId().equals(user.getId())) {
+            throw new BaseException(ErrorCode.ACCESS_DENIED);
+        }
+
+        Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+
+        if (findPick.isEmpty()) {
+            pick.updateAlarm();
+            return;
+        }
+
+        findPick.get().updateAlarm();
+        pick.updateAlarm();
+
+    }
+
 }

@@ -1,30 +1,43 @@
 package com.ssapick.server.core.config;
 
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import com.ssapick.server.core.properties.JwtProperties;
+import com.ssapick.server.domain.auth.repository.AuthCacheRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
-@TestConfiguration
-@Testcontainers
+@Configuration
 public class RedisTestConfig {
+    @Value("${spring.data.redis.host}")
+    private String host;
 
-    private static final String REDIS_IMAGE = "redis:7.0.8-alpine";
-    private static final int REDIS_PORT = 6379;
-    private static final GenericContainer REDIS_CONTAINER;
+    @Value("${spring.data.redis.port}")
+    private int port;
 
-    static {
-        REDIS_CONTAINER = new GenericContainer(REDIS_IMAGE)
-                .withExposedPorts(REDIS_PORT)
-                .withReuse(true);
-        REDIS_CONTAINER.start();
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(host, port);
     }
 
-    @DynamicPropertySource
-    private static void registerRedisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
-        registry.add("spring.data.redis.port", () -> REDIS_CONTAINER.getMappedPort(REDIS_PORT)
-                .toString());
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory());
+        return template;
+    }
+
+    @Bean
+    public JwtProperties jwtProperties() {
+        JwtProperties properties = new JwtProperties();
+        properties.setRefreshExpire(3600);
+        return properties;
+    }
+
+    @Bean
+    public AuthCacheRepository authCacheRepository(RedisTemplate<String, Object> redisTemplate, JwtProperties properties) {
+        return new AuthCacheRepository(redisTemplate, properties);
     }
 }

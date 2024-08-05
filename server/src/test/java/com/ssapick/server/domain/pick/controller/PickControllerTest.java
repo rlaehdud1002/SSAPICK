@@ -1,5 +1,27 @@
 package com.ssapick.server.domain.pick.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultActions;
+
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
@@ -13,28 +35,6 @@ import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("싸픽 컨트롤러 테스트")
 @WebMvcTest(
@@ -327,8 +327,26 @@ class PickControllerTest extends RestDocsSupport {
             )));
     }
 
+    @Test
+    @DisplayName("픽_알람_설정_테스트")
+    @WithMockUser(username = "test-user")
+    void 픽_알람_설정_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
 
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(patch("/api/v1/pick/{pickId}", 1L));
 
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("픽")
+                                .summary("픽 알람 설정 API")
+                                .description("사용자가 선택한 픽의 알람을 설정한다.")
+                                .responseFields(empty())
+                                .build()
+                )));
+    }
 
     private Pick createPick(User sender, User receiver, Question question) {
         return Pick.of(sender, receiver, question);

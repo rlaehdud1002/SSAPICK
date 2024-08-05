@@ -1,6 +1,6 @@
-package com.ssapick.server.domain.attendance.repository;
+package com.ssapick.server.domain.user.repository;
 
-import com.ssapick.server.domain.attendance.entity.Attendance;
+import com.ssapick.server.domain.user.entity.Attendance;
 import com.ssapick.server.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

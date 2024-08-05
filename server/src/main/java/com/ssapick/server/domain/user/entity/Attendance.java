@@ -1,7 +1,6 @@
-package com.ssapick.server.domain.attendance.entity;
+package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
-import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

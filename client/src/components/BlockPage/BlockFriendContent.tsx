@@ -2,12 +2,12 @@ import PlusDeleteButton from "buttons/PlusDeleteButton";
 import { Separator } from "@radix-ui/react-select";
 
 interface BlockFriendContentProps {
-    th:number;
-    classNum:number;
+    campusName:string;
+    campusSection:number;
     name:string
 }
 
-const BlockFriendContent = ({th,classNum,name}:BlockFriendContentProps) => {
+const BlockFriendContent = ({campusName,campusSection,name}:BlockFriendContentProps) => {
 
   const onEvnet = () => {
     console.log("차단리스트에서 친구 삭제")
@@ -18,7 +18,7 @@ const BlockFriendContent = ({th,classNum,name}:BlockFriendContentProps) => {
       <div>
         <img className="w-14 h-14" src="/icons/Profile.png" alt="profile" />
       </div>
-      <div className="">{th}기 {classNum}반 {name}</div>
+      <div className="">{campusName} {campusSection} {name}</div>
         <div onClick={onEvnet}>
         <PlusDeleteButton title="삭제" />
         </div>

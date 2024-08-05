@@ -9,11 +9,12 @@ import SetAlarmContent from "components/SetAlarmPage/SetAlarmContent";
 
 import { Switch } from "components/ui/switch";
 import { useNavigate } from "react-router-dom";
-import { IAlarm } from "atoms/Alarm.type";
+import { IAlarm, IAlarmAll } from "atoms/Alarm.type";
 import { alarmSettingsState } from "atoms/AlarmAtoms";
 import { postAlarm, postAlarmAll } from "api/alarmApi";
 import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
+import { log } from "console";
 
 const SetAlarm = () => {
   const [alarmSettings, setAlarmSettings] = useRecoilState(alarmSettingsState);
@@ -32,17 +33,17 @@ const SetAlarm = () => {
     }
   };
 
-  const handleSwitchAllChange = async (value: boolean) => {
+  const handleSwitchAllChange = async (value: IAlarmAll) => {
     if (alarmSettings) {
-      let updatedSettings = {
-        nearbyAlarm: value,
-        messageAlarm: value,
-        addQuestionAlarm: value,
-        pickAlarm: value,
-      };
       try {
+        console.log(value);
         await postAlarmAll(value);
-        setAlarmSettings(updatedSettings);
+        setAlarmSettings({
+          nearbyAlarm: value.updateAll,
+          messageAlarm: value.updateAll,
+          addQuestionAlarm: value.updateAll,
+          pickAlarm: value.updateAll,
+        });
       } catch (error) {
         console.error("전체 알람 업데이트 실패", error);
       }
@@ -73,7 +74,10 @@ const SetAlarm = () => {
       </div>
       <div className="bg-white/50 rounded-lg my-6 mx-8 mt-4 py-1.5 px-5 flex flex-row items-center justify-between">
         <span className="mx-2">전체 알림</span>
-        <Switch checked={allAlarm} onCheckedChange={(value) => handleSwitchAllChange(value)} />
+        <Switch
+          checked={allAlarm}
+          onCheckedChange={(value) => handleSwitchAllChange({ updateAll: value })}
+        />
       </div>
       <div className="mx-8">
         <SetAlarmContent
