@@ -42,7 +42,7 @@ export interface IPickUser {
 }
 
 export interface IPickCreate {
-  receiverId: number;
+  receiverId: number | null;
   questionId: number;
   index: number;
   status: string;
