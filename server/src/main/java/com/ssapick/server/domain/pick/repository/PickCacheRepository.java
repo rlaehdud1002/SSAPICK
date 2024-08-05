@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class PickCacheRepository {
-    public static final int NOT_EXIST = -1;
+    public static final Integer LAST_INDEX = 15;
     public static final String PICK_INDEX = "pick:index:";
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -19,19 +19,19 @@ public class PickCacheRepository {
     public void increment(Long userId) {
         String key = PICK_INDEX + userId;
         Object value = redisTemplate.opsForValue().get(key);
-        if (!(value instanceof Integer)) {
-            throw new IllegalArgumentException("픽 인덱스가 올바르지 않습니다.");
+
+        if (value == null){
+            this.init(userId);
+            return;
         }
-        redisTemplate.opsForValue().set(key, (int) value + 1);
+        redisTemplate.opsForValue().set(key, (Integer) value + 1);
     }
 
-    public int index(Long userId) {
+    public Integer index(Long userId) {
         String key = PICK_INDEX + userId;
-        Object value = redisTemplate.opsForValue().get(key);
-        if (!(value instanceof Integer)) {
-            return NOT_EXIST;
-        }
-        return (int) value;
+        Integer value = (Integer) redisTemplate.opsForValue().get(key);
+
+        return value;
     }
 
     public void clear(Long userId) {

@@ -215,7 +215,81 @@ class PickControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("픽_선택_생성_테스트")
+    @DisplayName("픽_선택_패스_테스트")
+    @WithMockUser(username = "test-user")
+    void 픽_선택_패스_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        Question question = spy(this.createQuestion("테스트 질문"));
+        when(question.getId()).thenReturn(1L);
+
+        PickData.Create create = new PickData.Create();
+        create.setQuestionId(question.getId());
+        create.setIndex(1);
+        create.setStatus(PickData.PickStatus.PASS);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(create))
+        );
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isCreated())
+                .andDo(this.restDocs.document(resource(
+                        ResourceSnippetParameters.builder()
+                                .tag("픽")
+                                .summary("픽 생성 API")
+                                .description("사용자가 패스한 픽을 처리한다.")
+                                .requestFields(
+                                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+                                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+                                )
+                                .responseFields(empty())
+                                .build()
+                )));
+    }
+
+
+    @Test
+    @DisplayName("픽_선택_시_질문_차단")
+    @WithMockUser(username = "test-user")
+    void 픽_선택_시_질문_차단() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        Question question = spy(this.createQuestion("테스트 질문"));
+        when(question.getId()).thenReturn(1L);
+
+        PickData.Create create = new PickData.Create();
+        create.setQuestionId(question.getId());
+        create.setIndex(1);
+        create.setStatus(PickData.PickStatus.PASS);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(create))
+        );
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isCreated())
+            .andDo(this.restDocs.document(resource(
+                ResourceSnippetParameters.builder()
+                    .tag("픽")
+                    .summary("픽 생성 API")
+                    .description("픽_선택_시_질문_차단을_하는_경우를_처리한다.")
+                    .requestFields(
+                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+                    )
+                    .responseFields(empty())
+                    .build()
+            )));
+    }
+
+
+    @Test
+    @DisplayName("픽_패스_테스트")
     @WithMockUser(username = "test-user")
     void 픽_선택_생성_테스트() throws Exception {
         // * GIVEN: 이런게 주어졌을 때
@@ -231,27 +305,30 @@ class PickControllerTest extends RestDocsSupport {
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(create))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(create))
         );
 
         // * THEN: 이런 결과가 나와야 한다
         perform.andExpect(status().isCreated())
-                .andDo(this.restDocs.document(resource(
-                        ResourceSnippetParameters.builder()
-                                .tag("픽")
-                                .summary("픽 생성 API")
-                                .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
-                                .requestFields(
-                                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
-                                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
-                                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
-                                )
-                                .responseFields(empty())
-                                .build()
-                )));
+            .andDo(this.restDocs.document(resource(
+                ResourceSnippetParameters.builder()
+                    .tag("픽")
+                    .summary("픽 생성 API")
+                    .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
+                    .requestFields(
+                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
+                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+                    )
+                    .responseFields(empty())
+                    .build()
+            )));
     }
+
+
+
 
     private Pick createPick(User sender, User receiver, Question question) {
         return Pick.of(sender, receiver, question);

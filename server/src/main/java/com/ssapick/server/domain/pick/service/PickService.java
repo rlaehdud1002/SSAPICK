@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ssapick.server.domain.notification.dto.FCMData;
 import com.ssapick.server.domain.notification.entity.NotificationType;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,10 +65,15 @@ public class PickService {
 
 	@Transactional
 	public void createPick(User sender, PickData.Create create) {
-		int index = pickCacheRepository.index(sender.getId());
+		log.info("픽 생성 요청 - sender: {}, create: {}", sender, create);
+		Integer index = pickCacheRepository.index(sender.getId());
 
-		if (index != NOT_EXIST && create.getIndex() != index) {
-			log.error("픽 인덱스가 올바르지 않습니다. index: {}, user: {}", create.getIndex(), sender);
+		if (index == null) {
+			pickCacheRepository.init(sender.getId());
+			index = 1;
+		}
+
+		if (index == null || create.getIndex() != index) {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
@@ -76,11 +82,15 @@ public class PickService {
 			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
 		});
 
+
+
 		switch (create.getStatus()) {
 			case PICKED -> {
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
-				publisher.publishEvent(FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!", pickEventMessage(question.getContent()), null ));
+				publisher.publishEvent(
+					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
+						pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
 				question.skip();
@@ -92,12 +102,16 @@ public class PickService {
 				log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 		}
-
-		// 픽 인덱스 증가
 		pickCacheRepository.increment(sender.getId());
+
+		if (index == LAST_INDEX) {
+			pickCacheRepository.init(sender.getId());
 	}
 
-	private String pickEventMessage(String message) {
-		return message;
-	}
+		log.info("============================================================끝");
+}
+
+private String pickEventMessage(String message) {
+	return message;
+}
 }
