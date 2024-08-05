@@ -5,8 +5,6 @@ import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 import java.util.List;
 import java.util.Optional;
 
-import com.ssapick.server.domain.notification.dto.FCMData;
-import com.ssapick.server.domain.notification.entity.NotificationType;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +65,8 @@ public class PickService {
 
 	@Transactional
 	public void createPick(User sender, PickData.Create create) {
-		int index = pickCacheRepository.index(sender.getId());
+		log.info("픽 생성 요청 - sender: {}, create: {}", sender, create);
+		Integer index = pickCacheRepository.index(sender.getId());
 
 		if (index == null) {
 			pickCacheRepository.init(sender.getId());
@@ -78,10 +77,10 @@ public class PickService {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
-        Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
-            log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
-            return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
-        });
+		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
+			log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
+			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
+		});
 
 		switch (create.getStatus()) {
 			case PICKED -> {
@@ -105,6 +104,9 @@ public class PickService {
 
 		if (index == LAST_INDEX) {
 			pickCacheRepository.init(sender.getId());
+		}
+
+		log.info("============================================================끝");
 	}
 
 	private String pickEventMessage(String message) {
