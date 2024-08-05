@@ -17,7 +17,7 @@ export const getAttendance = async (): Promise<IUserAttendance> => {
 };
 
 // 출석 체크
-export const postAttendance = async (): Promise<void> => {
+export const postAttendance = async (): Promise<IUserAttendance> => {
   const {
     data: { success, data },
   } = await instance.post<BaseResponse<IUserAttendance>>('/attendance');
@@ -27,4 +27,6 @@ export const postAttendance = async (): Promise<void> => {
   }
 
   console.log('postAttendance');
+
+  return data;
 };
