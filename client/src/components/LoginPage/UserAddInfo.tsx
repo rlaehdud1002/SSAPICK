@@ -27,7 +27,7 @@ const UserAddInfo = () => {
   } = useForm<AddUserForm>();
 
   const onSubmit = (data: AddUserForm) => {
-    console.log(data);
+
 
     setUserAddInfo((prev) => ({
       ...prev,
@@ -120,10 +120,6 @@ const UserAddInfo = () => {
             })}
             errors={errors}
           />
-          <div className="flex">
-            <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
-            <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 "></div>
-          </div>
           <div>
             <DoneButton title="완료" />
           </div>
