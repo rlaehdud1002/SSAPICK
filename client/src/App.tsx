@@ -65,7 +65,7 @@ function App() {
           return;
         }
         if (!data.validInfo) {
-          navigate('/userinfo');
+          // navigate('/userinfo');
           return;
         }
         if (data.validInfo) {
