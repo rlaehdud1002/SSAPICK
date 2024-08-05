@@ -1,15 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
 import { signOut } from "api/authApi";
+import { accessTokenState } from "atoms/UserAtoms";
 import WithdrawalModal from "components/modals/WithdrawalModal";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
 const SetAccount = () => {
   const navigate = useNavigate();
+  const setAccessToken = useSetRecoilState(accessTokenState);
 
   const mutation = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
       console.log("로그아웃 성공");
+      setAccessToken("");
       navigate("/");
     }
   });
