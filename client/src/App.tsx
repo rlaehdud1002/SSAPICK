@@ -67,8 +67,11 @@ function App() {
           return;
         }
         if (!data.validInfo) {
-          console.log("유저 정보 입력 안함");
-          navigate("/userinfo");
+          navigate('/infoinsert');
+          return;
+        }
+        if (data.validInfo) {
+          navigate('/home');
           return;
         }
       } catch (error) {

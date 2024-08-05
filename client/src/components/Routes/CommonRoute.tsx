@@ -3,6 +3,7 @@ import Send from 'components/MessagePage/Send';
 import Alarm from 'pages/AlarmPage';
 import AuthCallback from 'pages/AuthCallbackPage';
 import Home from 'pages/HomePage';
+import InfoInsert from 'pages/InfoInsert';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
@@ -10,9 +11,7 @@ import NotFoundPage from 'pages/NotFoundPage';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
-import UserAddInfo from 'pages/UserAddInfoPage';
-import UserInfo from 'pages/UserInfoPage';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
   return (
@@ -31,8 +30,7 @@ const CommonRoute = () => {
       <Route path="/mattermost" element={<Mattermost />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       {/* 추가 정보 입력 */}
-      <Route path="/userinfo" element={<UserInfo />} />
-      <Route path="/useraddinfo" element={<UserAddInfo />} />
+      <Route path="/infoinsert" element={<InfoInsert />} />
       {/* 잘못된 접근일 때 */}
       <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
