@@ -28,6 +28,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<Attendance, QAttendance> attendances = this.<Attendance, QAttendance>createList("attendances", Attendance.class, QAttendance.class, PathInits.DIRECT2);
 
+    public final NumberPath<Short> banCount = createNumber("banCount", Short.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

@@ -193,7 +193,7 @@ class PickServiceTest extends UserSupport {
 		pickService.createPick(sender, create);
 
 		// * THEN: 이런 결과가 나와야 한다
-		verify(question).ban();
+		verify(question).increaseBanCount();
 		verify(questionBanRepository).save(argThat(questionBan -> {
 			assertThat(questionBan.getUser()).isEqualTo(sender);
 			assertThat(questionBan.getQuestion()).isEqualTo(question);

@@ -61,4 +61,15 @@ public class QuestionCacheRepository {
 			.filter(question -> question.getId().equals(id))
 			.findFirst();
 	}
+
+	public void remove(Long id) {
+		List<QuestionData.Search> questions = this.findAll();
+
+		QuestionData.Search target = questions.stream()
+			.filter(question -> question.getId().equals(id))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("해당 질문이 존재하지 않습니다."));
+
+		listOperations.remove(QUESTION_LIST_KEY, 1, target);
+	}
 }

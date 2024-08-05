@@ -9,14 +9,12 @@ import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
-import com.ssapick.server.domain.question.entity.QuestionRegistration;
 import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionCacheRepository;
 import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserBanRepository;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -165,6 +163,8 @@ public class QuestionService {
                 throw new BaseException(ErrorCode.EXIST_QUESTION_BAN);
             });
 
+        question.increaseBanCount();
+
         questionBanRepository.save(QuestionBan.of(user, question));
     }
 
@@ -228,6 +228,12 @@ public class QuestionService {
 
         QuestionBan questionBan = questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), questionId)
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_BAN));
+
+        question.decreeaseBanCount();
+
+        if (question.getBanCount() >= 10) {
+            questionCacheRepository.remove(question.getId());
+        }
 
         questionBanRepository.delete(questionBan);
     }
