@@ -4,13 +4,13 @@ import instance from './clientApi';
 
 
 // 유저 정보 조회
-export const getUserInfo = async (): Promise<IUser[]> => {
+export const getUserInfo = async (): Promise<IUserInfo> => {
   const {
     data: { success, data, message },
-  } = await instance.get<BaseResponse<IUser[]>>('/user/me');
+  } = await instance.get<BaseResponse<IUserInfo>>("/user/me");
 
   if (!success) {
-    throw new Error('유저 정보 조회 실패');
+    throw new Error("유저 정보 조회 실패");
   }
   return data;
 };
@@ -19,11 +19,11 @@ export const getUserInfo = async (): Promise<IUser[]> => {
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
   const {
     data: { success, data, message, status },
-  } = await instance.post('/auth/mattermost-confirm', authData);
+  } = await instance.post("/auth/mattermost-confirm", authData);
   console.log(status);
   if (!success) {
     console.log(message);
-    throw new Error('실패');
+    throw new Error("실패");
   }
   return data;
 };
@@ -36,7 +36,7 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
     BaseResponse<{
       authenticated: boolean;
     }>
-  >('/auth/mattermost-confirm');
+  >("/auth/mattermost-confirm");
   if (!success) {
     throw new Error(message);
   }
@@ -57,7 +57,7 @@ export const signOut = async (): Promise<void> => {
 export const withdrawal = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.delete('/auth');
+  } = await instance.delete("/auth");
   if (!success) {
     throw new Error(message);
   }

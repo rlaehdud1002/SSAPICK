@@ -16,19 +16,17 @@ import { useRecoilValue } from "recoil";
 import { getAlarm } from "api/alarmApi";
 import { IAlarm } from "atoms/Alarm.type";
 import { useQuery } from "@tanstack/react-query";
-import { IUser } from "atoms/User.type";
+import { IUser, IUserInfo } from "atoms/User.type";
 import { getUserInfo } from "api/authApi";
 
 const Profile = () => {
-  const { data: information, isLoading } = useQuery<IUser[]>({
-    queryKey: ['information'],
+  const { data: information, isLoading } = useQuery<IUserInfo>({
+    queryKey: ["information"],
     queryFn: async () => await getUserInfo(),
-  })
+  });
 
   const accessToken = useRecoilValue(accessTokenState);
   console.log(accessToken);
-  console.log(information);
-
 
   const [alarmSettings, setAlarmSettings] = useRecoilState(alarmSettingsState);
   const navigate = useNavigate();
@@ -45,7 +43,7 @@ const Profile = () => {
 
   return (
     <div>
-      <ProfileContent />
+      {information && <ProfileContent information={information} />}
       <div className="mb-20">
         <Link to="/profile/modiuserinfo">
           <ProfileAlarm title="개인정보 수정" content="힌트로 제공할 나의 정보 수정">

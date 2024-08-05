@@ -1,13 +1,31 @@
-import MakeQuestionContent from "./MakeQuestionlContent"
+import { useQuery } from "@tanstack/react-query";
+import MakeQuestionContent from "./MakeQuestionlContent";
+import { getQuestionByUser } from "api/questionApi";
+import { IQuestionNoCreatedAt } from "atoms/Pick.type";
 
 const MakeQuestion = () => {
-    return (
-        <div className="mb-20">
-        {[0, 1, 2, 3, 4, 5, 6].map((index) => (
-            <MakeQuestionContent key={index} question="같이 밥먹고 싶은 사람은?"/>
-          ))}
-        </div>       
-)
-}
+  const { data: questions, isLoading } = useQuery<IQuestionNoCreatedAt[]>({
+    queryKey: ["question", "me"],
+    queryFn: async () => await getQuestionByUser(),
+  });
 
-export default MakeQuestion
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
+
+  console.log(questions);
+
+  if (!questions) {
+    return <div>질문이 없습니다.</div>;
+  }
+
+  return (
+    <div className="mb-20">
+      {questions.map((question, index) => (
+        <MakeQuestionContent key={index} question={question.content} />
+      ))}
+    </div>
+  );
+};
+
+export default MakeQuestion;
