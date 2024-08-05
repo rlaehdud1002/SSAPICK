@@ -1,7 +1,6 @@
-import { IAuth } from 'atoms/Auth.type';
-import { BaseResponse, IUser } from 'atoms/User.type';
-import instance from './clientApi';
-
+import { IAuth } from "atoms/Auth.type";
+import { BaseResponse, IUserInfo } from "atoms/User.type";
+import instance from "./clientApi";
 
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
@@ -47,7 +46,7 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 export const signOut = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.post('/auth/sign-out');
+  } = await instance.post("/auth/sign-out");
   if (!success) {
     throw new Error(message);
   }
