@@ -1,17 +1,17 @@
-export interface IUser {
-  "id": number,
-  "username": string,
-  "name": string,
-  "profileImage": string,
-  "gender": string,
-  "cohort": number,
-  "campusName": string,
-  "section": number,
-  "pickco": number,
-  "pickCount": number,
-  "followingCount": number,
-  "hints": Array<string>,
-}
+// export interface IUser {
+//   "id": number,
+//   "username": string,
+//   "name": string,
+//   "profileImage": string,
+//   "gender": string,
+//   "cohort": number,
+//   "campusName": string,
+//   "section": number,
+//   "pickco": number,
+//   "pickCount": number,
+//   "followingCount": number,
+//   "hints": Array<string>,
+// }
 
 export interface BaseResponse<T> {
   success: boolean;

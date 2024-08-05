@@ -30,7 +30,13 @@ export const firebaseTokenState = atom<string>({
 
 export const userState = atom<IUser>({
   key: 'userState',
-  
+  default: {
+    profileImage: '',
+    name: '',
+    th: '',
+    campusName: '',
+    gender: '',
+  }
 });
 
 export const userAddState = atom<IUserAdd>({
