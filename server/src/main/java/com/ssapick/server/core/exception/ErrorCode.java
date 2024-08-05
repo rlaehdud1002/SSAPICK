@@ -64,7 +64,8 @@ public enum ErrorCode {
 	SHORT_OF_PICKCO(10000, HttpStatus.BAD_REQUEST, "픽코가 부족합니다."),
 
 	//UserBan
-	NOT_FOUND_USER_BAN(11000, HttpStatus.NOT_FOUND, "사용자 차단을 찾을 수 없습니다.");
+	NOT_FOUND_USER_BAN(11000, HttpStatus.NOT_FOUND, "사용자 차단을 찾을 수 없습니다."),
+	ALREADY_BAN_USER(11001, HttpStatus.BAD_REQUEST, "이미 차단한 사용자입니다.");
 
 
 	private final int code;

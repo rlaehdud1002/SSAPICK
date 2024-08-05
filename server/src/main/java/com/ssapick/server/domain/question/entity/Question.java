@@ -69,11 +69,19 @@ public class Question extends BaseEntity {
 	public void delete() {
 		isDeleted = true;
 	}
-	public void ban() {
+
+	public void increaseBanCount() {
 		this.banCount++;
+		if (banCount >= 10){
+			this.delete();
+		}
 	}
 
 	public void skip() {
 		this.skipCount++;
+	}
+
+	public void decreeaseBanCount() {
+		this.banCount--;
 	}
 }

@@ -76,6 +76,9 @@ public class User extends BaseEntity {
 	@Column(name = "is_locked", nullable = false)
 	private boolean isLocked = false;
 
+	@Column(name = "ban_count", nullable = false)
+	private short banCount;
+
 	/**
 	 * 사용자 생성 메서드
 	 *
@@ -97,6 +100,25 @@ public class User extends BaseEntity {
 		user.profile = Profile.createEmptyProfile(user);
 		user.alarm = Alarm.createAlarm(user);
 		return user;
+	}
+
+	public void lock() {
+		this.isLocked = true;
+	}
+
+	public void unlock() {
+		this.isLocked = false;
+	}
+
+	public void increaseBanCount() {
+		this.banCount++;
+		if (this.banCount >= 10){
+			this.lock();
+		}
+	}
+
+	public void decreaseBanCount() {
+		this.banCount--;
 	}
 
 	public void mattermostConfirm() {
