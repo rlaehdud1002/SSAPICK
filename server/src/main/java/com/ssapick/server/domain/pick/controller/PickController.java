@@ -62,4 +62,19 @@ public class PickController {
         pickService.createPick(user, create);
         return SuccessResponse.empty();
     }
+
+
+    /**
+     * 픽 알람설정 API
+     *
+     *
+     */
+    @PatchMapping("/{pickId}")
+    public SuccessResponse<Void> updatePickAlarm(
+            @CurrentUser User user,
+            @PathVariable("pickId") Long pickId
+    ) {
+        pickService.updatePickAlarm(user, pickId);
+        return SuccessResponse.empty();
+    }
 }

@@ -61,4 +61,8 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
             JOIN FETCH sp.campus sc
             """)
     List<Pick> findAllWithReceiverAndSenderAndQuestion();
+
+    @Query("SELECT p FROM Pick p WHERE p.receiver.id = :receiverId AND p.alarm = true")
+    Optional<Pick> findByReceiverIdWithAlarm(@Param("receiverId") Long receiverId);
+
 }
