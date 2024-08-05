@@ -1,18 +1,26 @@
 package com.ssapick.server.domain.question.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,12 +86,12 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponse<Void> requestAddQuestion(
             @CurrentUser User user,
-            @Validated @RequestBody QuestionData.Create create,
-            Errors errors
-    ) {
+            @Validated @RequestBody QuestionData.Create create) {
+
         questionService.createQuestion(user, create);
         return SuccessResponse.empty();
     }
+
 
     /**
      * 사용자에게 질문을 뿌려주는 API (벤된 질문 제외)

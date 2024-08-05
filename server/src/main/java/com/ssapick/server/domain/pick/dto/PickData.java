@@ -1,9 +1,14 @@
 package com.ssapick.server.domain.pick.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssapick.server.core.annotation.ValidPickRequest;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.user.dto.ProfileData;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -47,10 +52,17 @@ public class PickData {
     }
 
     @Data
+    @ValidPickRequest
     public static class Create {
         private Long receiverId;
+
+        @NotNull(message = "질문 ID는 필수입니다.")
         private Long questionId;
+
+        @Min(value = 0, message = "불가능한 상태입니다.")
         private int index;
+
+        @NotNull(message = "픽 상태는 필수입니다.")
         private PickStatus status;
     }
 }
