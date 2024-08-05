@@ -95,7 +95,7 @@ public class PickService {
 				log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 			case BLOCK -> {
-				question.ban();
+				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
 				log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
