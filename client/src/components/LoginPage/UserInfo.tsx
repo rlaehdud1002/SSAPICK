@@ -1,9 +1,9 @@
 import { userState } from "atoms/UserAtoms";
+import DoneButton from "buttons/DoneButton";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
 
@@ -15,37 +15,38 @@ interface UserForm {
   campus: string;
 }
 
-const UserInfo = () => {
-  const setUserInfo = useSetRecoilState(userState);
-  const navigate = useNavigate();
-  const navigateToAddInfo = () => {
-    navigate("/infoinsert");
-  };
+interface UserInfoProps {
+  next: () => void;
+}
 
+const UserInfo = ({ next }: UserInfoProps) => {
+  const [_, setUserInfo] = useRecoilState(userState);
   const {
     register,
     handleSubmit,
     setValue,
-    trigger,
     formState: { errors },
   } = useForm<UserForm>();
   const [setUploadImage] = useState<File | undefined>(undefined);
 
   const onSubmit = (data: UserForm) => {
-    navigateToAddInfo();
+    console.log("123123123");
+
     const form = new FormData();
     form.append("name", data.name);
     form.append("image", "");
     console.log(data);
 
-
     setUserInfo((prev) => ({
       ...prev,
+      profileImage: "",
       name: data.name,
       gender: data.gender,
       th: data.th,
       campusName: data.campus,
     }));
+
+    next();
   };
   const onInvalid = (errors: any) => {
     console.log("error", errors);
@@ -58,7 +59,7 @@ const UserInfo = () => {
         </div>
         {/* {<div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> * /} */}
 
-        < InfoInput
+        <InfoInput
           name="name"
           title="이름"
           register={register("name", {
@@ -97,16 +98,12 @@ const UserInfo = () => {
           setValue={(value: string) => setValue("campus", value)}
           errors={errors}
         />
-        {/* <div className="flex">
-          <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
-          <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
-        </div> */}
         <div>
-          {/* <DoneButton title="다음" /> */}
+          <DoneButton title="다음" />
         </div>
       </div>
     </form>
   )
-}
+};
 
 export default UserInfo;

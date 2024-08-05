@@ -28,6 +28,7 @@ const UserAddInfo = () => {
 
   const onSubmit = (data: AddUserForm) => {
 
+
     setUserAddInfo((prev) => ({
       ...prev,
       mbti: data.mbti,
@@ -119,6 +120,9 @@ const UserAddInfo = () => {
             })}
             errors={errors}
           />
+          <div>
+            <DoneButton title="완료" />
+          </div>
         </div>
       </div>
     </form>

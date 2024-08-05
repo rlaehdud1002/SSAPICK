@@ -1,28 +1,19 @@
 
-import DoneButton from "buttons/DoneButton";
 import UserAddInfo from "components/LoginPage/UserAddInfo";
 import UserInfo from "components/LoginPage/UserInfo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useRef, useState } from "react";
 
 const InfoInsert = () => {
   const [tab, setTab] = useState<string>("userinfo");
-  
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // 폼 제출 기본 동작 방지
-    if (tab === "userinfo") {
-      setTab("useraddinfo");
-    } else {
-      // 완료 버튼 클릭 시의 로직을 여기에 추가
-      console.log("완료");
-    }
-  };
+  const infoRef = useRef<HTMLFormElement>(null);
+  const addInfoRef = useRef<HTMLFormElement>(null);
+
   return (
-    <form >
+    <div >
       <Tabs onValueChange={(value) => setTab(value)} value={tab} defaultValue="userinfo" className="w-[400px]">
         <TabsContent value="userinfo">
-          <UserInfo />
+          <UserInfo next={() => setTab('useraddinfo')} />
         </TabsContent>
         <TabsContent value="useraddinfo">
           <UserAddInfo />
@@ -30,26 +21,29 @@ const InfoInsert = () => {
         <div className="flex justify-center">
           <TabsList>
             <div className="mx-1">
-            <TabsTrigger value="userinfo">
-             
-            </TabsTrigger>
+              <TabsTrigger value="userinfo">
+
+              </TabsTrigger>
             </div>
             <div className="mx-1">
-            <TabsTrigger value="useraddinfo"></TabsTrigger>
+              <TabsTrigger value="useraddinfo"></TabsTrigger>
             </div>
           </TabsList>
         </div>
-      {tab === "useraddinfo" ?(
-      <div className="flex justify-center">
-      <DoneButton title="완료" />
-      </div>):(<div onClick={()=>setTab("useraddinfo")} className="flex justify-center">
-      <DoneButton title="다음" />
-      </div>)
-      }
+        {/* {tab === "useraddinfo" ? (
+          <div className="flex justify-center">
+            <DoneButton title="완료" />
+          </div>) : (<div onClick={(e) => {
+            e.preventDefault();
+            infoRef.current?.submit();
+          }} className="flex justify-center">
+            <DoneButton title="다음" />
+          </div>)
+        } */}
 
       </Tabs>
-      
-    </form>
+
+    </div>
   )
 }
 
