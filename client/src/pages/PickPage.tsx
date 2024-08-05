@@ -54,7 +54,7 @@ const Pick = () => {
     onSuccess: () => {
       console.log('pick 생성 성공');
       // 카운트 올리기
-      setPickCount((prevCount) => prevCount + 1);
+      setPickCount((prevCount) => (prevCount + 1) % 15);
     },
   });
 
@@ -68,7 +68,11 @@ const Pick = () => {
           questions.map((question, index) => {
             return (
               <>
-                <Question question={question} key={index} userPick={mutation.mutate} />
+                <Question
+                  question={question}
+                  key={index}
+                  userPick={mutation.mutate}
+                />
                 {pickFriends.length >= 4 && (
                   <div className="m-7">
                     <div
