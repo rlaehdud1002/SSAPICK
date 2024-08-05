@@ -58,6 +58,8 @@ const Pick = () => {
     },
   });
 
+  console.log('questionList', questions);
+
   return (
     <div className="relative">
       {/* <PickComplete /> */}
