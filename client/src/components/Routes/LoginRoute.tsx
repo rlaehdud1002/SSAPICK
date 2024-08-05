@@ -1,5 +1,5 @@
-import NotFoundPage from 'pages/NotFoundPage';
 import UserAddInfo from 'pages/UserAddInfoPage';
+import NotFoundPage from 'pages/NotFoundPage';
 import UserInfo from 'pages/UserInfoPage';
 import { Route, Routes } from 'react-router-dom';
 

@@ -19,7 +19,7 @@ const UserInfo = () => {
   const setUserInfo = useSetRecoilState(userState);
   const navigate = useNavigate();
   const navigateToAddInfo = () => {
-    navigate("/login/UserAddInfo");
+    navigate("/useraddinfo");
   };
 
   const {
