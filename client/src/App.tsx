@@ -51,15 +51,19 @@ function App() {
         console.log('data', data);
         if (data.lockedUser) {
           navigate('/');
+          return;
         }
         if (!data.mattermostConfirmed) {
           navigate('/mattermost');
+          return;
         }
         if (!data.validInfo) {
           navigate('/userinfo');
+          return;
         }
         if (data.validInfo) {
           navigate('/home');
+          return;
         }
       } catch (error) {
         console.error('유효성 검사 실패', error);
