@@ -32,7 +32,7 @@ const firebaseConfig = {
 function App() {
   initializeApp(firebaseConfig);
   const location = useLocation().pathname.split('/')[1];
-  console.log(location);
+  console.log(location)
   const queryClient = new QueryClient();
 
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ function App() {
           return;
         }
         if (!data.validInfo) {
-          navigate('/userinfo');
+          navigate('/infoinsert');
           return;
         }
         if (data.validInfo) {
@@ -81,7 +81,7 @@ function App() {
           {location !== '' &&
             location !== 'splash' &&
             location !== 'mattermost' &&
-            location !== 'login' && <Header />}
+            location !=='infoinsert' && <Header />}
           <div className="flex-grow">
             <Routes>
               <Route path="/*" element={<CommonRoute />} />
@@ -92,7 +92,8 @@ function App() {
               {location !== '' &&
                 location !== 'splash' &&
                 location !== 'mattermost' &&
-                location !== 'login' && <Footer />}
+                location !=='infoinsert' && <Footer />}
+                
             </div>
           </div>
         </div>
