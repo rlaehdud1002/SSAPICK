@@ -16,11 +16,11 @@ import { useRecoilValue } from "recoil";
 import { getAlarm } from "api/alarmApi";
 import { IAlarm } from "atoms/Alarm.type";
 import { useQuery } from "@tanstack/react-query";
-import { IUser } from "atoms/User.type";
+import { IUser, IUserInfo } from "atoms/User.type";
 import { getUserInfo } from "api/authApi";
 
 const Profile = () => {
-  const { data: information, isLoading } = useQuery<IUser>({
+  const { data: information, isLoading } = useQuery<IUserInfo>({
     queryKey: ["information"],
     queryFn: async () => await getUserInfo(),
   });

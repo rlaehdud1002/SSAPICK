@@ -2,13 +2,13 @@ import { IAuth } from "atoms/Auth.type";
 import instance from "./clientApi";
 import { useRecoilValue } from "recoil";
 import { accessTokenState } from "atoms/UserAtoms";
-import { BaseResponse, IUser } from "atoms/User.type";
+import { BaseResponse, IUser, IUserInfo } from "atoms/User.type";
 
 // 유저 정보 조회
-export const getUserInfo = async (): Promise<IUser> => {
+export const getUserInfo = async (): Promise<IUserInfo> => {
   const {
     data: { success, data, message },
-  } = await instance.get<BaseResponse<IUser>>("/user/me");
+  } = await instance.get<BaseResponse<IUserInfo>>("/user/me");
 
   if (!success) {
     throw new Error("유저 정보 조회 실패");

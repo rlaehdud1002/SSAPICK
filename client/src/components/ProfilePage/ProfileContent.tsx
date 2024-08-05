@@ -5,14 +5,14 @@ import {
   userPickState,
   userState,
 } from "atoms/UserAtoms";
-import { IUser } from "atoms/User.type";
+import { IUserInfo } from "atoms/User.type";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
 import { useRecoilValue } from "recoil";
 
 interface ProfileContentProps {
-  information: IUser; // information 데이터 타입 정의
+  information: IUserInfo;
 }
 
 const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {

@@ -1,4 +1,3 @@
-
 import UserAddInfo from "components/LoginPage/UserAddInfo";
 import UserInfo from "components/LoginPage/UserInfo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
@@ -10,10 +9,15 @@ const InfoInsert = () => {
   const addInfoRef = useRef<HTMLFormElement>(null);
 
   return (
-    <div >
-      <Tabs onValueChange={(value) => setTab(value)} value={tab} defaultValue="userinfo" className="w-[400px]">
+    <div>
+      <Tabs
+        onValueChange={(value) => setTab(value)}
+        value={tab}
+        defaultValue="userinfo"
+        className="w-[400px]"
+      >
         <TabsContent value="userinfo">
-          <UserInfo next={() => setTab('useraddinfo')} />
+          <UserInfo next={() => setTab("useraddinfo")} />
         </TabsContent>
         <TabsContent value="useraddinfo">
           <UserAddInfo />
@@ -21,9 +25,7 @@ const InfoInsert = () => {
         <div className="flex justify-center">
           <TabsList>
             <div className="mx-1">
-              <TabsTrigger value="userinfo">
-
-              </TabsTrigger>
+              <TabsTrigger value="userinfo"></TabsTrigger>
             </div>
             <div className="mx-1">
               <TabsTrigger value="useraddinfo"></TabsTrigger>
@@ -40,11 +42,9 @@ const InfoInsert = () => {
             <DoneButton title="다음" />
           </div>)
         } */}
-
       </Tabs>
-
     </div>
-  )
-}
+  );
+};
 
 export default InfoInsert;
