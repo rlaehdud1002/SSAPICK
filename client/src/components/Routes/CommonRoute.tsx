@@ -11,7 +11,7 @@ import NotFoundPage from 'pages/NotFoundPage';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
   return (

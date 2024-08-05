@@ -67,7 +67,7 @@ function App() {
           return;
         }
         if (!data.validInfo) {
-          navigate('/infoinsert');
+          // navigate('/infoinsert');
           return;
         }
         if (data.validInfo) {

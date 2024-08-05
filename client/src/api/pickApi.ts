@@ -26,7 +26,7 @@ export const postCreatePick = async (pickData: IPickCreate): Promise<void> => {
   if (!success) {
     throw new Error('pick 생성 실패');
   }
-
+  
   console.log('postCreatePick');
 };
 
