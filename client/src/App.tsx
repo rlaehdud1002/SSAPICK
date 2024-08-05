@@ -6,11 +6,9 @@ import { useRecoilState } from 'recoil';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 
-import { validCheck } from "api/validApi";
 import { validState } from "atoms/ValidAtoms";
 
 import { initializeApp } from 'firebase/app';
-import { useEffect } from 'react';
 import NotFoundPage from 'pages/NotFoundPage';
 
 const firebaseConfig = {
@@ -37,7 +35,8 @@ function App() {
       location !== '' && // 로그인 페이지
       location !== 'splash' && // 스플래시 페이지
       location !== 'mattermost' && // mm 인증 페이지
-      location !== '404' // 404 페이지
+      location !== '404' && // 404 페이지
+      location !== 'infoinsert' // 추가 정보 입력 페이지
     ) {
       return true;
     } else {
@@ -45,40 +44,43 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const checkValidity = async () => {
-      try {
-        console.log("location", location);
-        console.log("ValidState", ValidState);
-        if (location === "splash") {
-          return;
-        }
-        const data = await validCheck();
-        setValidState(data);
-        console.log("data", data);
-        if (data.lockedUser) {
-          console.log("유저 잠김");
-          navigate("/");
-          return;
-        }
-        if (!data.mattermostConfirmed) {
-          console.log("mm 미확인");
-          navigate("/mattermost");
-          return;
-        }
-        if (!data.validInfo) {
-          console.log("유저 정보 입력 안함");
-          navigate("/userinfo");
-          return;
-        }
-      } catch (error) {
-        console.error("유효성 검사 실패", error);
-        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
-      }
-    };
+  // useEffect(() => {
+  //   const checkValidity = async () => {
+  //     try {
+  //       console.log("location", location);
+  //       console.log("ValidState", ValidState);
+  //       if (location === "splash") {
+  //         return;
+  //       }
+  //       const data = await validCheck();
+  //       setValidState(data);
+  //       console.log("data", data);
+  //       if (data.lockedUser) {
+  //         console.log("유저 잠김");
+  //         navigate("/");
+  //         return;
+  //       }
+  //       if (!data.mattermostConfirmed) {
+  //         console.log("mm 미확인");
+  //         navigate("/mattermost");
+  //         return;
+  //       }
+  //       if (!data.validInfo && !location.includes("infoinsert")) {
+  //         navigate('/infoinsert');
+  //         return;
+  //       }
+  //       if (data.validInfo) {
+  //         navigate('/home');
+  //         return;
+  //       }
+  //     } catch (error) {
+  //       console.error("유효성 검사 실패", error);
+  //       navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+  //     }
+  //   };
 
-    checkValidity();
-  }, [navigate, setValidState]);
+  //   checkValidity();
+  // }, [navigate, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -88,7 +90,7 @@ function App() {
           <div className="flex-grow">
             <Routes>
               <Route path="/*" element={<CommonRoute />} />
-              <Route path="/profile/*" element={<ProfileRoute />} />
+              <Route path="/profile/*" element={<ProfileRoute />}  />
               <Route path="/404" element={<NotFoundPage />} />
             </Routes>
             <div className="flex flex-col max-h-screen">

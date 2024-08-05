@@ -1,12 +1,12 @@
 import { userState } from "atoms/UserAtoms";
 import DoneButton from "buttons/DoneButton";
-import InfoInput from "components/LoginPage/InfoInput";
-import InfoSelect from "components/LoginPage/InfoSelect";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
+import InfoInput from "./InfoInput";
+import InfoSelect from "./InfoSelect";
+
 
 interface UserForm {
   name: string;
@@ -15,13 +15,12 @@ interface UserForm {
   campus: string;
 }
 
-const UserInfo = () => {
-  const setUserInfo = useSetRecoilState(userState);
-  const navigate = useNavigate();
-  const navigateToAddInfo = () => {
-    navigate("/useraddinfo");
-  };
+interface UserInfoProps {
+  next: () => void;
+}
 
+const UserInfo = ({ next }: UserInfoProps) => {
+  const [_, setUserInfo] = useRecoilState(userState);
   const {
     register,
     handleSubmit,
@@ -31,7 +30,8 @@ const UserInfo = () => {
   const [setUploadImage] = useState<File | undefined>(undefined);
 
   const onSubmit = (data: UserForm) => {
-    navigateToAddInfo();
+    console.log("123123123");
+
     const form = new FormData();
     form.append("name", data.name);
     form.append("image", "");
@@ -39,23 +39,25 @@ const UserInfo = () => {
 
     setUserInfo((prev) => ({
       ...prev,
+      profileImage: "",
       name: data.name,
       gender: data.gender,
       th: data.th,
       campusName: data.campus,
     }));
+
+    next();
   };
   const onInvalid = (errors: any) => {
     console.log("error", errors);
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
           <ProfileCameraIcon setUploadImage={setUploadImage} />
         </div>
-        {/* <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> */}
+        {/* {<div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> * /} */}
 
         <InfoInput
           name="name"
@@ -96,15 +98,12 @@ const UserInfo = () => {
           setValue={(value: string) => setValue("campus", value)}
           errors={errors}
         />
-        <div className="flex">
-          <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
-          <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
-        </div>
         <div>
           <DoneButton title="다음" />
         </div>
       </div>
     </form>
-  );
+  )
 };
+
 export default UserInfo;

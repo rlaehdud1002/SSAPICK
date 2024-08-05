@@ -27,33 +27,15 @@ const Home = () => {
 
   const [isAttendance, setIsAttendance] = useState(attendance?.todayChecked);
 
-  console.log("attendance", isAttendance);
-
-  // 이건 postMutation의 onSuccess에서 실행
-  const getMutation = useMutation({
-    mutationKey: ["getAttendance"],
-    mutationFn: getAttendance,
-
-    onSuccess: (data) => {
-      console.log("출석체크 성공");
-      console.log(data);
-      // 그럼 여기서 todayChecked를 바꿔주고
-      // streak도 바꿔주고
-      setIsAttendance(data.todayChecked);
-      setStreak(data.streak);
-      // 여기서 모달 열면 되겠다
-      setModalOpen(true);
-    },
-  });
-
   const postMutation = useMutation({
     mutationKey: ["postAttendance"],
     mutationFn: postAttendance,
 
     onSuccess: (data) => {
-      console.log("postsuccess");
-      console.log(data);
-      getMutation.mutate();
+      console.log('postsuccess', data);
+      setIsAttendance(data.todayChecked);
+      setStreak(data.streak);
+      setModalOpen(true);
     },
 
     onError: (error) => {
@@ -62,12 +44,15 @@ const Home = () => {
   });
 
   // 출석 체크
-  // useEffect(() => {
-  //   console.log('attendance', 'useEffect', isAttendance);
-  //   if (!isAttendance) {
-  //     postMutation.mutate();
-  //   }
-  // }, [isAttendance]);
+  useEffect(() => {
+    console.log('!isAttendance', !isAttendance);
+    console.log('!isLoadingAttendance', !isLoadingAttendance);
+
+    if (!isAttendance && !isLoadingAttendance) {
+      console.log('출석체크 요청');
+      postMutation.mutate();
+    }
+  }, [isAttendance, isLoadingAttendance]);
 
   return (
     <div className="m-6">
