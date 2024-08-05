@@ -30,7 +30,11 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
       className=" text-white mx-4 rounded-lg h-72 p-3"
     >
       <div className="flex justify-between">
-        <img className="w-28 h-28 mt-6 ml-2" src={information?.profileImage} alt="profile" />
+        <img
+          className="w-28 h-28 mt-6 ml-2 rounded-full"
+          src={information?.profileImage}
+          alt="profile"
+        />
         <div className="flex items-center mr-2">
           <div className="flex flex-col items-center mx-1">
             <CoinIcon width={30} height={30} />
