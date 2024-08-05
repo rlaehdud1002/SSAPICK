@@ -4,3 +4,7 @@ export interface IAlarm {
   pickAlarm: boolean;
   addQuestionAlarm: boolean;
 }
+
+export interface IAlarmAll {
+  updateAll: boolean;
+}
