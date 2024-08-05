@@ -1,13 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { signOut } from "api/authApi";
-import { accessTokenState } from "atoms/UserAtoms";
 import WithdrawalModal from "components/modals/WithdrawalModal";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 const SetAccount = () => {
   const navigate = useNavigate();
-  const [accessToken, setAccessToken] = useRecoilState (accessTokenState);
+
   const mutation = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
@@ -17,9 +15,7 @@ const SetAccount = () => {
   });
 
   const handleLogout = async () => {
-    console.log(accessToken)
-    mutation.mutate(accessToken);
-
+    mutation.mutate();
   };
 
   return (
