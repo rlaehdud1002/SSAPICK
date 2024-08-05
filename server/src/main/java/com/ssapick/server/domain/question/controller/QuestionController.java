@@ -101,7 +101,7 @@ public class QuestionController {
      */
     @GetMapping("/pick")
     public SuccessResponse<List<QuestionData.Search>> searchQuestions(@CurrentUser User user) {
-        return SuccessResponse.of(List.copyOf(questionService.searchQeustionList(user)));
+        return SuccessResponse.of(questionService.searchQeustionList(user));
     }
 
     /**

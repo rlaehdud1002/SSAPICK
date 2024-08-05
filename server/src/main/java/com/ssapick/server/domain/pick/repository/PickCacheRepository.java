@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.pick.repository;
 
+import java.time.Duration;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,7 @@ public class PickCacheRepository {
 
     public void init(Long userId) {
         String key = PICK_INDEX + userId;
-        redisTemplate.opsForValue().set(key, 1);
+        redisTemplate.opsForValue().set(key, 1, Duration.ofDays(1));
     }
 
     public void increment(Long userId) {
@@ -24,7 +26,7 @@ public class PickCacheRepository {
             this.init(userId);
             return;
         }
-        redisTemplate.opsForValue().set(key, (Integer) value + 1);
+        redisTemplate.opsForValue().set(key, (Integer) value + 1, Duration.ofDays(1));
     }
 
     public Integer index(Long userId) {
