@@ -7,6 +7,14 @@ export interface IQuestion {
   createdAt?: string;
 }
 
+export interface IQuestionNoCreatedAt {
+  id: number;
+  banCount?: number;
+  skipCount?: number;
+  content: string;
+  category: ICategory;
+}
+
 export interface ICategory {
   id: number;
   name: string;

@@ -7,7 +7,6 @@ import InfoInsert from 'pages/InfoInsert';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
-import NotFoundPage from 'pages/NotFoundPage';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';

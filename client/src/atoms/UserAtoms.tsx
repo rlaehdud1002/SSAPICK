@@ -3,10 +3,6 @@ import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
 
-// export const isMMState = selector<boolean>({
-//   key: 'isMMState',
-// });
-
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
   get: ({ get }) => {
@@ -30,7 +26,13 @@ export const firebaseTokenState = atom<string>({
 
 export const userState = atom<IUser>({
   key: 'userState',
-  
+  default: {
+    profileImage: '',
+    name: '',
+    th: '',
+    campusName: '',
+    gender: '',
+  }
 });
 
 export const userAddState = atom<IUserAdd>({

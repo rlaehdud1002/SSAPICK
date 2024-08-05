@@ -3,23 +3,23 @@ import { signOut } from "api/authApi";
 import { accessTokenState } from "atoms/UserAtoms";
 import WithdrawalModal from "components/modals/WithdrawalModal";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 const SetAccount = () => {
   const navigate = useNavigate();
-  const [accessToken, setAccessToken] = useRecoilState (accessTokenState);
+  const setAccessToken = useSetRecoilState(accessTokenState);
+
   const mutation = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
       console.log("로그아웃 성공");
+      setAccessToken("");
       navigate("/");
     }
   });
 
   const handleLogout = async () => {
-    console.log(accessToken)
-    mutation.mutate(accessToken);
-
+    mutation.mutate();
   };
 
   return (
