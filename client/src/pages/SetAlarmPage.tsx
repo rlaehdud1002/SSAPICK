@@ -72,7 +72,7 @@ const SetAlarm = () => {
         <SetAlarmIcon width={25} height={25} alarmset className="me-2 mt-1" />
         <h1>알림 관리</h1>
       </div>
-      <div className="bg-white/50 rounded-lg my-6 mx-8 mt-4 py-1.5 px-5 flex flex-row items-center justify-between">
+      <div className="bg-white/50 rounded-lg my-6 mx-8 py-1.5 ps-5 pe-4 flex flex-row items-center justify-between">
         <span className="mx-2">전체 알림</span>
         <Switch
           checked={allAlarm}

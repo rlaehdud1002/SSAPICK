@@ -6,16 +6,25 @@ interface UserMaskIconProps {
 }
 
 const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
-  const [stroke, setStroke] = useState<string>('white');
-  const [fill, setFill] = useState<string>('none');
+  const [stroke, setStroke] = useState<string>("white");
+  const [fill, setFill] = useState<string>("none");
+  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   useEffect(() => {
-    setStroke(checked ? 'white' : gen === 'M' ? '#7EAFFF' : '#FF9798');
-    setFill(checked ? (gen === 'M' ? '#7EAFFF' : '#FF9798') : 'none');
-  }, [setStroke, setFill, checked, gen]);
+    setStroke(isClicked ? "white" : gen === "M" ? "#7EAFFF" : "#FF9798");
+    setFill(isClicked ? (gen === "M" ? "#7EAFFF" : "#FF9798") : "none");
+  }, [checked, gen, isClicked]);
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+    if (isClicked) {
+      setStroke(gen === "M" ? "#7EAFFF" : "#FF9798");
+      setFill("none");
+    }
+  };
 
   return (
-    <>
+    <div onClick={handleClick}>
       <svg
         width="24"
         height="24"
@@ -34,7 +43,7 @@ const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
         <path
           d="M2.99502 1.08298C2.769 1.00451 2.52749 0.981237 2.29065 1.01511C2.0538 1.04898 1.8285 1.13902 1.63354 1.2777C1.43858 1.41639 1.27962 1.59969 1.16994 1.81232C1.06025 2.02495 1.00302 2.26073 1.00302 2.49998V11.143C0.963749 12.8316 1.30841 14.507 2.01102 16.043C3.64802 19.402 6.82802 21.843 10.976 23.405C11.3161 23.5327 11.691 23.5327 12.031 23.405C16.179 21.847 19.358 19.405 20.995 16.043C21.6976 14.507 22.0423 12.8316 22.003 11.143V2.49998C22.003 2.26073 21.9458 2.02495 21.8361 1.81232C21.7264 1.59969 21.5675 1.41639 21.3725 1.2777C21.1775 1.13902 20.9522 1.04898 20.7154 1.01511C20.4785 0.981237 20.237 1.00451 20.011 1.08298C14.5101 3.05297 8.49596 3.05297 2.99502 1.08298Z"
           fill={fill}
-          stroke={gen === 'M' ? '#7EAFFF' : '#FF9798'}
+          stroke={gen === "M" ? "#7EAFFF" : "#FF9798"}
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -73,7 +82,7 @@ const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
           strokeLinejoin="round"
         />
       </svg>
-    </>
+    </div>
   );
 };
 

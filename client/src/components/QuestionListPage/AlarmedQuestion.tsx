@@ -11,7 +11,7 @@ const AlarmedQuestion = ({ gender, title }: AlarmedQuestionProps) => {
     <div>
       <div className="flex mt-5 ml-5">
         <AlarmedIcon gender={gender} />
-        <span className="ml-10">{title}</span>
+        <span className="ml-10">{title}..</span>
         {/* <Separator className="my-4 mx-4" />  */}
       </div>
       <div className="bg-white h-px w-90 mx-2 mt-5"></div>

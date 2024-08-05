@@ -13,9 +13,9 @@ const MakeQuestion = () => {
     return <div>로딩 중...</div>;
   }
 
-  console.log(questions);
+  console.log("questions : ", questions);
 
-  if (!questions) {
+  if (!questions || questions.length === 0) {
     return <div>질문이 없습니다.</div>;
   }
 
