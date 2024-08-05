@@ -6,8 +6,8 @@ import { useRecoilState } from 'recoil';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 
-import { validCheck } from 'api/validApi';
-import { validState } from 'atoms/ValidAtoms';
+import { validCheck } from "api/validApi";
+import { validState } from "atoms/ValidAtoms";
 
 import { initializeApp } from 'firebase/app';
 import { useEffect } from 'react';
@@ -25,7 +25,7 @@ const firebaseConfig = {
 
 function App() {
   initializeApp(firebaseConfig);
-  const location = useLocation().pathname.split('/')[1];
+  const location = useLocation().pathname.split("/")[1];
   console.log(location);
   const queryClient = new QueryClient();
 
@@ -48,33 +48,32 @@ function App() {
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        console.log('location', location);
-        console.log('ValidState', ValidState);
-        if (location === 'splash') {
+        console.log("location", location);
+        console.log("ValidState", ValidState);
+        if (location === "splash") {
           return;
         }
         const data = await validCheck();
         setValidState(data);
-        console.log('data', data);
+        console.log("data", data);
         if (data.lockedUser) {
-          navigate('/');
+          console.log("유저 잠김");
+          navigate("/");
           return;
         }
         if (!data.mattermostConfirmed) {
-          navigate('/mattermost');
+          console.log("mm 미확인");
+          navigate("/mattermost");
           return;
         }
         if (!data.validInfo) {
-          navigate('/userinfo');
-          return;
-        }
-        if (data.validInfo) {
-          navigate('/home');
+          console.log("유저 정보 입력 안함");
+          navigate("/userinfo");
           return;
         }
       } catch (error) {
-        console.error('유효성 검사 실패', error);
-        navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        console.error("유효성 검사 실패", error);
+        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
       }
     };
 

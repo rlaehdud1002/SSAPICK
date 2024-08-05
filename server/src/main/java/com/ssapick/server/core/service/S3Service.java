@@ -30,6 +30,7 @@ import com.amazonaws.util.IOUtils;
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.user.event.S3UploadEvent;
+import com.ssapick.server.domain.user.repository.ProfileRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class S3Service {
 	private final AmazonS3 s3;
+	private final ProfileRepository profileRepository;
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucketName;
@@ -61,6 +63,7 @@ public class S3Service {
 
 		CompletableFuture<String> future = CompletableFuture.completedFuture(this.uploadImage(event.getFile()));
 		event.getProfile().updateProfileImage(future.join());
+		profileRepository.save(event.getProfile());
 	}
 
 	public void deleteImageFromS3(String imageAddress) {
