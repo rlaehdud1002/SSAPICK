@@ -32,7 +32,7 @@ const CommonRoute = () => {
       {/* 추가 정보 입력 */}
       <Route path="/infoinsert" element={<InfoInsert />} />
       {/* 잘못된 접근일 때 */}
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
   );
 };
