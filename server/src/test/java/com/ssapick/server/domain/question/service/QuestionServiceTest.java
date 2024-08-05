@@ -386,6 +386,7 @@ class QuestionServiceTest extends UserSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches).hasSize(3);
+		assertThat(searches.size()).isLessThan(16);
 	}
 
 	private Question createQuestion(User user) {

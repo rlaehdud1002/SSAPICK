@@ -26,7 +26,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final QAlarm alarm;
 
-    public final ListPath<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance> attendances = this.<com.ssapick.server.domain.attendance.entity.Attendance, com.ssapick.server.domain.attendance.entity.QAttendance>createList("attendances", com.ssapick.server.domain.attendance.entity.Attendance.class, com.ssapick.server.domain.attendance.entity.QAttendance.class, PathInits.DIRECT2);
+    public final ListPath<Attendance, QAttendance> attendances = this.<Attendance, QAttendance>createList("attendances", Attendance.class, QAttendance.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
