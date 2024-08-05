@@ -13,8 +13,7 @@ import BlockQuestion from 'components/BlockPage/BlockQuestion';
 import QuestionInfo from 'components/QuestionListPage/QuestionInfo';
 import MakeQuestion from 'components/QuestionListPage/MakeQuestion';
 import Profile from 'pages/ProfilePage';
-import { Routes, Route } from 'react-router-dom';
-import NotFoundPage from 'pages/NotFoundPage';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 const ProfileRoute = () => {
   return (
@@ -39,7 +38,7 @@ const ProfileRoute = () => {
       <Route path="/setaccount" element={<SetAccount />} />
       <Route path="/friendsearch" element={<FriendSearch />} />
       {/* 잘못된 접근일 때 */}
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
   );
 };

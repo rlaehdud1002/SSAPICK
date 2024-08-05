@@ -11,7 +11,6 @@ interface InfoInputProps {
 }
 
 const InfoInput = ({ name, title, register, errors,value }: InfoInputProps) => {
-  console.log(name)
   return (
     <div className='flex flex-col'>
       <div>

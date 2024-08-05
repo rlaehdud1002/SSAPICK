@@ -1,13 +1,11 @@
-import UserAddInfo from 'pages/UserAddInfoPage';
+import InfoInsert from 'pages/InfoInsert';
 import NotFoundPage from 'pages/NotFoundPage';
-import UserInfo from 'pages/UserInfoPage';
 import { Route, Routes } from 'react-router-dom';
 
 const LoginRoute = () => {
   return (
     <Routes>
-      <Route path="/userinfo" element={<UserInfo />} />
-      <Route path="/useraddinfo" element={<UserAddInfo />} />
+      <Route path="/infoinsert" element={<InfoInsert />} />
       {/* 잘못된 접근일 때 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

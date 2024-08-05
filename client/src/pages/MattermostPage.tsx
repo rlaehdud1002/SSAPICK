@@ -25,14 +25,14 @@ const Mattermost = () => {
     mutationFn: mmAuthSend,
     // 성공시, 유저 정보 입력 페이지로 이동
     onSuccess: () => {
-      navigate('/userinfo');
+      navigate('/infoinsert');
       console.log('성공');
     },
   });
 
   useEffect(() => {
     if (authenticated) {
-      navigate('/userinfo');
+      navigate('/infoinsert');
     }
   }, [authenticated, navigate]);
 

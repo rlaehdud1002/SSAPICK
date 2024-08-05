@@ -1,12 +1,12 @@
 import { userState } from "atoms/UserAtoms";
-import DoneButton from "buttons/DoneButton";
-import InfoInput from "components/LoginPage/InfoInput";
-import InfoSelect from "components/LoginPage/InfoSelect";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import InfoInput from "./InfoInput";
+import InfoSelect from "./InfoSelect";
+
 
 interface UserForm {
   name: string;
@@ -19,13 +19,14 @@ const UserInfo = () => {
   const setUserInfo = useSetRecoilState(userState);
   const navigate = useNavigate();
   const navigateToAddInfo = () => {
-    navigate("/useraddinfo");
+    navigate("/infoinsert");
   };
 
   const {
     register,
     handleSubmit,
     setValue,
+    trigger,
     formState: { errors },
   } = useForm<UserForm>();
   const [setUploadImage] = useState<File | undefined>(undefined);
@@ -36,6 +37,7 @@ const UserInfo = () => {
     form.append("name", data.name);
     form.append("image", "");
     console.log(data);
+
 
     setUserInfo((prev) => ({
       ...prev,
@@ -48,16 +50,15 @@ const UserInfo = () => {
   const onInvalid = (errors: any) => {
     console.log("error", errors);
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
           <ProfileCameraIcon setUploadImage={setUploadImage} />
         </div>
-        {/* <div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> */}
+        {/* {<div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> * /} */}
 
-        <InfoInput
+        < InfoInput
           name="name"
           title="이름"
           register={register("name", {
@@ -96,15 +97,16 @@ const UserInfo = () => {
           setValue={(value: string) => setValue("campus", value)}
           errors={errors}
         />
-        <div className="flex">
+        {/* <div className="flex">
           <div className="bg-white w-3 h-3 rounded-full my-2 mx-1"></div>
           <div className="bg-white w-3 h-3 rounded-full my-2 mx-1 opacity-50"></div>
-        </div>
+        </div> */}
         <div>
-          <DoneButton title="다음" />
+          {/* <DoneButton title="다음" /> */}
         </div>
       </div>
     </form>
-  );
-};
+  )
+}
+
 export default UserInfo;
