@@ -55,6 +55,19 @@ public class QuestionService {
     }
 
     /**
+     * 내가 생성한 질문 조회
+     *
+     * @param user
+     * @return
+     */
+    public List<QuestionData.Search> getQuestionsByUser(User user) {
+        return questionRepository.findByAuthor(user)
+                .stream()
+                .map(QuestionData.Search::fromEntity)
+                .toList();
+    }
+
+    /**
      * 카테고리별 질문 조회
      *
      * @param questionCategoryId
