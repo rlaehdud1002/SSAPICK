@@ -59,7 +59,7 @@ class QuestionRepositoryTest extends TestDatabaseContainer {
 
 
 		// * WHEN: 이걸 실행하면
-		List<Question> questions = questionQueryRepository.findAll();
+		List<Question> questions = questionQueryRepository.findQuestions();
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(questions.size()).isEqualTo(3);
