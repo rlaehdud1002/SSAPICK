@@ -69,6 +69,8 @@ public class AttendanceControllerTest extends RestDocsSupport {
     @DisplayName("출석에 성공하면 성공 응답을 반환한다")
     public void attendanceSuccess() throws Exception {
         // * GIVEN: 이런게 주어졌을 때
+        AttendanceData.Status status = AttendanceData.CreateStatus(1, true);
+        when(attendanceService.getUserAttendanceStatus(any())).thenReturn(status);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(post("/api/v1/attendance")
@@ -81,7 +83,10 @@ public class AttendanceControllerTest extends RestDocsSupport {
                                 .tag("유저")
                                 .summary("출석 생성 API")
                                 .description("출석을 생성한다.")
-                                .responseFields(empty())
+                                .responseFields(response(
+                                        fieldWithPath("data.streak").type(JsonFieldType.NUMBER).description("연속 출석 일수"),
+                                        fieldWithPath("data.todayChecked").type(JsonFieldType.BOOLEAN).description("오늘 출석 여부")
+                                ))
                                 .build()
                 )));
 

@@ -32,17 +32,18 @@ public class AttendanceController {
 
     /**
      * 출석 생성
+     *
      * @param user
      * @return SuccessResponse<Void>
      */
     @Authenticated
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponse<Void> checkIn(
+    public SuccessResponse<AttendanceData.Status> checkIn(
             @CurrentUser User user
     ) {
         attendanceService.checkIn(user);
 
-        return SuccessResponse.empty();
+        return SuccessResponse.of(attendanceService.getUserAttendanceStatus(user));
     }
 }
