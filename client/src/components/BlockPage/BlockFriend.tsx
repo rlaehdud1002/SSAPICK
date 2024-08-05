@@ -10,10 +10,14 @@ const BlockFriend = () => {
       });
     return (
         <div className="mb-20">
-            {blocks &&
+            {blocks ? (
             blocks.map((block, index) => (
                 <BlockFriendContent key={index} campusName={block.campusName} campusSection={block.campusSection} name={block.nickname}/>
-            ))}
+            ))):(
+                <div className="flex justify-center">
+                    차단된 친구가 없습니다.
+                </div>
+            )}
         </div>
     )
 }
