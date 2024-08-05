@@ -1,15 +1,14 @@
-package com.ssapick.server.core.config;
+package com.ssapick.server.core.container;
 
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@TestConfiguration
 @Testcontainers
-public class RedisTestConfig {
-
+@PropertySource("classpath:application-test.properties")
+public class TestRedisContainer {
     private static final String REDIS_IMAGE = "redis:7.0.8-alpine";
     private static final int REDIS_PORT = 6379;
     private static final GenericContainer REDIS_CONTAINER;

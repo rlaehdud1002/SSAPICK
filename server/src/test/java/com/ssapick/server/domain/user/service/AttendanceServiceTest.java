@@ -1,12 +1,12 @@
-package com.ssapick.server.domain.attendance.service;
+package com.ssapick.server.domain.user.service;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
-import com.ssapick.server.domain.attendance.entity.Attendance;
-import com.ssapick.server.domain.attendance.repository.AttendanceRepository;
+import com.ssapick.server.domain.user.entity.Attendance;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
+import com.ssapick.server.domain.user.repository.AttendanceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

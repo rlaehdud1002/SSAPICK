@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.attendance.controller;
+package com.ssapick.server.domain.user.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
@@ -6,8 +6,8 @@ import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
-import com.ssapick.server.domain.attendance.dto.AttendanceData;
-import com.ssapick.server.domain.attendance.service.AttendanceService;
+import com.ssapick.server.domain.user.dto.AttendanceData;
+import com.ssapick.server.domain.user.service.AttendanceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
