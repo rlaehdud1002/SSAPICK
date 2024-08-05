@@ -10,6 +10,8 @@ import NotFoundPage from 'pages/NotFoundPage';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
+import UserAddInfo from 'pages/UserAddInfoPage';
+import UserInfo from 'pages/UserInfoPage';
 import { Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
@@ -28,6 +30,9 @@ const CommonRoute = () => {
       </Route>
       <Route path="/mattermost" element={<Mattermost />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      {/* 추가 정보 입력 */}
+      <Route path="/userinfo" element={<UserInfo />} />
+      <Route path="/useraddinfo" element={<UserAddInfo />} />
       {/* 잘못된 접근일 때 */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
