@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -204,6 +205,12 @@ public class QuestionService {
         List<QuestionData.Search> banQuestions = this.searchBanQuestions(user.getId());
 
         searches.removeAll(banQuestions);
+
+        Collections.shuffle(searches);
+
+        if (searches.size() > 15) {
+            searches = searches.subList(0, 15);
+        }
 
         return searches;
     }
