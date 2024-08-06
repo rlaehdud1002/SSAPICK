@@ -33,7 +33,7 @@ public class User extends BaseEntity {
 	// @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
 	// private final List<UserBan> bannedUser = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Hint> hints = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
