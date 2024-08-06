@@ -1,18 +1,22 @@
-import { userState } from "atoms/UserAtoms";
+import { useQuery } from "@tanstack/react-query";
+import { getUserInfo } from "api/authApi";
+import { IUserInfo } from "atoms/User.type";
 import DoneButton from "buttons/DoneButton";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import { set, useForm } from "react-hook-form";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
+import { sendUserInfoState } from "atoms/UserAtoms";
+import { useSetRecoilState } from "recoil";
 
 
 interface UserForm {
   name: string;
   gender: string;
-  th: string;
+  th: number;
   campus: string;
+  class: number;
 }
 
 interface UserInfoProps {
@@ -20,45 +24,81 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({ next }: UserInfoProps) => {
-  const [_, setUserInfo] = useRecoilState(userState);
+  const setSendUserInfo = useSetRecoilState(sendUserInfoState);
   const {
     register,
+    reset,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<UserForm>();
-  const [setUploadImage] = useState<File | undefined>(undefined);
+  } = useForm<UserForm>({
+    defaultValues: {
+      name: "",
+      campus: "",
+      gender: "",
+      class: 0,
+
+    }
+
+  });
+
+  const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
 
   const onSubmit = (data: UserForm) => {
-    console.log("123123123");
-
     const form = new FormData();
+    console.log(uploadImage)
+    setSendUserInfo((prev) => {
+      return {
+        ...prev,
+        name: data.name,
+        gender: data.gender,
+        campusSection: data.class,
+        cohort: data.th,
+        campusName: data.campus,
+      }
+    });
+    if (uploadImage) {
+      form.append("profileImage", uploadImage);
+
+    }
     form.append("name", data.name);
     form.append("image", "");
-    console.log(data);
-
-    setUserInfo((prev) => ({
-      ...prev,
-      profileImage: "",
-      name: data.name,
-      gender: data.gender,
-      th: data.th,
-      campusName: data.campus,
-    }));
-
     next();
+    console.log(data);
   };
+
   const onInvalid = (errors: any) => {
     console.log("error", errors);
   };
+
+
+  const { data: information, isLoading } = useQuery<IUserInfo>({
+    queryKey: ["information"],
+    queryFn: async () => await getUserInfo(),
+  });
+
+  useEffect(() => {
+    if (!isLoading && information) {
+      console.log(information);
+      reset({
+        name: information.name || "",
+        gender: information.gender || "",
+        class: information.section || 0,
+        campus: information.campusName || "",
+      })
+    }
+  }, [information, isLoading, reset])
+
+  console.log(information);
+
+  if (isLoading) return <div>로딩중</div>;
+
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
-          <ProfileCameraIcon setUploadImage={setUploadImage} />
+          <ProfileCameraIcon defaultImage={information?.profileImage} setUploadImage={setUploadImage} />
         </div>
-        {/* {<div className="mb-20" style={{ color: "red", fontSize: 10 }}>모든 정보 입력이 필수입니다.</div> * /} */}
-
         <InfoInput
           name="name"
           title="이름"
@@ -66,6 +106,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
             required: "이름을 입력해주세요.",
             maxLength: { value: 10, message: "10글자이하로 입력해주세요." },
           })}
+          value={information?.name}
           errors={errors}
         />
 
@@ -76,6 +117,17 @@ const UserInfo = ({ next }: UserInfoProps) => {
             required: "성별을 선택해주세요.",
           })}
           setValue={(value: string) => setValue("gender", value)}
+          defaultValue={information?.gender}
+          errors={errors}
+        />
+        <InfoSelect
+          name="class"
+          title="반"
+          register={register("class", {
+            required: "반을 선택해주세요.",
+          })}
+          setValue={(value: number) => setValue("class", value)}
+          defaultValue={information?.section}
           errors={errors}
         />
 
@@ -85,7 +137,8 @@ const UserInfo = ({ next }: UserInfoProps) => {
           register={register("th", {
             required: "기수를 선택해주세요.",
           })}
-          setValue={(value: string) => setValue("th", value)}
+          setValue={(value: number) => setValue("th", value)}
+          // defaultValue={information?.cohort}
           errors={errors}
         />
 
@@ -96,6 +149,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
             required: "캠퍼스를 선택해주세요.",
           })}
           setValue={(value: string) => setValue("campus", value)}
+          defaultValue={information?.campusName}
           errors={errors}
         />
         <div>

@@ -15,6 +15,25 @@ export const getUserInfo = async (): Promise<IUserInfo> => {
   return data;
 };
 
+// 유저 정보 전송
+export const UserSend = async (
+  userdata: FormData,
+): Promise<void> => {
+  const {
+    data: { success },
+  } = await instance.patch<BaseResponse<null>>('/user', userdata, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  if (!success) {
+    throw new Error("유저 정보 전송 실패");
+  }
+
+  console.log('postMessageSend');
+};
+
 // mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
   const {
