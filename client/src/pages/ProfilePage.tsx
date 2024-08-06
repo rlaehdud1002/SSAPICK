@@ -3,7 +3,7 @@ import { getAlarm } from "api/alarmApi";
 import { getUserInfo } from "api/authApi";
 import { alarmSettingsState } from "atoms/AlarmAtoms";
 import { IUserInfo } from "atoms/User.type";
-import { accessTokenState } from "atoms/UserAtoms";
+import { userInfostate } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import AccountIcon from "icons/AccountIcon";
@@ -14,17 +14,16 @@ import LocationAlarmIcon from "icons/LocationAlarmIcon";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const Profile = () => {
+  // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
     queryKey: ["information"],
     queryFn: async () => await getUserInfo(),
   });
-
-  const accessToken = useRecoilValue(accessTokenState);
-  console.log(accessToken);
 
   const [alarmSettings, setAlarmSettings] = useRecoilState(alarmSettingsState);
   const navigate = useNavigate();
@@ -38,6 +37,20 @@ const Profile = () => {
       console.error(error);
     }
   };
+
+  const setInfo = useSetRecoilState(userInfostate);
+
+  useEffect(() => {
+
+    setInfo(prev => ({
+      ...prev,
+      birth: information?.hints[7].content,
+    }
+    ));
+  })
+  console.log("프로필 페이지",information);
+
+  if (isLoading) return <div>로딩중...</div>
 
   return (
     <div>

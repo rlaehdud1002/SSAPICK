@@ -1,14 +1,14 @@
-import { userAddState } from 'atoms/UserAtoms';
+import { useMutation } from '@tanstack/react-query';
+import { UserSend } from 'api/authApi';
+import { sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
-import InfoSelect from 'components/LoginPage/InfoSelect';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 interface AddUserForm {
   mbti: string;
-  class: number;
   major: string;
   birth: string;
   town: string;
@@ -16,34 +16,49 @@ interface AddUserForm {
 }
 
 const UserAddInfo = () => {
-  const setUserAddInfo = useSetRecoilState(userAddState)
   const navigate = useNavigate();
+  const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
 
+  const mutation = useMutation({
+    mutationKey: ["user", "send"],
+    mutationFn: UserSend,
+    // 성공시, 유저 정보 입력 페이지로 이동
+    onSuccess: () => {
+      navigate('/home');
+      console.log('성공');
+    },
+  });
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<AddUserForm>();
 
+  console.log(SendUserInfo)
+
   const onSubmit = (data: AddUserForm) => {
+    const form = new FormData();
+    // 유저 정보 저장
+    setSendUserInfo((prev) => {
+      return {
+        ...prev,
+        mbti: data.mbti,
+        major: data.major,
+        birth: data.birth,
+        interest: data.hobby,
+        residentialArea: data.town,
+      }
+    });
+    console.log(SendUserInfo);
+    form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
 
-
-    setUserAddInfo((prev) => ({
-      ...prev,
-      mbti: data.mbti,
-      classNum: Number(data.class),
-      major: data.major,
-      birth: data.birth,
-      location: data.town,
-      interest: data.hobby,
-    }))
-    navigate('/home');
+    mutation.mutate(form);
   };
 
   const onInvalid = (errors: any) => {
     console.log(errors);
   };
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -68,16 +83,6 @@ const UserAddInfo = () => {
                 message: '대문자 MBTI 유형으로 입력해주세요.',
               },
             })}
-            errors={errors}
-          />
-
-          <InfoSelect
-            name="class"
-            title="반"
-            register={register('class', {
-              required: '반을 선택해주세요.',
-            })}
-            setValue={(value: number) => setValue('class', value)}
             errors={errors}
           />
 

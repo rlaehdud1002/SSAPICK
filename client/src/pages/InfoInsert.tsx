@@ -1,12 +1,10 @@
 import UserAddInfo from "components/LoginPage/UserAddInfo";
 import UserInfo from "components/LoginPage/UserInfo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "components/ui/tabs";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 const InfoInsert = () => {
   const [tab, setTab] = useState<string>("userinfo");
-  const infoRef = useRef<HTMLFormElement>(null);
-  const addInfoRef = useRef<HTMLFormElement>(null);
 
   return (
     <div>
@@ -32,16 +30,6 @@ const InfoInsert = () => {
             </div>
           </TabsList>
         </div>
-        {/* {tab === "useraddinfo" ? (
-          <div className="flex justify-center">
-            <DoneButton title="완료" />
-          </div>) : (<div onClick={(e) => {
-            e.preventDefault();
-            infoRef.current?.submit();
-          }} className="flex justify-center">
-            <DoneButton title="다음" />
-          </div>)
-        } */}
       </Tabs>
     </div>
   );
