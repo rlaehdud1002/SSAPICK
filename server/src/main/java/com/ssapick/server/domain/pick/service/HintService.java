@@ -47,10 +47,10 @@ public class HintService {
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.GENDER));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_NAME));
 		// test
-		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
-		hints.removeIf(hint -> hint.getHintType().equals(HintType.INTEREST));
-		hints.removeIf(hint -> hint.getHintType().equals(HintType.MAJOR));
-		hints.removeIf(hint -> hint.getHintType().equals(HintType.RESIDENTIAL_AREA));
+		// hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
+		// hints.removeIf(hint -> hint.getHintType().equals(HintType.INTEREST));
+		// hints.removeIf(hint -> hint.getHintType().equals(HintType.MAJOR));
+		// hints.removeIf(hint -> hint.getHintType().equals(HintType.RESIDENTIAL_AREA));
 		//
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
