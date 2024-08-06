@@ -23,6 +23,8 @@ const Pick = () => {
     queryFn: getQuestion,
   });
 
+  console.log('questionList', questions);
+
   // 전체 친구 목록 조회
   const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<IFriend[]>({
     queryKey: ["friends"],
