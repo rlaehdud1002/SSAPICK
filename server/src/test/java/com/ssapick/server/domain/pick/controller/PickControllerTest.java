@@ -1,27 +1,5 @@
 package com.ssapick.server.domain.pick.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultActions;
-
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
@@ -35,6 +13,27 @@ import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("싸픽 컨트롤러 테스트")
 @WebMvcTest(
@@ -69,7 +68,7 @@ class PickControllerTest extends RestDocsSupport {
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
-					.hint(Hint.createHint("힌트1", HintType.CHORT))
+					.hint(Hint.createHint("힌트1", HintType.COHORT))
 					.pick(pick)
 					.build()
 			));
@@ -354,7 +353,7 @@ class PickControllerTest extends RestDocsSupport {
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
-					.hint(Hint.createHint("힌트1", HintType.CHORT))
+					.hint(Hint.createHint("힌트1", HintType.COHORT))
 					.pick(pick)
 					.build()
 			));

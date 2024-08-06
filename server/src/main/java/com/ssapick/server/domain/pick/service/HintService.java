@@ -1,14 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
@@ -17,9 +8,16 @@ import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.event.PickcoEvent;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -73,11 +71,11 @@ public class HintService {
 				hintContent = processNameHint(hintContent);
 			}
 			case AGE -> {
-				int birthYeaar = Integer.parseInt(hintContent.split("-")[0]);
-				int age = LocalDate.now().getYear() - birthYeaar + 1;
+				int birthYear = Integer.parseInt(hintContent.split("-")[0]);
+				int age = LocalDate.now().getYear() - birthYear + 1;
 				hintContent = age + "세";
 			}
-			case CHORT -> {
+			case COHORT -> {
 				hintContent = hintContent + "기";
 			}
 			case CAMPUS_NAME -> {
@@ -146,7 +144,7 @@ public class HintService {
 		List<Character> initials = name.substring(1).chars()
 			.mapToObj(c -> (char)c)
 			.map(this::getInitialConsonant)
-			.collect(Collectors.toList());
+			.toList();
 
 		int revealIndex = random.nextInt(initials.size());
 

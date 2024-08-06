@@ -1,6 +1,8 @@
 package com.ssapick.server.domain.location.controller;
 
+import com.ssapick.server.domain.location.dto.LocationData;
 import com.ssapick.server.domain.location.listener.LocationPublisher;
+import com.ssapick.server.domain.location.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 @Controller
 public class LocationSocketController {
+    private final LocationService locationService;
     private final LocationPublisher locationPublisher;
 
     @MessageMapping("/location/update")
-    public void update() {
-        locationPublisher.publish();
+    public void update(LocationData.Request request) {
+        locationService.saveUserLocation(request.getUserId(), request.getGeo());
+        locationPublisher.publish(request);
     }
 }

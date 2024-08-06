@@ -91,7 +91,7 @@ public class UserService {
 		return List.of(
 			Hint.createHint(update.getName(), HintType.NAME),
 			Hint.createHint(String.valueOf(update.getGender()), HintType.GENDER),
-			Hint.createHint(String.valueOf(update.getCohort()), HintType.CHORT),
+			Hint.createHint(String.valueOf(update.getCohort()), HintType.COHORT),
 			Hint.createHint(update.getCampusName(), HintType.CAMPUS_NAME),
 			Hint.createHint(String.valueOf(update.getCampusSection()), HintType.CAMPUS_SECTION),
 			Hint.createHint(update.getMbti(), HintType.MBTI),

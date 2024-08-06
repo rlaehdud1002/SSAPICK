@@ -21,6 +21,8 @@ public class LocationSubscriber implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String publishMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
         LocationData.Request request = new Gson().fromJson(publishMessage, LocationData.Request.class);
-        messagingTemplate.convertAndSend("/sub/location/update", request);
+        if (request.getUserId() != null) {
+            messagingTemplate.convertAndSend("/sub/location/update", "change");
+        }
     }
 }

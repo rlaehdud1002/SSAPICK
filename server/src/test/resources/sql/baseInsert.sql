@@ -70,10 +70,10 @@ VALUES (NOW(), NOW(), 1, 2, 1),
 
 
 -- hint
-INSERT INTO public.hint (created_at, updated_at, content, hint_type, visibility, user_id, hint_id)
-VALUES (NOW(), NOW(), '힌트 내용 A', 1, TRUE, 1, 1),
-       (NOW(), NOW(), '힌트 내용 B', 2, TRUE, 2, 2),
-       (NOW(), NOW(), '힌트 내용 C', 3, FALSE, 3, 3);
+INSERT INTO public.hint (created_at, updated_at, content, hint_type, user_id, hint_id)
+VALUES (NOW(), NOW(), '힌트 내용 A', 'NAME', 1, 1),
+       (NOW(), NOW(), '힌트 내용 B', 'GENDER', 2, 2),
+       (NOW(), NOW(), '힌트 내용 C', 'COHORT', 3, 3);
 
 -- notification
 INSERT INTO public.notification (created_at, updated_at, is_read, notification_type, reference_id, user_id,
