@@ -10,6 +10,7 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.entity.UserBan;
+import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
@@ -24,6 +25,7 @@ public class UserBanservice {
 
 	private final UserBanRepository userBanRepository;
 	private final UserRepository userRepository;
+	private final FollowRepository followRepository;
 
 	/**
 	 * 사용자 차단
@@ -40,6 +42,13 @@ public class UserBanservice {
 		userBanRepository.findBanByFromUserAndToUser(user, findUser).ifPresent(
 			(userBan) -> {
 				throw new BaseException(ErrorCode.ALREADY_BAN_USER);
+			}
+		);
+
+		// 만약 팔로우 되어있으면 팔로우 취소
+		followRepository.findByFollowUserAndFollowingUser(user, findUser).ifPresent(
+			follow -> {
+				followRepository.delete(follow);
 			}
 		);
 
