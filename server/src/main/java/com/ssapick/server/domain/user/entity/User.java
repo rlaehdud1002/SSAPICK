@@ -11,6 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(
 	name = "users",
@@ -79,7 +81,7 @@ public class User extends BaseEntity {
 
 	@Column(name = "ban_count", nullable = false)
 	@ColumnDefault("0")
-	private short banCount = 0;
+	private short banCount;
 
 	/**
 	 * 사용자 생성 메서드

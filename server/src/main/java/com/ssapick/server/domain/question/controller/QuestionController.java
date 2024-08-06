@@ -156,4 +156,16 @@ public class QuestionController {
     public SuccessResponse<List<QuestionData.Search>> searchBanQuestions(@CurrentUser User user) {
         return SuccessResponse.of(questionService.searchBanQuestions(user.getId()));
     }
+
+
+    /**
+     * 질문 카테고리 목록 전체 조회
+     *
+     *
+     */
+    @GetMapping("/categories")
+    public SuccessResponse<List<QuestionData.Category>> searchCategories() {
+        return SuccessResponse.of(questionService.searchCategories());
+    }
+
 }
