@@ -17,7 +17,6 @@ interface AuthFormm {
 }
 
 const Mattermost = () => {
-  const [ userInfo, setUserInfo ] = useRecoilState(userInfostate);
   // 유저 정보 조회
   const { data: information } = useQuery<IUserInfo>({
     queryKey: ['information'],
