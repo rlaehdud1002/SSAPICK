@@ -127,7 +127,8 @@ class PickControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
-                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
+                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시"),
+                                        fieldWithPath("data[].alarm").type(JsonFieldType.BOOLEAN).description("픽 알람 설정 여부")
                                 ))
                                 .build())
                 ));
@@ -206,7 +207,9 @@ class PickControllerTest extends RestDocsSupport {
                                     fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
                                         fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
                                         fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
-                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시")
+                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시"),
+                                        fieldWithPath("data[].alarm").type(JsonFieldType.BOOLEAN).description("픽 알람 설정 여부")
+
                                 ))
                                 .build()
                 )));
