@@ -3,7 +3,6 @@ import { getAlarm } from "api/alarmApi";
 import { getUserInfo } from "api/authApi";
 import { alarmSettingsState } from "atoms/AlarmAtoms";
 import { IUserInfo } from "atoms/User.type";
-import { userInfostate } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import AccountIcon from "icons/AccountIcon";
@@ -14,9 +13,8 @@ import LocationAlarmIcon from "icons/LocationAlarmIcon";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 const Profile = () => {
   // 유저 정보 조회
@@ -38,19 +36,9 @@ const Profile = () => {
     }
   };
 
-  const setInfo = useSetRecoilState(userInfostate);
+  console.log(information)
 
-  useEffect(() => {
 
-    setInfo(prev => ({
-      ...prev,
-      birth: information?.hints[7].content,
-    }
-    ));
-  })
-  console.log("프로필 페이지",information);
-
-  if (isLoading) return <div>로딩중...</div>
 
   return (
     <div>

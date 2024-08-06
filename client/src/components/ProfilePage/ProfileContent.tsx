@@ -1,35 +1,17 @@
-import {
-  userAddState,
-  userCoinState,
-  userFriendState,
-  userInfostate,
-  userPickState,
-  userState,
-} from "atoms/UserAtoms";
 import { IUserInfo } from "atoms/User.type";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
-import { useRecoilValue } from "recoil";
-import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "api/authApi";
 
 interface ProfileContentProps {
   information: IUserInfo;
 }
 
 const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
-  const userProfile = useRecoilValue(userInfostate);
-  console.log("information", information);
-  console.log(userProfile.birth)
-  // const userYear: number|string = userProfile?.birth.split('-')[0] || 0;
+  const userYear = information.hints[7].content.split('-')[0]
   const year = new Date().getFullYear();
-  // const age = year - userYear + 1;
-  // console.log(age);
-
-  
-
-
+  const age = year - (userYear as unknown as number) + 1;
+  console.log(age);
 
   return (
     <div
@@ -64,7 +46,9 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
           {information?.campusName}캠퍼스 • {information?.cohort}기 • {information?.section}반
         </div>
         <div className="my-1">
-          {information?.gender} • {0}세 • {information?.hints[5].content} •{" "}
+          {information?.gender === "F" ?
+          (<span>여자</span>):(<span>남자</span>)}
+          • {age}세 • {information?.hints[5].content} • {" "}
           {information?.hints[9].content}
         </div>
       </div>

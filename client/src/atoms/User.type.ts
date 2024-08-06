@@ -13,11 +13,12 @@ export interface ISendUser {
   mbti?: string;
   cohort: number;
 }
+
+
 export interface IUserInfo {
   id?: number;
-  birth?: string;
   username: string;
-  name: string;
+  name?: string;
   profileImage: string;
   gender: string;
   cohort: number;
