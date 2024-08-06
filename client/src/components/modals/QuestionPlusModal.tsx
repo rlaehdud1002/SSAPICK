@@ -16,6 +16,9 @@ import {
 import SelectCategory from 'components/PickPage/SelectCategory';
 import InputModal from 'components/modals/InputModal';
 import ResultCheckModal from 'components/modals/ResultCheckModal';
+import { useMutation } from '@tanstack/react-query';
+import { postCreateQuestion } from 'api/questionApi';
+import { ICreateQuestion } from 'atoms/Pick.type';
 
 enum NewQuestionStep {
   INPUT,
@@ -31,6 +34,16 @@ const QuestionPlusModal = () => {
   const [step, setStep] = useState<NewQuestionStep>(NewQuestionStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  // 질문 생성 api
+  const mutation = useMutation({
+    mutationKey: ['question', 'create'],
+    mutationFn: postCreateQuestion,
+
+    onSuccess: () => {
+      console.log('질문 생성 성공');
+    },
+  });
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
   useEffect(() => {
@@ -52,7 +65,13 @@ const QuestionPlusModal = () => {
   } = useForm<QuestionForm>();
 
   const onSubmit = (data: QuestionForm) => {
-    console.log('ok', data);
+    const createData: ICreateQuestion = {
+      categoryId: parseInt(data.category),
+      content: data.newQuestion,
+    };
+
+    mutation.mutate(createData);
+
     setStep(NewQuestionStep.ALERT);
     reset();
   };
