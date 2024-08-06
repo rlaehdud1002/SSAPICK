@@ -1,18 +1,30 @@
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { mmAuthConfirm, mmAuthSend } from 'api/authApi';
+import { getUserInfo, mmAuthConfirm, mmAuthSend } from 'api/authApi';
 import DoneButton from 'buttons/DoneButton';
 import { useForm } from 'react-hook-form';
 import AuthInput from '../components/MattermostPage/AuthInput';
 import MattermostIcon from '../icons/MattermostIcon';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { IUserInfo } from 'atoms/User.type';
+import { useRecoilState } from 'recoil';
+import { userInfostate } from 'atoms/UserAtoms';
+import { profile } from 'console';
 
 interface AuthFormm {
   id: string;
   password: string;
 }
-// mm 인증 확인 -> 인증이 되어있으면, 유저 정보 입력 페이지로 이동
+
 const Mattermost = () => {
+  const [ userInfo, setUserInfo ] = useRecoilState(userInfostate);
+  // 유저 정보 조회
+  const { data: information } = useQuery<IUserInfo>({
+    queryKey: ['information'],
+    queryFn: async () => await getUserInfo(),
+  });
+
+  // mm 인증 확인 -> 인증이 되어있으면, 유저 정보 입력 페이지로 이동
   const { data: authenticated, isLoading } = useQuery<boolean>({
     queryKey: ['authenticated'],
     queryFn: async () => await mmAuthConfirm(),
@@ -25,6 +37,9 @@ const Mattermost = () => {
     mutationFn: mmAuthSend,
     // 성공시, 유저 정보 입력 페이지로 이동
     onSuccess: () => {
+    //   setUserInfo(()=>{
+    //     profileImage: information.profileImage,
+    //   })
       navigate('/infoinsert');
       console.log('성공');
     },
@@ -43,11 +58,13 @@ const Mattermost = () => {
       loginId: data.id,
       password: data.password,
     });
+   
   };
 
   const onInvalid = (errors: any) => {
     console.log(errors);
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex flex-col items-center mt-16">
