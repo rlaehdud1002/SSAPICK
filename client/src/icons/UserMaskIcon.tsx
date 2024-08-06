@@ -1,25 +1,30 @@
+import { patchPickAlarm } from "api/pickApi";
+import { IPick } from "atoms/Pick.type";
 import { useEffect, useState } from "react";
 
 interface UserMaskIconProps {
+  pickId: number;
+  alarm: boolean;
   gen: string;
-  checked?: boolean;
+  onAlarmUpdate: (updatedPicks: IPick[]) => void;
 }
 
-const UserMaskIcon = ({ gen, checked }: UserMaskIconProps) => {
+const UserMaskIcon = ({ pickId, alarm, gen, onAlarmUpdate }: UserMaskIconProps) => {
   const [stroke, setStroke] = useState<string>("white");
   const [fill, setFill] = useState<string>("none");
-  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   useEffect(() => {
-    setStroke(isClicked ? "white" : gen === "M" ? "#7EAFFF" : "#FF9798");
-    setFill(isClicked ? (gen === "M" ? "#7EAFFF" : "#FF9798") : "none");
-  }, [checked, gen, isClicked]);
+    setStroke(alarm ? "white" : gen === "M" ? "#7EAFFF" : "#FF9798");
+    setFill(alarm ? (gen === "M" ? "#7EAFFF" : "#FF9798") : "none");
+  }, [alarm, gen]);
 
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-    if (isClicked) {
-      setStroke(gen === "M" ? "#7EAFFF" : "#FF9798");
-      setFill("none");
+  const handleClick = async () => {
+    try {
+      const updatedPicks = await patchPickAlarm(pickId);
+      console.log("픽 ID의 알람이 업데이트되었습니다:", pickId);
+      onAlarmUpdate(updatedPicks);
+    } catch (error) {
+      console.error("픽 ID의 알람을 업데이트하지 못했습니다:", pickId, error);
     }
   };
 
