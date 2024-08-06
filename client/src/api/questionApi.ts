@@ -13,6 +13,7 @@ export const getQuestion = async (): Promise<IQuestion[]> => {
   }
 
   console.log("getQuestion");
+  
   return data;
 };
 
