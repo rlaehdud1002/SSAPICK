@@ -44,7 +44,7 @@ const Profile = () => {
     <div>
       {information && <ProfileContent information={information} />}
       <div className="mb-20">
-        <Link to="/profile/modiuserinfo">
+        <Link to="/modiinfoinsert">
           <ProfileAlarm title="개인정보 수정" content="힌트로 제공할 나의 정보 수정">
             <UserInfoIcon width={50} height={50} />
           </ProfileAlarm>

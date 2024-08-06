@@ -16,9 +16,9 @@ export interface ISendUser {
 
 
 export interface IUserInfo {
-  id?: number;
+  id: number;
   username: string;
-  name?: string;
+  name: string;
   profileImage: string;
   gender: string;
   cohort: number;
