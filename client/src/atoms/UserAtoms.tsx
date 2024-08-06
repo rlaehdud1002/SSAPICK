@@ -1,7 +1,9 @@
-import { IUser, IUserAdd } from 'atoms/User.type';
+import { IUser, IUserAdd, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
+export const userInfostate = atom<IUserInfo>({
+  key: 'userInfostate'})
 
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',

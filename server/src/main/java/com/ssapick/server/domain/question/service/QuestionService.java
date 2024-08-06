@@ -237,4 +237,12 @@ public class QuestionService {
 
         questionBanRepository.delete(questionBan);
     }
+
+    public List<QuestionData.Category> searchCategories() {
+        List<QuestionCategory> categories = questionCategoryRepository.findAll();
+
+        return categories.stream()
+            .map(QuestionData.Category::fromEntity)
+            .toList();
+    }
 }
