@@ -434,7 +434,7 @@ class QuestionControllerTest extends RestDocsSupport {
 		perform.andExpect(status().isOk())
 			.andDo(restDocs.document(resource(
 				ResourceSnippetParameters.builder()
-					.tag("질문 카테고리")
+					.tag("질문")
 					.summary("질문 카테고리 목록 조회 API")
 					.description("질문 카테고리 목록을 조회한다.")
 					.responseFields(response(
