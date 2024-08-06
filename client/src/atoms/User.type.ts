@@ -1,7 +1,21 @@
 import { IHint } from "./Hint.type";
 
+export interface ISendUser {
+
+  residentailArea?: string;
+  major?: string;
+  campusSection: number;
+  gender: string;
+  interest?: string;
+  campusName: string;
+  name: string;
+  birth?: string;
+  mbti?: string;
+  cohort: number;
+}
 export interface IUserInfo {
-  id: number;
+  id?: number;
+  birth?: string;
   username: string;
   name: string;
   profileImage: string;
