@@ -63,24 +63,26 @@ public class PickService {
 			.toList();
 	}
 
+	/**
+	 * 픽 생성하기
+	 * @param sender
+	 * @param create
+	 */
 	@Transactional
 	public void createPick(User sender, PickData.Create create) {
-		log.info("픽 생성 요청 - sender: {}, create: {}", sender, create);
-		Integer index = pickCacheRepository.index(sender.getId());
 
-		if (index == null) {
-			pickCacheRepository.init(sender.getId());
-			index = 1;
+		if (pickCacheRepository.isCooltime(sender.getId())) {
+			throw new BaseException(ErrorCode.PICK_COOLTIME);
 		}
 
-		if (index == null || create.getIndex() != index) {
+		Integer index = pickCacheRepository.index(sender.getId());
+
+		if (create.getIndex() != index) {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
-		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
-			log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
-			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
-		});
+		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
+			() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
 
 		switch (create.getStatus()) {
 			case PICKED -> {
@@ -101,6 +103,7 @@ public class PickService {
 		pickCacheRepository.increment(sender.getId());
 
 		if (index == LAST_INDEX) {
+			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
 		}
 	}
