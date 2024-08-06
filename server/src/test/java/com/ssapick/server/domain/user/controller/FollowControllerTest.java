@@ -163,9 +163,9 @@ class FollowControllerTest extends RestDocsSupport {
 					.builder()
 					.tag("팔로우")
 					.description("추천 팔로우 유저 목록 조회 API")
-					.summary("로그인된 사용자가 팔로우한 유저 목록을 조회한다.")
+					.summary("추천 팔로우 유저 목록 조회 API")
 					.responseFields(response(
-						fieldWithPath("data[]").description("팔로우한 유저 목록"),
+						fieldWithPath("data[]").description("추천 팔로우 유저 목록"),
 						fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
 						fieldWithPath("data[].gender").type(JsonFieldType.STRING).description("유저 성별"),
 						fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
