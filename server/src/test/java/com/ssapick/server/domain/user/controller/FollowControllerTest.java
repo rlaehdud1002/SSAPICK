@@ -162,7 +162,7 @@ class FollowControllerTest extends RestDocsSupport {
 				ResourceSnippetParameters
 					.builder()
 					.tag("팔로우")
-					.description("팔로우한 유저 목록 조회 API")
+					.description("추천 팔로우 유저 목록 조회 API")
 					.summary("로그인된 사용자가 팔로우한 유저 목록을 조회한다.")
 					.responseFields(response(
 						fieldWithPath("data[]").description("팔로우한 유저 목록"),
