@@ -1,10 +1,14 @@
 package com.ssapick.server.domain.pick.service;
 
+import static com.ssapick.server.core.constants.PickConst.PICK_COIN;
+import static com.ssapick.server.core.constants.PickConst.REGISTER_COIN;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +95,7 @@ public class PickService {
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
 						pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.SIGN_UP, PICK_COIN));
 			}
 			case PASS -> {
 				question.skip();

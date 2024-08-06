@@ -29,6 +29,7 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
+import org.springframework.context.ApplicationEventPublisher;
 
 @DisplayName("메시지 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +49,8 @@ class MessageServiceTest extends UserSupport {
 	private CommentAnalyzerService commentAnalyzerService;
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private ApplicationEventPublisher publisher;
 
 	@Test
 	@DisplayName("보낸 메시지 확인 테스트")
