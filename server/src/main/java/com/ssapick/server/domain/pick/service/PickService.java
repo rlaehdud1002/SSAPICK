@@ -129,6 +129,11 @@ public class PickService {
 			return;
 		}
 
+		if (findPick.get().getId().equals(pickId)) {
+			pick.updateAlarm();
+			return;
+		}
+
 		findPick.get().updateAlarm();
 		pick.updateAlarm();
 
