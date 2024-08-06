@@ -1,8 +1,7 @@
 import {
   userAddState,
   userCoinState,
-  userFriendState,
-  userPickState,
+  userInfostate,
   userState,
 } from "atoms/UserAtoms";
 import { IUserInfo } from "atoms/User.type";
@@ -10,21 +9,26 @@ import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
 import { useRecoilValue } from "recoil";
+import { useQuery } from "@tanstack/react-query";
+import { getUserInfo } from "api/authApi";
 
 interface ProfileContentProps {
   information: IUserInfo;
 }
 
 const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
-  console.log("information", information.profileImage);
-  // const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
-  // const accessToken = useRecoilValue(isLoginState);
-
-  // const userYear: number = +profileAdd?.birth.split('-')[0] || 0;
+  const userProfile = useRecoilValue(userInfostate);
+  console.log("information", information);
+  console.log(userProfile.birth)
+  // const userYear: number|string = userProfile?.birth.split('-')[0] || 0;
   const year = new Date().getFullYear();
   // const age = year - userYear + 1;
   // console.log(age);
-  console.log("information", information.campusName);
+
+  
+
+
+
   return (
     <div
       style={{ backgroundColor: "#000855", opacity: "80%" }}

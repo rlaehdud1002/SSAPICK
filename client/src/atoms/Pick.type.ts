@@ -28,6 +28,7 @@ export interface IPick {
   question: IQuestion;
   createdAt: string;
   messageSend: boolean;
+  alarm: boolean;
   openedHints: Array<string>;
 }
 

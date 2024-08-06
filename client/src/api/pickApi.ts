@@ -45,3 +45,18 @@ export const getHint = async (pickId: number): Promise<string> => {
 
   return data;
 };
+
+// pick 알림 설정
+export const patchPickAlarm = async (pickId: number): Promise<IPick[]> => {
+  const {
+    data: { success, data },
+  } = await instance.patch<BaseResponse<IPick[]>>(`/pick/${pickId}`);
+
+  if (!success) {
+    throw new Error("pick 알림 설정 실패");
+  }
+
+  console.log("patchPickAlarm");
+
+  return data;
+};

@@ -3,7 +3,7 @@ package com.ssapick.server.domain.pick.entity;
 public enum HintType {
 	NAME,
 	GENDER,
-	CHORT,
+	COHORT,
 	CAMPUS_NAME,
 	CAMPUS_SECTION,
 	MBTI,

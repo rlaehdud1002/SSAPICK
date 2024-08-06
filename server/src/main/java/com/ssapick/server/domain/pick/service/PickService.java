@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.pick.service;
 
+import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.HashMap;
@@ -21,9 +22,10 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
 import com.ssapick.server.domain.question.repository.QuestionBanRepository;
-import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,6 @@ public class PickService {
 	private final QuestionRepository questionRepository;
 	private final QuestionBanRepository questionBanRepository;
 	private final EntityManager em;
-	private final QuestionCategoryRepository questionCategoryRepository;
 
 	/**
 	 * 받은 픽 조회하기
@@ -155,7 +156,6 @@ public class PickService {
 			.build();
 	}
 
-
 	private String pickEventMessage(String message) {
 		return message;
 	}
@@ -170,17 +170,19 @@ public class PickService {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
 		}
 
-		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		pick.updateAlarm();
 
-		if (findPick.isEmpty()) {
-			pick.updateAlarm();
+		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		if (findPick.isEmpty() || findPick.get().getId().equals(pickId)) {
 			return;
 		}
-
 		findPick.get().updateAlarm();
-		pick.updateAlarm();
 
 	}
 
+
+	public void reRoll(User user) {
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
+	}
 
 }

@@ -1,27 +1,17 @@
 package com.ssapick.server.domain.pick.entity;
 
-import static jakarta.persistence.FetchType.*;
-
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.user.entity.User;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
 public class Hint extends TimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,24 +26,18 @@ public class Hint extends TimeEntity {
 	private String content;
 
 	@Column(name = "hint_type", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private HintType hintType;
-
-	@Column(nullable = false)
-	private boolean visibility = false;
-
-	public void setTestId(Long id) {
-		this.id = id;
-	}
-
-	public void updateContent(String content) {
-		this.content = content;
-	}
 
 	public static Hint createHint(String content, HintType hintType) {
 		Hint hint = new Hint();
 		hint.content = content;
 		hint.hintType = hintType;
 		return hint;
+	}
+
+	public void setTestId(Long id) {
+		this.id = id;
 	}
 
 	public void updateUser(User user) {

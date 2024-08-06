@@ -1,15 +1,5 @@
 package com.ssapick.server.domain.user.service;
 
-import java.util.List;
-import java.util.function.Function;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
@@ -23,9 +13,14 @@ import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -96,7 +91,7 @@ public class UserService {
 		return List.of(
 			Hint.createHint(update.getName(), HintType.NAME),
 			Hint.createHint(String.valueOf(update.getGender()), HintType.GENDER),
-			Hint.createHint(String.valueOf(update.getCohort()), HintType.CHORT),
+			Hint.createHint(String.valueOf(update.getCohort()), HintType.COHORT),
 			Hint.createHint(update.getCampusName(), HintType.CAMPUS_NAME),
 			Hint.createHint(String.valueOf(update.getCampusSection()), HintType.CAMPUS_SECTION),
 			Hint.createHint(update.getMbti(), HintType.MBTI),
@@ -107,16 +102,8 @@ public class UserService {
 		);
 	}
 
-	@Bean
-	public Function<UserDetails, User> fetchUser() {
-		return userDetails -> userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
-		);
-	}
-
 	private User findUserOrThrow(Long userId) throws BaseException {
 		return userRepository.findUserWithProfileById(userId)
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
-
 }

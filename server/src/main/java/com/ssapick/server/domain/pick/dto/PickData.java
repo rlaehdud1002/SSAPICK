@@ -36,6 +36,7 @@ public class PickData {
 		private ProfileData.Search receiver;
 		private QuestionData.Search question;
 		private boolean isMessageSend;
+		private boolean alarm;
 		private LocalDateTime createdAt;
 
 		@JsonProperty("openedHints")
@@ -56,6 +57,7 @@ public class PickData {
 			search.question = QuestionData.Search.fromEntity(pick.getQuestion());
 			search.isMessageSend = pick.isMessageSend();
 			search.createdAt = pick.getCreatedAt();
+			search.alarm = pick.isAlarm();
 			return search;
 		}
 	}

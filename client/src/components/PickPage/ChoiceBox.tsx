@@ -17,7 +17,7 @@ const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
 
     userPick(pickData);
   };
-  
+
   return (
     <div
       className="bg-white/50 w-32 h-32 rounded-3xl flex flex-col items-center justify-center first-line m-2"
@@ -26,9 +26,8 @@ const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
       <img
         src={friend.profileImage}
         alt="profileImage"
-        className="w-[55px] h-[55px]"
+        className="w-[75px] h-[75px] rounded-full"
       />
-      {/* <UserPickIcon gen={gen} width={55} height={55}/> */}
       <p className="pt-2 text-sm">{friend.nickname}</p>
     </div>
   );

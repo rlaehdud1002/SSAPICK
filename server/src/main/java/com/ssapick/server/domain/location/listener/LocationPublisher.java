@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.location.listener;
 
+import com.ssapick.server.domain.location.dto.LocationData;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,7 +21,7 @@ public class LocationPublisher {
         redisMessageListener.addMessageListener(locationSubscriber, locationTopic);
     }
 
-    public void publish() {
-//        redisTemplate.convertAndSend(locationTopic.getTopic(), message);
+    public void publish(LocationData.Request request) {
+        redisTemplate.convertAndSend(locationTopic.getTopic(), request);
     }
 }

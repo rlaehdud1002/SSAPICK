@@ -3,6 +3,9 @@ package com.ssapick.server.domain.pick.service;
 import java.util.List;
 import java.util.Objects;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,9 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.ssapick.server.core.constants.PickConst.HINT_OPEN_COIN;
+import static com.ssapick.server.core.constants.PickConst.MESSAGE_COIN;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -28,7 +34,7 @@ public class MessageService {
     private final PickRepository pickRepository;
     private final CommentAnalyzerService commentAnalyzer;
     private final UserRepository userRepository;
-
+	private final ApplicationEventPublisher publisher;
 	/**
 	 * 보낸 메시지 조회하기
 	 * 보낸 메시지를 조회하고 익명으로 보내진 메시지는 익명으로 표시한다.
@@ -83,6 +89,9 @@ public class MessageService {
         if (commentAnalyzer.isCommentOffensive(create.getContent())){
             throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
         }
+
+		publisher.publishEvent(new PickcoEvent(
+				pick.getReceiver(), PickcoLogType.HINT_OPEN, MESSAGE_COIN));
 
 		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 	}
