@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Initial = () => {
   return (
     <div>
-      <div className="text-center my-40">
+      <div className="text-center my-56">
         <span>상대방이 아직 당신을 지목하지 않았습니다.</span>
       </div>
       <div className="flex flex-col items-center">
