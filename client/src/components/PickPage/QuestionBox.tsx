@@ -44,7 +44,7 @@ const Question = ({ question, userPick }: QuestionProps) => {
           </div>
         </div>
         <div className="flex flex-row justify-center">
-          <img src={question.category.thumbnail} alt="categoryImg" />
+          <img src={question.category.thumbnail} alt="categoryImg" width={200} height={200}/>
         </div>
       </div>
     </div>
