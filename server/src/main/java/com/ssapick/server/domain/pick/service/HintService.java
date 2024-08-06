@@ -1,5 +1,6 @@
 package com.ssapick.server.domain.pick.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -16,9 +17,6 @@ import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.event.PickcoEvent;
-import com.ssapick.server.domain.user.repository.CampusRepository;
-import com.ssapick.server.domain.user.repository.ProfileRepository;
-import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 public class HintService {
 	private final HintRepository hintRepository;
 	private final PickRepository pickRepository;
-	private final UserRepository userRepository;
-	private final CampusRepository campusRepository;
-	private final ProfileRepository profileRepository;
+
 	private final ApplicationEventPublisher publisher;
 
+	@Transactional
 	public String getRandomHintByPickId(Long pickId) {
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
 			() -> new IllegalArgumentException("Pick이 존재하지 않습니다.")
@@ -47,6 +44,14 @@ public class HintService {
 		log.info("유저 아이디: {}", pick.getSender());
 
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.GENDER));
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_NAME));
+		// test
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.INTEREST));
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.MAJOR));
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.RESIDENTIAL_AREA));
+		//
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
 		log.info("힌트 아이디: {}", availableHints);
@@ -54,8 +59,6 @@ public class HintService {
 		Long openHintId = selectRandomHintId(availableHints);
 
 		Hint openHint = findHintById(hints, openHintId);
-
-		addHintOpenToPick(pick, openHint);
 
 		publisher.publishEvent(new PickcoEvent(
 			pick.getSender(),
@@ -65,9 +68,27 @@ public class HintService {
 
 		String hintContent = openHint.getContent();
 
-		if (openHint.getHintType().equals(HintType.NAME)) {
-			hintContent = processNameHint(hintContent);
+		switch (openHint.getHintType()) {
+			case NAME -> {
+				hintContent = processNameHint(hintContent);
+			}
+			case AGE -> {
+				int birthYeaar = Integer.parseInt(hintContent.split("-")[0]);
+				int age = LocalDate.now().getYear() - birthYeaar + 1;
+				hintContent = age + "세";
+			}
+			case CHORT -> {
+				hintContent = hintContent + "기";
+			}
+			case CAMPUS_NAME -> {
+				hintContent = hintContent + "캠퍼스";
+			}
+			case CAMPUS_SECTION -> {
+				hintContent = hintContent + "반";
+			}
 		}
+
+		addHintOpenToPick(pick, openHint, hintContent);
 
 		return hintContent;
 	}
@@ -95,10 +116,11 @@ public class HintService {
 			.orElseThrow(() -> new IllegalArgumentException("힌트를 찾을 수 없습니다."));
 	}
 
-	public void addHintOpenToPick(Pick pick, Hint openHint) {
+	public void addHintOpenToPick(Pick pick, Hint openHint, String content) {
 		HintOpen hintOpen = HintOpen.builder()
 			.hint(openHint)
 			.pick(pick)
+			.content(content)
 			.build();
 		pick.getHintOpens().add(hintOpen);
 	}

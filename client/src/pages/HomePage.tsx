@@ -32,7 +32,7 @@ const Home = () => {
     mutationFn: postAttendance,
 
     onSuccess: (data) => {
-      console.log('postsuccess', data);
+      console.log("postsuccess", data);
       setIsAttendance(data.todayChecked);
       setStreak(data.streak);
       setModalOpen(true);
@@ -44,15 +44,15 @@ const Home = () => {
   });
 
   // 출석 체크
-  useEffect(() => {
-    console.log('!isAttendance', !isAttendance);
-    console.log('!isLoadingAttendance', !isLoadingAttendance);
+  // useEffect(() => {
+  //   console.log('!isAttendance', !isAttendance);
+  //   console.log('!isLoadingAttendance', !isLoadingAttendance);
 
-    if (!isAttendance && !isLoadingAttendance) {
-      console.log('출석체크 요청');
-      postMutation.mutate();
-    }
-  }, [isAttendance, isLoadingAttendance]);
+  //   if (!isAttendance && !isLoadingAttendance) {
+  //     console.log('출석체크 요청');
+  //     postMutation.mutate();
+  //   }
+  // }, [isAttendance, isLoadingAttendance]);
 
   return (
     <div className="m-6">

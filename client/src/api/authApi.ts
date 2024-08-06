@@ -9,7 +9,8 @@ export const getUserInfo = async (): Promise<IUserInfo> => {
   } = await instance.get<BaseResponse<IUserInfo>>("/user/me");
 
   if (!success) {
-    throw new Error("유저 정보 조회 실패");
+    console.log(message)
+    throw new Error('유저 정보 조회 실패');
   }
   return data;
 };

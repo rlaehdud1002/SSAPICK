@@ -15,3 +15,15 @@ export const getBlockList = async (): Promise<IBlock[]> => {
 
   return data;
 };
+
+// 친구 차단 해제
+export const unblockFriend = async (userId: number): Promise<void> => {
+  const {
+    data: { success, message },
+  } = await instance.delete<BaseResponse<void>>(`/user-ban/${userId}`);
+
+  if (!success) {
+    console.log(message);
+    throw new Error('친구 차단 해제 실패');
+  }
+};

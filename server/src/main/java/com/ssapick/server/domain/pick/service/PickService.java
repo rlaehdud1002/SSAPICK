@@ -105,30 +105,30 @@ public class PickService {
 		}
 	}
 
-    private String pickEventMessage(String message) {
-        return message;
-    }
+	private String pickEventMessage(String message) {
+		return message;
+	}
 
-    @Transactional
-    public void updatePickAlarm(User user, Long pickId) {
-        Pick pick = pickRepository.findById(pickId).orElseThrow(() -> {
-            throw new BaseException(ErrorCode.NOT_FOUND_PICK);
-        });
+	@Transactional
+	public void updatePickAlarm(User user, Long pickId) {
+		Pick pick = pickRepository.findById(pickId).orElseThrow(() -> {
+			throw new BaseException(ErrorCode.NOT_FOUND_PICK);
+		});
 
-        if (!pick.getReceiver().getId().equals(user.getId())) {
-            throw new BaseException(ErrorCode.ACCESS_DENIED);
-        }
+		if (!pick.getReceiver().getId().equals(user.getId())) {
+			throw new BaseException(ErrorCode.ACCESS_DENIED);
+		}
 
-        Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
 
-        if (findPick.isEmpty()) {
-            pick.updateAlarm();
-            return;
-        }
+		if (findPick.isEmpty()) {
+			pick.updateAlarm();
+			return;
+		}
 
-        findPick.get().updateAlarm();
-        pick.updateAlarm();
+		findPick.get().updateAlarm();
+		pick.updateAlarm();
 
-    }
+	}
 
 }

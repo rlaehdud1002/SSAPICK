@@ -5,43 +5,42 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from 'components/ui/dialog';
+} from "components/ui/dialog";
 
-import { Button } from 'components/ui/button';
-import CoinUseModal from 'components/modals/CoinUseModal';
+import { Button } from "components/ui/button";
+import CoinUseModal from "components/modals/CoinUseModal";
 
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { getHint } from 'api/pickApi';
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { getHint } from "api/pickApi";
 
 interface HintModalProps {
   title: string;
+  pickId: number;
 }
 
-const HintModal = ({ title }: HintModalProps) => {
+const HintModal = ({ title, pickId }: HintModalProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hint, setHint] = useState<string>(title);
 
   // 힌트 조회 mutation
   const mutation = useMutation({
-    mutationKey: ['hint', 'get'],
+    mutationKey: ["hint", "get"],
     mutationFn: getHint,
 
     // 힌트 조회 성공 시
     onSuccess: (data) => {
+      console.log("hint", data);
       setHint(data);
     },
   });
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => !open && setOpen((prev) => !prev)}
-    >
+    <Dialog open={open} onOpenChange={(open) => !open && setOpen((prev) => !prev)}>
       <DialogTrigger
         className="luckiest_guy text-color-5F86E9"
         onClick={() => {
-          if (hint === '?') {
+          if (hint === "?") {
             setOpen(true);
           }
         }}
@@ -50,9 +49,7 @@ const HintModal = ({ title }: HintModalProps) => {
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
-          <DialogTitle className="flex flex-start text-color-5F86E9">
-            힌트 공개
-          </DialogTitle>
+          <DialogTitle className="flex flex-start text-color-5F86E9">힌트 공개</DialogTitle>
           <CoinUseModal coin={1} />
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end">
@@ -60,7 +57,7 @@ const HintModal = ({ title }: HintModalProps) => {
             variant="ssapick"
             size="md"
             onClick={() => {
-              mutation.mutate();
+              mutation.mutate(pickId);
               setOpen(false);
             }}
           >

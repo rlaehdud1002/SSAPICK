@@ -16,6 +16,7 @@ interface ProfileContentProps {
 }
 
 const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
+  console.log("information", information.profileImage);
   // const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   // const accessToken = useRecoilValue(isLoginState);
 
