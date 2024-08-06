@@ -135,4 +135,47 @@ class FollowControllerTest extends RestDocsSupport {
 				))
 			);
 	}
+
+	@Test
+	@DisplayName("추천_팔로우_조회_테스트")
+	void 추천_팔로우_조회_테스트() throws Exception {
+	    // * GIVEN: 이런게 주어졌을 때
+		List<User> users = List.of(this.createUser("테스트 유저 1"), this.createUser("테스트 유저 2"),
+			this.createUser("테스트 유저 3"));
+		List<ProfileData.Search> profiles = users.stream()
+			.map(User::getProfile)
+			.map(ProfileData.Search::fromEntity)
+			.toList();
+
+		when(followService.recommendFollow(any())).thenReturn(profiles);
+
+
+	    // * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/follow/recommend")
+			.contentType(MediaType.APPLICATION_JSON)
+			.header("Authorization", "Bearer access-token")
+		);
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(restDocs.document(resource(
+				ResourceSnippetParameters
+					.builder()
+					.tag("팔로우")
+					.description("팔로우한 유저 목록 조회 API")
+					.summary("로그인된 사용자가 팔로우한 유저 목록을 조회한다.")
+					.responseFields(response(
+						fieldWithPath("data[]").description("팔로우한 유저 목록"),
+						fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
+						fieldWithPath("data[].gender").type(JsonFieldType.STRING).description("유저 성별"),
+						fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+						fieldWithPath("data[].campusName").type(JsonFieldType.STRING).description("캠퍼스 지역"),
+						fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
+						fieldWithPath("data[].campusDescription").type(JsonFieldType.STRING).description("전공 관련 정보"),
+						fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+						fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보")
+					))
+					.build()
+			)));
+	}
 }
