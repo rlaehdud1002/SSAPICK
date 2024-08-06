@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAlarm } from "api/alarmApi";
 import { getUserInfo } from "api/authApi";
 import { alarmSettingsState } from "atoms/AlarmAtoms";
-import { IUser } from "atoms/User.type";
+import { IUserInfo } from "atoms/User.type";
 import { accessTokenState } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
@@ -15,14 +15,7 @@ import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { alarmSettingsState } from "atoms/AlarmAtoms";
-import { useRecoilValue } from "recoil";
-import { getAlarm } from "api/alarmApi";
-import { IAlarm } from "atoms/Alarm.type";
-import { useQuery } from "@tanstack/react-query";
-import { IUser, IUserInfo } from "atoms/User.type";
-import { getUserInfo } from "api/authApi";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const Profile = () => {
   const { data: information, isLoading } = useQuery<IUserInfo>({
