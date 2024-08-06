@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(
 	name = "users",
@@ -77,6 +79,7 @@ public class User extends BaseEntity {
 	private boolean isLocked = false;
 
 	@Column(name = "ban_count", nullable = false)
+	@ColumnDefault("0")
 	private short banCount;
 
 	/**
