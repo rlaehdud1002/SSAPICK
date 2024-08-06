@@ -3,11 +3,10 @@ package com.ssapick.server.domain.pick.service;
 import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import com.ssapick.server.domain.user.entity.PickcoLogType;
-import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,9 @@ import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
 import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -72,13 +73,17 @@ public class PickService {
 	 * @param create
 	 */
 	@Transactional
-	public void createPick(User sender, PickData.Create create) {
+	public PickData.PickCondition createPick(User sender, PickData.Create create) {
 
 		if (pickCacheRepository.isCooltime(sender.getId())) {
-			throw new BaseException(ErrorCode.PICK_COOLTIME);
+			return PickData.PickCondition.builder()
+				.isCooltime(true)
+				.build();
 		}
 
-		Integer index = pickCacheRepository.index(sender.getId());
+		Integer index = pickCacheRepository.getIndex(sender.getId());
+
+		log.debug("index: {}", index);
 
 		if (create.getIndex() != index) {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
@@ -89,27 +94,66 @@ public class PickService {
 
 		switch (create.getStatus()) {
 			case PICKED -> {
+				pickCacheRepository.pick(sender.getId());
+
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
-				publisher.publishEvent(
-					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
-						pickEventMessage(question.getContent()), null));
-				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.SIGN_UP, PICK_COIN));
+				// publisher.publishEvent(
+				// 	FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
+				// 		pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
+				pickCacheRepository.pass(sender.getId());
+
 				question.skip();
 			}
 			case BLOCK -> {
+				pickCacheRepository.block(sender.getId());
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
 			}
 		}
-		pickCacheRepository.increment(sender.getId());
 
-		if (index == LAST_INDEX) {
+		index = pickCacheRepository.getIndex(sender.getId());
+		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
+		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
+		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
+
+		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
 		}
+
+		return PickData.PickCondition.builder()
+			.index(index)
+			.pickCount(pickCount)
+			.blockCount(blockCount)
+			.passCount(passCount)
+			.build();
+	}
+
+	public PickData.PickCondition getPickCondition(User sender) {
+
+		if (pickCacheRepository.isCooltime(sender.getId())) {
+			throw new BaseException(ErrorCode.PICK_COOLTIME);
+		}
+
+		Integer index = pickCacheRepository.getIndex(sender.getId());
+
+		if (index == null) {
+			pickCacheRepository.init(sender.getId());
+			index = 0;
+		}
+		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
+		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
+		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
+
+		return PickData.PickCondition.builder()
+			.index(index)
+			.pickCount(pickCount)
+			.blockCount(blockCount)
+			.passCount(passCount)
+			.build();
 	}
 
 	private String pickEventMessage(String message) {
@@ -136,7 +180,9 @@ public class PickService {
 
 	}
 
+
 	public void reRoll(User user) {
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
 	}
+
 }

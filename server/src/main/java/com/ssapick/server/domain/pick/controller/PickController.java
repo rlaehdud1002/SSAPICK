@@ -63,13 +63,29 @@ public class PickController {
 	 */
 	@Authenticated
 	@PostMapping("")
-	@ResponseStatus(value = HttpStatus.CREATED)
-	public SuccessResponse<Void> createPick(
+	public SuccessResponse<PickData.PickCondition> createPick(
 		@CurrentUser User user,
 		@Validated @RequestBody PickData.Create create
 	) {
-		pickService.createPick(user, create);
-		return SuccessResponse.empty();
+		PickData.PickCondition pickCondition = pickService.createPick(user, create);
+
+		return SuccessResponse.of(pickCondition);
+	}
+
+	/**
+	 * 현재 픽 진행 상태 조회하는 API
+	 *
+	 * @param user   로그인한 유저
+	 * @return 처리 성공 응답
+	 */
+	@Authenticated
+	@GetMapping("")
+	public SuccessResponse<PickData.PickCondition> getPickCondition(
+		@CurrentUser User user
+	) {
+		PickData.PickCondition pickCondition = pickService.getPickCondition(user);
+
+		return SuccessResponse.of(pickCondition);
 	}
 
 	/**

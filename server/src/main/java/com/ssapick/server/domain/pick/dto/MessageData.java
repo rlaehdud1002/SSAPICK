@@ -10,6 +10,7 @@ public class MessageData {
 	@Data
 	public static class Search {
 		private Long id;
+		private Long senderId;
 		private String senderName;
 		private String receiverName;
 		private char senderGender;
@@ -26,6 +27,7 @@ public class MessageData {
 				search.senderName = message.getSender().getName();
 			}
 			search.id = message.getId();
+			search.senderId = message.getSender().getId();
 			search.receiverName = message.getReceiver().getName();
 			search.senderGender = message.getSender().getGender();
 			search.receiverGender = message.getReceiver().getGender();

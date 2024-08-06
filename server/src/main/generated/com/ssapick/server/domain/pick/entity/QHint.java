@@ -38,8 +38,6 @@ public class QHint extends EntityPathBase<Hint> {
 
     public final com.ssapick.server.domain.user.entity.QUser user;
 
-    public final BooleanPath visibility = createBoolean("visibility");
-
     public QHint(String variable) {
         this(Hint.class, forVariable(variable), INITS);
     }

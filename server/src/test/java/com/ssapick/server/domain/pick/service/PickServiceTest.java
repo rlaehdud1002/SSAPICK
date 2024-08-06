@@ -15,6 +15,8 @@ import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import jakarta.persistence.EntityManager;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -126,15 +128,19 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.PICKED);
 		create.setIndex(1);
 
-		when(pickCacheRepository.index(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
 		when(em.getReference(User.class, receiver.getId())).thenReturn(receiver);
 		Pick spy = spy(Pick.of(sender, receiver, question));
 		when(pickRepository.save(any())).thenReturn(spy);
-		when(spy.getId()).thenReturn(1L);
+
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
 
 		// * WHEN: 이걸 실행하면
-		pickService.createPick(sender, create);
+		PickData.PickCondition pickCondition = pickService.createPick(sender, create);
 
 		// * THEN: 이런 결과가 나와야 한다
 		verify(pickRepository).save(argThat(pick -> {
@@ -143,7 +149,15 @@ class PickServiceTest extends UserSupport {
 			assertThat(pick.getQuestion()).isEqualTo(question);
 			return true;
 		}));
-		verify(pickCacheRepository).increment(sender.getId());
+		verify(pickCacheRepository).pick(sender.getId());
+		Assertions.assertThat(pickCondition).isEqualTo(PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build());
+
 	}
 
 	@Test
@@ -161,15 +175,28 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.PASS);
 		create.setIndex(1);
 
-		when(pickCacheRepository.index(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
+
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
+
 
 		// * WHEN: 이걸 실행하면
 		pickService.createPick(sender, create);
 
 		// * THEN: 이런 결과가 나와야 한다
 		verify(question).skip();
-		verify(pickCacheRepository).increment(sender.getId());
+		verify(pickCacheRepository).pass(sender.getId());
+		Assertions.assertThat(pickService.createPick(sender, create)).isEqualTo(PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build());
 	}
 
 	@Test
@@ -187,7 +214,7 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.BLOCK);
 		create.setIndex(1);
 
-		when(pickCacheRepository.index(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
 
 		// * WHEN: 이걸 실행하면
@@ -219,7 +246,7 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.PICKED);
 		create.setIndex(correctId);
 
-		when(pickCacheRepository.index(sender.getId())).thenReturn(incorrectId);
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(incorrectId);
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> pickService.createPick(sender, create);
@@ -245,7 +272,7 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.PICKED);
 		create.setIndex(1);
 
-		when(pickCacheRepository.index(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.empty());
 
 		// * WHEN: 이걸 실행하면
@@ -325,8 +352,8 @@ class PickServiceTest extends UserSupport {
 		assertThat(pick.isAlarm()).isTrue();
 		verify(findPick, times(2)).updateAlarm();
 		assertThat(findPick.isAlarm()).isFalse();
-
 	}
+
 
 	@Test
 	@DisplayName("픽의 선택지 리롤을 하면 코인 이벤트가 발생한다.")
