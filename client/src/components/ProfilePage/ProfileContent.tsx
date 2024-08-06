@@ -1,9 +1,7 @@
 import {
   userAddState,
   userCoinState,
-  userFriendState,
   userInfostate,
-  userPickState,
   userState,
 } from "atoms/UserAtoms";
 import { IUserInfo } from "atoms/User.type";
