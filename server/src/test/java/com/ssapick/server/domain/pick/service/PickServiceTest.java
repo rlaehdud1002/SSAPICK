@@ -312,6 +312,7 @@ class PickServiceTest extends UserSupport {
 		findPick.updateAlarm();
 
 		when(pick.getId()).thenReturn(1L);
+		when(findPick.getId()).thenReturn(2L);
 		when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
 		when(pickRepository.findByReceiverIdWithAlarm(receiver.getId())).thenReturn(java.util.Optional.of(findPick));
 
