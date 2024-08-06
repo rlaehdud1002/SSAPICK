@@ -193,7 +193,7 @@ class PickServiceTest extends UserSupport {
 		pickService.createPick(sender, create);
 
 		// * THEN: 이런 결과가 나와야 한다
-		verify(question).ban();
+		verify(question).increaseBanCount();
 		verify(questionBanRepository).save(argThat(questionBan -> {
 			assertThat(questionBan.getUser()).isEqualTo(sender);
 			assertThat(questionBan.getQuestion()).isEqualTo(question);
@@ -254,6 +254,76 @@ class PickServiceTest extends UserSupport {
 		assertThatThrownBy(runnable::run)
 			.isInstanceOf(BaseException.class)
 			.hasMessage(ErrorCode.NOT_FOUND_QUESTION.getMessage());
+	}
+
+	@Test
+	@DisplayName("픽 알림이 없을 떄 알림을 설정하면 alarm이 true가 되어야 한다")
+	void 픽_알람이_없을_때_알림설정_설정_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("보낸 사람");
+		User receiver = this.createUser("받는 사람");
+		Question question = spy(this.createQuestion());
+
+		Pick pick = spy(Pick.of(sender, receiver, question));
+		when(pick.getId()).thenReturn(1L);
+		when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
+
+		// * WHEN: 이걸 실행하면
+		pickService.updatePickAlarm(receiver, pick.getId());
+
+		// * THEN: 이런 결과가 나와야 한다
+		verify(pick).updateAlarm();
+		assertThat(pick.isAlarm()).isTrue();
+
+	}
+
+	@Test
+	@DisplayName("픽 알림의 알림을 해제하면 alarm이 false가 되어야 한다")
+	void 픽_알림의_알림을_해제하면_alarm이_false가_되어야_한다() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("보낸 사람");
+		User receiver = this.createUser("받는 사람");
+		Question question = spy(this.createQuestion());
+
+		Pick pick = spy(Pick.of(sender, receiver, question));
+		pick.updateAlarm();
+		when(pick.getId()).thenReturn(1L);
+		when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
+		when(pickRepository.findByReceiverIdWithAlarm(receiver.getId())).thenReturn(java.util.Optional.empty());
+
+		// * WHEN: 이걸 실행하면
+		pickService.updatePickAlarm(receiver, pick.getId());
+
+		// * THEN: 이런 결과가 나와야 한다
+		verify(pick, times(2)).updateAlarm();
+		assertThat(pick.isAlarm()).isFalse();
+	}
+
+	@Test
+	@DisplayName("픽한 알림이 있는데 다른 알림을 픽하려는 경우 기존 알림을 취소하고 새로운 알림을 설정해야 한다")
+	void 픽한_알림이_있는데_다른_알림을_픽하려는_경우_기존_알림을_취소하고_새로운_알림을_설정해야_한다() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("보낸 사람");
+		User receiver = this.createUser("받는 사람");
+		Question question = spy(this.createQuestion());
+
+		Pick pick = spy(Pick.of(sender, receiver, question));
+		Pick findPick = spy(Pick.of(sender, receiver, question));
+		findPick.updateAlarm();
+
+		when(pick.getId()).thenReturn(1L);
+		when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
+		when(pickRepository.findByReceiverIdWithAlarm(receiver.getId())).thenReturn(java.util.Optional.of(findPick));
+
+		// * WHEN: 이걸 실행하면
+		pickService.updatePickAlarm(receiver, pick.getId());
+
+		// * THEN: 이런 결과가 나와야 한다
+		verify(pick).updateAlarm();
+		assertThat(pick.isAlarm()).isTrue();
+		verify(findPick, times(2)).updateAlarm();
+		assertThat(findPick.isAlarm()).isFalse();
+
 	}
 
 	private Pick createPick(User sender, User receiver, Question question) {

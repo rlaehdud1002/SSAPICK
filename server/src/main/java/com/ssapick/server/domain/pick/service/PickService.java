@@ -3,15 +3,16 @@ package com.ssapick.server.domain.pick.service;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.ssapick.server.domain.notification.dto.FCMData;
-import com.ssapick.server.domain.notification.entity.NotificationType;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.domain.notification.dto.FCMData;
+import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickCacheRepository;
@@ -64,10 +65,15 @@ public class PickService {
 
 	@Transactional
 	public void createPick(User sender, PickData.Create create) {
-		int index = pickCacheRepository.index(sender.getId());
+		log.info("픽 생성 요청 - sender: {}, create: {}", sender, create);
+		Integer index = pickCacheRepository.index(sender.getId());
 
-		if (index != NOT_EXIST && create.getIndex() != index) {
-			log.error("픽 인덱스가 올바르지 않습니다. index: {}, user: {}", create.getIndex(), sender);
+		if (index == null) {
+			pickCacheRepository.init(sender.getId());
+			index = 1;
+		}
+
+		if (index == null || create.getIndex() != index) {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
@@ -80,24 +86,53 @@ public class PickService {
 			case PICKED -> {
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
-				publisher.publishEvent(FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!", pickEventMessage(question.getContent()), null ));
+				publisher.publishEvent(
+					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
+						pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
 				question.skip();
 				log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 			case BLOCK -> {
-				question.ban();
+				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
 				log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 		}
-
-		// 픽 인덱스 증가
 		pickCacheRepository.increment(sender.getId());
+
+		if (index == LAST_INDEX) {
+			pickCacheRepository.init(sender.getId());
+		}
+
+		log.info("============================================================끝");
 	}
 
 	private String pickEventMessage(String message) {
 		return message;
 	}
+
+	@Transactional
+	public void updatePickAlarm(User user, Long pickId) {
+		Pick pick = pickRepository.findById(pickId).orElseThrow(() -> {
+			throw new BaseException(ErrorCode.NOT_FOUND_PICK);
+		});
+
+		if (!pick.getReceiver().getId().equals(user.getId())) {
+			throw new BaseException(ErrorCode.ACCESS_DENIED);
+		}
+
+		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+
+		if (findPick.isEmpty()) {
+			pick.updateAlarm();
+			return;
+		}
+
+		findPick.get().updateAlarm();
+		pick.updateAlarm();
+
+	}
+
 }

@@ -37,6 +37,13 @@ public class UserBanservice {
 			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
 		);
 
+		userBanRepository.findBanByFromUserAndToUser(user, findUser).ifPresent(
+			(userBan) -> {
+				throw new BaseException(ErrorCode.ALREADY_BAN_USER);
+			}
+		);
+
+		findUser.increaseBanCount();
 		userBanRepository.save(UserBan.of(user, findUser));
 	}
 
@@ -70,6 +77,8 @@ public class UserBanservice {
 		UserBan userBan = userBanRepository.findBanByFromUserAndToUser(user, findUser).orElseThrow(
 			() -> new BaseException(ErrorCode.NOT_FOUND_USER_BAN)
 		);
+
+		findUser.decreaseBanCount();
 
 		userBanRepository.delete(userBan);
 	}

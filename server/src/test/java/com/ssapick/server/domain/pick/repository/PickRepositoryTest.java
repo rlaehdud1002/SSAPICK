@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -152,6 +153,25 @@ class PickRepositoryTest extends TestDatabaseContainer {
         assertThat(utils.isLoaded(findPick, "hintOpens")).isTrue();
 
     }
+
+    @Test
+    @DisplayName("알람설정이 되어있는 픽 조회")
+    void findPickWithAlarm() {
+        // * GIVEN: 이런 상황이 주어지면
+        Pick pick = picks.get(0);
+        pick.updateAlarm();
+        em.merge(pick);
+
+
+        System.out.println("pick.isAlarm() = " + pick.isAlarm());
+
+        // * WHEN: 이걸 실행하면
+        Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(receiver.getId());
+
+        // * THEN: 이런 결과가 나와야 한다
+        assertThat(findPick.isPresent()).isTrue();
+    }
+
 
     private User createUser(String username) {
         User user = User.createUser(username, "테스트 유저", 'M', ProviderType.KAKAO, "123");

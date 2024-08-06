@@ -1,11 +1,10 @@
-package com.ssapick.server.domain.attendance.repository;
+package com.ssapick.server.domain.user.repository;
 
 import com.ssapick.server.core.config.JpaTestConfig;
 import com.ssapick.server.core.container.TestDatabaseContainer;
-import com.ssapick.server.domain.attendance.entity.Attendance;
+import com.ssapick.server.domain.user.entity.Attendance;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
-import com.ssapick.server.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,17 +12,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
-import org.assertj.core.api.Assertions;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("출석 레포지토리 테스트")
 @DataJpaTest

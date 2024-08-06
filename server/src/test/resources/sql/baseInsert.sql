@@ -39,15 +39,15 @@ VALUES ('1', '연애/데이트', 'image'),
        ('11', '라이프스타일', 'image');
 -- users
 INSERT INTO public.users (created_at, updated_at, is_deleted, email, gender, is_locked, is_mattermost_confirmed, name,
-                          provider_id, provider_type, role_type, username, user_id)
+                          provider_id, provider_type, role_type, username, user_id, ban_count)
 VALUES (NOW(), NOW(), FALSE, 'user1@example.com', 'M', FALSE, TRUE, 'User One', 'provider1', 'GOOGLE', 'USER', 'user1',
-        1),
+        1, 0),
        (NOW(), NOW(), FALSE, 'user2@example.com', 'F', FALSE, TRUE, 'User Two', 'provider2', 'NAVER', 'ADMIN', 'user2',
-        2),
+        2, 0),
        (NOW(), NOW(), FALSE, 'user3@example.com', 'M', FALSE, TRUE, 'User Three', 'provider3', 'KAKAO', 'PREMIUM_USER',
-        'user3', 3),
+        'user3', 3, 0),
        (NOW(), NOW(), FALSE, 'user4@example.com', 'M', FALSE, FALSE, 'User Four', 'provider4', 'KAKAO', 'PREMIUM_USER',
-        'user4', 4);
+        'user4', 4, 0);
 
 -- alarm
 INSERT INTO public.alarm (add_question_alarm, message_alarm, nearby_alarm, pick_alarm, user_id, alarm_id)

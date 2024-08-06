@@ -1,18 +1,26 @@
 package com.ssapick.server.domain.question.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +38,17 @@ public class QuestionController {
     public SuccessResponse<List<QuestionData.Search>> searchQuestions() {
         List<QuestionData.Search> questions = questionService.searchQuestions();
         return SuccessResponse.of(questions);
+    }
+
+    /**
+     * 내가 생성한 질문 조회 API
+     * 내가 생성한 질문을 조회한다.
+     *
+     * @param user 로그인한 사용자
+     */
+    @GetMapping("/me")
+    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByUser(@CurrentUser User user) {
+        return SuccessResponse.of(questionService.getQuestionsByUser(user));
     }
 
     /**
@@ -67,12 +86,12 @@ public class QuestionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponse<Void> requestAddQuestion(
             @CurrentUser User user,
-            @Validated @RequestBody QuestionData.Create create,
-            Errors errors
-    ) {
+            @Validated @RequestBody QuestionData.Create create) {
+
         questionService.createQuestion(user, create);
         return SuccessResponse.empty();
     }
+
 
     /**
      * 사용자에게 질문을 뿌려주는 API (벤된 질문 제외)
@@ -82,7 +101,7 @@ public class QuestionController {
      */
     @GetMapping("/pick")
     public SuccessResponse<List<QuestionData.Search>> searchQuestions(@CurrentUser User user) {
-        return SuccessResponse.of(List.copyOf(questionService.searchQeustionList(user)));
+        return SuccessResponse.of(questionService.searchQeustionList(user));
     }
 
     /**

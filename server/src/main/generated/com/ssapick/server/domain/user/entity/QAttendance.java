@@ -1,4 +1,4 @@
-package com.ssapick.server.domain.attendance.entity;
+package com.ssapick.server.domain.user.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QAttendance extends EntityPathBase<Attendance> {
 
-    private static final long serialVersionUID = -77125817L;
+    private static final long serialVersionUID = 754724265L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -32,7 +32,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public final com.ssapick.server.domain.user.entity.QUser user;
+    public final QUser user;
 
     public QAttendance(String variable) {
         this(Attendance.class, forVariable(variable), INITS);
@@ -52,7 +52,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.ssapick.server.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

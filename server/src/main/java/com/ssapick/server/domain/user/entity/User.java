@@ -1,29 +1,14 @@
 package com.ssapick.server.domain.user.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ssapick.server.core.entity.BaseEntity;
-import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.pick.entity.Hint;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -91,6 +76,9 @@ public class User extends BaseEntity {
 	@Column(name = "is_locked", nullable = false)
 	private boolean isLocked = false;
 
+	@Column(name = "ban_count", nullable = false)
+	private short banCount;
+
 	/**
 	 * 사용자 생성 메서드
 	 *
@@ -112,6 +100,25 @@ public class User extends BaseEntity {
 		user.profile = Profile.createEmptyProfile(user);
 		user.alarm = Alarm.createAlarm(user);
 		return user;
+	}
+
+	public void lock() {
+		this.isLocked = true;
+	}
+
+	public void unlock() {
+		this.isLocked = false;
+	}
+
+	public void increaseBanCount() {
+		this.banCount++;
+		if (this.banCount >= 10){
+			this.lock();
+		}
+	}
+
+	public void decreaseBanCount() {
+		this.banCount--;
 	}
 
 	public void mattermostConfirm() {

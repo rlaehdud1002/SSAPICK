@@ -1,11 +1,11 @@
-package com.ssapick.server.domain.attendance.controller;
+package com.ssapick.server.domain.user.controller;
 
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
-import com.ssapick.server.domain.attendance.dto.AttendanceData;
-import com.ssapick.server.domain.attendance.service.AttendanceService;
+import com.ssapick.server.domain.user.dto.AttendanceData;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
