@@ -35,6 +35,8 @@ import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.persistence.EntityManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.context.ApplicationEventPublisher;
 
 @DisplayName("질문 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +60,8 @@ class QuestionServiceTest extends UserSupport {
 	private SentenceSimilarityAnalyzerService sentenceSimilarityAnalyzerService;
 	@Mock
 	private QuestionCacheRepository questionCacheRepository;
+	@Mock
+	private ApplicationEventPublisher publisher;
 
 	private final AtomicLong atomicLong = new AtomicLong(1);
 

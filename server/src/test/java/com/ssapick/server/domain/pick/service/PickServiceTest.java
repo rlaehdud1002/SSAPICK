@@ -13,6 +13,7 @@ import com.ssapick.server.domain.question.repository.QuestionBanRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -325,6 +326,14 @@ class PickServiceTest extends UserSupport {
 		verify(findPick, times(2)).updateAlarm();
 		assertThat(findPick.isAlarm()).isFalse();
 
+	}
+
+	@Test
+	@DisplayName("픽의 선택지 리롤을 하면 코인 이벤트가 발생한다.")
+	void 픽의_선택지_리롤을_하면_코인_이벤트가_발생한다() {
+		pickService.reRoll(createUser("user"));
+
+		verify(publisher).publishEvent(any(PickcoEvent.class));
 	}
 
 	private Pick createPick(User sender, User receiver, Question question) {

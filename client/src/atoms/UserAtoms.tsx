@@ -54,16 +54,6 @@ export const userCoinState = atom<number>({
   default: 0,
 });
 
-export const userFriendState = atom<number>({
-  key: 'userFriendState',
-  default: 0,
-});
-
-export const userPickState = atom<number>({
-  key: 'userPickState',
-  default: 0,
-});
-
 export const userAttendanceState = atom<boolean>({
   key: 'userAttendanceState',
   default: false,

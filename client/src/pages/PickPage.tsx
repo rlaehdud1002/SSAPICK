@@ -80,7 +80,6 @@ const Pick = () => {
       {question.length > 0 && pickFriends.length > 0 && (
         <div>
           <Question question={question[0]} userPick={mutation.mutate} />
-
           <div className="m-7">
             <div className="flex flex-row justify-end" onClick={handleShuffle}>
               <ShuffleIcon className="cursor-pointer" />

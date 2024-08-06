@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.ssapick.server.core.constants.PickConst.HINT_OPEN_COIN;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -58,12 +60,6 @@ public class HintService {
 
 		Hint openHint = findHintById(hints, openHintId);
 
-		publisher.publishEvent(new PickcoEvent(
-			pick.getSender(),
-			PickcoLogType.HINT_OPEN,
-			-1
-		));
-
 		String hintContent = openHint.getContent();
 
 		switch (openHint.getHintType()) {
@@ -87,6 +83,9 @@ public class HintService {
 		}
 
 		addHintOpenToPick(pick, openHint, hintContent);
+
+		publisher.publishEvent(new PickcoEvent(
+				pick.getReceiver(), PickcoLogType.HINT_OPEN, HINT_OPEN_COIN));
 
 		return hintContent;
 	}
