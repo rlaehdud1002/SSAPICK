@@ -412,6 +412,42 @@ class QuestionControllerTest extends RestDocsSupport {
 			)));
 	}
 
+
+	@Test
+	@DisplayName("질문 카테고리 목록 전체 조회")
+	void 질문_카테고리_목록_전체_조회() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		List<QuestionData.Category> categories = Stream.of("연애/데이트", "친구", "가족")
+			.map((name) -> {
+				QuestionCategory category = spy(QuestionCategory.create(name, "exampleImage"));
+				when(category.getId()).thenReturn(1L);
+				return QuestionData.Category.fromEntity(category);
+			})
+			.toList();
+
+		when(questionService.searchCategories()).thenReturn(categories);
+
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/questions/categories"));
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("질문 카테고리")
+					.summary("질문 카테고리 목록 조회 API")
+					.description("질문 카테고리 목록을 조회한다.")
+					.responseFields(response(
+						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
+						fieldWithPath("data[].name").type(JsonFieldType.STRING).description("질문 카테고리명"),
+						fieldWithPath("data[].thumbnail").type(JsonFieldType.STRING).description("질문 카테고리 썸네일")
+					))
+					.build()
+			)));
+
+		verify(questionService).searchCategories();
+	}
+
 	private Question createQuestion(String content) {
 		QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "http://thumbnail.com"));
 		when(category.getId()).thenReturn(1L);
