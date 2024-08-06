@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,8 @@ public class User extends BaseEntity {
 	private boolean isLocked = false;
 
 	@Column(name = "ban_count", nullable = false)
-	private short banCount;
+	@ColumnDefault("0")
+	private short banCount = 0;
 
 	/**
 	 * 사용자 생성 메서드

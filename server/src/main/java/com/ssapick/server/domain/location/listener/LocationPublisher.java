@@ -23,4 +23,5 @@ public class LocationPublisher {
     public void publish() {
 //        redisTemplate.convertAndSend(locationTopic.getTopic(), message);
     }
+
 }
