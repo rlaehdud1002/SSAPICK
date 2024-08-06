@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ssapick.server.core.annotation.ValidPickRequest;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.dto.QuestionData;
@@ -14,7 +16,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,6 +58,16 @@ public class PickData {
 			search.createdAt = pick.getCreatedAt();
 			return search;
 		}
+	}
+
+	@Builder
+	@Data
+	public static class PickCondition{
+		private Integer index;
+		private Integer pickCount;
+		private Integer blockCount;
+		private Integer passCount;
+		boolean isCooltime;
 	}
 
     @Data
