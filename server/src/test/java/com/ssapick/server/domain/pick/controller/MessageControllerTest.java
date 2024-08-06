@@ -78,6 +78,7 @@ class MessageControllerTest extends RestDocsSupport {
 					.description("받은 메시지 목록을 조회한다.")
 					.responseFields(response(
 						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
+						fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 보낸 사람 ID"),
 						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (익명 처리)"),
 						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
 						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
@@ -119,6 +120,7 @@ class MessageControllerTest extends RestDocsSupport {
 					.description("보낸 메시지 목록을 조회한다.")
 					.responseFields(response(
 						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
+							fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 보낸 사람 ID"),
 						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (본인)"),
 						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
 						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
