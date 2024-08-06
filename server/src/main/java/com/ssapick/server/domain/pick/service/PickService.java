@@ -122,20 +122,13 @@ public class PickService {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
 		}
 
-		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
-
-		if (findPick.isEmpty()) {
-			pick.updateAlarm();
-			return;
-		}
-
-		if (findPick.get().getId().equals(pickId)) {
-			pick.updateAlarm();
-			return;
-		}
-
-		findPick.get().updateAlarm();
 		pick.updateAlarm();
+
+		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		if (findPick.isEmpty() || findPick.get().getId().equals(pickId)) {
+			return;
+		}
+		findPick.get().updateAlarm();
 
 	}
 
