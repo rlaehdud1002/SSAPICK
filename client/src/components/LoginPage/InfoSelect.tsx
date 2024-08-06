@@ -45,7 +45,7 @@ const InfoSelect = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
+            <SelectGroup >
               {title === '성별' && (
                 <>
                   <SelectItem value="M">남자</SelectItem>

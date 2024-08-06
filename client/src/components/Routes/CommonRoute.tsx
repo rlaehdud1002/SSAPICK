@@ -7,6 +7,7 @@ import InfoInsert from 'pages/InfoInsert';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
+import ModiInfoInsert from 'pages/ModiInfoInsert';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
@@ -30,6 +31,7 @@ const CommonRoute = () => {
       <Route path="/auth/callback" element={<AuthCallback />} />
       {/* 추가 정보 입력 */}
       <Route path="/infoinsert" element={<InfoInsert />} />
+      <Route path="/modiinfoinsert" element={<ModiInfoInsert/>}/>
       {/* 잘못된 접근일 때 */}
       <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
