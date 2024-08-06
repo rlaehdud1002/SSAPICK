@@ -1,17 +1,26 @@
 package com.ssapick.server.domain.pick.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,17 +72,29 @@ public class PickController {
 		return SuccessResponse.empty();
 	}
 
-    /**
-     * 픽 알람설정 API
-     *
-     *
-     */
-    @PatchMapping("/{pickId}")
-    public SuccessResponse<Void> updatePickAlarm(
-            @CurrentUser User user,
-            @PathVariable("pickId") Long pickId
-    ) {
-        pickService.updatePickAlarm(user, pickId);
-        return SuccessResponse.empty();
-    }
+	/**
+	 * 픽 알람설정 API
+	 *
+	 *
+	 */
+	@PatchMapping("/{pickId}")
+	public SuccessResponse<List<PickData.Search>> updatePickAlarm(
+		@CurrentUser User user,
+		@PathVariable("pickId") Long pickId
+	) {
+		pickService.updatePickAlarm(user, pickId);
+		return SuccessResponse.of(pickService.searchReceivePick(user));
+	}
+
+	/**
+	 * 선택지의 사용자 리롤
+	 */
+	@PatchMapping("/re-roll")
+	public SuccessResponse<Void> rerollPick(
+		@CurrentUser User user
+	) {
+		pickService.reRoll(user);
+		return SuccessResponse.empty();
+	}
+
 }

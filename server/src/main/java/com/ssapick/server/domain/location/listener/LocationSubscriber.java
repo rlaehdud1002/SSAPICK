@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.location.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.ssapick.server.domain.location.dto.LocationData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
@@ -13,13 +14,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LocationSubscriber implements MessageListener {
-    private final ObjectMapper objectMapper;
     private final RedisTemplate<String, Object> redisTemplate;
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String publishMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
-
+        LocationData.Request request = new Gson().fromJson(publishMessage, LocationData.Request.class);
+        if (request.getUserId() != null) {
+            messagingTemplate.convertAndSend("/sub/location/update", "change");
+        }
     }
 }

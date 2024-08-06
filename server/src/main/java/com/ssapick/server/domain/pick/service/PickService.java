@@ -1,10 +1,13 @@
 package com.ssapick.server.domain.pick.service;
 
+import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.ssapick.server.domain.user.entity.PickcoLogType;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,24 +66,26 @@ public class PickService {
 			.toList();
 	}
 
+	/**
+	 * 픽 생성하기
+	 * @param sender
+	 * @param create
+	 */
 	@Transactional
 	public void createPick(User sender, PickData.Create create) {
-		log.info("픽 생성 요청 - sender: {}, create: {}", sender, create);
-		Integer index = pickCacheRepository.index(sender.getId());
 
-		if (index == null) {
-			pickCacheRepository.init(sender.getId());
-			index = 1;
+		if (pickCacheRepository.isCooltime(sender.getId())) {
+			throw new BaseException(ErrorCode.PICK_COOLTIME);
 		}
 
-		if (index == null || create.getIndex() != index) {
+		Integer index = pickCacheRepository.index(sender.getId());
+
+		if (create.getIndex() != index) {
 			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
 		}
 
-		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(() -> {
-			log.error("질문이 존재하지 않습니다. questionId: {}", create.getQuestionId());
-			return new BaseException(ErrorCode.NOT_FOUND_QUESTION);
-		});
+		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
+			() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
 
 		switch (create.getStatus()) {
 			case PICKED -> {
@@ -89,24 +94,22 @@ public class PickService {
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
 						pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.SIGN_UP, PICK_COIN));
 			}
 			case PASS -> {
 				question.skip();
-				log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 			case BLOCK -> {
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
-				log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 		}
 		pickCacheRepository.increment(sender.getId());
 
 		if (index == LAST_INDEX) {
+			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
 		}
-
-		log.info("============================================================끝");
 	}
 
 	private String pickEventMessage(String message) {
@@ -123,16 +126,17 @@ public class PickService {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
 		}
 
-		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		pick.updateAlarm();
 
-		if (findPick.isEmpty()) {
-			pick.updateAlarm();
+		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+		if (findPick.isEmpty() || findPick.get().getId().equals(pickId)) {
 			return;
 		}
-
 		findPick.get().updateAlarm();
-		pick.updateAlarm();
 
 	}
 
+	public void reRoll(User user) {
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
+	}
 }

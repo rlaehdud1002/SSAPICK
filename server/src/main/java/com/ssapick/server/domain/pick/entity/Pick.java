@@ -3,6 +3,8 @@ package com.ssapick.server.domain.pick.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
@@ -45,6 +47,7 @@ public class Pick extends TimeEntity {
 	private Question question;
 
 	@Column(name = "alarm")
+	@ColumnDefault("false")
 	private boolean alarm = false;
 
 	@Column(name = "is_alarm_sent")

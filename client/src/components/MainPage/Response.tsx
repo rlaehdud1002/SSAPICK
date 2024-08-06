@@ -10,6 +10,7 @@ import {
 } from "components/ui/accordion";
 
 import { IPick } from "atoms/Pick.type";
+import { useEffect, useState } from "react";
 
 interface ResponseProps {
   picks: IPick[];
@@ -17,49 +18,60 @@ interface ResponseProps {
 }
 
 const Response = ({ picks, isLoading }: ResponseProps) => {
-  const handleUserMaskIconClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const [updatedPicks, setUpdatedPicks] = useState<IPick[]>(picks);
+
+  useEffect(() => {
+    setUpdatedPicks(updatedPicks);
+  }, [updatedPicks]);
+
+  const handleAlarmUpdate = (newPicks: IPick[]) => {
+    setUpdatedPicks(newPicks);
   };
 
   return (
-    <div className="rounded-lg bg-white/50 p-4">
-      {picks.map((pick, index) => (
-        <Accordion key={index} type="single" collapsible>
-          <AccordionItem value="item-1" className="border-none">
-            <AccordionTrigger className="p-0">
-              <div className="flex flex-col">
-                <div className="flex flex-row">
-                  <div onClick={handleUserMaskIconClick}>
-                    <UserMaskIcon gen={pick.sender.gender} />
+    <div>
+      {updatedPicks.map((pick, index) => (
+        <div className="rounded-lg bg-white/50 p-4 mb-5">
+          <Accordion key={index} type="single" collapsible>
+            <AccordionItem value="item-1" className="border-none">
+              <AccordionTrigger className="p-0">
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <UserMaskIcon
+                      pickId={pick.id}
+                      alarm={pick.alarm}
+                      gen={pick.sender.gender}
+                      onAlarmUpdate={handleAlarmUpdate}
+                    />
+                    <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
                   </div>
-                  <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
                 </div>
-              </div>
-            </AccordionTrigger>
-            <p className="text-center my-4">{pick.question.content}</p>
-            <AccordionContent>
-              <div className="flex flex-row justify-center">
-                <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                  <HintModal
-                    title={pick.openedHints.length === 0 ? "?" : pick.openedHints[1]}
-                    pickId={pick.id}
-                  />
+              </AccordionTrigger>
+              <p className="text-center my-4">{pick.question.content}</p>
+              <AccordionContent>
+                <div className="flex flex-row justify-center">
+                  <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                    <HintModal
+                      title={pick.openedHints.length === 0 ? "?" : pick.openedHints[1]}
+                      pickId={pick.id}
+                    />
+                  </div>
+                  <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                    <HintModal
+                      title={pick.openedHints.length <= 1 ? "?" : pick.openedHints[0]}
+                      pickId={pick.id}
+                    />
+                  </div>
                 </div>
-                <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                  <HintModal
-                    title={pick.openedHints.length <= 1 ? "?" : pick.openedHints[0]}
-                    pickId={pick.id}
-                  />
-                </div>
-              </div>
-              {/* {!pick.messageSend && (
-                <div className="float-end">
-                  <MessageModal receiverId={pick.receiver.userId} pickId={pick.id} />
-                </div>
-              )} */}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+                {!pick.messageSend && (
+                  <div className="float-end">
+                    <MessageModal receiverId={pick.receiver.userId} pick={pick} />
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       ))}
     </div>
   );

@@ -14,13 +14,16 @@ import com.ssapick.server.domain.question.repository.QuestionCacheRepository;
 import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
 import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
 import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
 
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.ssapick.server.core.constants.PickConst.PICK_COIN;
+import static com.ssapick.server.core.constants.PickConst.QUESTION_CREATE_COIN;
 
 @Service
 @Slf4j
@@ -42,6 +48,7 @@ public class QuestionService {
     private final SentenceSimilarityAnalyzerService sentenceSimilarityAnalyzerService;
     private final CommentAnalyzerService commentAnalyzerService;
     private final QuestionCacheRepository questionCacheRepository;
+    private final ApplicationEventPublisher publisher;
 
     @PostConstruct
     public void init() {
@@ -140,6 +147,7 @@ public class QuestionService {
             throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, QUESTION_CREATE_COIN));
         Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
         questionCacheRepository.add(saveQuestion);
     }
@@ -236,5 +244,13 @@ public class QuestionService {
         }
 
         questionBanRepository.delete(questionBan);
+    }
+
+    public List<QuestionData.Category> searchCategories() {
+        List<QuestionCategory> categories = questionCategoryRepository.findAll();
+
+        return categories.stream()
+            .map(QuestionData.Category::fromEntity)
+            .toList();
     }
 }

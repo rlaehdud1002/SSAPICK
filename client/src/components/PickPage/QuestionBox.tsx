@@ -2,7 +2,7 @@ import { IPickCreate, IQuestion } from 'atoms/Pick.type';
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import WarningModal from 'components/modals/WarningModal';
 import PassIcon from 'icons/PassIcon';
-import QuestionImageIcon from 'icons/QuestionIcon';
+import { Progress } from 'components/ui/progress';
 
 interface QuestionProps {
   question: IQuestion;
@@ -33,7 +33,9 @@ const Question = ({ question, userPick }: QuestionProps) => {
         <QuestionPlusModal />
       </div>
       <div className="m-4 flex flex-col justify-center">
-        <p className="text-xs text-right text-red-400">2 of 10</p>
+        <div className="flex justify-center">
+          <Progress value={10} className="mb-4 w-4/5" />
+        </div>
         <h1 className="text-center text-lg">{question.content}</h1>
         <div className="flex flex-row justify-end mt-1">
           <WarningModal question={question} userPick={userPick} />
