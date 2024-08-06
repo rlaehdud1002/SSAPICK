@@ -1,3 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { getAlarm } from "api/alarmApi";
+import { getUserInfo } from "api/authApi";
+import { alarmSettingsState } from "atoms/AlarmAtoms";
+import { IUser } from "atoms/User.type";
 import { accessTokenState } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
