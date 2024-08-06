@@ -92,22 +92,18 @@ public class PickService {
 			}
 			case PASS -> {
 				question.skip();
-				log.error("질문이 스킵되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 			case BLOCK -> {
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
-				log.error("질문이 차단되었습니다. questionId: {}, user: {}", question.getId(), sender);
 			}
 		}
 		pickCacheRepository.increment(sender.getId());
 
 		if (index == LAST_INDEX) {
 			pickCacheRepository.init(sender.getId());
+		}
 	}
-
-		log.info("============================================================끝");
-}
 
     private String pickEventMessage(String message) {
         return message;
