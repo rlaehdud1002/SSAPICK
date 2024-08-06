@@ -25,7 +25,6 @@ const Pick = () => {
 
     onSuccess: (data) => {
       console.log('새로운 질문 조회 성공');
-      console.log(data);
       setQuestion(data);
     },
   });
@@ -60,7 +59,7 @@ const Pick = () => {
 
   const handleShuffle = useCallback(() => {
     if (friends.length > 0) {
-      console.log('shuffleFriends')
+      console.log('shuffleFriends');
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
