@@ -1,7 +1,6 @@
 package com.ssapick.server.domain.pick.service;
 
-import static com.ssapick.server.core.constants.PickConst.PICK_COIN;
-import static com.ssapick.server.core.constants.PickConst.REGISTER_COIN;
+import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
 import java.util.List;
@@ -138,6 +137,6 @@ public class PickService {
 	}
 
 	public void reRoll(User user) {
-		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, REGISTER_COIN));
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
 	}
 }
