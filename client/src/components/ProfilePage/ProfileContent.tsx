@@ -1,15 +1,7 @@
-import {
-  userAddState,
-  userCoinState,
-  userFriendState,
-  userPickState,
-  userState,
-} from "atoms/UserAtoms";
 import { IUserInfo } from "atoms/User.type";
 import CoinIcon from "icons/CoinIcon";
 import FriendIcon from "icons/FriendIcon";
 import ProfilePickIcon from "icons/ProfilePickIcon";
-import { useRecoilValue } from "recoil";
 
 interface ProfileContentProps {
   information: IUserInfo;
