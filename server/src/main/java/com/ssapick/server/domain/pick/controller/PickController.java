@@ -85,4 +85,16 @@ public class PickController {
 		pickService.updatePickAlarm(user, pickId);
 		return SuccessResponse.of(pickService.searchReceivePick(user));
 	}
+
+	/**
+	 * 선택지의 사용자 리롤
+	 */
+	@PatchMapping("/re-roll")
+	public SuccessResponse<Void> rerollPick(
+		@CurrentUser User user
+	) {
+		pickService.reRoll(user);
+		return SuccessResponse.empty();
+	}
+
 }

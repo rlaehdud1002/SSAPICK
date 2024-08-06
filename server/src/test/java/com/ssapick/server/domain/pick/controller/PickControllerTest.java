@@ -424,6 +424,28 @@ class PickControllerTest extends RestDocsSupport {
 			)));
 	}
 
+
+	@Test
+	@DisplayName("픽 사용자 리롤시 픽코 사용")
+	@WithMockUser(username = "test-user")
+	void 픽_사용자_리롤시_픽코_사용() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(patch("/api/v1/pick/re-roll"));
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+				.andDo(this.restDocs.document(resource(
+						ResourceSnippetParameters.builder()
+								.tag("픽")
+								.summary("사용자 리롤 픽코 사용 API")
+								.description("사용자를 리롤하면 픽코를 사용한다")
+								.responseFields(empty())
+								.build()
+				)));
+	}
+
 	private Pick createPick(User sender, User receiver, Question question) {
 		return Pick.of(sender, receiver, question);
 	}

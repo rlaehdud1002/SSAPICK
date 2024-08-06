@@ -137,4 +137,7 @@ public class PickService {
 
 	}
 
+	public void reRoll(User user) {
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, REGISTER_COIN));
+	}
 }
