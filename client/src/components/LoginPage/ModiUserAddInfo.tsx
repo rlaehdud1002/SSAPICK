@@ -1,8 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
-import { UserSend } from 'api/authApi';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { UserSend, getUserInfo } from 'api/authApi';
+import { IUserInfo } from 'atoms/User.type';
 import { sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
+import BackIcon from 'icons/BackIcon';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -18,19 +21,26 @@ interface AddUserForm {
 const ModiUserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
-  
+
+  // 유저 정보 조회
+  const { data: information, isLoading } = useQuery<IUserInfo>({
+    queryKey: ["information"],
+    queryFn: async () => await getUserInfo(),
+  });
 
   const mutation = useMutation({
     mutationKey: ["user", "send"],
     mutationFn: UserSend,
-    // 성공시, 유저 정보 입력 페이지로 이동
+    
     onSuccess: () => {
-      navigate('/home');
+      navigate(-1);
       console.log('성공');
     },
   });
+
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<AddUserForm>();
@@ -50,9 +60,7 @@ const ModiUserAddInfo = () => {
         residentialArea: data.town,
       }
     });
-    console.log(SendUserInfo);
     form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
-
     mutation.mutate(form);
   };
 
@@ -60,12 +68,37 @@ const ModiUserAddInfo = () => {
     console.log(errors);
   };
 
+  useEffect(() => {
+    if (!isLoading && information) {
+      console.log(information);
+      reset({
+        mbti: information.hints[5].content || "",
+        major: information.hints[6].content || "",
+        birth: information.hints[7].content || "",
+        town: information.hints[8].content || "",
+        hobby: information.hints[9].content || "",
+      })
+    }
+  }, [information, isLoading, reset])
+
+  console.log("정보",information);
+
+  const goToBack = () => {
+    navigate(-1);
+  }
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+      <div className="flex items-center ml-4">
+      <div onClick={goToBack}>
+      <BackIcon />
+      </div>
+      <span className="ml-2">추가 정보 수정</span>
+      </div>
       <div className="flex flex-col my-5">
         <div className="ml-10">
-          <h3 style={{ fontSize: 15 }}>추가 정보 수정</h3>
+         
           <div style={{ fontSize: 11 }}>추후 랜덤 힌트로 사용됩니다.</div>
           <div className="mb-20" style={{ color: 'red', fontSize: 10 }}>
             모든 정보 입력이 필수입니다.

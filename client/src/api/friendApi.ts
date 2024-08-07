@@ -46,3 +46,18 @@ export const deleteFriend = async (userId: number): Promise<void> => {
 
   return data;
 };
+
+// 추천 친구 목록 조회
+export const getRecommendFriendsList = async (): Promise<IFriend[]> => {
+  const {
+    data: { success, data, message },
+  } = await instance.get<BaseResponse<IFriend[]>>('/follow/recommend');
+
+  if (!success) {
+    throw new Error('추천 친구 목록 조회 실패');
+  }
+
+  console.log('getRecommendFriendsList');
+
+  return data;
+};

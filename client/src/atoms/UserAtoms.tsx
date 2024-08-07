@@ -2,17 +2,18 @@ import { ISendUser, IUser, IUserAdd, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
+// 유저 입력 정보
 export const sendUserInfoState = atom<ISendUser>({
   key: 'sendUserInfoState',
   default: undefined,
 });
-
 
 export const userInfostate = atom<IUserInfo>({
   key: 'userInfostate',
   default: undefined,
 })
 
+// 로그인 상태
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
   get: ({ get }) => {
