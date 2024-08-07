@@ -3,7 +3,6 @@ package com.ssapick.server.domain.pick.service;
 import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +84,6 @@ public class PickService {
 		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
 		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
 		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
-
 
 		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
 			() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
@@ -182,16 +180,20 @@ public class PickService {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
 		}
 
-		pick.updateAlarm();
-
 		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
-		if (findPick.isEmpty() || findPick.get().getId().equals(pickId)) {
+
+		if (findPick.isEmpty()) {
+			pick.updateAlarm();
 			return;
 		}
+		if (findPick.get().getId().equals(pickId)) {
+			pick.updateAlarm();
+		}
+
 		findPick.get().updateAlarm();
+		pick.updateAlarm();
 
 	}
-
 
 	public void reRoll(User user) {
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
