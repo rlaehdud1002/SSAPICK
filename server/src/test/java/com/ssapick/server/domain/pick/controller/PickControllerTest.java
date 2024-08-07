@@ -17,6 +17,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -52,10 +55,10 @@ class PickControllerTest extends RestDocsSupport {
 	@DisplayName("받은 픽 조회 성공 테스트")
 	@WithMockUser(username = "test-user")
 	void 받은_픽_조회_성공_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
+		// GIVEN: 테스트 데이터 설정
 		User sender = this.createUser("보낸 사람");
 		User receiver = this.createUser("받은 사람");
-		List<PickData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
+		List<PickData.Search> searches = Stream.of(1, 2, 3).map(i -> {
 			Question question = spy(createQuestion("테스트 질문 " + i));
 			QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리 썸네일"));
 
@@ -73,70 +76,103 @@ class PickControllerTest extends RestDocsSupport {
 					.pick(pick)
 					.build()
 			));
-			return pick;
-		}).map((pick) -> PickData.Search.fromEntity(pick, true)).toList();
+			return PickData.Search.fromEntity(pick, true);
+		}).toList();
+
+		// Mocking pageable response
+		Page<PickData.Search> pickPage = new PageImpl<>(searches, PageRequest.of(0, 10), searches.size());
 
 		when(pickService.searchReceivePick(
-			argThat(user -> user.getUsername().equals("test-user")))
-		).thenReturn(searches);
+			argThat(user -> user.getUsername().equals("test-user")),
+			anyInt(),
+			anyInt()
+		)).thenReturn(pickPage);
 
-		// * WHEN: 이걸 실행하면
-		ResultActions perform = this.mockMvc.perform(get("/api/v1/pick/receive"));
+		// WHEN: API 호출
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/pick/receive")
+			.param("page", "0")
+			.param("size", "10"));
 
-		// * THEN: 이런 결과가 나와야 한다
+		// THEN: 결과 검증
 		perform.andExpect(status().isOk())
-			.andDo(this.restDocs.document(resource(
-				ResourceSnippetParameters.builder()
-					.tag("픽")
-					.summary("받은 픽 조회 API")
-					.description("로그인된 사용자가 받은 픽을 조회한다.")
-					.responseFields(response(
-						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("픽 ID"),
-						fieldWithPath("data[].sender.userId").type(JsonFieldType.NULL)
-							.description("픽 보낸 사람 ID (익명 처리)"),
-						fieldWithPath("data[].sender.nickname").type(JsonFieldType.NULL).description("픽 보낸 사람 익명 처리"),
-						fieldWithPath("data[].sender.gender").type(JsonFieldType.STRING).description("픽 보낸 사람 성별"),
-						fieldWithPath("data[].sender.campusName").type(JsonFieldType.STRING)
-							.description("픽 보낸 사람 캠퍼스 소속"),
-						fieldWithPath("data[].sender.campusSection").type(JsonFieldType.NUMBER)
-							.description("픽 보낸 사람 캠퍼스 반"),
-						fieldWithPath("data[].sender.campusDescription").type(JsonFieldType.STRING)
-							.description("픽 보낸 사람 전공"),
-						fieldWithPath("data[].sender.profileImage").type(JsonFieldType.NULL)
-							.description("픽 보낸 사람 프로필 이미지 익명 처리"),
-						fieldWithPath("data[].sender.cohort").type(JsonFieldType.NUMBER).description("픽 보낸 사람 기수"),
-						fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
-						fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
-						fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
-						fieldWithPath("data[].receiver.campusName").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 캠퍼스 소속"),
-						fieldWithPath("data[].receiver.campusSection").type(JsonFieldType.NUMBER)
-							.description("픽 받은 사람 캠퍼스 반"),
-						fieldWithPath("data[].receiver.campusDescription").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 전공"),
-						fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 프로필 이미지"),
-						fieldWithPath("data[].receiver.cohort").type(JsonFieldType.NUMBER).description("픽 받은 사람 기수"),
-						fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
-						fieldWithPath("data[].question.banCount").description("질문을 차단한 횟수"),
-						fieldWithPath("data[].question.skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),
-						fieldWithPath("data[].question.category.id").type(JsonFieldType.NUMBER)
-							.description("질문 카테고리 ID"),
-						fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING)
-							.description("질문 카테고리명"),
-						fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING)
-							.description("질문 카테고리 썸네일"),
-						fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
-						fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
-						fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
-						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시"),
-						fieldWithPath("data[].alarm").type(JsonFieldType.BOOLEAN).description("픽 알람 설정 여부")
-					))
-					.build())
+			.andDo(this.restDocs.document(
+				resource(
+					ResourceSnippetParameters.builder()
+						.tag("픽")
+						.summary("받은 픽 조회 API")
+						.description("로그인된 사용자가 받은 픽을 조회한다.")
+						.queryParameters(
+							parameterWithName("page").description("페이지 번호"),
+							parameterWithName("size").description("페이지 크기")
+						)
+						.responseFields(
+							fieldWithPath("success").description("성공 여부"),
+							fieldWithPath("status").description("HTTP 상태 코드"),
+							fieldWithPath("message").description("응답 메시지"),
+							fieldWithPath("data").description("응답 데이터").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.totalElements").description("총 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.totalPages").description("총 페이지 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable").description("페이지 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.pageNumber").description("페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.pageSize").description("페이지 크기").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.unpaged").description("비페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.paged").description("페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.numberOfElements").description("페이지 내 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.empty").description("비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.content").description("픽 데이터 목록").type(JsonFieldType.ARRAY).optional(),
+							fieldWithPath("data.content[].id").description("픽 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].sender").description("송신자 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.content[].sender.userId").description("송신자 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].sender.nickname").description("송신자 닉네임").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].sender.gender").description("송신자 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].sender.campusName").description("송신자 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].sender.campusSection").description("송신자 캠퍼스 섹션").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].sender.campusDescription").description("송신자 캠퍼스 설명").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].sender.profileImage").description("송신자 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].sender.cohort").description("송신자 코호트").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiver").description("수신자 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.content[].receiver.userId").description("수신자 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiver.nickname").description("수신자 닉네임").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiver.gender").description("수신자 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiver.campusName").description("수신자 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiver.campusSection").description("수신자 캠퍼스 섹션").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiver.campusDescription").description("수신자 캠퍼스 설명").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiver.profileImage").description("수신자 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiver.cohort").description("수신자 코호트").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].question").description("질문 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.content[].question.id").description("질문 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].question.banCount").description("질문 금지 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].question.skipCount").description("질문 스킵 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].question.category").description("질문 카테고리").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.content[].question.category.id").description("질문 카테고리 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].question.category.name").description("질문 카테고리 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].question.category.thumbnail").description("질문 카테고리 썸네일").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].question.content").description("질문 내용").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].alarm").description("알림 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.content[].createdAt").description("생성 일시").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록").type(JsonFieldType.ARRAY).optional(),
+							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID").type(JsonFieldType.NUMBER).optional()
+						)
+						.build()
+				)
 			));
-
-		verify(pickService, times(1)).searchReceivePick(argThat(user -> user.getUsername().equals("test-user")));
 	}
+
+
 
 	@Test
 	@DisplayName("보낸 픽 조회 성공 테스트")

@@ -1,6 +1,9 @@
 package com.ssapick.server.domain.pick.repository;
 
 import com.ssapick.server.domain.pick.entity.Pick;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +30,21 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
         WHERE p.receiver.id = :userId
         """)
     List<Pick> findReceiverByUserId(@Param("userId") Long userId);
+
+    @Query("""
+    SELECT p FROM Pick p 
+    JOIN FETCH p.receiver 
+    JOIN FETCH p.question 
+    JOIN FETCH p.question.questionCategory 
+    LEFT JOIN FETCH p.hintOpens ho 
+    LEFT JOIN FETCH ho.hint h 
+    WHERE p.id IN :ids
+    ORDER BY p.id DESC 
+    """)
+    List<Pick> findAllByIdsWithDetails(@Param("ids") List<Long> ids);
+
+    @Query("SELECT p.id FROM Pick p WHERE p.receiver.id = :userId")
+    Page<Long> findPickIdsByReceiverId(@Param("userId") Long userId, Pageable pageable);
 
     /**
      * 보낸 Pick 조회
