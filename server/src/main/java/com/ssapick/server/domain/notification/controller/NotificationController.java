@@ -22,4 +22,18 @@ public class NotificationController {
         fcmService.createUserToken(user, register.getToken());
         return SuccessResponse.empty();
     }
+
+
+    @GetMapping("/test")
+    public SuccessResponse<Void> push() {
+        fcmService.notification(FCMData.NotificationEvent.of(
+                NotificationType.PICK,
+                null,
+                1L,
+                "테스트 알림",
+                "테스트 메시지",
+                null
+        ));
+        return SuccessResponse.empty();
+    }
 }
