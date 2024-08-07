@@ -32,6 +32,35 @@ export interface IPick {
   openedHints: Array<string>;
 }
 
+export interface IPaging<T> {
+  totalPages: number;
+  totalElements: number;
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      empty: boolean;
+      unsorted: boolean;
+      sorted: boolean;
+    };
+    offset: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  size: number;
+  content: T;
+  numner: number;
+  sort: {
+    empty: boolean;
+    unsorted: boolean;
+    sorted: boolean;
+  };
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
 export interface IPickUser {
   userId: number;
   nickname?: string;
@@ -43,7 +72,7 @@ export interface IPickUser {
 }
 
 export interface IPickCreate {
-  receiverId?: number
+  receiverId?: number;
   questionId: number;
   status: string;
 }
