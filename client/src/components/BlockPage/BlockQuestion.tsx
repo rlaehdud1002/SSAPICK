@@ -1,11 +1,23 @@
+import { useQuery } from "@tanstack/react-query"
 import BlockQuestionContent from "./BlockQuestionContent"
+import { IBlock, IBlockQuestion } from "atoms/Block.type"
+import { getBlockedQuestionList } from "api/blockApi";
 
 const BlockQuestion = () => {
+    const {data: blockQuestion} = useQuery<IBlockQuestion[]>({
+        queryKey: ['blockQuestion'],
+        queryFn: async () => await getBlockedQuestionList(),
+    });
+    console.log(blockQuestion)
     return (
         <div className="mb-20">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
-            <BlockQuestionContent key={index} question="같이 밥먹고 싶은 사람은?"/>
-          ))}
+            {blockQuestion?.length ? (blockQuestion.map((block, index) => (
+                <BlockQuestionContent key={index} questionId={block.id} question={block}/>
+            ))):(
+                <div className="flex justify-center">
+                    차단된 질문이 없습니다.
+                </div>
+            )}
         </div>
 
     )

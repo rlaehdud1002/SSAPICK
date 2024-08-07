@@ -9,3 +9,10 @@ export interface IBlock {
   profileImage: string;
   cohort: number;
 }
+
+export interface IBlockQuestion {
+  id: number,
+  banCount: number,
+  skipCount: number,
+  category: object,
+}

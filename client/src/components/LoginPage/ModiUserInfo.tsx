@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
+import BackIcon from "icons/BackIcon";
+import { useNavigate } from "react-router-dom";
 
 
 interface UserForm {
@@ -24,6 +26,11 @@ interface UserInfoProps {
 }
 
 const ModiUserInfo = ({ next }: UserInfoProps) => {
+  const navigate = useNavigate();
+  const goToBack = () => {
+    navigate(-1);
+  }
+
   const setSendUserInfo = useSetRecoilState(sendUserInfoState);
   const {
     register,
@@ -31,17 +38,7 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<UserForm>({
-    // defaultValues: {
-    //   name: "",
-    //   campus: "",
-    //   gender: "",
-    //   class: 0,
-    //   th:0,
-
-    // }
-
-  });
+  } = useForm<UserForm>();
 
   const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
 
@@ -94,10 +91,15 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
   console.log(information);
 
   if (isLoading) return <div>로딩중</div>;
-
+  
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-      <span className="ml-11">정보 수정</span>
+      <div className="flex items-center ml-4">
+      <div onClick={goToBack} >
+      <BackIcon />
+      </div>
+      <span className="ml-2">정보 수정</span>
+      </div>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
           <ProfileCameraIcon defaultImage={information?.profileImage} setUploadImage={setUploadImage} />
