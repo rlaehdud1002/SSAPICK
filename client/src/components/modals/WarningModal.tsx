@@ -31,12 +31,10 @@ const WarningModal = ({ question, userPick }: WarningModalProps) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const handlePick = () => {
-    const pickData: IPickCreate = {
+    userPick({
       questionId: question.id,
-      status: 'BLOCKED',
-    };
-
-    userPick(pickData);
+      status: 'BLOCK',
+    });
     setStep(WarningStep.ALERT);
   };
 
