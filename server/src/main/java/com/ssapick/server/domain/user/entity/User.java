@@ -1,18 +1,33 @@
 package com.ssapick.server.domain.user.entity;
 
-import com.ssapick.server.core.entity.BaseEntity;
-import com.ssapick.server.domain.pick.entity.Hint;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.ssapick.server.core.entity.BaseEntity;
+import com.ssapick.server.domain.pick.entity.Hint;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Entity
 @Table(
 	name = "users",
@@ -116,7 +131,7 @@ public class User extends BaseEntity {
 
 	public void increaseBanCount() {
 		this.banCount++;
-		if (this.banCount >= 10){
+		if (this.banCount >= 10) {
 			this.lock();
 		}
 	}
@@ -146,12 +161,12 @@ public class User extends BaseEntity {
 		this.profile = newProfile;
 	}
 
-	public void updateHints(List<Hint> hints) {
+	public void updateHints(List<Hint> newHints) {
 		this.hints.clear();
-		this.hints.addAll(hints);
-		for (Hint hint : hints) {
+		for (Hint hint : newHints) {
 			hint.updateUser(this);
 		}
+		this.hints.addAll(newHints);
 	}
 
 	@Override
