@@ -14,7 +14,6 @@ import { alarmSettingsState } from "atoms/AlarmAtoms";
 import { postAlarm, postAlarmAll } from "api/alarmApi";
 import { useRecoilState } from "recoil";
 import { useEffect, useState } from "react";
-import { log } from "console";
 
 const SetAlarm = () => {
   const [alarmSettings, setAlarmSettings] = useRecoilState(alarmSettingsState);
