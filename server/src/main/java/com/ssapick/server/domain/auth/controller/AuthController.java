@@ -45,7 +45,6 @@ public class AuthController {
 		return SuccessResponse.empty();
 	}
 
-	@Authenticated
 	@PostMapping(value = "/refresh")
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public SuccessResponse<JwtToken> refresh(HttpServletRequest request, HttpServletResponse response) {

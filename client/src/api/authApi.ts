@@ -1,4 +1,4 @@
-import { IAuth } from "atoms/Auth.type";
+import { IAuth, JwtToken } from "atoms/Auth.type";
 import { BaseResponse, IUserInfo } from "atoms/User.type";
 import instance from "./clientApi";
 
@@ -84,10 +84,10 @@ export const withdrawal = async (): Promise<void> => {
 };
 
 
-export const refreshToken = async (): Promise<void> => {
+export const refresh = async (): Promise<JwtToken> => {
   const {
     data: {success, data, message}
-  } = await instance.post("/auth/refresh")
+  } = await instance.post<BaseResponse<JwtToken>>("/auth/refresh")
   if (!success) {
     throw new Error(message);
   }

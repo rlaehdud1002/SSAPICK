@@ -21,9 +21,9 @@ export const isLoginState = selector<boolean>({
   },
 });
 
-export const accessTokenState = atom<string>({
+export const accessTokenState = atom<string | undefined>({
   key: 'accessTokenState',
-  default: '',
+  default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -31,6 +31,12 @@ export const firebaseTokenState = atom<string>({
   key: 'firebaseTokenState',
   default: "",
   effects_UNSTABLE: [persistAtom],
+})
+
+export const refreshRequestState = atom<boolean>({
+  key: 'refreshRequestState',
+  default: false,
+  effects_UNSTABLE: [persistAtom]
 })
 
 
