@@ -21,7 +21,7 @@ export const getBlockedList = async (): Promise<IBlock[]> => {
 export const blockCancel = async (userId: number): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.post(`/user-ban/${userId}`);
+  } = await instance.delete(`/user-ban/${userId}`);
 
   if (!success) {
     throw new Error(message);
@@ -45,7 +45,7 @@ export const getBlockedQuestionList = async (): Promise<IBlockQuestion[]> => {
 export const blockQuestionCancel = async (questionId: number): Promise<void> => {
   const {
     data: { success, data, message },
-} = await instance.post(`/questions/${questionId}/ban`);
+} = await instance.delete(`/questions/${questionId}/ban`);
 
   if (!success) {
     throw new Error(message);

@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import ResultCheckModal from './ResultCheckModal';
 import { useMutation } from '@tanstack/react-query';
 import { withdrawal } from 'api/authApi';
+import { useRecoilState } from 'recoil';
+import { accessTokenState } from 'atoms/UserAtoms';
 
 enum WithdrawalModalStep {
   CONFIRM,
@@ -24,6 +26,7 @@ interface HintModalProps {
 }
 
 const WithdrawalModal = ({ title }: HintModalProps) => {
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<WithdrawalModalStep>(
     WithdrawalModalStep.CONFIRM,
@@ -59,6 +62,7 @@ const WithdrawalModal = ({ title }: HintModalProps) => {
   const onSubmit = () => {
     setStep(WithdrawalModalStep.ALERT);
     mutation.mutate();
+    setAccessToken("");
   };
 
   const onClose = () => {

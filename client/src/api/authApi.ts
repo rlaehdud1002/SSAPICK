@@ -1,6 +1,7 @@
 import { IAuth } from "atoms/Auth.type";
 import { BaseResponse, IUserInfo } from "atoms/User.type";
 import instance from "./clientApi";
+import { access } from "fs";
 
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
@@ -63,15 +64,16 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 };
 
 // 로그아웃 요청
-export const signOut = async (): Promise<void> => {
+export const signOut = async (accessToken:string): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.post("/auth/sign-out");
+  } = await instance.post("/auth/sign-out", accessToken);
   if (!success) {
     throw new Error(message);
   }
   return data;
 };
+
 // 회원 탈퇴 요청
 export const withdrawal = async (): Promise<void> => {
   const {
