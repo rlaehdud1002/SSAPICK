@@ -49,7 +49,7 @@ const UserAddInfo = () => {
         residentialArea: data.town,
       }
     });
-    console.log(SendUserInfo);
+    console.log("sendinfo",SendUserInfo);
     form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
 
     mutation.mutate(form);

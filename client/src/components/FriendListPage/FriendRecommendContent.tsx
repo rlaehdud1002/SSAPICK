@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getRecommendFriendsList } from 'api/friendApi';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { deleteFriend, getRecommendFriendsList, postAddFriend } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
 import ProfileIcon from 'icons/ProfileIcon';
 import ToPlusIcon from 'icons/ToPlusIcon';
@@ -11,6 +11,8 @@ const FriendRecommendContent = () => {
     queryFn: async () => await getRecommendFriendsList(),
   });
   console.log(recommendFriends)
+
+  
   
   return (
     <div className="w-full">
@@ -19,7 +21,7 @@ const FriendRecommendContent = () => {
           {recommendFriends.length? (recommendFriends.map((friend, index) => (
             <ToPlusIcon key={index} campus={friend.campusName} classNum={friend.campusSection} name={friend.nickname} profileImage={friend.profileImage}/>
           ))):(
-            <span className='text-xs ml-40 mt-3'>추천하는 친구가 없습니다.</span>
+            <span className='text-xs ml-44 mt-3'>추천하는 친구가 없습니다.</span>
           )}  
         </div>
       </div>

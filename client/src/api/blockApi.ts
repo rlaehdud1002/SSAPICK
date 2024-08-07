@@ -52,3 +52,15 @@ export const blockQuestionCancel = async (questionId: number): Promise<void> => 
   }
   return data;
 };
+
+// 유저 차단 (쪽지)
+export const blockUser = async (userId: number): Promise<void> => {
+  const {
+    data: { success, data, message },
+  } = await instance.post(`/user-ban/${userId}`);
+
+  if (!success) {
+    throw new Error(message);
+  }
+  return data;
+};
