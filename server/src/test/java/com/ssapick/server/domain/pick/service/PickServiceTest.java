@@ -151,8 +151,8 @@ class PickServiceTest extends UserSupport {
 		}));
 		verify(pickCacheRepository).pick(sender.getId());
 		Assertions.assertThat(pickCondition).isEqualTo(PickData.PickCondition.builder()
-			.index(1)
-			.pickCount(1)
+			.index(2)
+			.pickCount(2)
 			.blockCount(1)
 			.passCount(1)
 			.isCooltime(false)
@@ -191,10 +191,10 @@ class PickServiceTest extends UserSupport {
 		verify(question).skip();
 		verify(pickCacheRepository).pass(sender.getId());
 		Assertions.assertThat(pickService.createPick(sender, create)).isEqualTo(PickData.PickCondition.builder()
-			.index(1)
+			.index(2)
 			.pickCount(1)
 			.blockCount(1)
-			.passCount(1)
+			.passCount(2)
 			.isCooltime(false)
 			.build());
 	}

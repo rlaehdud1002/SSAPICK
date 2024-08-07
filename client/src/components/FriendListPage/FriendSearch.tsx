@@ -34,7 +34,6 @@ const FriendSearch = () => {
             <FriendIcon width={20} height={20} isDefault={true} />
             <span className="ml-2">친구찾기</span>
           </div>
-          {/* <div className="sticky top-3"> */}
           <Search />
         </div>
         {/* </div> */}

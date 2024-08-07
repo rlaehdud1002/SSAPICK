@@ -8,12 +8,12 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
+import { QueryClient, useMutation } from '@tanstack/react-query';
+import { deleteFriend } from 'api/friendApi';
 import { Button } from 'components/ui/button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ResultCheckModal from './ResultCheckModal';
-import { QueryClient, useMutation } from '@tanstack/react-query';
-import { deleteFriend } from 'api/friendApi';
 
 enum DeletelStep {
   CONFIRM,
@@ -22,9 +22,10 @@ enum DeletelStep {
 
 interface DeleteModalProps {
   title: string;
+  userId: number;
 }
 
-const DeleteModal = ({ title }: DeleteModalProps) => {
+const DeleteModal = ({ title, userId }: DeleteModalProps) => {
   const queryClient = new QueryClient();
   // 친구 삭제 mutation
   const mutation = useMutation({
@@ -34,7 +35,6 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['friends'],
-      
       });
     },
   });
@@ -58,13 +58,13 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
       }, 1000);
       return () => clearTimeout(timer);
     }
-    
+
   });
 
-  const onSubmit = () => {
+  const onUnfollow = () => {
     setStep(DeletelStep.ALERT);
-     // 삭제할 userId 넣어주기
-     mutation.mutate(4);
+    // 삭제할 userId 넣어주기
+    mutation.mutate(userId);
   };
 
   const onClose = () => {
@@ -73,37 +73,41 @@ const DeleteModal = ({ title }: DeleteModalProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogTrigger className="ml-2" onClick={() => setOpen(true)}>
-        {title}
-      </DialogTrigger>
-      {isModalVisible && (
-        <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5 relative">
-          <DialogHeader>
-            <DialogTitle className="flex flex-start text-color-5F86E9">
-              {title}
-            </DialogTitle>
-          </DialogHeader>
-          {step === DeletelStep.CONFIRM && (
-            <div>
-              <DialogDescription className="flex justify-center">
-                <h3 className="flex flex-row my-10 items-center">
-                  삭제하시겠습니까?
-                </h3>
-              </DialogDescription>
-              <DialogFooter className="flex flex-row justify-end">
-                <Button variant="ssapick" size="md" onClick={onSubmit}>
-                  확인
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
-          {step === DeletelStep.ALERT && (
-            <ResultCheckModal content="삭제가 완료되었습니다." />
-          )}
-        </DialogContent>
-      )}
-    </Dialog>
+    <div>
+      <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+        <div className='bg-blue-300 rounded-lg px-2 py-0.5 text-sm text-white'>
+        <DialogTrigger onClick={() => setOpen(true)}>
+          {title}
+        </DialogTrigger>
+        </div>
+        {isModalVisible && (
+          <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
+            <DialogHeader>
+              <DialogTitle className="flex flex-start text-color-5F86E9">
+                {title}
+              </DialogTitle>
+            </DialogHeader>
+            {step === DeletelStep.CONFIRM && (
+              <div>
+                <DialogDescription className="flex justify-center">
+                  <h3 className="flex flex-row my-10 items-center">
+                    삭제하시겠습니까?
+                  </h3>
+                </DialogDescription>
+                <DialogFooter className="flex flex-row justify-end">
+                  <Button variant="ssapick" size="md" onClick={onUnfollow}>
+                    확인
+                  </Button>
+                </DialogFooter>
+              </div>
+            )}
+            {step === DeletelStep.ALERT && (
+              <ResultCheckModal content="삭제가 완료되었습니다." />
+            )}
+          </DialogContent>
+        )}
+      </Dialog>
+    </div>
   );
 };
 

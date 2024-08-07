@@ -11,8 +11,11 @@ import {
   PopoverTrigger,
 } from "../ui/popover"
 
+interface PopOverProps {
+  userId: number;
+}
 
-const PopOver = () => {
+const PopOver = ({userId}:PopOverProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -20,17 +23,12 @@ const PopOver = () => {
           <PointIcon />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-28 mr-5">
-        <div className="flex flex-col items-center">
+      <PopoverContent className="w-26 mr-5">
           <div className="flex items-center">
             <FriendBlockIcon width={22} height={22} />
-            <BlockModal title="차단" />
+            <DeleteModal title="언팔로우" userId={userId} />
+            {userId}
           </div>
-          <div className="flex items-center">
-            <DeleteIcon width={22} height={22} />
-            <DeleteModal title="삭제" />
-          </div>
-        </div>
       </PopoverContent>
     </Popover>
   )
