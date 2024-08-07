@@ -96,7 +96,7 @@ public class User extends BaseEntity {
 
 	@Column(name = "ban_count", nullable = false)
 	@ColumnDefault("0")
-	private short banCount;
+	private short banCount = 0;
 
 	/**
 	 * 사용자 생성 메서드
