@@ -30,7 +30,15 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   };
 
   const handleAccordionClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
+    // 클릭 이벤트가 전파되지 않도록 방지
+    e.stopPropagation();
+  }, []);
+
+  const handleMaskClick = useCallback((e: React.MouseEvent) => {
+    // 클릭 이벤트가 아코디언으로 전파되지 않도록 방지
+    e.stopPropagation();
+    // 필요한 추가 작업을 여기에 넣으세요
   }, []);
 
   if (isLoading) {
@@ -46,12 +54,14 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
               <AccordionTrigger className="p-0" onClick={handleAccordionClick}>
                 <div className="flex flex-col">
                   <div className="flex flex-row">
-                    <UserMaskIcon
-                      pickId={pick.id}
-                      alarm={pick.alarm}
-                      gen={pick.sender.gender}
-                      onAlarmUpdate={handleAlarmUpdate}
-                    />
+                    <div onClick={handleMaskClick}>
+                      <UserMaskIcon
+                        pickId={pick.id}
+                        alarm={pick.alarm}
+                        gen={pick.sender.gender}
+                        onAlarmUpdate={handleAlarmUpdate}
+                      />
+                    </div>
                     <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
                   </div>
                 </div>
