@@ -3,14 +3,15 @@ import Send from 'components/MessagePage/Send';
 import Alarm from 'pages/AlarmPage';
 import AuthCallback from 'pages/AuthCallbackPage';
 import Home from 'pages/HomePage';
+import InfoInsert from 'pages/InfoInsert';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
-import NotFoundPage from 'pages/NotFoundPage';
+import ModiInfoInsert from 'pages/ModiInfoInsert';
 import Pick from 'pages/PickPage';
 import Ranking from 'pages/RankingPage';
 import Splash from 'pages/SplashPage';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
   return (
@@ -28,8 +29,11 @@ const CommonRoute = () => {
       </Route>
       <Route path="/mattermost" element={<Mattermost />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
+      {/* 추가 정보 입력 */}
+      <Route path="/infoinsert" element={<InfoInsert />} />
+      <Route path="/modiinfoinsert" element={<ModiInfoInsert/>}/>
       {/* 잘못된 접근일 때 */}
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
   );
 };

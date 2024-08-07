@@ -1,16 +1,33 @@
-export interface IUser {
-  "id": number,
-  "username": string,
-  "name": string,
-  "profileImage": string,
-  "gender": string,
-  "cohort": number,
-  "campusName": string,
-  "section": number,
-  "pickco": number,
-  "pickCount": number,
-  "followingCount": number,
-  "hints": Array<string>,
+import { IHint } from "./Hint.type";
+
+export interface ISendUser {
+
+  residentailArea?: string;
+  major?: string;
+  campusSection: number;
+  gender: string;
+  interest?: string;
+  campusName: string;
+  name: string;
+  birth?: string;
+  mbti?: string;
+  cohort: number;
+}
+
+
+export interface IUserInfo {
+  id: number;
+  username: string;
+  name: string;
+  profileImage: string;
+  gender: string;
+  cohort: number;
+  campusName: string;
+  section: number;
+  pickco: number;
+  pickCount: number;
+  followingCount: number;
+  hints: Array<IHint>;
 }
 
 export interface BaseResponse<T> {

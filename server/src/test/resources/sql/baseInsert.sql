@@ -39,15 +39,15 @@ VALUES ('1', '연애/데이트', 'image'),
        ('11', '라이프스타일', 'image');
 -- users
 INSERT INTO public.users (created_at, updated_at, is_deleted, email, gender, is_locked, is_mattermost_confirmed, name,
-                          provider_id, provider_type, role_type, username, user_id)
+                          provider_id, provider_type, role_type, username, user_id, ban_count)
 VALUES (NOW(), NOW(), FALSE, 'user1@example.com', 'M', FALSE, TRUE, 'User One', 'provider1', 'GOOGLE', 'USER', 'user1',
-        1),
+        1, 0),
        (NOW(), NOW(), FALSE, 'user2@example.com', 'F', FALSE, TRUE, 'User Two', 'provider2', 'NAVER', 'ADMIN', 'user2',
-        2),
+        2, 0),
        (NOW(), NOW(), FALSE, 'user3@example.com', 'M', FALSE, TRUE, 'User Three', 'provider3', 'KAKAO', 'PREMIUM_USER',
-        'user3', 3),
+        'user3', 3, 0),
        (NOW(), NOW(), FALSE, 'user4@example.com', 'M', FALSE, FALSE, 'User Four', 'provider4', 'KAKAO', 'PREMIUM_USER',
-        'user4', 4);
+        'user4', 4, 0);
 
 -- alarm
 INSERT INTO public.alarm (add_question_alarm, message_alarm, nearby_alarm, pick_alarm, user_id, alarm_id)
@@ -70,10 +70,10 @@ VALUES (NOW(), NOW(), 1, 2, 1),
 
 
 -- hint
-INSERT INTO public.hint (created_at, updated_at, content, hint_type, visibility, user_id, hint_id)
-VALUES (NOW(), NOW(), '힌트 내용 A', 1, TRUE, 1, 1),
-       (NOW(), NOW(), '힌트 내용 B', 2, TRUE, 2, 2),
-       (NOW(), NOW(), '힌트 내용 C', 3, FALSE, 3, 3);
+INSERT INTO public.hint (created_at, updated_at, content, hint_type, user_id, hint_id)
+VALUES (NOW(), NOW(), '힌트 내용 A', 'NAME', 1, 1),
+       (NOW(), NOW(), '힌트 내용 B', 'GENDER', 2, 2),
+       (NOW(), NOW(), '힌트 내용 C', 'COHORT', 3, 3);
 
 -- notification
 INSERT INTO public.notification (created_at, updated_at, is_read, notification_type, reference_id, user_id,

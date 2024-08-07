@@ -32,23 +32,24 @@ const InfoSelect = ({
   const handleChange = (value: string) => {
     setValue(value);
   };
-  // console.log(defaultValue);
+  console.log(defaultValue);
+
   return (
     <div>
       <div>
         <Select
-          defaultValue={defaultValue}
+          defaultValue={String(defaultValue)}
           {...register} onValueChange={handleChange}>
           <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
             <Label htmlFor={title}>{title}</Label>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectGroup>
+            <SelectGroup >
               {title === '성별' && (
                 <>
-                  <SelectItem value="남자">남자</SelectItem>
-                  <SelectItem value="여자">여자</SelectItem>
+                  <SelectItem value="M">남자</SelectItem>
+                  <SelectItem value="F">여자</SelectItem>
                 </>
               )}
               {title === '기수' && (

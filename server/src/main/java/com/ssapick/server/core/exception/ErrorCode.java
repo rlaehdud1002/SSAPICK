@@ -46,6 +46,7 @@ public enum ErrorCode {
 	//Pick
 	NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
 	INVALID_PICK_INDEX(6002, HttpStatus.BAD_REQUEST, "픽 인덱스가 올바르지 않습니다."),
+	PICK_COOLTIME(6003, HttpStatus.BAD_REQUEST, "픽 쿨타임입니다."),
 
 	//MESSAGE
 	ALREADY_SEND_MESSAGE(7001, HttpStatus.BAD_REQUEST, "하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다."),
@@ -64,7 +65,8 @@ public enum ErrorCode {
 	SHORT_OF_PICKCO(10000, HttpStatus.BAD_REQUEST, "픽코가 부족합니다."),
 
 	//UserBan
-	NOT_FOUND_USER_BAN(11000, HttpStatus.NOT_FOUND, "사용자 차단을 찾을 수 없습니다.");
+	NOT_FOUND_USER_BAN(11000, HttpStatus.NOT_FOUND, "사용자 차단을 찾을 수 없습니다."),
+	ALREADY_BAN_USER(11001, HttpStatus.BAD_REQUEST, "이미 차단한 사용자입니다.");
 
 
 	private final int code;

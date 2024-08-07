@@ -74,9 +74,6 @@ public class AuthController {
 		@CurrentUser User user,
 		@RequestBody MattermostData.Request request
 	) {
-		log.info("request = {}", request);
-		log.info("user = {}", user);
-		log.debug("user = {}", user);
 		authService.authenticate(user, request);
 		return SuccessResponse.empty();
 	}

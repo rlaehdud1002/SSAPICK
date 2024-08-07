@@ -1,27 +1,14 @@
 package com.ssapick.server.domain.question.repository;
 
-import static com.ssapick.server.domain.question.entity.QQuestion.*;
-
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import static com.ssapick.server.domain.pick.entity.QPick.*;
 import static com.ssapick.server.domain.question.entity.QQuestion.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssapick.server.domain.question.entity.Question;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
-import static com.ssapick.server.domain.pick.entity.QPick.pick;
-import static com.ssapick.server.domain.question.entity.QQuestion.question;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,9 +23,11 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 	 * @return
 	 */
 	@Override
-	public List<Question> findAll() {
+	public List<Question> findQuestions() {
 		return queryFactory
 			.selectFrom(question)
+			.leftJoin(question.questionCategory).fetchJoin()
+			.leftJoin(question.author).fetchJoin()
 			.where(question.isDeleted.eq(false))
 			.fetch();
 	}

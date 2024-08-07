@@ -10,11 +10,7 @@ import com.ssapick.server.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -35,11 +31,23 @@ public class UserController {
 		return SuccessResponse.of(userService.getUserInfo(user));
 	}
 
+	/**
+	 * 사용자 정보 유효 여부 조회 API
+	 * @param user
+	 * @return {@link UserData.IsValid} 사용자 정보 유효 여부
+	 */
+
+	@Authenticated
+	@GetMapping(value = "/valid")
+	public SuccessResponse<UserData.IsValid> idValid(@CurrentUser User user) {
+		return SuccessResponse.of(userService.idValid(user));
+	}
+
 	@PatchMapping(value = "", consumes = "multipart/form-data")
 	public SuccessResponse<Void> updateProfile(
 		@CurrentUser User user,
 		@RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
-		@Valid @RequestPart UserData.Update update
+		@Valid @RequestPart(value = "update") UserData.Update update
 	) {
 		userService.updateUser(user.getId(), update, profileImage);
 		return SuccessResponse.empty();

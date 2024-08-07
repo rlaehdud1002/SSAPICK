@@ -1,5 +1,5 @@
 import instance from "api/clientApi";
-import { IAlarm } from "atoms/Alarm.type";
+import { IAlarm, IAlarmAll } from "atoms/Alarm.type";
 import { BaseResponse } from "atoms/User.type";
 
 // 알람 조회
@@ -28,14 +28,14 @@ export const postAlarm = async (alarmData: IAlarm): Promise<void> => {
 };
 
 // 전체 알람 설정
-export const postAlarmAll = async (onOff: boolean): Promise<void> => {
+export const postAlarmAll = async (updateAll: IAlarmAll): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post<BaseResponse<null>>("/alarm/all", onOff);
+  } = await instance.post<BaseResponse<null>>("/alarm/all", updateAll);
 
   if (!success) {
     throw new Error("전체 알람 설정 실패");
   }
 
-  console.log("putAlarm");
+  console.log("postAlarm");
 };

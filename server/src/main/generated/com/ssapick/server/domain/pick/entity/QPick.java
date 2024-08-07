@@ -24,6 +24,8 @@ public class QPick extends EntityPathBase<Pick> {
 
     public final com.ssapick.server.core.entity.QTimeEntity _super = new com.ssapick.server.core.entity.QTimeEntity(this);
 
+    public final BooleanPath alarm = createBoolean("alarm");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

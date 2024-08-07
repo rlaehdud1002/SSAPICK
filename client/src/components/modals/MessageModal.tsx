@@ -1,17 +1,17 @@
-import SendingIcon from 'icons/SendingIcon';
-import CoinIcon from 'icons/CoinIcon';
+import SendingIcon from "icons/SendingIcon";
+import CoinIcon from "icons/CoinIcon";
 
-import { Button } from 'components/ui/button';
+import { Button } from "components/ui/button";
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { postMessageSend } from 'api/messageApi';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { postMessageSend } from "api/messageApi";
 
-import CoinUseModal from 'components/modals/CoinUseModal';
-import InputModal from 'components/modals/InputModal';
-import ResultCheckModal from 'components/modals/ResultCheckModal';
+import CoinUseModal from "components/modals/CoinUseModal";
+import InputModal from "components/modals/InputModal";
+import ResultCheckModal from "components/modals/ResultCheckModal";
 
 import {
   Dialog,
@@ -20,7 +20,9 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from 'components/ui/dialog';
+} from "components/ui/dialog";
+import UserMaskIcon from "icons/UserMaskIcon";
+import { IPick } from "atoms/Pick.type";
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -34,10 +36,10 @@ interface MessageForm {
 
 interface MessageModalProps {
   receiverId: number;
-  pickId: number;
+  pick: IPick;
 }
 
-const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
+const MessageModal = ({ receiverId, pick }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
@@ -46,7 +48,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
 
   // 쪽지 전송 mutation
   const mutation = useMutation({
-    mutationKey: ['message', 'send'],
+    mutationKey: ["message", "send"],
     mutationFn: postMessageSend,
     // 쪽지 전송 성공 시
     onSuccess: () => {
@@ -73,12 +75,12 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
   } = useForm<MessageForm>();
 
   const onSubmit = (data: MessageForm) => {
-    console.log('ok', data);
+    console.log("ok", data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
     } else if (step === MessageModalStep.CONFIRM) {
       setStep(MessageModalStep.ALERT);
-      mutation.mutate({ receiverId, pickId, content: data.message });
+      mutation.mutate({ receiverId, pickId: pick.id, content: data.message });
       reset();
     }
   };
@@ -89,7 +91,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
   };
 
   const onInvalid = (errors: any) => {
-    console.log('errors', errors);
+    console.log("errors", errors);
   };
 
   return (
@@ -100,20 +102,18 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
-            <DialogTitle className="flex flex-start text-color-5F86E9">
-              쪽지 보내기
-            </DialogTitle>
+            <DialogTitle className="flex flex-start text-color-5F86E9">쪽지 보내기</DialogTitle>
           </DialogHeader>
+          <div className="my-3">{pick.question.content}</div>
           {step === MessageModalStep.INPUT && (
             <div>
               <InputModal
-                title="messageSend"
                 name="message"
-                register={register('message', {
-                  required: '쪽지 내용을 입력해주세요.',
+                register={register("message", {
+                  required: "쪽지 내용을 입력해주세요.",
                   maxLength: {
                     value: 255,
-                    message: '255글자 이하로 입력해주세요.',
+                    message: "255글자 이하로 입력해주세요.",
                   },
                 })}
                 errors={errors}
@@ -151,9 +151,7 @@ const MessageModal = ({ receiverId, pickId }: MessageModalProps) => {
               </DialogFooter>
             </div>
           )}
-          {step === MessageModalStep.ALERT && (
-            <ResultCheckModal content="전송이 완료되었습니다." />
-          )}
+          {step === MessageModalStep.ALERT && <ResultCheckModal content="전송이 완료되었습니다." />}
         </DialogContent>
       )}
     </Dialog>

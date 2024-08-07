@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 
 interface ProfileCameraIconProps {
+  defaultImage?: string;
   setUploadImage: any;
+
 }
 
-const ProfileCameraIcon = ({ setUploadImage }: ProfileCameraIconProps) => {
-  const [imageSrc, setImageSrc] = React.useState<string>("/icons/Profile.png")
+const ProfileCameraIcon = ({ defaultImage, setUploadImage }: ProfileCameraIconProps) => {
+  const [imageSrc, setImageSrc] = React.useState<string>(defaultImage || "/icons/Profile.png")
   function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
 
@@ -31,7 +33,7 @@ const ProfileCameraIcon = ({ setUploadImage }: ProfileCameraIconProps) => {
   return (
 
     <div className="relative">
-      <img width={180} height={180} src={imageSrc} alt="profile" />
+      <img width={180} height={180} className="rounded-full" src={imageSrc} alt="profile" />
       <div className="absolute w-10 bottom-1 right-2">
         <label htmlFor="profile-image">
           <img src="/icons/Camera.png" alt="camera" />

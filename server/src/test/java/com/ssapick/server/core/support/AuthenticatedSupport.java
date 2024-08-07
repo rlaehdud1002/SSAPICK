@@ -1,44 +1,42 @@
 package com.ssapick.server.core.support;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.ssapick.server.domain.pick.repository.PickRepository;
-import com.ssapick.server.domain.user.repository.CampusRepository;
-import com.ssapick.server.domain.user.repository.FollowRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mock;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-
-import com.ssapick.server.core.service.S3Service;
+import com.ssapick.server.domain.auth.service.CustomUserService;
 import com.ssapick.server.domain.pick.repository.HintRepository;
+import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.CampusRepository;
+import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-import com.ssapick.server.domain.user.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
-@Import(UserService.class)
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+@Import(CustomUserService.class)
 public abstract class AuthenticatedSupport {
 	@MockBean
-	private UserRepository userRepository;
+	protected UserRepository userRepository;
 
 	@MockBean
-	private HintRepository hintRepository;
+	protected HintRepository hintRepository;
 
 	@MockBean
-	private CampusRepository campusRepository;
+	protected CampusRepository campusRepository;
 
 	@MockBean
-	private FollowRepository followRepository;
+	protected FollowRepository followRepository;
 
 	@MockBean
-	private PickRepository pickRepository;
+	protected PickRepository pickRepository;
 
 	private AtomicLong atomicLong = new AtomicLong(1);
 

@@ -9,6 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'components/ui/select';
+import { useQuery } from '@tanstack/react-query';
+import { getCategory } from 'api/questionApi';
 
 interface SelectCategoryProps {
   title: string;
@@ -26,11 +28,18 @@ const SelectCategory = ({
   name,
 }: SelectCategoryProps) => {
   const handleChange = (value: string) => {
-    setValue(value);
+    setValue(parseInt(value));
   };
 
+  const { data: categorys, isLoading: categoryLoading } = useQuery({
+    queryKey: ['categorys'],
+    queryFn: getCategory,
+  });
+
+  console.log('categorys', categorys);
+
   return (
-    <div>
+    <div className='my-3'>
       <div>
         <Select {...register} onValueChange={handleChange}>
           <SelectTrigger className="w-32 h-7 border-[#7EAFFF]">
@@ -38,17 +47,13 @@ const SelectCategory = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="1">연애/데이트</SelectItem>
-              <SelectItem value="2">친구</SelectItem>
-              <SelectItem value="3">가족</SelectItem>
-              <SelectItem value="4">학업/프로젝트</SelectItem>
-              <SelectItem value="5">직장/커리어</SelectItem>
-              <SelectItem value="6">건강/운동</SelectItem>
-              <SelectItem value="7">취미/여가</SelectItem>
-              <SelectItem value="8">기술/IT</SelectItem>
-              <SelectItem value="9">문화/예술</SelectItem>
-              <SelectItem value="10">패션/뷰티</SelectItem>
-              <SelectItem value="11">라이프스타일</SelectItem>
+              {categorys && categorys.map((category, index) => {
+                return (
+                  <SelectItem key={index} value={String(category.id)}>
+                    {category.name}
+                  </SelectItem>
+                );
+              })}
             </SelectGroup>
           </SelectContent>
         </Select>

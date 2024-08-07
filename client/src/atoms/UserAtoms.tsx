@@ -1,11 +1,17 @@
-import { IUser, IUserAdd } from 'atoms/User.type';
+import { ISendUser, IUser, IUserAdd, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
+export const sendUserInfoState = atom<ISendUser>({
+  key: 'sendUserInfoState',
+  default: undefined,
+});
 
-// export const isMMState = selector<boolean>({
-//   key: 'isMMState',
-// });
+
+export const userInfostate = atom<IUserInfo>({
+  key: 'userInfostate',
+  default: undefined,
+})
 
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
@@ -30,7 +36,13 @@ export const firebaseTokenState = atom<string>({
 
 export const userState = atom<IUser>({
   key: 'userState',
-  
+  default: {
+    profileImage: '',
+    name: '',
+    th: '',
+    campusName: '',
+    gender: '',
+  }
 });
 
 export const userAddState = atom<IUserAdd>({
@@ -47,16 +59,6 @@ export const userAddState = atom<IUserAdd>({
 
 export const userCoinState = atom<number>({
   key: 'userCoinState',
-  default: 0,
-});
-
-export const userFriendState = atom<number>({
-  key: 'userFriendState',
-  default: 0,
-});
-
-export const userPickState = atom<number>({
-  key: 'userPickState',
   default: 0,
 });
 
