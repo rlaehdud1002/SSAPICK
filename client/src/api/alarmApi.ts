@@ -18,7 +18,7 @@ export const getAlarm = async (): Promise<IAlarm> => {
 export const postAlarm = async (alarmData: IAlarm): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post<BaseResponse<null>>("/alarm", alarmData);
+  } = await instance.post<BaseResponse<void>>("/alarm", alarmData);
 
   if (!success) {
     throw new Error("알람 설정 실패");
@@ -31,7 +31,7 @@ export const postAlarm = async (alarmData: IAlarm): Promise<void> => {
 export const postAlarmAll = async (updateAll: IAlarmAll): Promise<void> => {
   const {
     data: { success },
-  } = await instance.post<BaseResponse<null>>("/alarm/all", updateAll);
+  } = await instance.post<BaseResponse<void>>("/alarm/all", updateAll);
 
   if (!success) {
     throw new Error("전체 알람 설정 실패");
