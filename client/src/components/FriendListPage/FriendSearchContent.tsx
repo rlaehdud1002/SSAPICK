@@ -1,18 +1,44 @@
 import { Separator } from "components/ui/separator";
 import PlusDeleteButton from "buttons/PlusDeleteButton";
 import { Fragment, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteFriend, postAddFriend } from "api/friendApi";
 
 interface FriendSearchContentProps {
   campus: string;
   th: number;
   classNum: number;
   name: string;
+  userid?: number;
 }
 
 const FriendSearchContent = ({ campus, th, classNum, name }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
+  
+  // 친구 추가
+  const addMutation = useMutation({
+    mutationKey: ["addFriend",],
+    mutationFn: postAddFriend,
+  
+    onSuccess: () => {
+      console.log("친구 추가 성공");
+    },
+  });
+  
+  const deleteMutation = useMutation({
+    mutationKey: ["deleteFriend",],
+    mutationFn: deleteFriend,
+    
+    onSuccess: () => {
+      console.log("친구 삭제 성공");
+    },
+  });
+
   const onPlus = () => {
-    isPlus ? setIsPlus(false) : setIsPlus(true);
+    {isPlus ? 
+      (setIsPlus(false)) 
+      : 
+      (setIsPlus(true))}
   }
 
   return <Fragment>
@@ -23,12 +49,20 @@ const FriendSearchContent = ({ campus, th, classNum, name }: FriendSearchContent
       <div className="">{campus}캠퍼스 {th}기 {classNum}반 {name}</div>
       <div>
         {isPlus ? (
-          <div onClick={onPlus}>
-            <PlusDeleteButton title="추가" isDlete={true} />
+          <div onClick={()=>{
+            addMutation.mutate(0);
+            onPlus();
+          }}>
+            <PlusDeleteButton title="팔로우" isDelete={true} />
           </div>
         ) : (
-          <div onClick={onPlus}>
-            <PlusDeleteButton title="삭제" />
+          <div onClick={
+            ()=>{
+              deleteMutation.mutate(0);
+              onPlus();
+            }
+          }>
+            <PlusDeleteButton title="언팔로우" />
           </div>
         )}
       </div>

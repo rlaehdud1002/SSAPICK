@@ -17,14 +17,14 @@ export const getFriendsList = async (): Promise<IFriend[]> => {
   return data;
 };
 
-// 친구 추가
+// 유저 팔로우
 export const postAddFriend = async (userId: number): Promise<void> => {
   const {
     data: { success, data, message },
   } = await instance.post<BaseResponse<void>>(`/follow/${userId}`);
 
   if (!success) {
-    throw new Error('친구 추가 실패');
+    throw new Error('친구 팔로우 실패');
   }
 
   console.log('postAddFriend');
@@ -32,14 +32,14 @@ export const postAddFriend = async (userId: number): Promise<void> => {
   return data;
 };
 
-// 친구 삭제
+// 유저 언팔로우
 export const deleteFriend = async (userId: number): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.delete<BaseResponse<void>>(`/follow/${userId}`);
+  } = await instance.delete(`/follow/${userId}`);
 
   if (!success) {
-    throw new Error('친구 삭제 실패');
+    throw new Error('친구 언팔로우 실패');
   }
 
   console.log('deleteFriend');

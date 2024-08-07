@@ -3,6 +3,7 @@ import { UserSend } from 'api/authApi';
 import { sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -49,11 +50,20 @@ const UserAddInfo = () => {
         residentialArea: data.town,
       }
     });
-    console.log(SendUserInfo);
+    console.log("sendinfo",SendUserInfo);
     form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
 
     mutation.mutate(form);
   };
+
+  useEffect(() => {
+    if (!SendUserInfo.mbti) return;
+    const form = new FormData();
+
+    form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
+
+    mutation.mutate(form);
+  }, [SendUserInfo])
 
   const onInvalid = (errors: any) => {
     console.log(errors);
