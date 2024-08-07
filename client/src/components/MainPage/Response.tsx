@@ -88,6 +88,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
           </Accordion>
         </div>
       ))}
+      <div className="h-24" />
     </div>
   );
 };

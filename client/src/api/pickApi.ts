@@ -1,36 +1,32 @@
-import instance from 'api/clientApi';
-import { IPaging, IPick, IPickCreate, IPickInfo } from 'atoms/Pick.type';
-import { BaseResponse } from 'atoms/User.type';
+import instance from "api/clientApi";
+import { IPaging, IPick, IPickCreate, IPickInfo } from "atoms/Pick.type";
+import { BaseResponse } from "atoms/User.type";
 
 // 받은 pick 조회
-export const getReceivePick = async (): Promise<IPaging<IPick[]>> => {
+export const getReceivePick = async (page: number): Promise<IPaging<IPick[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPaging<IPick[]>>>('/pick/receive');
+  } = await instance.get<BaseResponse<IPaging<IPick[]>>>(`/pick/receive?page=${page}`);
 
   if (!success) {
-    throw new Error('받은 pick 조회 실패');
+    throw new Error("받은 pick 조회 실패");
   }
-  console.log('getReceivePick');
-
   return data;
 };
 
 // pick 생성
-export const postCreatePick = async (
-  pickData: IPickCreate,
-): Promise<IPickInfo> => {
-  console.log('pickData', pickData);
+export const postCreatePick = async (pickData: IPickCreate): Promise<IPickInfo> => {
+  console.log("pickData", pickData);
 
   const {
     data: { success, data },
-  } = await instance.post<BaseResponse<IPickInfo>>('/pick', pickData);
+  } = await instance.post<BaseResponse<IPickInfo>>("/pick", pickData);
 
   if (!success) {
-    throw new Error('pick 생성 실패');
+    throw new Error("pick 생성 실패");
   }
 
-  console.log('postCreatePick');
+  console.log("postCreatePick");
 
   return data;
 };
@@ -44,10 +40,10 @@ export const getPickInfo = async (): Promise<IPickInfo> => {
   console.log(data);
 
   if (!success) {
-    throw new Error('pick 조회 실패');
+    throw new Error("pick 조회 실패");
   }
 
-  console.log('getPickInfo');
+  console.log("getPickInfo");
 
   return data;
 };
@@ -58,11 +54,11 @@ export const getHint = async (pickId: number): Promise<string> => {
     data: { success, data },
   } = await instance.get<BaseResponse<string>>(`/hint/${pickId}`);
 
-  console.log('getHint');
-  console.log('data', data);
+  console.log("getHint");
+  console.log("data", data);
 
   if (!success) {
-    throw new Error('힌트 조회 실패');
+    throw new Error("힌트 조회 실패");
   }
 
   return data;
@@ -75,10 +71,10 @@ export const patchPickAlarm = async (pickId: number): Promise<IPick[]> => {
   } = await instance.patch<BaseResponse<IPick[]>>(`/pick/${pickId}`);
 
   if (!success) {
-    throw new Error('pick 알림 설정 실패');
+    throw new Error("pick 알림 설정 실패");
   }
 
-  console.log('patchPickAlarm');
+  console.log("patchPickAlarm");
 
   return data;
 };
