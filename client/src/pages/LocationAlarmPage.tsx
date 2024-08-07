@@ -7,15 +7,12 @@ import LocationWatchModal from 'components/LocationPage/LocationWatchModal';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LocationModal from 'components/modals/LocationModal';
+import { useLocation } from 'hooks/useLocation';
 
 const LocationAlarm = () => {
   const nav = useNavigate();
   const [dot, setDot] = useState('');
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [watchLatitude, setwatchLatitude] = useState<number | null>(null);
-  const [watchLongitude, setwatchLongitude] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const {coords, error} = useLocation()
 
   // search text
   useEffect(() => {
@@ -26,39 +23,7 @@ const LocationAlarm = () => {
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
   }, []);
 
-  // 위치 정보 가져오기 (렌더링 될 때만)
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          setError(error.message);
-        },
-      );
-    } else {
-      setError('위치 정보를 가져올 수 없습니다.');
-    }
-  }, []);
 
-  // 위치 정보 가져오기 (지속적으로 추적)
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.watchPosition(
-        (position) => {
-          setwatchLatitude(position.coords.latitude);
-          setwatchLongitude(position.coords.longitude);
-        },
-        (error) => {
-          setError(error.message);
-        },
-      );
-    } else {
-      setError('위치 정보를 가져올 수 없습니다.');
-    }
-  }, []);
 
   return (
     <div>
@@ -86,11 +51,7 @@ const LocationAlarm = () => {
       </div>
       <div className="flex flex-col">
         <LocationModal />
-        <LocationCheckModal latitude={latitude} longitude={longitude} />
-        <LocationWatchModal
-          latitude={watchLatitude}
-          longitude={watchLongitude}
-        />
+        <LocationCheckModal latitude={coords.latitude} longitude={coords.longitude} />
       </div>
     </div>
   );

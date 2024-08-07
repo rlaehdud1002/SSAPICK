@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import { validState } from 'atoms/ValidAtoms';
 
@@ -72,7 +73,6 @@ function App() {
   // }, [isAuthenticated]);
 
   // useEffect(() => {
-  //   console.log('location', location);
   //   const checkValidity = async () => {
   //     try {
   //       console.log('location', location);
@@ -97,6 +97,10 @@ function App() {
   //         navigate('/infoinsert');
   //         return;
   //       }
+  //       if (data.validInfo) {
+  //         navigate('/home');
+  //         return;
+  //       }
   //     } catch (error) {
   //       console.error('유효성 검사 실패', error);
   //       navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
@@ -107,6 +111,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <div className="flex flex-col relative">
         <div className="flex flex-col max-h-screen">
           {headerFooter() && <Header />}

@@ -20,6 +20,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -62,13 +63,13 @@ class PickControllerTest extends RestDocsSupport {
 			Question question = spy(createQuestion("테스트 질문 " + i));
 			QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리 썸네일"));
 
-			when(category.getId()).thenReturn((long)i);
+			when(category.getId()).thenReturn((long) i);
 			when(question.getQuestionCategory()).thenReturn(category);
-			when(question.getId()).thenReturn((long)i);
+			when(question.getId()).thenReturn((long) i);
 			when(question.getCreatedAt()).thenReturn(LocalDateTime.now());
 
 			Pick pick = spy(createPick(sender, receiver, question));
-			when(pick.getId()).thenReturn((long)i);
+			when(pick.getId()).thenReturn((long) i);
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
@@ -80,12 +81,12 @@ class PickControllerTest extends RestDocsSupport {
 		}).toList();
 
 		// Mocking pageable response
-		Page<PickData.Search> pickPage = new PageImpl<>(searches, PageRequest.of(0, 10), searches.size());
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<PickData.Search> pickPage = new PageImpl<>(searches, pageable, searches.size());
 
 		when(pickService.searchReceivePick(
 			argThat(user -> user.getUsername().equals("test-user")),
-			anyInt(),
-			anyInt()
+			any(Pageable.class)
 		)).thenReturn(pickPage);
 
 		// WHEN: API 호출
@@ -166,13 +167,12 @@ class PickControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록").type(JsonFieldType.ARRAY).optional(),
 							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID").type(JsonFieldType.NUMBER).optional()
-
-
 						)
 						.build()
 				)
 			));
 	}
+
 
 
 
@@ -373,63 +373,63 @@ class PickControllerTest extends RestDocsSupport {
     }
 
 
-    // @Test
-    // @DisplayName("픽_패스_테스트")
-    // @WithMockUser(username = "test-user")
-    // void 픽_선택_생성_테스트() throws Exception {
-    //     // * GIVEN: 이런게 주어졌을 때
-    //     User receiver = this.createUser("받은 사람");
-    //     Question question = spy(this.createQuestion("테스트 질문"));
-    //     when(question.getId()).thenReturn(1L);
-    //
-    //     PickData.Create create = new PickData.Create();
-    //     create.setReceiverId(receiver.getId());
-    //     create.setQuestionId(question.getId());
-    //     create.setIndex(1);
-    //     create.setStatus(PickData.PickStatus.PICKED);
-    //
-    //     PickData.PickCondition pickCondition = PickData.PickCondition.builder()
-    //         .index(1)
-    //         .pickCount(1)
-    //         .blockCount(1)
-    //         .passCount(1)
-    //         .isCooltime(false)
-    //         .build();
-    //
-    //     when(pickService.createPick(any(), create)).thenReturn(pickCondition);
-    //
-    //     // * WHEN: 이걸 실행하면
-    //     ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .content(toJson(create))
-    //     );
-    //
-    //     // * THEN: 이런 결과가 나와야 한다
-    //     perform.andExpect(status().isOk())
-    //         .andDo(this.restDocs.document(resource(
-    //             ResourceSnippetParameters.builder()
-    //                 .tag("픽")
-    //                 .summary("픽 생성 API")
-    //                 .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
-    //                 .requestFields(
-    //                     fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
-    //                     fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
-    //                     fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-    //                     fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
-    //                 )
-    //                 .responseFields(response(
-    //                     fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
-    //                     fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-    //                     fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-    //                     fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-    //                     fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
-    //                     fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
-    //                     fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-    //                     fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
-    //                 ))
-    //                 .build()
-    //         )));
-    // }
+    @Test
+    @DisplayName("픽_선택_테스트")
+    @WithMockUser(username = "test-user")
+    void 픽_선택_생성_테스트() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User receiver = this.createUser("받은 사람");
+        Question question = spy(this.createQuestion("테스트 질문"));
+        when(question.getId()).thenReturn(1L);
+
+        PickData.Create create = new PickData.Create();
+        create.setReceiverId(receiver.getId());
+        create.setQuestionId(question.getId());
+        create.setIndex(1);
+        create.setStatus(PickData.PickStatus.PICKED);
+
+        PickData.PickCondition pickCondition = PickData.PickCondition.builder()
+            .index(1)
+            .pickCount(1)
+            .blockCount(1)
+            .passCount(1)
+            .isCooltime(false)
+            .build();
+
+		when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(create))
+        );
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+            .andDo(this.restDocs.document(resource(
+                ResourceSnippetParameters.builder()
+                    .tag("픽")
+                    .summary("픽 생성 API")
+                    .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
+                    .requestFields(
+                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
+                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+                    )
+                    .responseFields(response(
+                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+                        fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
+                        fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
+                        fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
+                        fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+                    ))
+                    .build()
+            )));
+    }
 
     @Test
     @DisplayName("픽_진행_상태_조회_테스트")

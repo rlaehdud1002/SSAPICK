@@ -8,13 +8,11 @@ interface ChoiceProps {
 
 const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
   const handlePick = () => {
-    const pickData = {
+    userPick({
       receiverId: friend.userId,
       questionId: questionId,
       status: 'PICKED',
-    };
-
-    userPick(pickData);
+    });
   };
 
   return (
@@ -23,11 +21,11 @@ const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
       onClick={handlePick}
     >
       <img
-        src={friend.profileImage}
+        src={friend?.profileImage || '/images/default_profile.png'}
         alt="profileImage"
         className="w-[75px] h-[75px] rounded-full"
       />
-      <p className="pt-2 text-sm">{friend.nickname}</p>
+      <p className="pt-2 text-sm">{friend?.nickname || ''}</p>
     </div>
   );
 };

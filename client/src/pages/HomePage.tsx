@@ -56,7 +56,7 @@ const Home = () => {
 
   return (
     <div className="m-6">
-      {picks !== undefined && picks.content.length !== 0 ? (
+      {picks !== undefined && picks?.content?.length !== 0 ? (
         <Response picks={picks.content} isLoading={isLoading} />
       ) : (
         <Initial />

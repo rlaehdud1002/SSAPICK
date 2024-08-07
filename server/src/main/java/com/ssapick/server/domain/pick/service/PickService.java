@@ -3,7 +3,6 @@ package com.ssapick.server.domain.pick.service;
 import static com.ssapick.server.core.constants.PickConst.*;
 import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,16 +60,15 @@ public class PickService {
 			.toList();
 	}
 
-	/**
-	 * 받은 픽 조회하기 페이징 처리
+	/***
+	 * 받은 픽 조회하기
 	 * @param user
-	 * @param page
-	 * @param size
+	 * @param pageable
 	 * @return
 	 */
-	public Page<PickData.Search> searchReceivePick(User user, int page, int size) {
-		// Create a Pageable object with sorting by id in descending order
-		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+	public Page<PickData.Search> searchReceivePick(User user,Pageable pageable) {
+
+		// pageable.
 
 		// Step 1: Fetch paged IDs with sorting
 		Page<Long> pickIdsPage = pickRepository.findPickIdsByReceiverId(user.getId(), pageable);
@@ -123,26 +121,27 @@ public class PickService {
 		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
 		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
 
-
 		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
 			() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
 
 		switch (create.getStatus()) {
 			case PICKED -> {
 				pickCacheRepository.pick(sender.getId());
+				pickCount++;
 
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
 						pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
 					throw new BaseException(ErrorCode.PASS_BLOCK_LIMIT);
 				}
-
 				pickCacheRepository.pass(sender.getId());
+				passCount++;
 				question.skip();
 			}
 			case BLOCK -> {
@@ -151,20 +150,17 @@ public class PickService {
 				}
 
 				pickCacheRepository.block(sender.getId());
+				blockCount++;
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
 			}
 		}
+		index++;
 
-		index = pickCacheRepository.getIndex(sender.getId());
-		pickCount = pickCacheRepository.getPickCount(sender.getId());
-		blockCount = pickCacheRepository.getBlockCount(sender.getId());
-		passCount = pickCacheRepository.getPassCount(sender.getId());
 
 		if (pickCount + blockCount >= 10) {
-			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
-
+			pickCacheRepository.setCooltime(sender.getId());
 			return PickData.PickCondition.builder()
 				.isCooltime(true)
 				.build();
@@ -219,19 +215,23 @@ public class PickService {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
 		}
 
-		pick.updateAlarm();
-
 		Optional<Pick> findPick = pickRepository.findByReceiverIdWithAlarm(user.getId());
-		if (findPick.isEmpty() || findPick.get().getId().equals(pickId)) {
+
+		if (findPick.isEmpty()) {
+			pick.updateAlarm();
 			return;
 		}
+		if (findPick.get().getId().equals(pickId)) {
+			pick.updateAlarm();
+		}
+
 		findPick.get().updateAlarm();
+		pick.updateAlarm();
 
 	}
 
-
 	public void reRoll(User user) {
-		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
 
 }

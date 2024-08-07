@@ -6,6 +6,9 @@ import java.util.Objects;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +45,14 @@ public class MessageService {
 	 * @param user 로그인된 사용자
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
-	public List<MessageData.Search> searchSendMessage(User user) {
-		return messageRepository.findSentMessageByUserId(user.getId()).stream()
-			.map((message) -> MessageData.Search.fromEntity(message, false))
+	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
+		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
+
+		List<MessageData.Search> messages = messagesPage.stream()
+			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
+
+		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
 	/**
@@ -55,10 +62,14 @@ public class MessageService {
 	 * @param user 로그인된 사용자
 	 * @return {@link MessageData.Search} 받은 메시지 리스트
 	 */
-	public List<MessageData.Search> searchReceiveMessage(User user) {
-		return messageRepository.findReceivedMessageByUserId(user.getId()).stream()
-			.map((message) -> MessageData.Search.fromEntity(message, true))
+	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
+		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
+
+		List<MessageData.Search> messages = messagesPage.stream()
+			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
+
+		return new  PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
     /**
@@ -91,7 +102,7 @@ public class MessageService {
         }
 
 		publisher.publishEvent(new PickcoEvent(
-				pick.getReceiver(), PickcoLogType.HINT_OPEN, MESSAGE_COIN));
+				pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN));
 
 		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 	}
