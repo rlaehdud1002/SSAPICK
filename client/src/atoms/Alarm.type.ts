@@ -6,5 +6,5 @@ export interface IAlarm {
 }
 
 export interface IAlarmAll {
-  updateAll: boolean;
+  onOff: boolean;
 }
