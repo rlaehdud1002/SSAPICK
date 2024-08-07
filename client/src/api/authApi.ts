@@ -27,12 +27,12 @@ export const UserSend = async (
       'Content-Type': 'multipart/form-data',
     },
   });
-
+  console.log("pppp");
   if (!success) {
     throw new Error("유저 정보 전송 실패");
   }
 
-  console.log('postMessageSend');
+  console.log('유저 정보 입력 성공');
 };
 
 // mm 인증 요청

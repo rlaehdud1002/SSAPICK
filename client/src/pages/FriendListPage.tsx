@@ -1,6 +1,8 @@
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { getUserInfo } from 'api/authApi';
 import { getFriendsList } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
+import { IUserInfo } from 'atoms/User.type';
 import Friend from 'components/FriendListPage/FriendBox';
 import BackIcon from 'icons/BackIcon';
 import FriendIcon from 'icons/FriendIcon';
@@ -13,9 +15,14 @@ const FriendList = () => {
     queryFn: async () => await getFriendsList(),
   });
 
+  const {data: userInfo} = useQuery<IUserInfo>({
+    queryKey: ['userInfo'],
+    queryFn: async () => await getUserInfo(),
+  });
+
   const navigate = useNavigate();
 
-  console.log(friends, isLoading);
+  console.log(friends, userInfo);
 
   return (
     <div className='mb-25'>
@@ -41,6 +48,8 @@ const FriendList = () => {
               campusSection={friend.campusSection}
               campusDescription={friend.campusDescription}
               name={friend.nickname}
+              userId={friend.userId}
+              userClass = {userInfo?.section}
             />
           </div>
         ))}
