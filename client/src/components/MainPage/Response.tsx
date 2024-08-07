@@ -10,7 +10,7 @@ import {
 } from "components/ui/accordion";
 
 import { IPick } from "atoms/Pick.type";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ResponseProps {
   picks: IPick[];
@@ -21,6 +21,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   const [updatedPicks, setUpdatedPicks] = useState<IPick[]>(picks);
 
   useEffect(() => {
+    console.log("updatedPicks", updatedPicks);
     setUpdatedPicks(updatedPicks);
   }, [updatedPicks]);
 
@@ -28,21 +29,35 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
     setUpdatedPicks(newPicks);
   };
 
+  const handleAccordionClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleMaskClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
   return (
     <div>
-      {updatedPicks.map((pick, index) => (
-        <div key={index} className="rounded-lg bg-white/50 p-4 mb-5">
+      {updatedPicks.map((pick) => (
+        <div key={pick.id} className="rounded-lg bg-white/50 p-4 mb-5">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1" className="border-none">
-              <AccordionTrigger className="p-0">
+              <AccordionTrigger className="p-0" onClick={handleAccordionClick}>
                 <div className="flex flex-col">
                   <div className="flex flex-row">
-                    <UserMaskIcon
-                      pickId={pick.id}
-                      alarm={pick.alarm}
-                      gen={pick.sender.gender}
-                      onAlarmUpdate={handleAlarmUpdate}
-                    />
+                    <div onClick={handleMaskClick}>
+                      <UserMaskIcon
+                        pickId={pick.id}
+                        alarm={pick.alarm}
+                        gen={pick.sender.gender}
+                        onAlarmUpdate={handleAlarmUpdate}
+                      />
+                    </div>
                     <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
                   </div>
                 </div>

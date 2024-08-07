@@ -1,9 +1,9 @@
-import { useRecoilValue } from 'recoil';
-import AlarmIcon from '../../icons/AlarmIcon';
-import CoinIcon from '../../icons/CoinIcon';
-import Logo from '../../icons/Logo';
-import { userCoinState } from 'atoms/UserAtoms';
-import { Link } from 'react-router-dom';
+import { useRecoilValue } from "recoil";
+import AlarmIcon from "../../icons/AlarmIcon";
+import CoinIcon from "../../icons/CoinIcon";
+import Logo from "../../icons/Logo";
+import { userCoinState } from "atoms/UserAtoms";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const coin = useRecoilValue(userCoinState);
@@ -14,7 +14,7 @@ const Header = () => {
       </Link>
       <div className="flex flex-row justify-between items-center space-x-2">
         <Link to="/alarm">
-          <AlarmIcon className="" />
+          <AlarmIcon />
         </Link>
       </div>
     </header>
