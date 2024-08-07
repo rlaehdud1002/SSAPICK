@@ -43,13 +43,20 @@ export interface IPickUser {
 }
 
 export interface IPickCreate {
-  receiverId: number | null;
+  receiverId?: number
   questionId: number;
-  index: number;
   status: string;
 }
 
 export interface ICreateQuestion {
   categoryId: number;
   content: string;
+}
+
+export interface IPickInfo {
+  index: number;
+  pickCount: number;
+  blockCount: number;
+  passCount: number;
+  cooltime: boolean;
 }
