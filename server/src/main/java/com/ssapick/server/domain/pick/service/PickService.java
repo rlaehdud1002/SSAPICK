@@ -61,16 +61,15 @@ public class PickService {
 			.toList();
 	}
 
-	/**
-	 * 받은 픽 조회하기 페이징 처리
+	/***
+	 * 받은 픽 조회하기
 	 * @param user
-	 * @param page
-	 * @param size
+	 * @param pageable
 	 * @return
 	 */
-	public Page<PickData.Search> searchReceivePick(User user, int page, int size) {
-		// Create a Pageable object with sorting by id in descending order
-		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+	public Page<PickData.Search> searchReceivePick(User user,Pageable pageable) {
+
+		// pageable.
 
 		// Step 1: Fetch paged IDs with sorting
 		Page<Long> pickIdsPage = pickRepository.findPickIdsByReceiverId(user.getId(), pageable);

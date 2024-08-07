@@ -43,7 +43,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
     """)
     List<Pick> findAllByIdsWithDetails(@Param("ids") List<Long> ids);
 
-    @Query("SELECT p.id FROM Pick p WHERE p.receiver.id = :userId")
+    @Query("SELECT p.id FROM Pick p WHERE p.receiver.id = :userId ORDER BY p.id DESC")
     Page<Long> findPickIdsByReceiverId(@Param("userId") Long userId, Pageable pageable);
 
     /**

@@ -3,6 +3,7 @@ package com.ssapick.server.domain.pick.controller;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +42,9 @@ public class PickController {
 	@ResponseStatus(value = HttpStatus.OK)
 	public SuccessResponse<Page<PickData.Search>> getReceivePick(
 		@CurrentUser User user,
-		@RequestParam(defaultValue = "0") int page,
-		@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable) {
 
-		Page<PickData.Search> pickPage = pickService.searchReceivePick(user, page, size);
+		Page<PickData.Search> pickPage = pickService.searchReceivePick(user, pageable);
 		return SuccessResponse.of(pickPage);
 	}
 
