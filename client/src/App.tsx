@@ -10,6 +10,8 @@ import { validState } from "atoms/ValidAtoms";
 
 import { initializeApp } from 'firebase/app';
 import NotFoundPage from 'pages/NotFoundPage';
+import { useEffect } from 'react';
+import { validCheck } from 'api/validApi';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -44,43 +46,39 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   const checkValidity = async () => {
-  //     try {
-  //       console.log("location", location);
-  //       console.log("ValidState", ValidState);
-  //       if (location === "splash") {
-  //         return;
-  //       }
-  //       const data = await validCheck();
-  //       setValidState(data);
-  //       console.log("data", data);
-  //       if (data.lockedUser) {
-  //         console.log("유저 잠김");
-  //         navigate("/");
-  //         return;
-  //       }
-  //       if (!data.mattermostConfirmed) {
-  //         console.log("mm 미확인");
-  //         navigate("/mattermost");
-  //         return;
-  //       }
-  //       if (!data.validInfo && !location.includes("infoinsert")) {
-  //         navigate('/infoinsert');
-  //         return;
-  //       }
-  //       if (data.validInfo) {
-  //         navigate('/home');
-  //         return;
-  //       }
-  //     } catch (error) {
-  //       console.error("유효성 검사 실패", error);
-  //       navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
-  //     }
-  //   };
+  useEffect(() => {
+    const checkValidity = async () => {
+      try {
+        console.log("location", location);
+        console.log("ValidState", ValidState);
+        if (location === "splash") {
+          return;
+        }
+        const data = await validCheck();
+        setValidState(data);
+        console.log("data", data);
+        if (data.lockedUser) {
+          console.log("유저 잠김");
+          navigate("/");
+          return;
+        }
+        if (!data.mattermostConfirmed) {
+          console.log("mm 미확인");
+          navigate("/mattermost");
+          return;
+        }
+        if (!data.validInfo && !location.includes("infoinsert")) {
+          navigate('/infoinsert');
+          return;
+        }
+      } catch (error) {
+        console.error("유효성 검사 실패", error);
+        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+      }
+    };
 
-  //   checkValidity();
-  // }, [navigate, setValidState]);
+    checkValidity();
+  }, [navigate, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>
