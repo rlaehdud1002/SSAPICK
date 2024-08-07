@@ -23,6 +23,7 @@ import {
 } from "components/ui/dialog";
 import UserMaskIcon from "icons/UserMaskIcon";
 import { IPick } from "atoms/Pick.type";
+import { MESSAGE_COIN } from "coins/coins";
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -136,7 +137,7 @@ const MessageModal = ({ receiverId, pick }: MessageModalProps) => {
           )}
           {step === MessageModalStep.CONFIRM && (
             <div>
-              <CoinUseModal coin={1} />
+              <CoinUseModal coin={MESSAGE_COIN} />
               <DialogFooter className="flex flex-row justify-end mt-3">
                 <Button
                   type="submit"
