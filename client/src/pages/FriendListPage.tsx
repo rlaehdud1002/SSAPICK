@@ -18,7 +18,7 @@ const FriendList = () => {
   console.log(friends, isLoading);
 
   return (
-    <div>
+    <div className='mb-25'>
       <div className="flex justify-between">
         <div className="flex ml-2">
           <div onClick={() => navigate(-1)} className="mr-2">

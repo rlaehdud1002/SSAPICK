@@ -1,4 +1,4 @@
-import { IPickCreate, IQuestion } from 'atoms/Pick.type';
+import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import WarningModal from 'components/modals/WarningModal';
 import PassIcon from 'icons/PassIcon';
@@ -6,16 +6,19 @@ import { Progress } from 'components/ui/progress';
 
 interface QuestionProps {
   question: IQuestion;
+  pickInfo: IPickInfo;
   userPick: (data: IPickCreate) => void;
 }
 
-const Question = ({ question, userPick }: QuestionProps) => {
+const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
+  const blockPassCount = pickInfo.blockCount + pickInfo.passCount;
+  const pickBlockCount = pickInfo.pickCount + pickInfo.blockCount;
+  console.log('pickBlockCount', pickBlockCount);
+
   const handlePick = () => {
     const pickData = {
-      receiverId: null,
       questionId: question.id,
-      index: 0,
-      status: 'PASSED',
+      status: 'PASS',
     };
 
     userPick(pickData);
@@ -34,17 +37,24 @@ const Question = ({ question, userPick }: QuestionProps) => {
       </div>
       <div className="m-4 flex flex-col justify-center">
         <div className="flex justify-center">
-          <Progress value={10} className="mb-4 w-4/5" />
+          <Progress value={pickBlockCount * 10} className="mb-4 w-4/5" />
         </div>
         <h1 className="text-center text-lg">{question.content}</h1>
-        <div className="flex flex-row justify-end mt-1">
-          <WarningModal question={question} userPick={userPick} />
-          <div onClick={handlePick}>
-            <PassIcon />
+        {blockPassCount < 5 && (
+          <div className="flex flex-row justify-end mt-1">
+            <WarningModal question={question} userPick={userPick} />
+            <div onClick={handlePick}>
+              <PassIcon />
+            </div>
           </div>
-        </div>
+        )}
         <div className="flex flex-row justify-center">
-          <img src={question.category.thumbnail} alt="categoryImg" width={200} height={200}/>
+          <img
+            src={question.category.thumbnail}
+            alt="categoryImg"
+            width={200}
+            height={200}
+          />
         </div>
       </div>
     </div>

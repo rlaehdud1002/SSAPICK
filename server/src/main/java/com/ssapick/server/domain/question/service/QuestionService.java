@@ -139,7 +139,7 @@ public class QuestionService {
             throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
-        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, QUESTION_CREATE_COIN));
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.QUESTION_CREATE, QUESTION_CREATE_COIN));
         Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
         questionCacheRepository.add(saveQuestion);
     }
