@@ -96,9 +96,9 @@ public class PickService {
 
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
-				// publisher.publishEvent(
-				// 	FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
-				// 		pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(
+					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
+						pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
@@ -127,6 +127,10 @@ public class PickService {
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
+
+			return PickData.PickCondition.builder()
+				.isCooltime(true)
+				.build();
 		}
 
 		return PickData.PickCondition.builder()
@@ -151,6 +155,7 @@ public class PickService {
 			pickCacheRepository.init(sender.getId());
 			index = 0;
 		}
+
 		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
 		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
 		Integer passCount = pickCacheRepository.getPassCount(sender.getId());

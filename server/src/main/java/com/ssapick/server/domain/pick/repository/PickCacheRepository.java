@@ -34,10 +34,16 @@ public class PickCacheRepository {
         String passCountKey = PASS_COUNT + userId;
         String blockCountKey = BLOCK_COUNT + userId;
 
-        redisTemplate.opsForValue().set(questionIndexKey, 0, Duration.ofDays(1));
-        redisTemplate.opsForValue().set(pickCountKey, 0, Duration.ofDays(1));
-        redisTemplate.opsForValue().set(passCountKey, 0, Duration.ofDays(1));
-        redisTemplate.opsForValue().set(blockCountKey, 0, Duration.ofDays(1));
+        redisTemplate.execute(new SessionCallback<List<Object>>() {
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                operations.multi();
+                operations.opsForValue().set(questionIndexKey, 0, Duration.ofDays(1));
+                operations.opsForValue().set(pickCountKey, 0, Duration.ofDays(1));
+                operations.opsForValue().set(passCountKey, 0, Duration.ofDays(1));
+                operations.opsForValue().set(blockCountKey, 0, Duration.ofDays(1));
+                return operations.exec();
+            }
+        });
     }
 
 
@@ -113,7 +119,14 @@ public class PickCacheRepository {
 
     public void setCooltime(Long userId) {
         String key = PICK_COOLTIME + userId;
-        redisTemplate.opsForValue().set(key, true, Duration.ofMinutes(COOL_TIME));
+
+        redisTemplate.execute(new SessionCallback<List<Object>>() {
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                operations.multi();
+                operations.opsForValue().set(key, true, Duration.ofMinutes(COOL_TIME));
+                return operations.exec();
+            }
+        });
     }
 
     public boolean isCooltime(Long userId) {
