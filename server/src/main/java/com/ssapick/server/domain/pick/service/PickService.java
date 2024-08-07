@@ -140,7 +140,9 @@ public class PickService {
 	public PickData.PickCondition getPickCondition(User sender) {
 
 		if (pickCacheRepository.isCooltime(sender.getId())) {
-			throw new BaseException(ErrorCode.PICK_COOLTIME);
+			return PickData.PickCondition.builder()
+				.isCooltime(true)
+				.build();
 		}
 
 		Integer index = pickCacheRepository.getIndex(sender.getId());
