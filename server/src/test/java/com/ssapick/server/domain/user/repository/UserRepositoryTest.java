@@ -125,4 +125,16 @@ class UserRepositoryTest extends TestDatabaseContainer {
         Assertions.assertThat(findUsers.stream().map(User::getId)).containsExactlyInAnyOrder(2L, 3L, 4L);
 
     }
+
+    @Test
+    @DisplayName("키워드로 유저를 검색하면 키워드가 포함된 유저 조회")
+    void 키워드로_유저_조회() {
+        // * GIVEN: 이런게 주어졌을 때
+
+        // * WHEN: 이걸 실행하면
+        List<User> findUsers = userRepository.findUserByKeyword("Use");
+
+        // * THEN: 이런 결과가 나와야 한다
+        Assertions.assertThat(findUsers.size()).isEqualTo(4);
+    }
 }
