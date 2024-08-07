@@ -10,8 +10,8 @@ export const TOTAL_PICK_COIN = 30;
 // 질문 생성
 export const QUESTION_CREATE_COIN = 20;
 // 힌트 오픈
-export const HINT_OPEN_COIN = -100;
+export const HINT_OPEN_COIN = 100;
 // 사용자 리롤
-export const USER_REROLL_COIN = -1;
+export const USER_REROLL_COIN = 20;
 // 쪽지
-export const MESSAGE_COIN = -20;
+export const MESSAGE_COIN = 20;
