@@ -11,26 +11,16 @@ const FriendRecommendContent = () => {
     queryFn: async () => await getRecommendFriendsList(),
   });
   console.log(recommendFriends)
+  
   return (
     <div className="w-full">
       <div>
         <div className="flex overflow-x-scroll scrollbar-hide">
-          {recommendFriends?.map((friend, index) => (
+          {recommendFriends.length? (recommendFriends.map((friend, index) => (
             <ToPlusIcon key={index} campus={friend.campusName} classNum={friend.campusSection} name={friend.nickname} profileImage={friend.profileImage}/>
-          ))}  
-
-          {/* {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
-            return (
-              <ToPlusIcon
-                key={index}
-                campus="광주"
-                th={11}
-                classNum={2}
-                name="민준수"
-              />
-            );
-          })} */}
-          {/* <ToPlusIcon campus="광주" th={11} classNum={2} name="민준수" isPlus={true} /> */}
+          ))):(
+            <span className='text-xs ml-40 mt-3'>추천하는 친구가 없습니다.</span>
+          )}  
         </div>
       </div>
     </div>

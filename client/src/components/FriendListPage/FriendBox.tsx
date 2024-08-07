@@ -1,4 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import { getUserInfo } from "api/authApi";
+import { IUserInfo } from "atoms/User.type";
+import DoneButton from "buttons/DoneButton";
 import PopOver from "components/common/Popover";
+import DeleteModal from "components/modals/DeleteModal";
 
 
 interface FriendProps {
@@ -6,9 +11,12 @@ interface FriendProps {
   campusSection: number;
   name: string;
   campusDescription: string;
+  userId: number;
+  userClass?: number;  
 }
 
-const Friend = ({ campus, campusDescription, name, campusSection }: FriendProps) => {
+const Friend = ({ campus, userId, name, campusSection, userClass }: FriendProps) => {
+  
   return (
     <div className="flex flex-col relative">
       <div className="flex items-center ml-5 mr-5 justify-between">
@@ -22,15 +30,13 @@ const Friend = ({ campus, campusDescription, name, campusSection }: FriendProps)
             {campus}캠퍼스 {campusSection}반 {name}
           </span>
           <div className='flex flex-row'>
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mr-2">
-              반 친구
-            </span>
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center">
-              찐친
-            </span>
+              <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1 mr-2">반 친구</span>
+              <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1">찐친</span>
           </div>
         </div>
-        <PopOver />
+        {userClass !== campusSection ?(<DeleteModal title="언팔로우" userId={userId}/>):(
+          <span></span>
+        )}
       </div>
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
