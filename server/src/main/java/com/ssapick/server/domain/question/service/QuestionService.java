@@ -9,20 +9,14 @@ import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
-import com.ssapick.server.domain.question.repository.QuestionBanRepository;
-import com.ssapick.server.domain.question.repository.QuestionCacheRepository;
-import com.ssapick.server.domain.question.repository.QuestionCategoryRepository;
-import com.ssapick.server.domain.question.repository.QuestionRegistrationRepository;
-import com.ssapick.server.domain.question.repository.QuestionRepository;
+import com.ssapick.server.domain.question.repository.*;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
-
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -32,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.ssapick.server.core.constants.PickConst.PICK_COIN;
 import static com.ssapick.server.core.constants.PickConst.QUESTION_CREATE_COIN;
 
 @Service
@@ -56,7 +49,6 @@ public class QuestionService {
             questionRepository.findQuestions()
         ));
     }
-
 
     /**
      * 모든질문 조회
