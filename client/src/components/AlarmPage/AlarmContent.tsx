@@ -1,7 +1,7 @@
-import LocationAlarmIcon from 'icons/LocationAlarmIcon';
-import MessageAlarmIcon from 'icons/MessageAlarmIcon';
-import PickAlarmIcon from 'icons/PickAlarmIcon';
-import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
+import LocationAlarmIcon from "icons/LocationAlarmIcon";
+import MessageAlarmIcon from "icons/MessageAlarmIcon";
+import PickAlarmIcon from "icons/PickAlarmIcon";
+import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 
 interface AlarmContentProps {
   category: string;
@@ -13,14 +13,10 @@ const AlarmContent = ({ category, content, read }: AlarmContentProps) => {
   return (
     <div className="bg-white/50 rounded-lg flex flex-row p-3 mb-3">
       <div>
-        {category === 'location' && (
-          <LocationAlarmIcon width={42} height={42} />
-        )}
-        {category === 'message' && <MessageAlarmIcon width={42} height={42} />}
-        {category === 'pick' && <PickAlarmIcon width={42} height={42} />}
-        {category === 'question' && (
-          <QuestionAlarmIcon width={42} height={42} />
-        )}
+        {category === "LOCATION" && <LocationAlarmIcon width={42} height={42} />}
+        {category === "MESSAGE" && <MessageAlarmIcon width={42} height={42} />}
+        {category === "PICK" && <PickAlarmIcon width={42} height={42} />}
+        {category === "ADD_QUESTION" && <QuestionAlarmIcon width={42} height={42} />}
       </div>
       <div className="flex flex-col ms-3">
         <p>{content}</p>

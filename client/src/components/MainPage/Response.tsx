@@ -30,15 +30,11 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   };
 
   const handleAccordionClick = useCallback((e: React.MouseEvent) => {
-    // e.preventDefault();
-    // 클릭 이벤트가 전파되지 않도록 방지
     e.stopPropagation();
   }, []);
 
   const handleMaskClick = useCallback((e: React.MouseEvent) => {
-    // 클릭 이벤트가 아코디언으로 전파되지 않도록 방지
     e.stopPropagation();
-    // 필요한 추가 작업을 여기에 넣으세요
   }, []);
 
   if (isLoading) {
@@ -47,9 +43,9 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
 
   return (
     <div>
-      {updatedPicks.map((pick, index) => (
-        <div className="rounded-lg bg-white/50 p-4 mb-5">
-          <Accordion key={index} type="single" collapsible>
+      {updatedPicks.map((pick) => (
+        <div key={pick.id} className="rounded-lg bg-white/50 p-4 mb-5">
+          <Accordion type="single" collapsible>
             <AccordionItem value="item-1" className="border-none">
               <AccordionTrigger className="p-0" onClick={handleAccordionClick}>
                 <div className="flex flex-col">
