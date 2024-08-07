@@ -1,8 +1,13 @@
 package com.ssapick.server.domain.pick.repository;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssapick.server.domain.pick.entity.Message;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,18 +21,31 @@ public class MessageRepositoryImpl implements MessageQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Message> findReceivedMessageByUserId(Long userId) {
-        return queryFactory.selectFrom(message)
-                .where(message.receiver.id.eq(userId)
-                        .and(message.isReceiverDeleted.isFalse()))
-                .fetch();
+    public Page<Message> findReceivedMessageByUserId(Long userId, Pageable pageable) {
+        List<Message> messages = queryFactory.selectFrom(message)
+            .leftJoin(message.sender).fetchJoin() // 패치 조인
+            .where(message.receiver.id.eq(userId)
+                .and(message.isReceiverDeleted.isFalse()))
+            .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+
+        return new PageImpl<>(messages, pageable, messages.size());
     }
 
     @Override
-    public List<Message> findSentMessageByUserId(Long userId) {
-        return queryFactory.selectFrom(message)
-                .where(message.sender.id.eq(userId)
-                        .and(message.isSenderDeleted.isFalse()))
-                .fetch();
+    public Page<Message> findSentMessageByUserId(Long userId, Pageable pageable) {
+        List<Message> messages = queryFactory.selectFrom(message)
+            .leftJoin(message.receiver).fetchJoin() // 패치 조인
+            .where(message.sender.id.eq(userId)
+                .and(message.isSenderDeleted.isFalse()))
+            .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        return new PageImpl<>(messages, pageable, messages.size());
     }
 }
