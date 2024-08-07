@@ -17,6 +17,7 @@ public class LocationSocketController {
 
     @MessageMapping("/location/update")
     public void update(LocationData.Request request) {
+        log.debug("request: {}", request);
         locationService.saveUserLocation(request.getUserId(), request.getGeo());
         locationPublisher.publish(request);
     }
