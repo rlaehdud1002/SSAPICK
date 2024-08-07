@@ -96,9 +96,9 @@ public class PickService {
 
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
-				// publisher.publishEvent(
-				// 	FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
-				// 		pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(
+					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
+						pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
