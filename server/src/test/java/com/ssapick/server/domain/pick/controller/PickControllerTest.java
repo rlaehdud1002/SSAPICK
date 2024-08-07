@@ -166,6 +166,8 @@ class PickControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록").type(JsonFieldType.ARRAY).optional(),
 							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID").type(JsonFieldType.NUMBER).optional()
+
+
 						)
 						.build()
 				)
