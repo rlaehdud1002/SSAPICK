@@ -6,8 +6,14 @@ import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +59,37 @@ public class PickService {
 		return pickRepository.findReceiverByUserId(user.getId()).stream()
 			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
 			.toList();
+	}
+
+	/**
+	 * 받은 픽 조회하기 페이징 처리
+	 * @param user
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<PickData.Search> searchReceivePick(User user, int page, int size) {
+		// Create a Pageable object with sorting by id in descending order
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+
+		// Step 1: Fetch paged IDs with sorting
+		Page<Long> pickIdsPage = pickRepository.findPickIdsByReceiverId(user.getId(), pageable);
+		List<Long> pickIds = pickIdsPage.getContent();
+
+		if (pickIds.isEmpty()) {
+			return Page.empty();
+		}
+
+		// Step 2: Fetch Picks with details using the sorted IDs
+		List<Pick> picks = pickRepository.findAllByIdsWithDetails(pickIds);
+
+		// Convert Pick entities to PickData.Search DTOs
+		List<PickData.Search> pickSearchList = picks.stream()
+			.map(pick -> PickData.Search.fromEntity(pick, true))
+			.collect(Collectors.toList());
+
+		// Return a Page object with the DTOs
+		return new PageImpl<>(pickSearchList, pageable, pickIdsPage.getTotalElements());
 	}
 
 	/**
