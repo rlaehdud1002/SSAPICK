@@ -23,22 +23,7 @@ const Profile = () => {
     queryFn: async () => await getUserInfo(),
   });
 
-  const [alarmSettings, setAlarmSettings] = useRecoilState(alarmSettingsState);
-  const navigate = useNavigate();
-
-  const getAlarmData = async () => {
-    try {
-      const alarmData = await getAlarm();
-      setAlarmSettings(alarmData);
-      navigate("/profile/setalarm", { state: { alarmSettings: alarmData } });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  console.log(information)
-
-
+  console.log(information);
 
   return (
     <div>
@@ -49,11 +34,11 @@ const Profile = () => {
             <UserInfoIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
-        <div onClick={getAlarmData}>
+        <Link to="/profile/setalarm">
           <ProfileAlarm title="알림 설정" content="원하는 알림 설정">
             <SetAlarmIcon width={50} height={50} />
           </ProfileAlarm>
-        </div>
+        </Link>
         <Link to="/profile/friendlist">
           <ProfileAlarm title="친구 관리" content="내가 PICK하고 싶은 친구 찾기">
             <FriendAlarmIcon width={50} height={50} />
