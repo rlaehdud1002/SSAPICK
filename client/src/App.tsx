@@ -12,6 +12,8 @@ import { initializeApp } from 'firebase/app';
 import NotFoundPage from 'pages/NotFoundPage';
 import { useEffect } from 'react';
 import { validCheck } from 'api/validApi';
+import { accessTokenState, isLoginState, refreshRequestState } from 'atoms/UserAtoms';
+import { refresh } from 'api/authApi';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -97,9 +99,8 @@ function App() {
   //       navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
   //     }
   //   };
-
-    checkValidity();
-  }, [navigate, setValidState]);
+  //   checkValidity();
+  // }, [navigae, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>
