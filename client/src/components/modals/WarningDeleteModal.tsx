@@ -5,7 +5,6 @@ import ResultCheckModal from "components/modals/ResultCheckModal";
 import DeleteIcon from "icons/DeleteIcon";
 import WarningIcon from "icons/WarningIcon";
 import { Button } from "components/ui/button";
-import { blockUser } from "api/banuserApi";
 
 import {
   Dialog,
