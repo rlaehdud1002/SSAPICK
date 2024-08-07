@@ -4,8 +4,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,10 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DisplayName("메시지 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -59,14 +65,21 @@ class MessageServiceTest extends UserSupport {
 		User sender = this.createUser("sender");
 		User receiver = this.createUser("receiver");
 
-		when(messageRepository.findSentMessageByUserId(sender.getId())).thenReturn(List.of(
+		List<Message> messages = List.of(
 			this.createMessage(sender, receiver, "테스트 메시지 1"),
 			this.createMessage(sender, receiver, "테스트 메시지 2"),
 			this.createMessage(sender, receiver, "테스트 메시지 3")
-		));
+		);
+
+
+		Page<Message> messagePage = new PageImpl<>(messages, PageRequest.of(0, 10), messages.size());
+
+
+		when(messageRepository.findSentMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
+			.thenReturn(messagePage);
 
 		// * WHEN: 이걸 실행하면
-		List<MessageData.Search> searches = messageService.searchSendMessage(sender);
+		List<MessageData.Search> searches = messageService.searchSendMessage(sender, PageRequest.of(0, 10)).getContent();
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches).hasSize(3);
@@ -78,20 +91,29 @@ class MessageServiceTest extends UserSupport {
 	}
 
 	@Test
-	@DisplayName("받은 메시지 확인 테스트")
-	void 받은_메시지_확인_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		User sender = this.createUser("sender");
+	@DisplayName("받은 메시지 페이징 조회 성공 테스트")
+	void 받은_메시지_페이징_조회_성공_테스트() throws Exception {
+		// * GIVEN: 테스트 데이터 설정
+		User sender = this.createUser("익명");
 		User receiver = this.createUser("receiver");
 
-		when(messageRepository.findReceivedMessageByUserId(receiver.getId())).thenReturn(List.of(
+		// 메시지 리스트 생성
+		List<Message> messages = List.of(
 			this.createMessage(sender, receiver, "테스트 메시지 1"),
 			this.createMessage(sender, receiver, "테스트 메시지 2"),
 			this.createMessage(sender, receiver, "테스트 메시지 3")
-		));
+		);
 
-		// * WHEN: 이걸 실행하면
-		List<MessageData.Search> searches = messageService.searchReceiveMessage(receiver);
+
+		Page<Message> messagePage = new PageImpl<>(messages, PageRequest.of(0, 10), messages.size());
+
+
+		when(messageRepository.findReceivedMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
+			.thenReturn(messagePage);
+
+
+		// * WHEN: 서비스 메서드 호출
+		List<MessageData.Search> searches = messageService.searchReceiveMessage(sender, PageRequest.of(0, 10)).getContent();
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches).hasSize(3);
