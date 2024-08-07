@@ -90,6 +90,7 @@ const Pick = () => {
       });
       setNowQuestion(question[data.index]);
       handleShuffle();
+      console.log('pickInfo', pickInfo);
     },
   });
 

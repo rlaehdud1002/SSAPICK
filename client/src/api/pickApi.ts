@@ -1,17 +1,16 @@
 import instance from 'api/clientApi';
-import { IPick, IPickCreate, IPickInfo } from 'atoms/Pick.type';
+import { IPaging, IPick, IPickCreate, IPickInfo } from 'atoms/Pick.type';
 import { BaseResponse } from 'atoms/User.type';
 
 // 받은 pick 조회
-export const getReceivePick = async (): Promise<IPick[]> => {
+export const getReceivePick = async (): Promise<IPaging<IPick[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPick[]>>('/pick/receive');
+  } = await instance.get<BaseResponse<IPaging<IPick[]>>>('/pick/receive');
 
   if (!success) {
     throw new Error('받은 pick 조회 실패');
   }
-
   console.log('getReceivePick');
 
   return data;
