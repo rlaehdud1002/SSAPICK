@@ -3,13 +3,13 @@ import Initial from "components/MainPage/Initial";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getReceivePick } from "api/pickApi";
-import { IPick } from "atoms/Pick.type";
+import { IPaging, IPick } from "atoms/Pick.type";
 import { useEffect, useState } from "react";
 import { getAttendance, postAttendance } from "api/attendanceApi";
 import AttendanceModal from "components/modals/AttendanceModal";
 
 const Home = () => {
-  const { data: picks, isLoading } = useQuery<IPick[]>({
+  const { data: picks, isLoading } = useQuery<IPaging<IPick[]>>({
     queryKey: ["pick", "receive"],
     queryFn: getReceivePick,
   });
@@ -56,8 +56,8 @@ const Home = () => {
 
   return (
     <div className="m-6">
-      {picks !== undefined && picks.length !== 0 ? (
-        <Response picks={picks} isLoading={isLoading} />
+      {picks !== undefined && picks.content.length !== 0 ? (
+        <Response picks={picks.content} isLoading={isLoading} />
       ) : (
         <Initial />
       )}
