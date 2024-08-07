@@ -127,6 +127,10 @@ public class PickService {
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.setCooltime(sender.getId());
 			pickCacheRepository.init(sender.getId());
+
+			return PickData.PickCondition.builder()
+				.isCooltime(true)
+				.build();
 		}
 
 		return PickData.PickCondition.builder()
@@ -151,6 +155,7 @@ public class PickService {
 			pickCacheRepository.init(sender.getId());
 			index = 0;
 		}
+
 		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
 		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
 		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
