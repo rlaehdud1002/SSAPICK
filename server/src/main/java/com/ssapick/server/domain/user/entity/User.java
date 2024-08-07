@@ -2,10 +2,10 @@ package com.ssapick.server.domain.user.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import org.hibernate.annotations.ColumnDefault;
 
 import com.ssapick.server.core.entity.BaseEntity;
-import com.ssapick.server.domain.attendance.entity.Attendance;
 import com.ssapick.server.domain.pick.entity.Hint;
 
 import jakarta.persistence.CascadeType;
@@ -23,10 +23,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(
 	name = "users",
@@ -38,13 +39,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User extends BaseEntity {
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
+	private final List<Follow> followers = new ArrayList<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followingUser")
+	private final List<Follow> followings = new ArrayList<>();
+
+	// @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
+	// private final List<UserBan> bannedUser = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private final List<Hint> hints = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private final List<Attendance> attendances = new ArrayList<>();
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long id;
 
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private Profile profile;
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Alarm alarm;
 
 	@Column(nullable = false)
 	private String username;
@@ -66,9 +85,6 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private RoleType roleType = RoleType.USER;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followUser")
-	private List<Follow> followers = new ArrayList<>();
-
 	@Column(name = "provider_id", nullable = false)
 	private String providerId;
 
@@ -78,29 +94,9 @@ public class User extends BaseEntity {
 	@Column(name = "is_locked", nullable = false)
 	private boolean isLocked = false;
 
-	@OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
-	private List<UserBan> bannedUser = new ArrayList<>();
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Hint> hints = new ArrayList<>();
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Attendance> attendances = new ArrayList<>();
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		User user = (User)o;
-		return Objects.equals(id, user.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
+	@Column(name = "ban_count", nullable = false)
+	@ColumnDefault("0")
+	private short banCount = 0;
 
 	/**
 	 * 사용자 생성 메서드
@@ -120,32 +116,32 @@ public class User extends BaseEntity {
 		user.gender = gender;
 		user.providerType = providerType;
 		user.providerId = providerId;
+		user.profile = Profile.createEmptyProfile(user);
+		user.alarm = Alarm.createAlarm(user);
 		return user;
+	}
+
+	public void lock() {
+		this.isLocked = true;
+	}
+
+	public void unlock() {
+		this.isLocked = false;
+	}
+
+	public void increaseBanCount() {
+		this.banCount++;
+		if (this.banCount >= 10) {
+			this.lock();
+		}
+	}
+
+	public void decreaseBanCount() {
+		this.banCount--;
 	}
 
 	public void mattermostConfirm() {
 		this.isMattermostConfirmed = true;
-	}
-
-	@Builder
-	private User(Long id, String username, String name, char gender, String email, ProviderType providerType,
-		RoleType roleType, String providerId, Profile profile,
-		boolean isMattermostConfirmed, boolean isLocked) {
-		this.id = id;
-		this.username = username;
-		this.name = name;
-		this.gender = gender;
-		this.email = email;
-		this.providerType = providerType;
-		this.roleType = roleType;
-		this.providerId = providerId;
-		this.profile = profile;
-		this.isMattermostConfirmed = isMattermostConfirmed;
-		this.isLocked = isLocked;
-	}
-
-	public void setTestId(Long id) {
-		this.id = id;
 	}
 
 	public void updateUser(String username, String name) {
@@ -165,6 +161,14 @@ public class User extends BaseEntity {
 		this.profile = newProfile;
 	}
 
+	public void updateHints(List<Hint> newHints) {
+		this.hints.clear();
+		for (Hint hint : newHints) {
+			hint.updateUser(this);
+		}
+		this.hints.addAll(newHints);
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -181,7 +185,7 @@ public class User extends BaseEntity {
 	public void delete() {
 		this.isDeleted = true;
 		this.getProfile().delete();
-		this.bannedUser.clear();
+		// this.bannedUser.clear();
 		this.hints.clear();
 	}
 }

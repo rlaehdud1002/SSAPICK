@@ -1,46 +1,78 @@
-import UserIcon from '../../icons/UserIcon';
+import HintModal from "components/modals/HintModal";
+import MessageModal from "components/modals/MessageModal";
+import UserMaskIcon from "icons/UserMaskIcon";
 
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from 'components/ui/accordion';
+} from "components/ui/accordion";
 
-import HintModal from 'components/modals/HintModal';
-import MessageModal from 'components/modals/MessageModal';
+import { IPick } from "atoms/Pick.type";
+import { useEffect, useState } from "react";
 
-const Response = () => {
+interface ResponseProps {
+  picks: IPick[];
+  isLoading: boolean;
+}
+
+const Response = ({ picks, isLoading }: ResponseProps) => {
+  const [updatedPicks, setUpdatedPicks] = useState<IPick[]>(picks);
+
+  useEffect(() => {
+    setUpdatedPicks(updatedPicks);
+  }, [updatedPicks]);
+
+  const handleAlarmUpdate = (newPicks: IPick[]) => {
+    setUpdatedPicks(newPicks);
+  };
+
   return (
-    <div className="rounded-lg bg-white/50 p-4">
-      <Accordion type="single" collapsible>
-        <AccordionItem value="item-1" className="border-none">
-          <AccordionTrigger className="p-0">
-            <div className="flex flex-col">
-              <div className="flex flex-row">
-                <UserIcon />
-                <h3 className="mx-3 text-color-000855">12기 2반</h3>
-              </div>
-            </div>
-          </AccordionTrigger>
-          <p className="text-center my-4">
-            나랑 같이 프로젝트 하고 싶은 사람은?
-          </p>
-          <AccordionContent>
-            <div className="flex flex-row justify-center">
-              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                <HintModal title="?" />
-              </div>
-              <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
-                <HintModal title="?" />
-              </div>
-            </div>
-            <div className="float-end">
-              <MessageModal />
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+    <div>
+      {updatedPicks.map((pick, index) => (
+        <div className="rounded-lg bg-white/50 p-4 mb-5">
+          <Accordion key={index} type="single" collapsible>
+            <AccordionItem value="item-1" className="border-none">
+              <AccordionTrigger className="p-0">
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <UserMaskIcon
+                      pickId={pick.id}
+                      alarm={pick.alarm}
+                      gen={pick.sender.gender}
+                      onAlarmUpdate={handleAlarmUpdate}
+                    />
+                    <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <p className="text-center my-4">{pick.question.content}</p>
+              <AccordionContent>
+                <div className="flex flex-row justify-center">
+                  <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                    <HintModal
+                      title={pick.openedHints.length === 0 ? "?" : pick.openedHints[0]}
+                      pickId={pick.id}
+                    />
+                  </div>
+                  <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
+                    <HintModal
+                      title={pick.openedHints.length <= 1 ? "?" : pick.openedHints[1]}
+                      pickId={pick.id}
+                    />
+                  </div>
+                </div>
+                {!pick.messageSend && (
+                  <div className="float-end">
+                    <MessageModal receiverId={pick.sender.userId} pick={pick} />
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      ))}
     </div>
   );
 };

@@ -9,10 +9,10 @@ const TrophyIcon = ({ width, height }: TrophyIconProps) => {
       className="cursor-pointer"
       width={width}
       height={height}
-      src="/icons/trophy.png"
-      alt="trophy"
+      src="/icons/Trophy.png"
+      alt="Trophy"
     />
-  )
-}
+  );
+};
 
-export default TrophyIcon 
+export default TrophyIcon;

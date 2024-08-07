@@ -1,24 +1,17 @@
 package com.ssapick.server.domain.user.controller;
 
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.ssapick.server.core.annotation.Authenticated;
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.service.UserService;
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -29,28 +22,35 @@ public class UserController {
 
 	/**
 	 * 로그인한 사용자 정보 조회 API
+	 *
 	 * @return {@link ProfileData.Search} 로그인한 사용자 정보
 	 */
 	@Authenticated
-	@GetMapping(value = "")
-	public SuccessResponse<ProfileData.Search> findLoggedInUser(@CurrentUser User user) {
-		return SuccessResponse.of(null);
+	@GetMapping(value = "/me")
+	public SuccessResponse<UserData.UserInfo> findLoggedInUser(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getUserInfo(user));
+	}
+
+	/**
+	 * 사용자 정보 유효 여부 조회 API
+	 * @param user
+	 * @return {@link UserData.IsValid} 사용자 정보 유효 여부
+	 */
+
+	@Authenticated
+	@GetMapping(value = "/valid")
+	public SuccessResponse<UserData.IsValid> idValid(@CurrentUser User user) {
+		return SuccessResponse.of(userService.idValid(user));
 	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")
 	public SuccessResponse<Void> updateProfile(
 		@CurrentUser User user,
-		@RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-		@Validated @RequestBody ProfileData.Update update,
-		Errors errors
+		@RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+		@Valid @RequestPart(value = "update") UserData.Update update
 	) {
-		if (errors.hasErrors()) {
-			log.error("사용자 수정 입력 값 에러 발생: {}", errors);
-			throw new IllegalArgumentException("입력 값이 올바르지 않습니다.");
-		}
-
-		userService.updateUser(user, update);
-		return SuccessResponse.of(null);
+		userService.updateUser(user.getId(), update, profileImage);
+		return SuccessResponse.empty();
 	}
 
 }

@@ -38,25 +38,31 @@ ext {
 
 openapi3 {
     servers = [
-            { url = "http://localhost:8080/api/v1" }
+            { url = "http://localhost:8080" },
+            { url = "https://www.ssapick.kro.kr" }
     ]
     title = 'SSAPICK API Documentation'
     description = '싸피 프로젝트 싸픽의 API 문서입니다.'
     version = '0.0.1'
     outputFileNamePrefix = 'ssapick-api-docs'
-    format = 'json'
+    format = 'yaml'
     outputDirectory = 'build/resources/test/docs'
 }
 
 dependencies {
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // Database
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
+
+    //Jackson에 LocalDateTime을 직렬화/역직렬화할 수 있는 모듈을 추가
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -93,11 +99,16 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
 
+    implementation 'com.google.firebase:firebase-admin:9.3.0'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'com.google.code.gson:gson:2.11.0'
     testImplementation 'org.projectlombok:lombok'
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 
     // Feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
@@ -105,10 +116,11 @@ dependencies {
     // Test Container
     testImplementation "org.testcontainers:testcontainers:1.19.0"
     testImplementation "org.testcontainers:junit-jupiter:1.19.0"
+    testImplementation "org.testcontainers:postgresql:1.17.6"
+//    testImplementation 'org.testcontainers:jdbc:1.16.0'
 
-    // JSON
-    implementation 'org.json:json:20210307'
-
+    // AWS
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 dependencyManagement {
@@ -117,12 +129,20 @@ dependencyManagement {
     }
 }
 
-tasks.register('openapi3-generator') {
+tasks.register('openapi3-security-schemes') {
     dependsOn 'openapi3'
+    doFirst {
+        def swaggerUIFile = file("${openapi3.outputDirectory}/${openapi3.outputFileNamePrefix}.${openapi3.format}")
 
-    copy {
-        from "build/resources/main/static/docs"
-        into "src/test/resources/docs"
+        def securitySchemesContent = "  securitySchemes:\n" +         \
+                                             "    APIKey:\n" +         \
+                                             "      type: apiKey\n" +         \
+                                             "      name: Authorization\n" +         \
+                                             "      in: header\n" +        \
+                                             "security:\n" +
+                "  - APIKey: []  # Apply the security scheme here"
+
+        swaggerUIFile.append securitySchemesContent
     }
 }
 

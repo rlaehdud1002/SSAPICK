@@ -2,12 +2,22 @@ package com.ssapick.server.domain.user.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+
 @Entity
 @Getter
+@Table(
+    name = "follow",
+    uniqueConstraints = {
+        @UniqueConstraint(name= "unique_follow", columnNames = {"follower_id", "following_id"})
+    }
+)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

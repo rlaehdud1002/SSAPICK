@@ -1,43 +1,46 @@
-import Attendance from 'pages/Attendance';
-import Block from 'pages/Block';
-import LocationAlarm from 'pages/LocationAlarm';
-import ModiUserAddInfo from 'pages/ModiUserAddInfo';
-import ModiUserInfo from 'pages/ModiUserInfo';
-import QuestionList from 'pages/QuestionList';
-import SetAccount from 'pages/SetAccount';
-import SetAlarm from 'pages/SetAlarm';
-import FriendList from 'pages/FriendList';
-import FriendSearch from 'components/FriendListPage/FriendSearch';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BlockFriend from 'components/BlockPage/BlockFriend';
 import BlockQuestion from 'components/BlockPage/BlockQuestion';
-import QuestionInfo from 'components/QuestionListPage/QuestionInfo';
+import FriendSearch from 'components/FriendListPage/FriendSearch';
+import ModiUserInfo from 'components/LoginPage/ModiUserInfo';
 import MakeQuestion from 'components/QuestionListPage/MakeQuestion';
-
+import QuestionInfo from 'components/QuestionListPage/QuestionInfo';
+import Attendance from 'pages/AttendancePage';
+import Block from 'pages/BlockPage';
+import FriendList from 'pages/FriendListPage';
+import LocationAlarm from 'pages/LocationAlarmPage';
+import ModiInfoInsert from 'pages/ModiInfoInsert';
+import Profile from 'pages/ProfilePage';
+import QuestionList from 'pages/QuestionListPage';
+import SetAccount from 'pages/SetAccountPage';
+import SetAlarm from 'pages/SetAlarmPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const ProfileRoute = () => {
-  return(
+  return (
     <Routes>
-      <Route path="/profile/modiuserinfo" element={<ModiUserInfo />} />
-              <Route path="/profile/modiuseraddinfo" element={<ModiUserAddInfo />} />
-              <Route path="/profile/setalarm" element={<SetAlarm />} />
-              <Route path="/profile/friendlist" element={<FriendList />} />
-              <Route path="/profile/block" element={<Block/>}>
-                <Route path="" element={<BlockFriend/>}/>
-                <Route path="blockfriend" element={<BlockFriend/>}/>
-                <Route path="blockquestion" element={<BlockQuestion/>}/>
-              </Route>
-              <Route path="/profile/attendance" element={<Attendance />} />
-              <Route path="/profile/locationalarm" element={<LocationAlarm />} />
-              <Route path="/profile/questionlist" element={<QuestionList />}>
-                <Route path="" element={<QuestionInfo/>}/>
-                <Route path="questioninfo" element={<QuestionInfo/>}/>
-                <Route path="makequestion" element={<MakeQuestion/>}/>
-              </Route>
-              <Route path="/profile/setaccount" element={<SetAccount />} />
-              <Route path="/profile/friendsearch" element={<FriendSearch/>} />
+      <Route path="/" element={<Profile />} />
+      {/* <Route path="/modiuserinfo" element={<ModiUser />} />
+      <Route path="/modiuseraddinfo" element={<ModiUserAddInfo />} /> */}
+      <Route path="/setalarm" element={<SetAlarm />} />
+      <Route path="/friendlist" element={<FriendList />} />
+      <Route path="/block" element={<Block />}>
+        <Route index element={<BlockFriend />} />
+        <Route path="blockfriend" element={<BlockFriend />} />
+        <Route path="blockquestion" element={<BlockQuestion />} />
+      </Route>
+      <Route path="/attendance" element={<Attendance />} />
+      <Route path="/locationalarm" element={<LocationAlarm />} />
+      <Route path="/questionlist" element={<QuestionList />}>
+        <Route index element={<QuestionInfo />} />
+        <Route path="questioninfo" element={<QuestionInfo />} />
+        <Route path="makequestion" element={<MakeQuestion />} />
+      </Route>
+      <Route path="/setaccount" element={<SetAccount />} />
+      <Route path="/friendsearch" element={<FriendSearch />} />
+      {/* <Route path="/modiinfoinsert" element={<ModiInfoInsert/>}/> */}
+      {/* 잘못된 접근일 때 */}
+      <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
-    
-  )
-}
+  );
+};
 export default ProfileRoute;

@@ -128,7 +128,7 @@ public class JWTService {
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get("authorities").toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
+                        .map((authority) -> new SimpleGrantedAuthority("ROLE_" + authority))
                         .toList();
 
         UserDetails principal = new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities);

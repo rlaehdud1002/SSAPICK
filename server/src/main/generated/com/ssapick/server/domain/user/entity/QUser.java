@@ -24,12 +24,20 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.ssapick.server.core.entity.QBaseEntity _super = new com.ssapick.server.core.entity.QBaseEntity(this);
 
+    public final QAlarm alarm;
+
+    public final ListPath<Attendance, QAttendance> attendances = this.<Attendance, QAttendance>createList("attendances", Attendance.class, QAttendance.class, PathInits.DIRECT2);
+
+    public final NumberPath<Short> banCount = createNumber("banCount", Short.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath email = createString("email");
 
     public final ListPath<Follow, QFollow> followers = this.<Follow, QFollow>createList("followers", Follow.class, QFollow.class, PathInits.DIRECT2);
+
+    public final ListPath<Follow, QFollow> followings = this.<Follow, QFollow>createList("followings", Follow.class, QFollow.class, PathInits.DIRECT2);
 
     public final ComparablePath<Character> gender = createComparable("gender", Character.class);
 
@@ -77,6 +85,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.alarm = inits.isInitialized("alarm") ? new QAlarm(forProperty("alarm"), inits.get("alarm")) : null;
         this.profile = inits.isInitialized("profile") ? new QProfile(forProperty("profile"), inits.get("profile")) : null;
     }
 

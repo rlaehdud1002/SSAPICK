@@ -16,10 +16,7 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,10 +36,14 @@ public class HintOpen extends TimeEntity {
 	@JoinColumn(name = "pick_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "foreign_key_hint_open_pick_id"))
 	private Pick pick;
 
+	@Column(name = "content")
+	private String content;
+
 	@Builder
-	private HintOpen(Hint hint, Pick pick) {
+	private HintOpen(Hint hint, Pick pick, String content) {
 		this.hint = hint;
 		this.pick = pick;
+		this.content = content;
 	}
 
 	public void setPick(Pick pick) {

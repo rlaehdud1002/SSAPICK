@@ -1,15 +1,25 @@
 import { Separator } from "@radix-ui/react-select";
+import { useMutation } from "@tanstack/react-query";
+import { blockQuestionCancel } from "api/blockApi";
 import PlusDeleteButton from "buttons/PlusDeleteButton"
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 
 interface BlockQuestionContentProps{
-    question:string
+    question:any
+    questionId:number
 }
 
-const BlockQuestionContent = ({question}:BlockQuestionContentProps) =>{
-    const onEvnet = ()=>{
-        console.log("차단 질문 리스트에서 삭제")
-    }
+const BlockQuestionContent = ({question, questionId}:BlockQuestionContentProps) =>{
+   
+    const mutation = useMutation({
+        mutationKey: ['deleteBlock'],
+        mutationFn: blockQuestionCancel,
+    
+        onSuccess: () => {
+          console.log('차단 해제 성공');
+        }
+    });
+    
     return (
         <div>
         <div className="flex items-center mt-5 justify-between mx-8">
@@ -17,7 +27,7 @@ const BlockQuestionContent = ({question}:BlockQuestionContentProps) =>{
       <QuestionAlarmIcon width={50} height={50}/>
       </div>
       <div className="">{question}</div>
-        <div onClick={onEvnet}>
+        <div onClick={()=>{mutation.mutate(questionId)}}>
         <PlusDeleteButton title="삭제" />
         </div>
     </div>

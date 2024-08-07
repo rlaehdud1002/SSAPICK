@@ -1,6 +1,7 @@
 package com.ssapick.server.domain.pick.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,9 +24,9 @@ public class HintController {
 	 * @param pickId 조회할 픽 아이디
 	 * @return {@link String} 랜덤한 힌트 내용
 	 */
-	@GetMapping(value = "/random")
-	public SuccessResponse<String> getRandomHintByPickId(Long pickId) {
+	@GetMapping(value = "/{pickId}")
+	public SuccessResponse<String> getRandomHintByPickId(@PathVariable("pickId") Long pickId) {
 		return SuccessResponse.of(hintService.getRandomHintByPickId(pickId));
 	}
-    
+
 }

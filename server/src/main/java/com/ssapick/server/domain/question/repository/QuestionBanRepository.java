@@ -11,9 +11,9 @@ import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
 
 public interface QuestionBanRepository extends JpaRepository<QuestionBan, Long> {
-	@Query("SELECT qb FROM QuestionBan qb WHERE qb.user.id = :userId AND qb.question.id = :questionId")
-	Optional<QuestionBan> findBanByUserIdAndQuestionId(Long userId, Long questionId);
+	@Query("SELECT qb FROM QuestionBan qb JOIN FETCH qb.question WHERE qb.user.id = :userId AND qb.question.id = :questionId")
+	Optional<QuestionBan> findBanByUserIdAndQuestionId(@Param("userId") Long userId, @Param("questionId") Long questionId);
 
-	@Query("SELECT qb FROM QuestionBan qb WHERE qb.user.id = :userId")
-	List<Question> findQBanByUserId(@Param("userId") Long userId);
+	@Query("SELECT qb.question FROM QuestionBan qb WHERE qb.user.id = :userId")
+	List<Question> findQuestionBanByUserId(@Param("userId") Long userId);
 }

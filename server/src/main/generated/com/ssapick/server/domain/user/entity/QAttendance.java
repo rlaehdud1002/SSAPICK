@@ -29,8 +29,6 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath reward = createString("reward");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 

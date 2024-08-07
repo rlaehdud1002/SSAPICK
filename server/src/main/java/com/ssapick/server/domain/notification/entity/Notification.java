@@ -27,4 +27,15 @@ public class Notification extends TimeEntity {
 
     @Column(name = "is_read")
     private boolean isRead = false;
+
+    private String message;
+
+    public static Notification createNotification(User user, NotificationType notificationType, Long referenceId, String message) {
+        Notification notification = new Notification();
+        notification.user = user;
+        notification.notificationType = notificationType;
+        notification.referenceId = referenceId;
+        notification.message = message;
+        return notification;
+    }
 }

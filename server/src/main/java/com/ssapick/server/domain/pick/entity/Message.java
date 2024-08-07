@@ -63,6 +63,10 @@ public class Message extends TimeEntity {
         return message;
     }
 
+    public void sendAlarm() {
+        isAlarmSent = true;
+    }
+
     public void deleteMessageOfSender() {
         isSenderDeleted = true;
     }

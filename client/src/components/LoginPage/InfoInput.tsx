@@ -7,14 +7,14 @@ interface InfoInputProps {
   title: string,
   register: UseFormRegisterReturn,
   errors: object
+  value?: string
 }
 
-const InfoInput = ({ name, title, register, errors }: InfoInputProps) => {
-  console.log(name)
+const InfoInput = ({ name, title, register, errors,value }: InfoInputProps) => {
   return (
     <div className='flex flex-col'>
       <div>
-      <div className="w-72 h-10 text-sm flex justify-center py-2 border border-black rounded-md">
+      <div className="w-72 h-10 text-sm flex justify-center py-2 border border-black rounded-lg">
       <label className="relative w-40 ml-8" htmlFor={name}>
         {title}
       </label>
@@ -22,6 +22,7 @@ const InfoInput = ({ name, title, register, errors }: InfoInputProps) => {
         type="text"
         id={name}
         autoComplete="off"
+        value={value}
         className="bg-transparent outline-none ml-10"
         {...register}
       />

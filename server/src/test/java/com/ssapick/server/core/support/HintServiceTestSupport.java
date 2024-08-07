@@ -19,7 +19,7 @@ public abstract class HintServiceTestSupport {
 
 	protected User createUser() {
 		User user = spy(User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
-		Profile profile = Profile.createProfile(user, (short)1, createMockCampus(), "https://test-profile.com");
+		Profile profile = Profile.createProfile(user, (short)1, createMockCampus());
 		lenient().when(user.getProfile()).thenReturn(profile);
 		lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
 		return user;
@@ -30,7 +30,7 @@ public abstract class HintServiceTestSupport {
 	}
 
 	protected Hint createMockHint(Long id, User user, String content) {
-		Hint hint = Hint.createHint(user, content, HintType.NAME);
+		Hint hint = Hint.createHint(content, HintType.NAME);
 		hint.setTestId(id);
 		return hint;
 	}
@@ -46,7 +46,7 @@ public abstract class HintServiceTestSupport {
 	}
 
 	protected Profile createMockProfile(User user, Campus campus) {
-		Profile profile = Profile.createProfile(user, (short)11, campus, "image");
+		Profile profile = Profile.createProfile(user, (short)11, campus);
 		profile.setTestId(1L);
 		return profile;
 	}

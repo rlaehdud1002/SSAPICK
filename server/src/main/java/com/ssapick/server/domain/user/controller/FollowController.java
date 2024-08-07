@@ -30,7 +30,7 @@ public class FollowController {
     @Authenticated
     @PostMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponse<Void> followUser(@CurrentUser User user, @PathVariable Long userId) {
+    public SuccessResponse<Void> followUser(@CurrentUser User user, @PathVariable("userId") Long userId) {
         followService.followUser(user, userId);
         return SuccessResponse.empty();
     }
@@ -38,7 +38,7 @@ public class FollowController {
     @Authenticated
     @DeleteMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public SuccessResponse<Void> unfollowUser(@CurrentUser User user, @PathVariable Long userId) {
+    public SuccessResponse<Void> unfollowUser(@CurrentUser User user, @PathVariable("userId") Long userId) {
         followService.unfollowUser(user, userId);
         return SuccessResponse.empty();
     }

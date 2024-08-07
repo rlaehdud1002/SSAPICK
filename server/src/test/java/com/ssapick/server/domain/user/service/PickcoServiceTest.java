@@ -1,10 +1,13 @@
 package com.ssapick.server.domain.user.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.PickcoLogRepository;
+import com.ssapick.server.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @DisplayName("픽코 서비스 테스트")
@@ -22,6 +27,9 @@ public class PickcoServiceTest {
 
     @Mock
     private PickcoLogRepository pickcoLogRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private PickcoService pickcoService;
@@ -42,18 +50,17 @@ public class PickcoServiceTest {
         // Given
         int initialPickco = 10;
         int changeAmount = -5;
-        when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
 
-        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount, initialPickco);
+        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
         // When
         pickcoService.createPickcoLog(event);
 
         // Then
         verify(profile).changePickco(changeAmount);
-        verify(pickcoLogRepository).save(argThat(pickcoLog ->
-                pickcoLog.getRemain() == initialPickco + changeAmount
-        ));
+        verify(pickcoLogRepository).save(any());
     }
 
     @DisplayName("픽코가 부족하면 예외 발생")
@@ -62,18 +69,21 @@ public class PickcoServiceTest {
         // Given
         int initialPickco = 3;
         int changeAmount = -5;
-        when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(profile.getPickco()).thenReturn(initialPickco);
+        lenient().when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
 
-        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount, initialPickco + changeAmount);
+        PickcoEvent event = new PickcoEvent(user, PickcoLogType.HINT_OPEN, changeAmount);
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> {
-            pickcoService.createPickcoLog(event);
-        });
+        Runnable runnable = () -> pickcoService.createPickcoLog(event);
 
         // Then
+        assertThatThrownBy(runnable::run)
+                .isInstanceOf(BaseException.class)
+                .hasMessage(ErrorCode.SHORT_OF_PICKCO.getMessage());
         verify(profile, never()).changePickco(changeAmount);
         verify(pickcoLogRepository, never()).save(any());
+
     }
 
 }

@@ -3,6 +3,8 @@ package com.ssapick.server.domain.pick.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.user.entity.User;
@@ -44,6 +46,10 @@ public class Pick extends TimeEntity {
 	@JoinColumn(name = "question_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_pick_question_id"))
 	private Question question;
 
+	@Column(name = "alarm")
+	@ColumnDefault("false")
+	private boolean alarm = false;
+
 	@Column(name = "is_alarm_sent")
 	private boolean isAlarmSent = false;
 
@@ -61,6 +67,10 @@ public class Pick extends TimeEntity {
 		return pick;
 	}
 
+	public void sendAlarm() {
+		this.isAlarmSent = true;
+	}
+
 	@Builder
 	public Pick(User sender) {
 		this.sender = sender;
@@ -68,5 +78,9 @@ public class Pick extends TimeEntity {
 
 	public void send() {
 		this.isMessageSend = true;
+	}
+
+	public void updateAlarm() {
+		this.alarm = !this.alarm;
 	}
 }

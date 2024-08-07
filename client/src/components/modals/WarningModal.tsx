@@ -1,5 +1,8 @@
-import { Button } from 'components/ui/button';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 import WarningIcon from 'icons/WarningIcon';
+
+import { Button } from 'components/ui/button';
+
 import {
   Dialog,
   DialogContent,
@@ -10,6 +13,7 @@ import {
 } from 'components/ui/dialog';
 
 import { useEffect, useState } from 'react';
+import { IPickCreate } from 'atoms/Pick.type';
 
 enum WarningStep {
   CHECK,
@@ -17,13 +21,24 @@ enum WarningStep {
 }
 
 interface WarningModalProps {
-  question: string;
+  question: any;
+  userPick: (data: IPickCreate) => void;
 }
 
-const WarningModal = ({ question }: WarningModalProps) => {
+const WarningModal = ({ question, userPick }: WarningModalProps) => {
   const [step, setStep] = useState<WarningStep>(WarningStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+
+  const handlePick = () => {
+    const pickData: IPickCreate = {
+      questionId: question.id,
+      status: 'BLOCKED',
+    };
+
+    userPick(pickData);
+    setStep(WarningStep.ALERT);
+  };
 
   // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
   useEffect(() => {
@@ -36,10 +51,6 @@ const WarningModal = ({ question }: WarningModalProps) => {
     }
   }, [step]);
 
-  const Click = () => {
-    setStep(WarningStep.ALERT);
-  };
-
   const onClose = () => {
     setOpen(false);
     setStep(WarningStep.CHECK);
@@ -48,7 +59,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <WarningIcon width={20} height={20} className="mx-1" />
+        <WarningIcon width={20} height={20} className="mx-1" circle />
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
@@ -59,17 +70,17 @@ const WarningModal = ({ question }: WarningModalProps) => {
           </DialogHeader>
           {step === WarningStep.CHECK && (
             <div>
-              <div className="flex flex-col items-center my-16 text-center">
+              <div className="flex flex-col items-center my-12 text-center">
                 <p>이 질문을 신고하시겠습니까?</p>
                 <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
-                  {question}
+                  {question.content}
                 </p>
               </div>
               <DialogFooter className="flex flex-row justify-end">
                 <Button
                   type="submit"
                   className="bg-[#E95F5F] hover:bg-red-400 "
-                  onClick={Click}
+                  onClick={handlePick}
                 >
                   신고
                 </Button>
@@ -77,7 +88,7 @@ const WarningModal = ({ question }: WarningModalProps) => {
             </div>
           )}
           {step === WarningStep.ALERT && (
-            <div className="text-center my-16">질문 신고가 완료되었습니다.</div>
+            <ResultCheckModal content="질문 신고가 완료되었습니다." />
           )}
         </DialogContent>
       )}

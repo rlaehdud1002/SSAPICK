@@ -1,22 +1,28 @@
 import MessageContent from 'components/MessagePage/MessageContent';
 
+import { useQuery } from '@tanstack/react-query';
+import { IMessage } from 'atoms/Message.type';
+import { getSendMessage } from 'api/messageApi';
+import NoMessage from 'components/MessagePage/NoMessage';
+
 const Send = () => {
+  const { data: messages = [], isLoading } = useQuery<IMessage[]>({
+    queryKey: ['message', 'send'],
+    queryFn: getSendMessage,
+  });
+
   return (
     <div>
-      <MessageContent
-        name="11기 2반"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
-        gen="female"
-      />
-      <MessageContent
-        name="11기 2반"
-        question="나랑 같이 프로젝트 하고 싶은 사람은?"
-        message="쪽지 내용"
-        date="2024.07.23"
-        gen="male"
-      />
+      {!isLoading &&
+        (messages.length > 0 ? (
+          messages.map((message, index) => {
+            return (
+              <MessageContent key={index} message={message} status="send" />
+            );
+          })
+        ) : (
+          <NoMessage content="보낸 쪽지가 없습니다."/>
+        ))}
     </div>
   );
 };

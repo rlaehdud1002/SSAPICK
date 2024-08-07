@@ -2,6 +2,8 @@ package com.ssapick.server.domain.user.dto;
 
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import com.ssapick.server.domain.user.entity.Profile;
@@ -19,6 +21,9 @@ public class ProfileData {
 		private short campusSection;
 		private String campusDescription;
 		private String profileImage;
+		private short cohort;
+
+
 
 		public static Search fromEntity(Profile profile) {
 			Search search = new Search();
@@ -29,6 +34,7 @@ public class ProfileData {
 			search.campusSection = profile.getCampus().getSection();
 			search.campusDescription = profile.getCampus().getDescription();
 			search.profileImage = profile.getProfileImage();
+			search.cohort = profile.getCohort();
 			return search;
 		}
 
@@ -38,11 +44,14 @@ public class ProfileData {
 			search.campusName = profile.getCampus().getName();
 			search.campusSection = profile.getCampus().getSection();
 			search.campusDescription = profile.getCampus().getDescription();
+			search.cohort = profile.getCohort();
 			return search;
 		}
 	}
 
 	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class InitialProfileInfo {
 
 		private String name;

@@ -2,9 +2,9 @@ package com.ssapick.server.domain.question.dto;
 
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 
@@ -49,8 +49,7 @@ public class QuestionData {
         private Long categoryId;
 
         @NotNull(message = "질문 내용은 필수입니다.")
-        @Min(value = 5, message = "질문 내용은 최소 5자 이상입니다.")
-        @Max(value = 30, message = "질문 내용은 최대 30자 이하입니다.")
+        @Size(min = 5, max = 30, message = "질문 내용은 5자 이상 30자 이하입니다.")
         private String content;
     }
 

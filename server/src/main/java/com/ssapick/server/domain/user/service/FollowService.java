@@ -1,13 +1,7 @@
 package com.ssapick.server.domain.user.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -15,9 +9,15 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,36 +29,35 @@ public class FollowService {
     private final UserBanRepository userBanRepository;
 
     public List<ProfileData.Search> findFollowUsers(User user) {
-        log.info("userRepository.findFollowUserByUserId(user.getId()) : {}", userRepository.findFollowUserByUserId(user.getId()));
         return userRepository.findFollowUserByUserId(user.getId()).stream().map(User::getProfile).map(ProfileData.Search::fromEntity).toList();
     }
 
     @Transactional
-    public void followUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(
-                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
-        );
+    public void followUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER));
 
-        followRepository.findByFollowingUserAndFollowUser(user, followUser).ifPresent(follow -> {
-            throw new IllegalArgumentException("이미 팔로우한 사용자입니다.");
+
+        followRepository.findByFollowUserAndFollowingUser(user, followingUser).ifPresent(follow -> {
+            throw new BaseException(ErrorCode.ALREADY_FOLLOWED_USER);
         });
 
-        followRepository.save(Follow.follow(user, followUser));
+        followRepository.save(Follow.follow(user, followingUser));
     }
 
     @Transactional
-    public void unfollowUser(User user, Long followUserId) {
-        User followUser = userRepository.findById(followUserId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    public void unfollowUser(User user, Long followingUserId) {
+        User followingUser = userRepository.findById(followingUserId).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 
-        Follow follow = followRepository.findByFollowingUserAndFollowUser(user, followUser).orElseThrow(
-                () -> new IllegalArgumentException("팔로우한 사용자가 아닙니다.")
-        );
+        Follow follow = followRepository.findByFollowUserAndFollowingUser(user, followingUser).orElseThrow(
+            () -> new BaseException(ErrorCode.NOT_FOLLOWED_USER));
 
         followRepository.delete(follow);
     }
 
     /**
      * 추천 팔로우 목록 조회
+     *
      * @param user
      * @return List<ProfileData.Search>
      */
@@ -69,7 +68,7 @@ public class FollowService {
             .toList();
 
         // 현재 사용자가 벤한 친구 목록을 가져온다.
-        List<Profile> bannedProfiles = userBanRepository.findByFromUser(user).stream()
+        List<Profile> bannedProfiles = userBanRepository.findBanUsersByFromUser(user).stream()
             .map(User::getProfile)
             .toList();
 

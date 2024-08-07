@@ -6,13 +6,10 @@ import ShuffleIcon from "icons/ShuffleIcon";
 import { useNavigate } from "react-router-dom";
 import FriendRecommendContent from "./FriendRecommendContent";
 import FriendSearchContent from "./FriendSearchContent";
-import Search from "./Search";
-
-
+import Search from "./SearchBox";
 
 const FriendSearch = () => {
   const navigate = useNavigate();
-
 
   return (
 
