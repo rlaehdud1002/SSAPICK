@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/user")
@@ -41,6 +43,14 @@ public class UserController {
 	@GetMapping(value = "/valid")
 	public SuccessResponse<UserData.IsValid> idValid(@CurrentUser User user) {
 		return SuccessResponse.of(userService.idValid(user));
+	}
+
+
+	@GetMapping(value = "/search")
+	public SuccessResponse<List<UserData.Search>> searchUser(
+			@RequestParam(value = "q") String keyword
+	) {
+		return SuccessResponse.of(userService.getUserByKeyword(keyword));
 	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")

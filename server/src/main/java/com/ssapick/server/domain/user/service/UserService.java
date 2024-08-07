@@ -5,6 +5,7 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -106,4 +107,13 @@ public class UserService {
 		return userRepository.findUserWithProfileById(userId)
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
+
+	public List<UserData.Search> getUserByKeyword(String keyword) {
+		List<User> users = userRepository.findUserByKeyword(keyword);
+
+		return users.stream()
+				.map(UserData.Search::fromEntity)
+				.toList();
+	}
+
 }

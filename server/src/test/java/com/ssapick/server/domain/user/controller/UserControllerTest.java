@@ -162,4 +162,11 @@ class UserControllerTest extends RestDocsSupport {
                 )));
     }
 
+
+    @Test
+    @DisplayName("유저 검색을 하면 검색어를 포함하는 유저 프로필 데이터를 반환한다.")
+    void searchUserProfile() {
+
+    }
+
 }

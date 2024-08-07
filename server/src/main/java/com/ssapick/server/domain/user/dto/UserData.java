@@ -8,7 +8,9 @@ import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.A;
 
 public class UserData {
 
@@ -159,6 +161,21 @@ public class UserData {
 			create.residentialArea = residentialArea;
 			create.interest = interest;
 			return create;
+		}
+	}
+
+	@Data
+	public static class Search {
+		String name;
+		short cohort;
+		short campusSection;
+
+		public static Search fromEntity(User user) {
+			Search search = new Search();
+			search.name = user.getName();
+			search.cohort = user.getProfile().getCohort();
+			search.campusSection = user.getProfile().getCampus().getSection();
+			return search;
 		}
 	}
 }
