@@ -39,7 +39,7 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && setOpen((prev) => !prev)}>
       <DialogTrigger
-        className="luckiest_guy text-color-5F86E9"
+        className="text-color-5F86E9"
         onClick={() => {
           if (hint === "?") {
             setOpen(true);

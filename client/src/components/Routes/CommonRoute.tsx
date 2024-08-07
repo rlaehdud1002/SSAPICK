@@ -2,6 +2,7 @@ import Received from 'components/MessagePage/Received';
 import Send from 'components/MessagePage/Send';
 import Alarm from 'pages/AlarmPage';
 import AuthCallback from 'pages/AuthCallbackPage';
+import CoolTime from 'pages/CoolTimePage';
 import Home from 'pages/HomePage';
 import InfoInsert from 'pages/InfoInsert';
 import Login from 'pages/LoginPage';
@@ -22,6 +23,7 @@ const CommonRoute = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
+      <Route path="/cooltime" element={<CoolTime />} />
       <Route path="/message" element={<Message />}>
         <Route index element={<Received />} />
         <Route path="received" element={<Received />} />

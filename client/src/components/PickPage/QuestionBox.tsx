@@ -12,13 +12,7 @@ interface QuestionProps {
 
 const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
   const blockPassCount = pickInfo.blockCount + pickInfo.passCount;
-
-  const handlePick = () => {
-    userPick({
-      questionId: question.id,
-      status: 'PASS',
-    });
-  };
+  console.log('blockPassCount', blockPassCount);
 
   return (
     <div
@@ -41,10 +35,18 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
         <h1 className="text-center text-lg">{question.content}</h1>
         {blockPassCount < 5 && (
           <div className="flex flex-row justify-end mt-1">
-            <WarningModal question={question} userPick={userPick} />
-            <div onClick={handlePick}>
-              <PassIcon />
-            </div>
+            <WarningModal
+              question={question}
+              userPick={userPick}
+              title="block"
+              blockPassCount={blockPassCount}
+            />
+            <WarningModal
+              question={question}
+              userPick={userPick}
+              title="pass"
+              blockPassCount={blockPassCount}
+            />
           </div>
         )}
         <div className="flex flex-row justify-center">

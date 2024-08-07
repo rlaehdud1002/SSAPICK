@@ -5,7 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { validState } from 'atoms/ValidAtoms';
 
@@ -112,8 +112,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <div className="flex flex-col relative">
-        <div className="flex flex-col max-h-screen">
+      {/* <div className="flex flex-col relative">
+        <div className="flex flex-col h-screen">
           {headerFooter() && <Header />}
           <div className="flex-grow">
             <Routes>
@@ -121,11 +121,22 @@ function App() {
               <Route path="/profile/*" element={<ProfileRoute />} />
               <Route path="/404" element={<NotFoundPage />} />
             </Routes>
-            <div className="flex flex-col max-h-screen">
-              {headerFooter() && <Footer />}
-            </div>
+          </div>
+          <div className="flex flex-col h-screen">
+            {headerFooter() && <Footer />}
           </div>
         </div>
+      </div> */}
+      <div className="flex flex-col relative min-h-screen">
+        {headerFooter() && <Header />}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/*" element={<CommonRoute />} />
+            <Route path="/profile/*" element={<ProfileRoute />} />
+            <Route path="/404" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+        {headerFooter() && <Footer />}
       </div>
     </QueryClientProvider>
   );

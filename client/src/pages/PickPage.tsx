@@ -3,6 +3,7 @@ import Choice from 'components/PickPage/ChoiceBox';
 import ShuffleIcon from 'icons/ShuffleIcon';
 import {
   QueryClient,
+  QueryErrorResetBoundary,
   useMutation,
   useQuery,
   useQueryClient,
@@ -15,14 +16,15 @@ import { useCallback, useState, useEffect } from 'react';
 import { getPickInfo, postCreatePick } from 'api/pickApi';
 import { useRecoilState } from 'recoil';
 import { questionState } from 'atoms/PickAtoms';
-import CoolTime from 'components/PickPage/CoolTime';
 import PickComplete from 'components/PickPage/PickComplete';
+import CoolTime from 'pages/CoolTimePage';
+import { Navigate } from 'react-router-dom';
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
   // recoil에 저장되어 있는 질문들
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
-
+  const [finish, setFinish] = useState<boolean>(false);
   // 새로운 질문 조회 mutation
   const getNewQuestion = useMutation({
     mutationKey: ['question'],
@@ -79,6 +81,7 @@ const Pick = () => {
     if (pickInfo && question.length > 0) {
       setNowQuestion(question[pickInfo.index]);
       setIsLoaded(true); // 데이터가 로딩된 후 상태를 업데이트
+
       // index === 0 이면 질문 시작이므로 새로운 질문 조회
       // if (pickInfo.index === 0) {
       //   getNewQuestion.mutate();
@@ -97,21 +100,24 @@ const Pick = () => {
       });
       setNowQuestion(question[data.index]);
       handleShuffle();
+
+      // post의 결과가 null이면 PickComplete로 이동
+      setFinish(data.index === null);
     },
   });
+
+  if (finish) {
+    return <PickComplete setQuestion={setQuestion} />;
+  }
 
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
     return <div>데이터 준비중입니다.</div>;
   }
 
-  const isPickComplete = pickInfo.pickCount + pickInfo.blockCount >= 15;
-
   return (
     <div className="relative">
-      {isPickComplete ? (
-        <PickComplete setQuestion={setQuestion} />
-      ) : pickInfo?.cooltime ? (
-        <CoolTime />
+      {pickInfo?.cooltime ? (
+        <Navigate to="/cooltime" />
       ) : (
         nowQuestion &&
         pickFriends.length > 0 && (
