@@ -91,7 +91,7 @@ public class MessageService {
         }
 
 		publisher.publishEvent(new PickcoEvent(
-				pick.getReceiver(), PickcoLogType.HINT_OPEN, MESSAGE_COIN));
+				pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN));
 
 		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 	}

@@ -135,6 +135,7 @@ public class PickService {
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
 						pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
@@ -230,7 +231,7 @@ public class PickService {
 
 
 	public void reRoll(User user) {
-		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
 
 }
