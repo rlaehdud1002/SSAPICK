@@ -13,6 +13,7 @@ import CoinUseModal from "components/modals/CoinUseModal";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { getHint } from "api/pickApi";
+import { HINT_OPEN_COIN } from "coins/coins";
 
 interface HintModalProps {
   title: string;
@@ -50,7 +51,7 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
           <DialogTitle className="flex flex-start text-color-5F86E9">힌트 공개</DialogTitle>
-          <CoinUseModal coin={1} />
+          <CoinUseModal coin={HINT_OPEN_COIN} />
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end">
           <Button
