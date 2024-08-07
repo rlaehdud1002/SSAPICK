@@ -82,12 +82,10 @@ public class PickService {
 		}
 
 		Integer index = pickCacheRepository.getIndex(sender.getId());
+		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
+		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
+		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
 
-		log.debug("index: {}", index);
-
-		if (create.getIndex() != index) {
-			throw new BaseException(ErrorCode.INVALID_PICK_INDEX);
-		}
 
 		Question question = questionRepository.findById(create.getQuestionId()).orElseThrow(
 			() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
@@ -103,11 +101,18 @@ public class PickService {
 				// 		pickEventMessage(question.getContent()), null));
 			}
 			case PASS -> {
-				pickCacheRepository.pass(sender.getId());
+				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
+					throw new BaseException(ErrorCode.PASS_BLOCK_LIMIT);
+				}
 
+				pickCacheRepository.pass(sender.getId());
 				question.skip();
 			}
 			case BLOCK -> {
+				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
+					throw new BaseException(ErrorCode.PASS_BLOCK_LIMIT);
+				}
+
 				pickCacheRepository.block(sender.getId());
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
@@ -115,9 +120,9 @@ public class PickService {
 		}
 
 		index = pickCacheRepository.getIndex(sender.getId());
-		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
-		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
-		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
+		pickCount = pickCacheRepository.getPickCount(sender.getId());
+		blockCount = pickCacheRepository.getBlockCount(sender.getId());
+		passCount = pickCacheRepository.getPassCount(sender.getId());
 
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.setCooltime(sender.getId());

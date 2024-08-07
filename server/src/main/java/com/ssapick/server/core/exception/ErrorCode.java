@@ -47,6 +47,7 @@ public enum ErrorCode {
 	NOT_FOUND_PICK(6001, HttpStatus.NOT_FOUND, "픽을 찾을 수 없습니다."),
 	INVALID_PICK_INDEX(6002, HttpStatus.BAD_REQUEST, "픽 인덱스가 올바르지 않습니다."),
 	PICK_COOLTIME(6003, HttpStatus.BAD_REQUEST, "픽 쿨타임입니다."),
+	PASS_BLOCK_LIMIT(6004, HttpStatus.BAD_REQUEST, "패스와 차단은 합쳐서 최대 5개까지 할 수 있습니다."),
 
 	//MESSAGE
 	ALREADY_SEND_MESSAGE(7001, HttpStatus.BAD_REQUEST, "하나의 픽에 대해서는 하나의 메시지만 보낼 수 있습니다."),

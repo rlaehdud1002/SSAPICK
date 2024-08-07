@@ -229,33 +229,33 @@ class PickServiceTest extends UserSupport {
 		}));
 	}
 
-	@Test
-	@DisplayName("픽 인덱스 존재 X 테스트")
-	void 픽_인덱스_존재_X_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		int correctId = 1;
-		int incorrectId = 2;
-		User sender = this.createUser("보낸 사람");
-		User receiver = this.createUser("받는 사람");
-		Question question = spy(this.createQuestion());
-		when(question.getId()).thenReturn(1L);
-
-		PickData.Create create = new PickData.Create();
-		create.setReceiverId(receiver.getId());
-		create.setQuestionId(question.getId());
-		create.setStatus(PickData.PickStatus.PICKED);
-		create.setIndex(correctId);
-
-		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(incorrectId);
-
-		// * WHEN: 이걸 실행하면
-		Runnable runnable = () -> pickService.createPick(sender, create);
-
-		// * THEN: 이런 결과가 나와야 한다
-		assertThatThrownBy(runnable::run)
-			.isInstanceOf(BaseException.class)
-			.hasMessage(ErrorCode.INVALID_PICK_INDEX.getMessage());
-	}
+	// @Test
+	// @DisplayName("픽 인덱스 존재 X 테스트")
+	// void 픽_인덱스_존재_X_테스트() throws Exception {
+	// 	// * GIVEN: 이런게 주어졌을 때
+	// 	int correctId = 1;
+	// 	int incorrectId = 2;
+	// 	User sender = this.createUser("보낸 사람");
+	// 	User receiver = this.createUser("받는 사람");
+	// 	Question question = spy(this.createQuestion());
+	// 	when(question.getId()).thenReturn(1L);
+	//
+	// 	PickData.Create create = new PickData.Create();
+	// 	create.setReceiverId(receiver.getId());
+	// 	create.setQuestionId(question.getId());
+	// 	create.setStatus(PickData.PickStatus.PICKED);
+	// 	create.setIndex(correctId);
+	//
+	// 	when(pickCacheRepository.getIndex(sender.getId())).thenReturn(incorrectId);
+	//
+	// 	// * WHEN: 이걸 실행하면
+	// 	Runnable runnable = () -> pickService.createPick(sender, create);
+	//
+	// 	// * THEN: 이런 결과가 나와야 한다
+	// 	assertThatThrownBy(runnable::run)
+	// 		.isInstanceOf(BaseException.class)
+	// 		.hasMessage(ErrorCode.INVALID_PICK_INDEX.getMessage());
+	// }
 
 	@Test
 	@DisplayName("질문이 없는 경우 테스트")

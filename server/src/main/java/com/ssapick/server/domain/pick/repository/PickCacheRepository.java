@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class PickCacheRepository {
-    public static final int LAST_COUNT = 10;
+    public static final int PASS_BLOCK_LIMIT = 5;
     public static final int COOL_TIME = 1;
     public static final String QUESTION_INDEX = "pick:questionIndex:";
     public static final String PICK_COUNT = "pick:pickCount:";
