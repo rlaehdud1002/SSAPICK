@@ -2,17 +2,18 @@ import { ISendUser, IUser, IUserAdd, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
+// 유저 입력 정보
 export const sendUserInfoState = atom<ISendUser>({
   key: 'sendUserInfoState',
   default: undefined,
 });
-
 
 export const userInfostate = atom<IUserInfo>({
   key: 'userInfostate',
   default: undefined,
 })
 
+// 로그인 상태
 export const isLoginState = selector<boolean>({
   key: 'isLoginState',
   get: ({ get }) => {
@@ -21,9 +22,9 @@ export const isLoginState = selector<boolean>({
   },
 });
 
-export const accessTokenState = atom<string>({
+export const accessTokenState = atom<string | undefined>({
   key: 'accessTokenState',
-  default: '',
+  default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -31,6 +32,12 @@ export const firebaseTokenState = atom<string>({
   key: 'firebaseTokenState',
   default: "",
   effects_UNSTABLE: [persistAtom],
+})
+
+export const refreshRequestState = atom<boolean>({
+  key: 'refreshRequestState',
+  default: false,
+  effects_UNSTABLE: [persistAtom]
 })
 
 

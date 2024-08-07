@@ -3,11 +3,11 @@ import { signOut } from "api/authApi";
 import { accessTokenState } from "atoms/UserAtoms";
 import WithdrawalModal from "components/modals/WithdrawalModal";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 const SetAccount = () => {
   const navigate = useNavigate();
-  const setAccessToken = useSetRecoilState(accessTokenState);
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
   const mutation = useMutation({
     mutationFn: signOut,
@@ -18,14 +18,18 @@ const SetAccount = () => {
     }
   });
 
-  const handleLogout = async () => {
-    mutation.mutate();
-  };
+  const onLogout = () => {
+    mutation.mutate(`Bearer ${accessToken}`);
+  }
+
+  // const handleLogout = async () => {
+  //   mutation.mutate(`Bearer ${accessToken}`);
+  // };
 
   return (
     <div className="ml-4">
       <div className="text-xl mb-10 mt-3">계정 설정</div>
-      <div className="text-sm ml-2" onClick={handleLogout} style={{ cursor: "pointer" }}>
+      <div className="text-sm ml-2" onClick={onLogout}  style={{ cursor: "pointer" }}>
         로그아웃
       </div>
       <div className="bg-white mr-5 my-3 h-px w-auto"></div>

@@ -1,29 +1,54 @@
+import { IBlock, IBlockQuestion } from "atoms/Block.type";
 import { BaseResponse } from "atoms/User.type";
 import instance from "./clientApi";
-import { IBlock } from "atoms/Block.type";
 
-// 차단 친구 목록 조회
-export const getBlockList = async (): Promise<IBlock[]> => {
+// 차단 유저 목록 조회
+export const getBlockedList = async (): Promise<IBlock[]> => {
   const {
-    data: { success, data, message },
+    data: { success, data },
   } = await instance.get<BaseResponse<IBlock[]>>('/user-ban');
 
   if (!success) {
-    console.log(message);
-    throw new Error('차단 친구 목록 조회 실패');
+    throw new Error('차단 유저 목록 조회 실패');
   }
+
+  console.log('getBlockedList');
 
   return data;
 };
 
-// 친구 차단 해제
-export const unblockFriend = async (userId: number): Promise<void> => {
+// 유저 차단 해제
+export const blockCancel = async (userId: number): Promise<void> => {
   const {
-    data: { success, message },
-  } = await instance.delete<BaseResponse<void>>(`/user-ban/${userId}`);
+    data: { success, data, message },
+  } = await instance.delete(`/user-ban/${userId}`);
 
   if (!success) {
-    console.log(message);
-    throw new Error('친구 차단 해제 실패');
+    throw new Error(message);
   }
+  return data;
+};
+
+// 차단 질문 목록 조회
+export const getBlockedQuestionList = async (): Promise<IBlockQuestion[]> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<IBlockQuestion[]>>('/questions/bans');
+
+  if (!success) {
+    throw new Error('차단 질문 목록 조회 실패');
+  }
+  return data;
+}
+
+// 질문 차단 해제
+export const blockQuestionCancel = async (questionId: number): Promise<void> => {
+  const {
+    data: { success, data, message },
+} = await instance.delete(`/questions/${questionId}/ban`);
+
+  if (!success) {
+    throw new Error(message);
+  }
+  return data;
 };

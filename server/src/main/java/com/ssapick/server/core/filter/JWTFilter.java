@@ -32,11 +32,14 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        log.debug("requestURI: {}", requestURI);
 
         String accessToken = resolveToken(request);
+        log.debug("accessToken: {}", accessToken);
         try {
             if (accessToken != null) {
                 Authentication authentication = jwtService.parseAuthentication(accessToken);
+                log.debug("authentication: {}", authentication);
                 validateToken(request, authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {

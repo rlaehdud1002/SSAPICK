@@ -59,7 +59,7 @@ class PickcoLogRepositoryTest extends TestDatabaseContainer {
                 PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 109),
                 PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 108),
                 PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 107),
-                PickcoLog.createPickcoLog(user, PickcoLogType.SSAPICK, 10, 118)
+                PickcoLog.createPickcoLog(user, PickcoLogType.PICK, 10, 118)
         );
 
         pickcoLogRepository.saveAll(pickcoLog);

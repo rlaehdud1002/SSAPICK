@@ -31,8 +31,8 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   return (
     <div>
       {updatedPicks.map((pick, index) => (
-        <div className="rounded-lg bg-white/50 p-4 mb-5">
-          <Accordion key={index} type="single" collapsible>
+        <div key={index} className="rounded-lg bg-white/50 p-4 mb-5">
+          <Accordion type="single" collapsible>
             <AccordionItem value="item-1" className="border-none">
               <AccordionTrigger className="p-0">
                 <div className="flex flex-col">
@@ -65,7 +65,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                 </div>
                 {!pick.messageSend && (
                   <div className="float-end">
-                    <MessageModal receiverId={pick.receiver.userId} pick={pick} />
+                    <MessageModal receiverId={pick.sender.userId} pick={pick} />
                   </div>
                 )}
               </AccordionContent>

@@ -6,8 +6,14 @@ import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +61,36 @@ public class PickService {
 			.toList();
 	}
 
+	/***
+	 * 받은 픽 조회하기
+	 * @param user
+	 * @param pageable
+	 * @return
+	 */
+	public Page<PickData.Search> searchReceivePick(User user,Pageable pageable) {
+
+		// pageable.
+
+		// Step 1: Fetch paged IDs with sorting
+		Page<Long> pickIdsPage = pickRepository.findPickIdsByReceiverId(user.getId(), pageable);
+		List<Long> pickIds = pickIdsPage.getContent();
+
+		if (pickIds.isEmpty()) {
+			return Page.empty();
+		}
+
+		// Step 2: Fetch Picks with details using the sorted IDs
+		List<Pick> picks = pickRepository.findAllByIdsWithDetails(pickIds);
+
+		// Convert Pick entities to PickData.Search DTOs
+		List<PickData.Search> pickSearchList = picks.stream()
+			.map(pick -> PickData.Search.fromEntity(pick, true))
+			.collect(Collectors.toList());
+
+		// Return a Page object with the DTOs
+		return new PageImpl<>(pickSearchList, pageable, pickIdsPage.getTotalElements());
+	}
+
 	/**
 	 * 보낸 픽 조회하기
 	 *
@@ -99,6 +135,7 @@ public class PickService {
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
 						pickEventMessage(question.getContent()), null));
+				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
@@ -194,7 +231,7 @@ public class PickService {
 
 
 	public void reRoll(User user) {
-		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, USER_REROLL_COIN));
+		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
 
 }
