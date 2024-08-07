@@ -82,3 +82,14 @@ export const withdrawal = async (): Promise<void> => {
   }
   return data;
 };
+
+
+export const refreshToken = async (): Promise<void> => {
+  const {
+    data: {success, data, message}
+  } = await instance.post("/auth/refresh")
+  if (!success) {
+    throw new Error(message);
+  }
+  return data;
+}

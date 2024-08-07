@@ -48,7 +48,7 @@ public class AuthController {
 	@Authenticated
 	@PostMapping(value = "/refresh")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public SuccessResponse<Void> refresh(HttpServletRequest request, HttpServletResponse response) {
+	public SuccessResponse<JwtToken> refresh(HttpServletRequest request, HttpServletResponse response) {
 		Cookie cookie = CookieUtils.getCookie(request, AuthConst.REFRESH_TOKEN).orElseThrow(
 			() -> new BaseException(ErrorCode.UNAUTHORIZED)
 		);
@@ -57,7 +57,7 @@ public class AuthController {
 
 		CookieUtils.removeCookie(response, AuthConst.REFRESH_TOKEN);
 		CookieUtils.addCookie(response, AuthConst.REFRESH_TOKEN, refreshedToken.getRefreshToken(), properties.getRefreshExpire(), true);
-		return SuccessResponse.created();
+		return SuccessResponse.of(refreshedToken);
 	}
 
 	@Authenticated
