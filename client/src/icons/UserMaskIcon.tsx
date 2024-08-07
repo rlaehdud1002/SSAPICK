@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { patchPickAlarm } from "api/pickApi";
 import { IPick } from "atoms/Pick.type";
 import { useEffect, useState } from "react";
@@ -18,11 +19,20 @@ const UserMaskIcon = ({ pickId, alarm, gen, onAlarmUpdate }: UserMaskIconProps) 
     setFill(alarm ? (gen === "M" ? "#7EAFFF" : "#FF9798") : "none");
   }, [alarm, gen]);
 
+  const patchPickPutation = useMutation({
+    mutationFn: patchPickAlarm,
+    onSuccess: (data) => {
+      onAlarmUpdate(data);
+    },
+    onError: (error) => {
+      console.error("patch error", error);
+    },
+  });
+
   const handleClick = async () => {
     try {
-      const updatedPicks = await patchPickAlarm(pickId);
+      patchPickPutation.mutate(pickId);
       console.log("픽 ID의 알람이 업데이트되었습니다:", pickId);
-      onAlarmUpdate(updatedPicks);
     } catch (error) {
       console.error("픽 ID의 알람을 업데이트하지 못했습니다:", pickId, error);
     }

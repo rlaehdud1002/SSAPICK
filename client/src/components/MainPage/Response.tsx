@@ -10,7 +10,7 @@ import {
 } from "components/ui/accordion";
 
 import { IPick } from "atoms/Pick.type";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ResponseProps {
   picks: IPick[];
@@ -21,6 +21,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   const [updatedPicks, setUpdatedPicks] = useState<IPick[]>(picks);
 
   useEffect(() => {
+    console.log("updatedPicks", updatedPicks);
     setUpdatedPicks(updatedPicks);
   }, [updatedPicks]);
 
@@ -28,13 +29,21 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
     setUpdatedPicks(newPicks);
   };
 
+  const handleAccordionClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+  }, []);
+
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
   return (
     <div>
       {updatedPicks.map((pick, index) => (
         <div className="rounded-lg bg-white/50 p-4 mb-5">
           <Accordion key={index} type="single" collapsible>
             <AccordionItem value="item-1" className="border-none">
-              <AccordionTrigger className="p-0">
+              <AccordionTrigger className="p-0" onClick={handleAccordionClick}>
                 <div className="flex flex-col">
                   <div className="flex flex-row">
                     <UserMaskIcon
