@@ -10,9 +10,8 @@ import { validState } from "atoms/ValidAtoms";
 
 import { initializeApp } from 'firebase/app';
 import NotFoundPage from 'pages/NotFoundPage';
-import { accessTokenState, isLoginState, refreshRequestState } from 'atoms/UserAtoms';
 import { useEffect } from 'react';
-import { refresh } from 'api/authApi';
+import { validCheck } from 'api/validApi';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -99,8 +98,8 @@ function App() {
   //     }
   //   };
 
-  //   checkValidity();
-  // }, [navigate, setValidState]);
+    checkValidity();
+  }, [navigate, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>

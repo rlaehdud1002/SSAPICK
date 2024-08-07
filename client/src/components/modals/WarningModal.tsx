@@ -31,10 +31,8 @@ const WarningModal = ({ question, userPick }: WarningModalProps) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const handlePick = () => {
-    const pickData = {
-      receiverId: null,
+    const pickData: IPickCreate = {
       questionId: question.id,
-      index: 0,
       status: 'BLOCKED',
     };
 

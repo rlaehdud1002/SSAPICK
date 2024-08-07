@@ -9,9 +9,8 @@ interface ChoiceProps {
 const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
   const handlePick = () => {
     const pickData = {
-      receiverId: friend.id,
+      receiverId: friend.userId,
       questionId: questionId,
-      index: 0,
       status: 'PICKED',
     };
 
