@@ -20,6 +20,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -62,13 +63,13 @@ class PickControllerTest extends RestDocsSupport {
 			Question question = spy(createQuestion("테스트 질문 " + i));
 			QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리 썸네일"));
 
-			when(category.getId()).thenReturn((long)i);
+			when(category.getId()).thenReturn((long) i);
 			when(question.getQuestionCategory()).thenReturn(category);
-			when(question.getId()).thenReturn((long)i);
+			when(question.getId()).thenReturn((long) i);
 			when(question.getCreatedAt()).thenReturn(LocalDateTime.now());
 
 			Pick pick = spy(createPick(sender, receiver, question));
-			when(pick.getId()).thenReturn((long)i);
+			when(pick.getId()).thenReturn((long) i);
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
@@ -80,12 +81,12 @@ class PickControllerTest extends RestDocsSupport {
 		}).toList();
 
 		// Mocking pageable response
-		Page<PickData.Search> pickPage = new PageImpl<>(searches, PageRequest.of(0, 10), searches.size());
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<PickData.Search> pickPage = new PageImpl<>(searches, pageable, searches.size());
 
 		when(pickService.searchReceivePick(
 			argThat(user -> user.getUsername().equals("test-user")),
-			anyInt(),
-			anyInt()
+			any(Pageable.class)
 		)).thenReturn(pickPage);
 
 		// WHEN: API 호출
@@ -166,13 +167,12 @@ class PickControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록").type(JsonFieldType.ARRAY).optional(),
 							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID").type(JsonFieldType.NUMBER).optional()
-
-
 						)
 						.build()
 				)
 			));
 	}
+
 
 
 
