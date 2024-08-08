@@ -59,6 +59,8 @@ export const blockUser = async (userId: number): Promise<void> => {
     data: { success, data, message },
   } = await instance.post(`/user-ban/${userId}`);
 
+  console.log('쪽지 신고', success, data, message)
+
   if (!success) {
     throw new Error(message);
   }

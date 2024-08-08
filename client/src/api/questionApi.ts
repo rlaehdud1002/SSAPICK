@@ -27,8 +27,10 @@ export const postCreateQuestion = async (
   questionData: ICreateQuestion,
 ): Promise<void> => {
   const {
-    data: { success },
+    data: { success, data, message, status },
   } = await instance.post<BaseResponse<null>>('/questions', questionData);
+
+  console.log('질문 생성', message, status, data, success);
 
   if (!success) {
     throw new Error('질문 생성 실패');

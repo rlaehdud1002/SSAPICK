@@ -6,7 +6,7 @@ import { Button } from 'components/ui/button';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';
@@ -21,7 +21,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from 'components/ui/dialog';
-import UserMaskIcon from 'icons/UserMaskIcon';
 import { IPick } from 'atoms/Pick.type';
 import { MESSAGE_COIN } from 'coins/coins';
 
@@ -43,8 +42,9 @@ const MessageModal = ({ pick }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
+  const [message, setMessage] = useState<boolean>(pick.messageSend);
 
-  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // 쪽지 전송 mutation
   const mutation = useMutation({
@@ -52,15 +52,20 @@ const MessageModal = ({ pick }: MessageModalProps) => {
     mutationFn: postMessageSend,
     // 쪽지 전송 성공 시
     onSuccess: () => {
-      navigate(0);
+      queryClient.invalidateQueries({
+        queryKey: ['receivedPick'],
+      });
+      setMessage(true);
+      setStep(MessageModalStep.ALERT); // ALERT 단계로 이동
     },
   });
 
-  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
+  // ALERT 단계가 실행된 후 1.5초 뒤에 모달을 닫음
   useEffect(() => {
     if (step === MessageModalStep.ALERT) {
       const timer = setTimeout(() => {
         setIsModalVisible(false);
+        setOpen(false); // 모달 닫기
       }, 1500);
 
       return () => clearTimeout(timer);
@@ -83,7 +88,6 @@ const MessageModal = ({ pick }: MessageModalProps) => {
         pickId: pick.id,
         content: data.message,
       });
-      setStep(MessageModalStep.ALERT);
       reset();
     }
   };
@@ -100,7 +104,7 @@ const MessageModal = ({ pick }: MessageModalProps) => {
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <SendingIcon />
+        {!message && <SendingIcon />}
       </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
