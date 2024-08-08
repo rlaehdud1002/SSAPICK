@@ -78,3 +78,18 @@ export const patchPickAlarm = async (pickId: number): Promise<void> => {
 
   return data;
 };
+
+// 사용자 리롤
+export const patchPickUserReRoll = async (): Promise<void> => {
+  const {
+    data: { success, data },
+  } = await instance.patch<BaseResponse<void>>(`/pick/re-roll`);
+
+  if (!success) {
+    throw new Error("사용자 리롤 실패");
+  }
+
+  console.log("patchPickUserReRoll");
+
+  return data;
+};
