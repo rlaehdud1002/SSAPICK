@@ -14,6 +14,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from 'components/ui/dialog';
+import { blockUser } from 'api/blockApi';
 
 enum WarningDeleteStep {
   CHECK,
@@ -38,6 +39,15 @@ const WarningDeleteModal = ({
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const queryClient = new QueryClient();
+
+  // 유저 차단 api
+  const blockMutatiion = useMutation({
+    mutationKey: ['delete'],
+    mutationFn: blockUser,
+    onSuccess: () => {
+      console.log('유저 차단 성공');
+    },
+  });
 
   // 쪽지 삭제 mutation
   const deleteMutation = useMutation({
