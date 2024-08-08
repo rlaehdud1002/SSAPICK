@@ -25,9 +25,9 @@ public class LocationService {
     private GeoOperations<String, String> geoOperations;
 
     @Transactional
-    public void saveUserLocation(Long userId, LocationData.Geo geo) {
+    public void saveUserLocation(String username, LocationData.Geo geo) {
         Point point = new Point(geo.getLongitude(), geo.getLatitude());
-        geoOperations.add(GEO_LOCATION_KEY, point, userId.toString());
+        geoOperations.add(GEO_LOCATION_KEY, point, username);
     }
 
     public void findFriends(Long userId) {

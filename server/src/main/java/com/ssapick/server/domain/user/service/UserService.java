@@ -64,7 +64,7 @@ public class UserService {
 
 		userRepository.save(user);
 
-		if (!profileImage.isEmpty()) {
+		if (profileImage != null && !profileImage.isEmpty()) {
 			publisher.publishEvent(new S3UploadEvent(profile, profileImage));
 		}
 	}

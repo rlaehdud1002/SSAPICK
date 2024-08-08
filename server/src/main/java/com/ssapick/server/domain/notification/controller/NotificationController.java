@@ -1,23 +1,16 @@
 package com.ssapick.server.domain.notification.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.notification.dto.FCMData;
 import com.ssapick.server.domain.notification.dto.NotificationData;
-import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.notification.service.FCMService;
 import com.ssapick.server.domain.notification.service.NotificationService;
 import com.ssapick.server.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,19 +22,6 @@ public class NotificationController {
 	@PostMapping("/register")
 	public SuccessResponse<Void> saveToken(@CurrentUser User user, @RequestBody FCMData.Register register) {
 		fcmService.createUserToken(user, register.getToken());
-		return SuccessResponse.empty();
-	}
-
-	@GetMapping("/test")
-	public SuccessResponse<Void> push() {
-		fcmService.notification(FCMData.NotificationEvent.of(
-			NotificationType.PICK,
-			null,
-			1L,
-			"테스트 알림",
-			"테스트 메시지",
-			null
-		));
 		return SuccessResponse.empty();
 	}
 
