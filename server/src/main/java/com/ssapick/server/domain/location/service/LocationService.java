@@ -31,7 +31,6 @@ public class LocationService {
     }
 
     public void findFriends(Long userId) {
-//        geoOperations.search(GEO_LOCATION_KEY, );
         GeoReference<String> reference = GeoReference.fromMember(userId.toString());
         Distance distance = new Distance(500, METERS);
 
@@ -43,6 +42,6 @@ public class LocationService {
                 .limit(10);
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
-
+        System.out.println(search);
     }
 }

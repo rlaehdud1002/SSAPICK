@@ -40,7 +40,6 @@ public class MessageData {
 
 	@Data
 	public static class Create {
-		private Long receiverId;
 		private Long pickId;
 		private String content;
 	}

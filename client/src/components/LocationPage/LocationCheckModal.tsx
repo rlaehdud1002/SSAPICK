@@ -16,7 +16,6 @@ const LocationCheckModal = ({
   latitude,
   longitude,
 }: LocationCheckModalProps) => {
-  console.log('watch');
   return (
     <Dialog>
       <DialogTrigger>location check</DialogTrigger>

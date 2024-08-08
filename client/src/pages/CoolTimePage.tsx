@@ -20,7 +20,7 @@ const CoolTime = () => {
     const timer = setInterval(updateTimeLeft, 1000); // 1초마다 시간 업데이트
 
     if (timeLeft <= 0) {
-      navigate('/pick');
+      console.log('coolTime finish');
     }
 
     return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
@@ -31,8 +31,8 @@ const CoolTime = () => {
 
   return (
     <div
-      className="w-full flex flex-col items-center justify-center pb-[70px]"
-      // style={{ height: 'calc(100vh - 70px)' }}
+      className="w-full flex flex-col items-center justify-center"
+      style={{ height: 'calc(100vh - 70px)' }}
     >
       <CoolTimeIcon
         width={100}
