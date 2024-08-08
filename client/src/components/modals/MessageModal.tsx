@@ -61,7 +61,7 @@ const MessageModal = ({ pick }: MessageModalProps) => {
     if (step === MessageModalStep.ALERT) {
       const timer = setTimeout(() => {
         setIsModalVisible(false);
-      }, 1000);
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
@@ -109,9 +109,9 @@ const MessageModal = ({ pick }: MessageModalProps) => {
               쪽지 보내기
             </DialogTitle>
           </DialogHeader>
-          <div className="my-3">{pick.question.content}</div>
           {step === MessageModalStep.INPUT && (
             <div>
+              <div className="my-3">{pick.question.content}</div>
               <InputModal
                 name="message"
                 register={register('message', {
@@ -134,7 +134,10 @@ const MessageModal = ({ pick }: MessageModalProps) => {
                   }}
                 >
                   <CoinIcon width={25} height={25} />
-                  <h3 className="luckiest_guy ms-2 me-4 pt-1">{MESSAGE_COIN}</h3>전송
+                  <h3 className="luckiest_guy ms-2 me-4 pt-1">
+                    {MESSAGE_COIN}
+                  </h3>
+                  전송
                 </Button>
               </DialogFooter>
             </div>

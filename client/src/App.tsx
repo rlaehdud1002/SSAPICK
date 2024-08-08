@@ -63,12 +63,6 @@ function App() {
     }
   }, [refreshRequest, setAccessToken, setRefreshRequest]);
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate('/home');
-  //   }
-  // }, [isAuthenticated]);
-
   useEffect(() => {
     const checkValidity = async () => {
       try {
@@ -86,8 +80,8 @@ function App() {
           navigate("/mattermost");
           return;
         }
-        if (!data.validInfo && !location.includes("infoinsert")) {
-          navigate("/infoinsert");
+        if (!data.validInfo && !location.includes('infoinsert')) {
+          navigate('/infoinsert');
           return;
         }
       } catch (error) {

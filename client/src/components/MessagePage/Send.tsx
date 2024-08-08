@@ -8,7 +8,7 @@ import { IPaging } from 'atoms/Pick.type';
 
 const Send = () => {
   const { data: messages, isLoading } = useQuery<IPaging<IMessage[]>>({
-    queryKey: ['message', 'send'],
+    queryKey: ['sendMessage'],
     queryFn: getSendMessage,
   });
 
