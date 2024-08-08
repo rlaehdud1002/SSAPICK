@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 public class StompHandler implements ChannelInterceptor {
     private final JWTService jwtService;
 
+
+
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
