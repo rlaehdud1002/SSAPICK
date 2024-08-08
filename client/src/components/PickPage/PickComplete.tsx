@@ -16,15 +16,15 @@ const PickComplete = ({ setQuestion }: PickCompleteProps) => {
   useEffect(() => {
     // 현재 시간으로부터 1분 뒤의 시간 설정
     const now = new Date().getTime();
-    const newCoolTime = now + 15 * 60 * 1000; // 현재 시간 + 1분
+    const newCoolTime = now + 60 * 1000; // 현재 시간 + 1분
     setCoolTime(newCoolTime);
     setQuestion([]);
   }, [setCoolTime, setQuestion]);
   
   return (
     <div
-      className="w-full flex flex-col items-center justify-center pb-[70px]"
-      // style={{ height: 'calc(100vh - 70px)' }}
+      className="w-full flex flex-col items-center justify-center"
+      style={{ height: 'calc(100vh - 70px)' }}
     >
       <CoinIcon
         width={72}
