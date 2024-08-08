@@ -11,6 +11,8 @@ export const getAlarm = async (): Promise<IAlarm> => {
     throw new Error("알람 조회 실패");
   }
 
+  console.log('getAlarm')
+
   return data;
 };
 

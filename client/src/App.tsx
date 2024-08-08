@@ -54,7 +54,7 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(refreshRequest)
+    console.log(refreshRequest);
     if (!refreshRequest) {
       refresh()
         .then((response) => {
@@ -67,12 +67,6 @@ function App() {
         });
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate('/home');
-  //   }
-  // }, [isAuthenticated]);
 
   useEffect(() => {
     const checkValidity = async () => {
@@ -96,10 +90,6 @@ function App() {
         }
         if (!data.validInfo && !location.includes('infoinsert')) {
           navigate('/infoinsert');
-          return;
-        }
-        if (data.validInfo) {
-          navigate('/home');
           return;
         }
       } catch (error) {
