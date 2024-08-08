@@ -7,7 +7,7 @@ import NoMessage from 'components/MessagePage/NoMessage';
 
 const Received = () => {
   const { data: messages, isLoading } = useQuery<IPaging<IMessage[]>>({
-    queryKey: ['receiveMessage'],
+    queryKey: ['message', 'received'],
     queryFn: getReceivedMessage,
   });
 

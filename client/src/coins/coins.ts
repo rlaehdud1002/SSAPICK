@@ -12,6 +12,6 @@ export const QUESTION_CREATE_COIN = 20;
 // 힌트 오픈
 export const HINT_OPEN_COIN = 100;
 // 사용자 리롤
-export const USER_REROLL_COIN = 20;
+export const USER_REROLL_COIN = 10;
 // 쪽지
 export const MESSAGE_COIN = 20;

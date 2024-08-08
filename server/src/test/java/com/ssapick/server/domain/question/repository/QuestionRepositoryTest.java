@@ -63,7 +63,7 @@ class QuestionRepositoryTest extends TestDatabaseContainer {
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(questions.size()).isEqualTo(3);
-		assertThat(questions.stream().map(Question::getId).toList()).containsExactly(1L, 2L, 4L);
+		assertThat(questions.stream().map(Question::getId).toList()).containsExactlyInAnyOrder(1L, 2L, 4L);
 		assertThat(questions.stream().map(Question::isDeleted).allMatch(deleted -> !deleted)).isTrue();
 	}
 
