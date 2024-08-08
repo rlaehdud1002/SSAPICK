@@ -33,13 +33,9 @@ function App() {
   initializeApp(firebaseConfig);
   const location = useLocation().pathname.split('/')[1];
   const queryClient = new QueryClient();
-
-  const navigate = useNavigate();
-  const [ValidState, setValidState] = useRecoilState(validState);
   const [refreshRequest, setRefreshRequest] =
     useRecoilState(refreshRequestState);
-  const setAccessToken = useSetRecoilState(accessTokenState);
-  const isAuthenticated = useRecoilValue(isLoginState);
+  const setAccessToken = useSetRecoilState(accessTokenState);                        
 
   const headerFooter = () => {
     return (

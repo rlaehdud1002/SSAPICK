@@ -1,7 +1,6 @@
 import { IAuth, JwtToken } from "atoms/Auth.type";
 import { BaseResponse, IUserInfo } from "atoms/User.type";
 import instance from "./clientApi";
-import { access } from "fs";
 
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
@@ -63,7 +62,7 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 };
 
 // 로그아웃 요청
-export const signOut = async (accessToken:string): Promise<void> => {
+export const signOut = async (accessToken: string): Promise<void> => {
   const {
     data: { success, data, message },
   } = await instance.post("/auth/sign-out", accessToken);
@@ -87,7 +86,7 @@ export const withdrawal = async (): Promise<void> => {
 
 export const refresh = async (): Promise<JwtToken> => {
   const {
-    data: {success, data, message}
+    data: { success, data, message }
   } = await instance.post<BaseResponse<JwtToken>>("/auth/refresh")
   if (!success) {
     throw new Error(message);
