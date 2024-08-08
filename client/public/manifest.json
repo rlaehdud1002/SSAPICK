@@ -100,7 +100,7 @@
     }
   ],
   "start_url": "./",
-  "display": "minimal-ui",
+  "display": "fullscreen",
   "orientaion": "portrait",
   "theme_color": "#FF0000",
   "background_color": "#000000"

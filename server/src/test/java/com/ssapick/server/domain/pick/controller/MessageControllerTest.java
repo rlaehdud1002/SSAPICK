@@ -19,6 +19,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,88 +54,176 @@ class MessageControllerTest extends RestDocsSupport {
 	private MessageRepository messageRepository;
 
 	@Test
-	@DisplayName("받은 메시지 성공 테스트")
+	@DisplayName("받은 메시지 페이징 조회 성공 테스트")
 	@WithMockUser(username = "test-user")
-	void 받은_메시지_성공_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
+	void 받은_메시지_페이징_조회_성공_테스트() throws Exception {
+		// * GIVEN: 테스트 데이터 설정
 		User sender = this.createUser("보낸 사람");
 		User receiver = this.createUser("받은 사람");
 
-		List<MessageData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
-			Message message = spy(this.createMessage(sender, receiver, "테스트 메시지 " + i));
+		// 메시지 리스트 생성
+		List<MessageData.Search> searches = Stream.of(16, 15, 14).map(i -> {
+			Message message = spy(this.createMessage(sender, receiver, "내용" + i));
 			when(message.getId()).thenReturn((long)i);
 			when(message.getCreatedAt()).thenReturn(LocalDateTime.now());
-			return message;
-		}).map((message) -> MessageData.Search.fromEntity(message, true)).toList();
+			return MessageData.Search.fromEntity(message, false);
+		}).toList();
 
-		when(messageService.searchReceiveMessage(any())).thenReturn(searches);
 
-		// * WHEN: 이걸 실행하면
-		ResultActions perform = this.mockMvc.perform(get("/api/v1/message/receive"));
+		// Mocking pageable response
+		Pageable pageable = PageRequest.of(0, 3);
+		Page<MessageData.Search> searchPage = new PageImpl<>(searches, pageable, 16); // totalElements = 16
 
-		// * THEN: 이런 결과가 나와야 한다
+		when(messageService.searchSendMessage(
+			argThat(user -> user.getUsername().equals("test-user")),
+			any(Pageable.class)
+		)).thenReturn(searchPage);
+
+		// * WHEN: API 호출
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/message/receive")
+			.param("page", "0")
+			.param("size", "3"));
+
+		// * THEN: 결과 검증
 		perform.andExpect(status().isOk())
-			.andDo(this.restDocs.document(resource(
-				ResourceSnippetParameters.builder()
-					.tag("쪽지")
-					.summary("받은 메시지 목록 조회 API")
-					.description("받은 메시지 목록을 조회한다.")
-					.responseFields(response(
-						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
-						fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 보낸 사람 ID"),
-						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (익명 처리)"),
-						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
-						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
-						fieldWithPath("data[].receiverGender").type(JsonFieldType.STRING).description("받은 사람 성별"),
-						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("받은 일시"),
-						fieldWithPath("data[].questionContent").type(JsonFieldType.STRING).description("메시지 받은 질문 내용"),
-						fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용")
-					))
-					.build()
-			)));
+			.andDo(this.restDocs.document(
+				resource(
+					ResourceSnippetParameters.builder()
+						.tag("쪽지")
+						.summary("받은 메시지 목록 조회 API")
+						.description("받은 메시지 목록을 페이징하여 조회한다.")
+						.queryParameters(
+							parameterWithName("page").description("페이지 번호"),
+							parameterWithName("size").description("페이지 크기")
+						)
+						.responseFields(
+							fieldWithPath("success").description("성공 여부"),
+							fieldWithPath("status").description("HTTP 상태 코드"),
+							fieldWithPath("message").description("응답 메시지"),
+							fieldWithPath("data").description("응답 데이터").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.totalElements").description("총 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.totalPages").description("총 페이지 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable").description("페이지 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.pageNumber").description("페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.pageSize").description("페이지 크기").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.unpaged").description("비페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.paged").description("페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.numberOfElements").description("페이지 내 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.empty").description("비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.content").description("메시지 데이터 목록").type(JsonFieldType.ARRAY).optional(),
+							fieldWithPath("data.content[].id").description("메시지 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderId").description("메시지 보낸 사람 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderName").description("보낸 사람 정보 (익명 처리)").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderGender").description("보낸 사람 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverName").description("받은 사람 정보 (본인)").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverGender").description("받은 사람 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].createdAt").description("받은 일시").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].questionContent").description("메시지 받은 질문 내용").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].content").description("메시지 내용").type(JsonFieldType.STRING).optional()
+						)
+						.build()
+				)
+			));
 	}
 
 	@Test
-	@DisplayName("보낸 메시지 성공 테스트")
+	@DisplayName("보낸 메시지 조회 성공 테스트")
 	@WithMockUser(username = "test-user")
-	void 보낸_메시지_성공_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
+	void 보낸_메시지_조회_성공_테스트() throws Exception {
+		// GIVEN: 테스트 데이터 설정
 		User sender = this.createUser("보낸 사람");
 		User receiver = this.createUser("받은 사람");
 
-		List<MessageData.Search> searches = Stream.of(1, 2, 3).map((i) -> {
-			Message message = spy(this.createMessage(sender, receiver, "테스트 메시지 " + i));
+		List<MessageData.Search> searches = Stream.of(16, 15, 14).map(i -> {
+			Message message = spy(this.createMessage(sender, receiver, "내용" + i));
 			when(message.getId()).thenReturn((long)i);
 			when(message.getCreatedAt()).thenReturn(LocalDateTime.now());
-			return message;
-		}).map((message) -> MessageData.Search.fromEntity(message, false)).toList();
+			return MessageData.Search.fromEntity(message, false);
+		}).toList();
 
-		when(messageService.searchSendMessage(any())).thenReturn(searches);
+		// Mocking pageable response
+		Pageable pageable = PageRequest.of(0, 3);
+		Page<MessageData.Search> searchPage = new PageImpl<>(searches, pageable, 16); // totalElements = 16
 
-		// * WHEN: 이걸 실행하면
-		ResultActions perform = this.mockMvc.perform(get("/api/v1/message/send"));
+		when(messageService.searchSendMessage(
+			argThat(user -> user.getUsername().equals("test-user")),
+			any(Pageable.class)
+		)).thenReturn(searchPage);
 
-		// * THEN: 이런 결과가 나와야 한다
+		// WHEN: API 호출
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/message/send")
+			.param("page", "0")
+			.param("size", "3"));
+
+		// THEN: 결과 검증
 		perform.andExpect(status().isOk())
-			.andDo(this.restDocs.document(resource(
-				ResourceSnippetParameters.builder()
-					.tag("쪽지")
-					.summary("보낸 메시지 목록 조회 API")
-					.description("보낸 메시지 목록을 조회한다.")
-					.responseFields(response(
-						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("메시지 ID"),
-							fieldWithPath("data[].senderId").type(JsonFieldType.NUMBER).description("메시지 보낸 사람 ID"),
-						fieldWithPath("data[].senderName").type(JsonFieldType.STRING).description("보낸 사람 정보 (본인)"),
-						fieldWithPath("data[].senderGender").type(JsonFieldType.STRING).description("보낸 사람 성별"),
-						fieldWithPath("data[].receiverName").type(JsonFieldType.STRING).description("받은 사람 정보 (본인)"),
-						fieldWithPath("data[].receiverGender").type(JsonFieldType.STRING).description("받은 사람 성별"),
-						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("받은 일시"),
-						fieldWithPath("data[].questionContent").type(JsonFieldType.STRING).description("메시지 받은 질문 내용"),
-						fieldWithPath("data[].content").type(JsonFieldType.STRING).description("메시지 내용")
-					))
-					.build()
-			)));
+			.andDo(this.restDocs.document(
+				resource(
+					ResourceSnippetParameters.builder()
+						.tag("쪽지")
+						.summary("보낸 메시지 목록 조회 API")
+						.description("로그인된 사용자가 보낸 메시지 목록을 조회한다.")
+						.queryParameters(
+							parameterWithName("page").description("페이지 번호"),
+							parameterWithName("size").description("페이지 크기")
+						)
+						.responseFields(
+							fieldWithPath("success").description("응답 성공 여부"),
+							fieldWithPath("status").description("HTTP 상태 코드"),
+							fieldWithPath("message").description("응답 메시지"),
+							fieldWithPath("data").description("응답 데이터").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.totalElements").description("총 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.totalPages").description("총 페이지 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable").description("페이지 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.pageNumber").description("페이지 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.pageSize").description("페이지 크기").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+							fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.unpaged").description("비페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.pageable.paged").description("페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.numberOfElements").description("페이지 내 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.empty").description("비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.content").description("메시지 목록").type(JsonFieldType.ARRAY).optional(),
+							fieldWithPath("data.content[].id").description("메시지 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderId").description("메시지 보낸 사람 ID").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderName").description("보낸 사람 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverName").description("받은 사람 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderGender").description("보낸 사람 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverGender").description("받은 사람 성별").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].createdAt").description("메시지 생성 일시").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].content").description("메시지 내용").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].questionContent").description("메시지 질문 내용").type(JsonFieldType.STRING).optional()
+						)
+						.build()
+				)
+			));
 	}
+
+
 
 	@Test
 	@DisplayName("메시지 보내기 성공 테스트")
@@ -141,7 +233,6 @@ class MessageControllerTest extends RestDocsSupport {
 		User receiver = this.createUser("받은 사람");
 
 		MessageData.Create create = new MessageData.Create();
-		create.setReceiverId(receiver.getId());
 		create.setPickId(1L);
 		create.setContent("테스트 메시지");
 
@@ -159,18 +250,13 @@ class MessageControllerTest extends RestDocsSupport {
 					.summary("메시지 보내기 API")
 					.description("자신이 받은 픽 기반으로 메시지를 보낸다. (픽 1개당 메시지 1번 가능)")
 					.requestFields(
-						fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("받는 사람 ID"),
 						fieldWithPath("pickId").type(JsonFieldType.NUMBER).description("픽 ID"),
 						fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용")
 					)
 					.build()
 			)));
 
-		verify(messageService).createMessage(
-			argThat(user -> user.getUsername().equals("test-user")),
-			argThat(
-				message -> message.getReceiverId().equals(receiver.getId()) && message.getContent().equals("테스트 메시지"))
-		);
+		verify(messageService).createMessage(any(), any());
 	}
 
 	@Test

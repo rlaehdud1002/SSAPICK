@@ -6,6 +6,9 @@ import java.util.Objects;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +45,14 @@ public class MessageService {
 	 * @param user 로그인된 사용자
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
-	public List<MessageData.Search> searchSendMessage(User user) {
-		return messageRepository.findSentMessageByUserId(user.getId()).stream()
-			.map((message) -> MessageData.Search.fromEntity(message, false))
+	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
+		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
+
+		List<MessageData.Search> messages = messagesPage.stream()
+			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
+
+		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
 	/**
@@ -55,10 +62,14 @@ public class MessageService {
 	 * @param user 로그인된 사용자
 	 * @return {@link MessageData.Search} 받은 메시지 리스트
 	 */
-	public List<MessageData.Search> searchReceiveMessage(User user) {
-		return messageRepository.findReceivedMessageByUserId(user.getId()).stream()
-			.map((message) -> MessageData.Search.fromEntity(message, true))
+	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
+		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
+
+		List<MessageData.Search> messages = messagesPage.stream()
+			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
+
+		return new  PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
     /**
@@ -71,7 +82,7 @@ public class MessageService {
     @Async("apiExecutor")
     @Transactional
     public void createMessage(User sender, MessageData.Create create) {
-        Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
+        Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
             () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
 
@@ -81,7 +92,7 @@ public class MessageService {
 		pick.send();
 
 
-        User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(
+        User receiver = userRepository.findById(pick.getSender().getId()).orElseThrow(
             () -> new BaseException(ErrorCode.NOT_FOUND_USER)
         );
 

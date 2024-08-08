@@ -1,7 +1,7 @@
 package com.ssapick.server.domain.pick.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,22 +30,22 @@ public class MessageController {
 
     @GetMapping("/send")
     @Authenticated
-    public SuccessResponse<List<MessageData.Search>> searchSendMessage(@CurrentUser User user) {
-        return SuccessResponse.of(messageService.searchSendMessage(user));
+    public SuccessResponse<Page<MessageData.Search>> searchSendMessage(@CurrentUser User user, Pageable pageable) {
+        return SuccessResponse.of(messageService.searchSendMessage(user, pageable));
     }
 
     @Authenticated
     @GetMapping("/receive")
-    public SuccessResponse<List<MessageData.Search>> searchReceiveMessage(@CurrentUser User user) {
-        return SuccessResponse.of(messageService.searchReceiveMessage(user));
+    public SuccessResponse<Page<MessageData.Search>> searchReceiveMessage(@CurrentUser User user, Pageable pageable) {
+        return SuccessResponse.of(messageService.searchReceiveMessage(user, pageable));
     }
 
     @Authenticated
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponse<Void> createMessage(
-            @CurrentUser User user,
-            @RequestBody MessageData.Create create
+        @CurrentUser User user,
+        @RequestBody MessageData.Create create
     ) {
         messageService.createMessage(user, create);
         return SuccessResponse.empty();
@@ -55,8 +55,8 @@ public class MessageController {
     @DeleteMapping("/{messageId}/receive")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> deleteFromMessage(
-            @CurrentUser User user,
-            @PathVariable("messageId") Long messageId
+        @CurrentUser User user,
+        @PathVariable("messageId") Long messageId
     ) {
         messageService.deleteReceiveMessage(user, messageId);
         return SuccessResponse.empty();
@@ -66,8 +66,8 @@ public class MessageController {
     @DeleteMapping("/{messageId}/send")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> deleteToMessage(
-            @CurrentUser User user,
-            @PathVariable("messageId") Long messageId
+        @CurrentUser User user,
+        @PathVariable("messageId") Long messageId
     ) {
         messageService.deleteSendMessage(user, messageId);
         return SuccessResponse.empty();

@@ -1,7 +1,6 @@
 import Question from "components/PickPage/QuestionBox";
 import Choice from "components/PickPage/ChoiceBox";
-import ShuffleIcon from "icons/ShuffleIcon";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IPickCreate, IPickInfo, IQuestion } from "atoms/Pick.type";
 import { getQuestion } from "api/questionApi";
 import { IFriend } from "atoms/Friend.type";
@@ -10,28 +9,26 @@ import { useCallback, useState, useEffect } from "react";
 import { getPickInfo, postCreatePick } from "api/pickApi";
 import { useRecoilState } from "recoil";
 import { questionState } from "atoms/PickAtoms";
-import CoolTime from "components/PickPage/CoolTime";
 import PickComplete from "components/PickPage/PickComplete";
+import { Navigate } from "react-router-dom";
+import FriendRerollModal from "components/modals/FriendRerollModal";
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
   // recoil에 저장되어 있는 질문들
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
-
+  const [finish, setFinish] = useState<boolean>(false);
   // 새로운 질문 조회 mutation
   const getNewQuestion = useMutation({
     mutationKey: ["question"],
     mutationFn: getQuestion,
 
     onSuccess: (data) => {
-      console.log("새로운 질문 조회 성공");
       setQuestion(data);
     },
   });
 
-  // 질문 리스트가 비어있을 때 질문 조회
   useEffect(() => {
-    // if (question.length === 0) getNewQuestion.mutate();
     getNewQuestion.mutate();
   }, []);
 
@@ -62,35 +59,47 @@ const Pick = () => {
   // ============================================== 픽 생성 ========================================================='
   const [nowQuestion, setNowQuestion] = useState<IQuestion>();
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const queryClient = new QueryClient();
 
   // pick 상태 조회
-  const { data: pickInfo, isLoading: LoadingPickInfo } = useQuery({
+  const { data: pickInfo, isLoading: LoadingPickInfo } = useQuery<IPickInfo>({
     queryKey: ["pickInfo"],
     queryFn: getPickInfo,
   });
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (pickInfo && question.length > 0) {
       setNowQuestion(question[pickInfo.index]);
       setIsLoaded(true); // 데이터가 로딩된 후 상태를 업데이트
+
+      // index === 0 이면 질문 시작이므로 새로운 질문 조회
+      // if (pickInfo.index === 0) {
+      //   getNewQuestion.mutate();
+      //   console.log('새로운 질문 조회');
+      // }
     }
   }, [pickInfo, question]);
 
   // pick 생성
   const mutation = useMutation({
-    mutationKey: ["createPick"],
+    mutationKey: ["pickInfo"],
     mutationFn: async (data: IPickCreate) => postCreatePick(data),
-
     onSuccess: (data: IPickInfo) => {
       queryClient.invalidateQueries({
         queryKey: ["pickInfo"],
       });
       setNowQuestion(question[data.index]);
       handleShuffle();
-      console.log("pickInfo", pickInfo);
+
+      // post의 결과가 null이면 PickComplete로 이동
+      setFinish(data.index === null);
     },
   });
+
+  if (finish) {
+    return <PickComplete setQuestion={setQuestion} />;
+  }
 
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
     return <div>데이터 준비중입니다.</div>;
@@ -98,17 +107,16 @@ const Pick = () => {
 
   return (
     <div className="relative">
-      {/* <PickComplete setQuestion={setQuestion} /> */}
       {pickInfo?.cooltime ? (
-        <CoolTime />
+        <Navigate to="/cooltime" />
       ) : (
         nowQuestion &&
         pickFriends.length > 0 && (
           <div>
             <Question question={nowQuestion} userPick={mutation.mutate} pickInfo={pickInfo} />
             <div className="m-7">
-              <div className="flex flex-row justify-end" onClick={handleShuffle}>
-                <ShuffleIcon className="cursor-pointer" />
+              <div className="flex flex-row justify-end">
+                <FriendRerollModal handleShuffle={handleShuffle} />
               </div>
               <div className="flex flex-row justify-center">
                 <Choice

@@ -34,16 +34,12 @@ public class PickCacheRepository {
         String passCountKey = PASS_COUNT + userId;
         String blockCountKey = BLOCK_COUNT + userId;
 
-        redisTemplate.execute(new SessionCallback<List<Object>>() {
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                operations.multi();
-                operations.opsForValue().set(questionIndexKey, 0, Duration.ofDays(1));
-                operations.opsForValue().set(pickCountKey, 0, Duration.ofDays(1));
-                operations.opsForValue().set(passCountKey, 0, Duration.ofDays(1));
-                operations.opsForValue().set(blockCountKey, 0, Duration.ofDays(1));
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForValue().set(questionIndexKey, 0, Duration.ofDays(1));
+        redisTemplate.opsForValue().set(pickCountKey, 0, Duration.ofDays(1));
+        redisTemplate.opsForValue().set(passCountKey, 0, Duration.ofDays(1));
+        redisTemplate.opsForValue().set(blockCountKey, 0, Duration.ofDays(1));
+
+
     }
 
 
@@ -51,46 +47,30 @@ public class PickCacheRepository {
         String questionIndexKey = QUESTION_INDEX + userId;
         String countKey = PICK_COUNT + userId;
 
-        redisTemplate.execute(new SessionCallback<List<Object>>() {
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                operations.multi();
-                operations.opsForValue().increment(questionIndexKey);
-                operations.expire(questionIndexKey, Duration.ofDays(1));
-                operations.opsForValue().increment(countKey);
-                operations.expire(countKey, Duration.ofDays(1));
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForValue().increment(questionIndexKey);
+        redisTemplate.expire(questionIndexKey, Duration.ofDays(1));
+        redisTemplate.opsForValue().increment(countKey);
+        redisTemplate.expire(countKey, Duration.ofDays(1));
+
     }
     public void block(Long userId) {
         String blockKey = BLOCK_COUNT + userId;
         String questionIndexKey = QUESTION_INDEX + userId;
-        redisTemplate.execute(new SessionCallback<List<Object>>() {
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                operations.multi();
-                operations.opsForValue().increment(questionIndexKey);
-                operations.expire(questionIndexKey, Duration.ofDays(1));
-                operations.opsForValue().increment(blockKey);
-                operations.expire(blockKey, Duration.ofDays(1));
-                return operations.exec();
-            }
-        });
+
+        redisTemplate.opsForValue().increment(questionIndexKey);
+        redisTemplate.expire(questionIndexKey, Duration.ofDays(1));
+        redisTemplate.opsForValue().increment(blockKey);
+        redisTemplate.expire(blockKey, Duration.ofDays(1));
     }
 
     public void pass(Long userId) {
         String passKey = PASS_COUNT + userId;
         String questionIndexKey = QUESTION_INDEX + userId;
 
-        redisTemplate.execute(new SessionCallback<List<Object>>() {
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                operations.multi();
-                operations.opsForValue().increment(questionIndexKey);
-                operations.expire(questionIndexKey, Duration.ofDays(1));
-                operations.opsForValue().increment(passKey);
-                operations.expire(passKey, Duration.ofDays(1));
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForValue().increment(questionIndexKey);
+        redisTemplate.expire(questionIndexKey, Duration.ofDays(1));
+        redisTemplate.opsForValue().increment(passKey);
+        redisTemplate.expire(passKey, Duration.ofDays(1));
     }
 
     public Integer getIndex(Long userId) {
@@ -119,14 +99,7 @@ public class PickCacheRepository {
 
     public void setCooltime(Long userId) {
         String key = PICK_COOLTIME + userId;
-
-        redisTemplate.execute(new SessionCallback<List<Object>>() {
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                operations.multi();
-                operations.opsForValue().set(key, true, Duration.ofMinutes(COOL_TIME));
-                return operations.exec();
-            }
-        });
+        redisTemplate.opsForValue().set(key, true, Duration.ofMinutes(COOL_TIME));
     }
 
     public boolean isCooltime(Long userId) {

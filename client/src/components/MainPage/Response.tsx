@@ -85,7 +85,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                 </div>
                 {!pick.messageSend && (
                   <div className="float-end">
-                    <MessageModal receiverId={pick.sender.userId} pick={pick} />
+                    <MessageModal pick={pick} />
                   </div>
                 )}
               </AccordionContent>

@@ -127,6 +127,7 @@ public class PickService {
 		switch (create.getStatus()) {
 			case PICKED -> {
 				pickCacheRepository.pick(sender.getId());
+				pickCount++;
 
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
@@ -139,8 +140,8 @@ public class PickService {
 				if (passCount + blockCount >= PASS_BLOCK_LIMIT) {
 					throw new BaseException(ErrorCode.PASS_BLOCK_LIMIT);
 				}
-
 				pickCacheRepository.pass(sender.getId());
+				passCount++;
 				question.skip();
 			}
 			case BLOCK -> {
@@ -149,15 +150,13 @@ public class PickService {
 				}
 
 				pickCacheRepository.block(sender.getId());
+				blockCount++;
 				question.increaseBanCount();
 				questionBanRepository.save(QuestionBan.of(sender, question));
 			}
 		}
+		index++;
 
-		index = pickCacheRepository.getIndex(sender.getId());
-		pickCount = pickCacheRepository.getPickCount(sender.getId());
-		blockCount = pickCacheRepository.getBlockCount(sender.getId());
-		passCount = pickCacheRepository.getPassCount(sender.getId());
 
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.init(sender.getId());

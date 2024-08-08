@@ -22,7 +22,7 @@ self.addEventListener("push", function (e) {
   console.log("push: ", { resultData, notificationTitle, notificationOptions });
   console.log(self.registration.showNotification)
 
-  self.registration.showNotification("타이틀", notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
 self.addEventListener("notificationclick", function (event) {

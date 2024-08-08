@@ -21,7 +21,6 @@ import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.pick.service.PickService;
 import com.ssapick.server.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController

@@ -5,7 +5,10 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Footer from "./components/common/Footer";
 import Header from "./components/common/Header";
-import { validState } from "atoms/ValidAtoms";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import { isValidateState, validState } from "atoms/ValidAtoms";
+
 import { initializeApp } from "firebase/app";
 import NotFoundPage from "pages/NotFoundPage";
 import { useEffect } from "react";
@@ -29,7 +32,8 @@ function App() {
   const queryClient = new QueryClient();
 
   const navigate = useNavigate();
-  const [ValidState, setValidState] = useRecoilState(validState);
+  const isValid = useRecoilValue(isValidateState);
+  const setValidState = useSetRecoilState(validState);
   const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const isAuthenticated = useRecoilValue(isLoginState);
@@ -45,6 +49,7 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(refreshRequest);
     if (!refreshRequest) {
       refresh()
         .then((response) => {
@@ -58,11 +63,11 @@ function App() {
     }
   }, [refreshRequest, setAccessToken, setRefreshRequest]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/home");
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate('/home');
+  //   }
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     const checkValidity = async () => {
@@ -70,6 +75,7 @@ function App() {
         if (location === "splash") {
           return;
         }
+        if (isValid) return;
         const data = await validCheck();
         setValidState(data);
         if (data.lockedUser) {
@@ -90,17 +96,13 @@ function App() {
       }
     };
     checkValidity();
-  }, [location, navigate, setValidState]);
-
-  useEffect(() => {
-    // 스크롤을 항상 최하단으로 이동
-    window.scrollTo(0, document.body.scrollHeight);
-  });
+  }, [refreshRequest]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex flex-col relative">
-        <div className="flex flex-col max-h-screen">
+      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <div className="flex flex-col relative">
+        <div className="flex flex-col h-screen">
           {headerFooter() && <Header />}
           <div className="flex-grow">
             <Routes>
@@ -108,9 +110,22 @@ function App() {
               <Route path="/profile/*" element={<ProfileRoute />} />
               <Route path="/404" element={<NotFoundPage />} />
             </Routes>
-            <div className="flex flex-col max-h-screen">{headerFooter() && <Footer />}</div>
+          </div>
+          <div className="flex flex-col h-screen">
+            {headerFooter() && <Footer />}
           </div>
         </div>
+      </div> */}
+      <div className="flex flex-col relative min-h-screen">
+        {headerFooter() && <Header />}
+        <main className="flex-grow mb-[70px]">
+          <Routes>
+            <Route path="/*" element={<CommonRoute />} />
+            <Route path="/profile/*" element={<ProfileRoute />} />
+            <Route path="/404" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+        {headerFooter() && <Footer />}
       </div>
     </QueryClientProvider>
   );

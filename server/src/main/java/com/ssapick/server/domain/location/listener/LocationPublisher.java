@@ -21,7 +21,7 @@ public class LocationPublisher {
         redisMessageListener.addMessageListener(locationSubscriber, locationTopic);
     }
 
-    public void publish(LocationData.Request request) {
-        redisTemplate.convertAndSend(locationTopic.getTopic(), request);
+    public void publish(LocationData.Geo geo) {
+        redisTemplate.convertAndSend(locationTopic.getTopic(), geo);
     }
 }
