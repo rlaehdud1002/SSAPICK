@@ -7,7 +7,7 @@ interface FriendSearchForm {
 }
 
 const Search = () => {
-
+  
   const { register, handleSubmit, reset, formState: { isSubmitSuccessful } } = useForm<FriendSearchForm>();
 
   useEffect(() => {

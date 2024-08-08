@@ -10,7 +10,7 @@ import Search from "./SearchBox";
 
 const FriendSearch = () => {
   const navigate = useNavigate();
-
+  console.log()
   return (
 
     <div className="relative flex flex-col">
@@ -34,6 +34,7 @@ const FriendSearch = () => {
             <FriendIcon width={20} height={20} isDefault={true} />
             <span className="ml-2">친구찾기</span>
           </div>
+          
           <Search />
         </div>
         {/* </div> */}

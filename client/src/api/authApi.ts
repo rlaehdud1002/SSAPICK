@@ -62,10 +62,10 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 };
 
 // 로그아웃 요청
-export const signOut = async (accessToken: string): Promise<void> => {
+export const signOut = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.post("/auth/sign-out", accessToken);
+  } = await instance.post("/auth/sign-out");
   if (!success) {
     throw new Error(message);
   }
