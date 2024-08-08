@@ -10,7 +10,6 @@ export interface IMessage {
 }
 
 export interface ISendMessage {
-  receiverId: number;
   pickId: number;
   content: string;
 }
