@@ -13,7 +13,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/postgresql:/var/lib/postgresql/data
+      - ssapick-db
 
   database-admin:
     container_name: database-admin
@@ -37,3 +37,6 @@ services:
     container_name: ssapick-korean-sentence-similarity
     ports:
       - "2252:2252"
+
+volumes:
+  - ssapick-db

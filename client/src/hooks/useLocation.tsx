@@ -49,7 +49,10 @@ export const useLocation = () => {
                     latitude: coords.latitude + 0.0004,
                     longitude: coords.longitude - 0.0002
                 }
-            })
+            }),
+            // headers: {
+            //     Authorization: `Bearer ${accessToken}`
+            // }
         })
     }, [coords, client, client?.connected])
 
