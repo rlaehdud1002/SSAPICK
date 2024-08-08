@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAlarm } from "api/alarmApi";
 import { getUserInfo } from "api/authApi";
-import { alarmSettingsState } from "atoms/AlarmAtoms";
 import { IUserInfo } from "atoms/User.type";
+import { profileImageState } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import AccountIcon from "icons/AccountIcon";
@@ -13,15 +12,19 @@ import LocationAlarmIcon from "icons/LocationAlarmIcon";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
-import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useEffect } from "react";
+import { set } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 
 const Profile = () => {
+  const setProfileImage = useSetRecoilState(profileImageState);
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
     queryKey: ["information"],
     queryFn: async () => await getUserInfo(),
   });
+
 
   console.log(information);
 

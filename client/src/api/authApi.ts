@@ -27,7 +27,6 @@ export const UserSend = async (
       'Content-Type': 'multipart/form-data',
     },
   });
-  console.log("pppp");
   if (!success) {
     throw new Error("유저 정보 전송 실패");
   }

@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
 import { IUserInfo } from "atoms/User.type";
+import { profileImageState, sendUserInfoState } from "atoms/UserAtoms";
 import DoneButton from "buttons/DoneButton";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useSetRecoilState } from "recoil";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
-import { sendUserInfoState } from "atoms/UserAtoms";
-import { useSetRecoilState } from "recoil";
-
 
 interface UserForm {
   name: string;
@@ -25,6 +24,8 @@ interface UserInfoProps {
 
 const UserInfo = ({ next }: UserInfoProps) => {
   const setSendUserInfo = useSetRecoilState(sendUserInfoState);
+  const setProfileImage = useSetRecoilState<File | undefined>(profileImageState);
+
   const {
     register,
     reset,
@@ -37,16 +38,17 @@ const UserInfo = ({ next }: UserInfoProps) => {
       campus: "",
       gender: "",
       class: 0,
-
     }
-
   });
 
   const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
 
+  const { data: information, isLoading } = useQuery<IUserInfo>({
+    queryKey: ["information"],
+    queryFn: async () => await getUserInfo(),
+  });
+
   const onSubmit = (data: UserForm) => {
-    const form = new FormData();
-    console.log(uploadImage)
     setSendUserInfo((prev) => {
       return {
         ...prev,
@@ -57,14 +59,9 @@ const UserInfo = ({ next }: UserInfoProps) => {
         campusName: data.campus,
       }
     });
-    if (uploadImage) {
-      form.append("profileImage", uploadImage);
-
-    }
-    form.append("name", data.name);
-    form.append("image", "");
+    if (uploadImage)
+      setProfileImage(uploadImage);
     next();
-    console.log(data);
   };
 
   const onInvalid = (errors: any) => {
@@ -72,13 +69,11 @@ const UserInfo = ({ next }: UserInfoProps) => {
   };
 
 
-  const { data: information, isLoading } = useQuery<IUserInfo>({
-    queryKey: ["information"],
-    queryFn: async () => await getUserInfo(),
-  });
+  console.log(information)
 
   useEffect(() => {
     if (!isLoading && information) {
+      // setProfileImage(information.profileImage);
       console.log(information);
       reset({
         name: information.name || "",
@@ -87,9 +82,10 @@ const UserInfo = ({ next }: UserInfoProps) => {
         campus: information.campusName || "",
       })
     }
+
   }, [information, isLoading, reset])
 
-  console.log(information);
+
 
   if (isLoading) return <div>로딩중</div>;
 

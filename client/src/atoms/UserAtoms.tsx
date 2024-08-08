@@ -73,3 +73,8 @@ export const userAttendanceState = atom<boolean>({
   key: 'userAttendanceState',
   default: false,
 });
+
+export const profileImageState = atom<File | undefined>({
+  key: 'profileImageState',
+  default: undefined,
+});

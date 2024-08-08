@@ -10,7 +10,7 @@ const QuestionInfo = () => {
       <div className="mt-5">
         <span>알림 설정한 질문</span>
         <div className="mb-20">
-          {[0, 1, 2, 3, 4, 5, 6, 6].map((index) => (
+          {[0].map((index) => (
             <AlarmedQuestion key={index} gender="여자" title="같이 밥먹고 싶은 사람?" />
           ))}
         </div>

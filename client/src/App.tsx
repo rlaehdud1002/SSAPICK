@@ -1,24 +1,23 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import CommonRoute from 'components/Routes/CommonRoute';
 import ProfileRoute from 'components/Routes/ProfileRoute';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Footer from './components/common/Footer';
 import Header from './components/common/Header';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { validState } from 'atoms/ValidAtoms';
 
-import { initializeApp } from 'firebase/app';
-import NotFoundPage from 'pages/NotFoundPage';
-import { useEffect } from 'react';
-import { validCheck } from 'api/validApi';
+import { refresh } from 'api/authApi';
 import {
   accessTokenState,
   isLoginState,
   refreshRequestState,
 } from 'atoms/UserAtoms';
-import { refresh } from 'api/authApi';
+import { initializeApp } from 'firebase/app';
+import NotFoundPage from 'pages/NotFoundPage';
+import { useEffect } from 'react';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
