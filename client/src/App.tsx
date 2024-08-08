@@ -7,7 +7,7 @@ import Footer from './components/common/Footer';
 import Header from './components/common/Header';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { validState } from 'atoms/ValidAtoms';
+import { isValidateState, validState } from 'atoms/ValidAtoms';
 
 import { initializeApp } from 'firebase/app';
 import NotFoundPage from 'pages/NotFoundPage';
@@ -36,7 +36,8 @@ function App() {
   const queryClient = new QueryClient();
 
   const navigate = useNavigate();
-  const [ValidState, setValidState] = useRecoilState(validState);
+  const isValid = useRecoilValue(isValidateState);
+  const setValidState = useSetRecoilState(validState);
   const [refreshRequest, setRefreshRequest] =
     useRecoilState(refreshRequestState);
   const setAccessToken = useSetRecoilState(accessTokenState);
@@ -53,6 +54,7 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(refreshRequest)
     if (!refreshRequest) {
       refresh()
         .then((response) => {
@@ -72,42 +74,41 @@ function App() {
   //   }
   // }, [isAuthenticated]);
 
-  // useEffect(() => {
-  //   const checkValidity = async () => {
-  //     try {
-  //       console.log('location', location);
-  //       console.log('ValidState', ValidState);
-  //       if (location === 'splash') {
-  //         return;
-  //       }
-  //       const data = await validCheck();
-  //       setValidState(data);
-  //       console.log('data', data);
-  //       if (data.lockedUser) {
-  //         console.log('유저 잠김');
-  //         navigate('/');
-  //         return;
-  //       }
-  //       if (!data.mattermostConfirmed) {
-  //         console.log('mm 미확인');
-  //         navigate('/mattermost');
-  //         return;
-  //       }
-  //       if (!data.validInfo && !location.includes('infoinsert')) {
-  //         navigate('/infoinsert');
-  //         return;
-  //       }
-  //       if (data.validInfo) {
-  //         navigate('/home');
-  //         return;
-  //       }
-  //     } catch (error) {
-  //       console.error('유효성 검사 실패', error);
-  //       navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
-  //     }
-  //   };
-  //   checkValidity();
-  // }, [navigate, setValidState]);
+  useEffect(() => {
+    const checkValidity = async () => {
+      try {
+        if (location === 'splash') {
+          return;
+        }
+        if (isValid) return;
+        const data = await validCheck();
+        setValidState(data);
+        console.log('data', data);
+        if (data.lockedUser) {
+          console.log('유저 잠김');
+          navigate('/');
+          return;
+        }
+        if (!data.mattermostConfirmed) {
+          console.log('mm 미확인');
+          navigate('/mattermost');
+          return;
+        }
+        if (!data.validInfo && !location.includes('infoinsert')) {
+          navigate('/infoinsert');
+          return;
+        }
+        if (data.validInfo) {
+          navigate('/home');
+          return;
+        }
+      } catch (error) {
+        console.error('유효성 검사 실패', error);
+        navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+      }
+    };
+    checkValidity();
+  }, [refreshRequest]);
 
   return (
     <QueryClientProvider client={queryClient}>
