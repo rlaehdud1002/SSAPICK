@@ -7,7 +7,7 @@ interface UserMaskIconProps {
   pickId: number;
   alarm: boolean;
   gen: string;
-  onAlarmUpdate: (updatedPicks: IPick[]) => void;
+  onAlarmUpdate: (pickId: number) => void;
 }
 
 const UserMaskIcon = ({ pickId, alarm, gen, onAlarmUpdate }: UserMaskIconProps) => {
@@ -21,8 +21,8 @@ const UserMaskIcon = ({ pickId, alarm, gen, onAlarmUpdate }: UserMaskIconProps) 
 
   const patchPickPutation = useMutation({
     mutationFn: patchPickAlarm,
-    onSuccess: (data) => {
-      onAlarmUpdate(data);
+    onSuccess: () => {
+      onAlarmUpdate(pickId);
     },
     onError: (error) => {
       console.error("patch error", error);
