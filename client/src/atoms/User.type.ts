@@ -1,7 +1,6 @@
-import { IHint } from "./Hint.type";
+import { IHint } from './Hint.type';
 
 export interface ISendUser {
-
   residentailArea?: string;
   major?: string;
   campusSection: number;
@@ -13,7 +12,6 @@ export interface ISendUser {
   mbti?: string;
   cohort: number;
 }
-
 
 export interface IUserInfo {
   id: number;
@@ -30,11 +28,27 @@ export interface IUserInfo {
   hints: Array<IHint>;
 }
 
-export interface BaseResponse<T> {
+export interface IEmpty{
   success: boolean;
-  code: number;
+  status: number;
+  message: string;
+  data: null;
+}
+
+export interface SuccessResponse<T> {
+  success: boolean;
   message: string;
   data: T;
+  status?: number;
+  errors?: object[];
+}
+
+export interface BaseResponse<T> {
+  success: boolean;
+  code?: number;
+  message: string;
+  data: T;
+  status?: number;
   errors?: object[];
 }
 
