@@ -71,6 +71,9 @@ class MessageControllerTest extends RestDocsSupport {
 			search.setReceiverName(receiver.getName());
 			search.setReceiverGender(receiver.getGender());
 			search.setReceiverProfileImage(receiver.getProfile().getProfileImage());
+			search.setReceiverCampus(receiver.getProfile().getCampus().getName());
+			search.setReceiverSection(receiver.getProfile().getCampus().getSection());
+			search.setReceiverCohort(receiver.getProfile().getCohort());
 			return search;
 		}).toList();
 
@@ -142,7 +145,9 @@ class MessageControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].senderCampus").description("보낸 사람 캠퍼스").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].receiverCampus").description("받은 사람 캠퍼스").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].senderSection").description("보낸 사람 섹션").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션").type(JsonFieldType.NUMBER).optional()
+							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderCohort").description("보낸 사람 기수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiverCohort").description("받은 사람 기수").type(JsonFieldType.NUMBER).optional()
 						)
 						.build()
 				)
@@ -233,7 +238,9 @@ class MessageControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].senderCampus").description("보낸 사람 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].receiverCampus").description("받은 사람 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].senderSection").description("보낸 사람 섹션 번호").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션 번호").type(JsonFieldType.NUMBER).optional()
+							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].senderCohort").description("보낸 사람 기수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiverCohort").description("받은 사람 기수").type(JsonFieldType.NUMBER).optional()
 						)
 						.build()
 				)

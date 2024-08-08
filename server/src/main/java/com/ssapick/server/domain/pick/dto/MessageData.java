@@ -25,6 +25,8 @@ public class MessageData {
 		private String receiverCampus;
 		private short senderSection;
 		private short receiverSection;
+		private short senderCohort;
+		private short receiverCohort;
 
 
 		public static Search fromEntity(Message message, boolean isReceived) {
@@ -32,8 +34,10 @@ public class MessageData {
 			if (!isReceived) {
 				search.receiverName = message.getReceiver().getName();
 				search.receiverGender = message.getReceiver().getGender();
+				search.receiverCohort = message.getReceiver().getProfile().getCohort();
 			}
 
+			search.senderCohort = message.getSender().getProfile().getCohort();
 			search.senderName = message.getSender().getName();
 			search.senderProfileImage = message.getSender().getProfile().getProfileImage();
 			search.senderCampus = message.getSender().getProfile().getCampus().getName();
