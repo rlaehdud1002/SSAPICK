@@ -66,15 +66,19 @@ class MessageControllerTest extends RestDocsSupport {
 			Message message = spy(this.createMessage(sender, receiver, "내용" + i));
 			when(message.getId()).thenReturn((long)i);
 			when(message.getCreatedAt()).thenReturn(LocalDateTime.now());
-			return MessageData.Search.fromEntity(message, false);
-		}).toList();
 
+			MessageData.Search search = MessageData.Search.fromEntity(message, true);
+			search.setReceiverName(receiver.getName());
+			search.setReceiverGender(receiver.getGender());
+			search.setReceiverProfileImage(receiver.getProfile().getProfileImage());
+			return search;
+		}).toList();
 
 		// Mocking pageable response
 		Pageable pageable = PageRequest.of(0, 3);
 		Page<MessageData.Search> searchPage = new PageImpl<>(searches, pageable, 16); // totalElements = 16
 
-		when(messageService.searchSendMessage(
+		when(messageService.searchReceiveMessage(
 			argThat(user -> user.getUsername().equals("test-user")),
 			any(Pageable.class)
 		)).thenReturn(searchPage);
@@ -132,12 +136,19 @@ class MessageControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].receiverGender").description("받은 사람 성별").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].createdAt").description("받은 일시").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].questionContent").description("메시지 받은 질문 내용").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].content").description("메시지 내용").type(JsonFieldType.STRING).optional()
+							fieldWithPath("data.content[].content").description("메시지 내용").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderProfileImage").description("보낸 사람 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverProfileImage").description("받은 사람 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderCampus").description("보낸 사람 캠퍼스").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverCampus").description("받은 사람 캠퍼스").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderSection").description("보낸 사람 섹션").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션").type(JsonFieldType.NUMBER).optional()
 						)
 						.build()
 				)
 			));
 	}
+
 
 	@Test
 	@DisplayName("보낸 메시지 조회 성공 테스트")
@@ -149,7 +160,7 @@ class MessageControllerTest extends RestDocsSupport {
 
 		List<MessageData.Search> searches = Stream.of(16, 15, 14).map(i -> {
 			Message message = spy(this.createMessage(sender, receiver, "내용" + i));
-			when(message.getId()).thenReturn((long)i);
+			when(message.getId()).thenReturn((long) i);
 			when(message.getCreatedAt()).thenReturn(LocalDateTime.now());
 			return MessageData.Search.fromEntity(message, false);
 		}).toList();
@@ -216,12 +227,19 @@ class MessageControllerTest extends RestDocsSupport {
 							fieldWithPath("data.content[].receiverGender").description("받은 사람 성별").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].createdAt").description("메시지 생성 일시").type(JsonFieldType.STRING).optional(),
 							fieldWithPath("data.content[].content").description("메시지 내용").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].questionContent").description("메시지 질문 내용").type(JsonFieldType.STRING).optional()
+							fieldWithPath("data.content[].questionContent").description("메시지 질문 내용").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderProfileImage").description("보낸 사람 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverProfileImage").description("받은 사람 프로필 이미지").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderCampus").description("보낸 사람 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].receiverCampus").description("받은 사람 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
+							fieldWithPath("data.content[].senderSection").description("보낸 사람 섹션 번호").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.content[].receiverSection").description("받은 사람 섹션 번호").type(JsonFieldType.NUMBER).optional()
 						)
 						.build()
 				)
 			));
 	}
+
 
 
 

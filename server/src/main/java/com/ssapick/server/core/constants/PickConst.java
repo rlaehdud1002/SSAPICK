@@ -15,7 +15,7 @@ public abstract class PickConst {
     // 힌트 오픈
     public static final int HINT_OPEN_COIN = -100;
     // 사용자 리롤
-    public static final int USER_REROLL_COIN = -1;
+    public static final int USER_REROLL_COIN = -10;
     // 쪽지
     public static final int MESSAGE_COIN = -20;
 }

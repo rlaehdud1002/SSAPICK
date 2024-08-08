@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { UserSend, getUserInfo } from 'api/authApi';
 import { IUserInfo } from 'atoms/User.type';
-import { sendUserInfoState } from 'atoms/UserAtoms';
+import { profileImageState, sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import BackIcon from 'icons/BackIcon';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 interface AddUserForm {
   mbti: string;
@@ -21,6 +21,7 @@ interface AddUserForm {
 const ModiUserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
+  const profileImage = useRecoilValue(profileImageState)
 
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
@@ -31,7 +32,7 @@ const ModiUserAddInfo = () => {
   const mutation = useMutation({
     mutationKey: ["user", "send"],
     mutationFn: UserSend,
-    
+
     onSuccess: () => {
       navigate(-1);
       console.log('성공');
@@ -45,10 +46,10 @@ const ModiUserAddInfo = () => {
     formState: { errors },
   } = useForm<AddUserForm>();
 
-  console.log(SendUserInfo)
+  console.log(SendUserInfo, profileImage)
 
   const onSubmit = (data: AddUserForm) => {
-    const form = new FormData();
+
     // 유저 정보 저장
     setSendUserInfo((prev) => {
       return {
@@ -60,8 +61,7 @@ const ModiUserAddInfo = () => {
         residentialArea: data.town,
       }
     });
-    form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
-    mutation.mutate(form);
+
   };
 
   const onInvalid = (errors: any) => {
@@ -69,8 +69,20 @@ const ModiUserAddInfo = () => {
   };
 
   useEffect(() => {
+    console.log("123123123")
+    if (SendUserInfo.mbti) {
+      const form = new FormData();
+      if (profileImage) {
+        form.append("profileImage", profileImage);
+      }
+      form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
+
+      mutation.mutate(form);
+    }
+  }, [SendUserInfo])
+
+  useEffect(() => {
     if (!isLoading && information) {
-      console.log(information);
       reset({
         mbti: information.hints[5].content || "",
         major: information.hints[6].content || "",
@@ -79,26 +91,24 @@ const ModiUserAddInfo = () => {
         hobby: information.hints[9].content || "",
       })
     }
-  }, [information, isLoading, reset])
-
-  console.log("정보",information);
+  }, [isLoading, information, reset])
 
   const goToBack = () => {
-    navigate(-1);
+    window.location.reload();
   }
 
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex items-center ml-4">
-      <div onClick={goToBack}>
-      <BackIcon />
-      </div>
-      <span className="ml-2">추가 정보 수정</span>
+        <div onClick={goToBack}>
+          <BackIcon />
+        </div>
+        <span className="ml-2">추가 정보 수정</span>
       </div>
       <div className="flex flex-col my-5">
         <div className="ml-10">
-         
+
           <div style={{ fontSize: 11 }}>추후 랜덤 힌트로 사용됩니다.</div>
           <div className="mb-20" style={{ color: 'red', fontSize: 10 }}>
             모든 정보 입력이 필수입니다.

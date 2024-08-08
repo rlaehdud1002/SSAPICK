@@ -22,6 +22,7 @@ import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class MessageService {
     private final CommentAnalyzerService commentAnalyzer;
     private final UserRepository userRepository;
 	private final ApplicationEventPublisher publisher;
+	private final UserBanRepository userBanRepository;
+
 	/**
 	 * 보낸 메시지 조회하기
 	 * 보낸 메시지를 조회하고 익명으로 보내진 메시지는 익명으로 표시한다.
@@ -48,7 +51,10 @@ public class MessageService {
 	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
 		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
 
+		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
+
 		List<MessageData.Search> messages = messagesPage.stream()
+			.filter(message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
 
@@ -65,7 +71,9 @@ public class MessageService {
 	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
 		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
 
+		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
 		List<MessageData.Search> messages = messagesPage.stream()
+			.filter(message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
 

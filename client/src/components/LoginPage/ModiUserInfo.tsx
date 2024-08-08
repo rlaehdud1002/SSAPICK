@@ -1,17 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
 import { IUserInfo } from "atoms/User.type";
-import { sendUserInfoState } from "atoms/UserAtoms";
+import { profileImageState, sendUserInfoState } from "atoms/UserAtoms";
 import DoneButton from "buttons/DoneButton";
+import BackIcon from "icons/BackIcon";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
-import BackIcon from "icons/BackIcon";
-import { useNavigate } from "react-router-dom";
-
 
 interface UserForm {
   name: string;
@@ -26,7 +25,9 @@ interface UserInfoProps {
 }
 
 const ModiUserInfo = ({ next }: UserInfoProps) => {
+  const setProfileImage = useSetRecoilState(profileImageState);
   const navigate = useNavigate();
+
   const goToBack = () => {
     navigate(-1);
   }
@@ -55,14 +56,11 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
         campusName: data.campus,
       }
     });
-    if (uploadImage) {
-      form.append("profileImage", uploadImage);
 
-    }
-    form.append("name", data.name);
-    form.append("image", "");
+    if (uploadImage)
+      // form.append("profileImage", uploadImage);
+    setProfileImage(uploadImage);
     next();
-    console.log(data);
   };
 
   const onInvalid = (errors: any) => {
@@ -86,19 +84,21 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
         campus: information.campusName || "",
       })
     }
+
   }, [information, isLoading, reset])
 
   console.log(information);
 
   if (isLoading) return <div>로딩중</div>;
-  
+
+
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex items-center ml-4">
-      <div onClick={goToBack} >
-      <BackIcon />
-      </div>
-      <span className="ml-2">정보 수정</span>
+        <div onClick={goToBack} >
+          <BackIcon />
+        </div>
+        <span className="ml-2">정보 수정</span>
       </div>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">

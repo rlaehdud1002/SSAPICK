@@ -1,4 +1,3 @@
-import PlusDeleteButton from "buttons/PlusDeleteButton";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 
 interface MakeQuestionContentProps {

@@ -1,7 +1,7 @@
 import { Client } from '@stomp/stompjs';
 import { accessTokenState, isLoginState } from 'atoms/UserAtoms';
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 interface Position {
     latitude: number;
@@ -25,24 +25,24 @@ export const useLocation = () => {
     const fetchLocation = () => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
-              (position) => {
-                  setCoords(position.coords);
+                (position) => {
+                    setCoords(position.coords);
 
-                  
-              },
-              (error) => {
-                setError(error.message);
-              },
+
+                },
+                (error) => {
+                    setError(error.message);
+                },
             );
-          } else {
+        } else {
             setError('위치 정보를 가져올 수 없습니다.');
-          }
+        }
     }
 
     useEffect(() => {
         if ((coords.latitude === 0 && coords.longitude === 0)) return;
         if (!client || !client.connected) return;
-        
+
         client.publish({
             destination: '/pub/location/update',
             body: JSON.stringify({geo: {
@@ -74,5 +74,5 @@ export const useLocation = () => {
         setClient(client)
     }, [isLogin])
 
-    return {coords, error}
+    return { coords, error }
 }
