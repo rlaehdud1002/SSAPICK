@@ -41,7 +41,7 @@ const InfoSelect = ({
           defaultValue={String(defaultValue)}
           {...register} onValueChange={handleChange}>
           <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
-            <Label htmlFor={title}>{title}</Label>
+            <Label className='w-16 text-start' htmlFor={title}>{title}</Label>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

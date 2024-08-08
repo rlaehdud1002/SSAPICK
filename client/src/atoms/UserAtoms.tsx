@@ -41,28 +41,28 @@ export const refreshRequestState = atom<boolean>({
 })
 
 
-export const userState = atom<IUser>({
-  key: 'userState',
-  default: {
-    profileImage: '',
-    name: '',
-    th: '',
-    campusName: '',
-    gender: '',
-  }
-});
+// export const userState = atom<IUser>({
+//   key: 'userState',
+//   default: {
+//     profileImage: '',
+//     name: '',
+//     th: '',
+//     campusName: '',
+//     gender: '',
+//   }
+// });
 
-export const userAddState = atom<IUserAdd>({
-  key: 'userAddState',
-  default: {
-    mbti: '',
-    classNum: 1,
-    major: '',
-    birth: '',
-    location: '',
-    interest: '',
-  },
-});
+// export const userAddState = atom<IUserAdd>({
+//   key: 'userAddState',
+//   default: {
+//     mbti: '',
+//     classNum: 1,
+//     major: '',
+//     birth: '',
+//     location: '',
+//     interest: '',
+//   },
+// });
 
 export const userCoinState = atom<number>({
   key: 'userCoinState',
@@ -72,4 +72,9 @@ export const userCoinState = atom<number>({
 export const userAttendanceState = atom<boolean>({
   key: 'userAttendanceState',
   default: false,
+});
+
+export const profileImageState = atom<File | undefined>({
+  key: 'profileImageState',
+  default: undefined,
 });

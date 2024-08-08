@@ -1,7 +1,6 @@
 import { IHint } from "./Hint.type";
 
 export interface ISendUser {
-
   residentailArea?: string;
   major?: string;
   campusSection: number;
