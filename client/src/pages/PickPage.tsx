@@ -1,24 +1,17 @@
-import Question from 'components/PickPage/QuestionBox';
-import Choice from 'components/PickPage/ChoiceBox';
-import ShuffleIcon from 'icons/ShuffleIcon';
-import {
-  QueryClient,
-  QueryErrorResetBoundary,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
-import { getQuestion } from 'api/questionApi';
-import { IFriend } from 'atoms/Friend.type';
-import { getFriendsList } from 'api/friendApi';
-import { useCallback, useState, useEffect } from 'react';
-import { getPickInfo, postCreatePick } from 'api/pickApi';
-import { useRecoilState } from 'recoil';
-import { questionState } from 'atoms/PickAtoms';
-import PickComplete from 'components/PickPage/PickComplete';
-import CoolTime from 'pages/CoolTimePage';
-import { Navigate } from 'react-router-dom';
+import Question from "components/PickPage/QuestionBox";
+import Choice from "components/PickPage/ChoiceBox";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { IPickCreate, IPickInfo, IQuestion } from "atoms/Pick.type";
+import { getQuestion } from "api/questionApi";
+import { IFriend } from "atoms/Friend.type";
+import { getFriendsList } from "api/friendApi";
+import { useCallback, useState, useEffect } from "react";
+import { getPickInfo, postCreatePick } from "api/pickApi";
+import { useRecoilState } from "recoil";
+import { questionState } from "atoms/PickAtoms";
+import PickComplete from "components/PickPage/PickComplete";
+import { Navigate } from "react-router-dom";
+import FriendRerollModal from "components/modals/FriendRerollModal";
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
@@ -27,7 +20,7 @@ const Pick = () => {
   const [finish, setFinish] = useState<boolean>(false);
   // 새로운 질문 조회 mutation
   const getNewQuestion = useMutation({
-    mutationKey: ['question'],
+    mutationKey: ["question"],
     mutationFn: getQuestion,
 
     onSuccess: (data) => {
@@ -41,10 +34,8 @@ const Pick = () => {
 
   // ========================================== 친구 조회 ==============================================================
   // 전체 친구 목록 조회
-  const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<
-    IFriend[]
-  >({
-    queryKey: ['friends'],
+  const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<IFriend[]>({
+    queryKey: ["friends"],
     queryFn: getFriendsList,
   });
 
@@ -53,7 +44,7 @@ const Pick = () => {
 
   const handleShuffle = useCallback(() => {
     if (friends.length > 0) {
-      console.log('shuffleFriends');
+      console.log("shuffleFriends");
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
@@ -71,7 +62,7 @@ const Pick = () => {
 
   // pick 상태 조회
   const { data: pickInfo, isLoading: LoadingPickInfo } = useQuery<IPickInfo>({
-    queryKey: ['pickInfo'],
+    queryKey: ["pickInfo"],
     queryFn: getPickInfo,
   });
 
@@ -92,11 +83,11 @@ const Pick = () => {
 
   // pick 생성
   const mutation = useMutation({
-    mutationKey: ['pickInfo'],
+    mutationKey: ["pickInfo"],
     mutationFn: async (data: IPickCreate) => postCreatePick(data),
     onSuccess: (data: IPickInfo) => {
       queryClient.invalidateQueries({
-        queryKey: ['pickInfo'],
+        queryKey: ["pickInfo"],
       });
       setNowQuestion(question[data.index]);
       handleShuffle();
@@ -122,17 +113,10 @@ const Pick = () => {
         nowQuestion &&
         pickFriends.length > 0 && (
           <div>
-            <Question
-              question={nowQuestion}
-              userPick={mutation.mutate}
-              pickInfo={pickInfo}
-            />
+            <Question question={nowQuestion} userPick={mutation.mutate} pickInfo={pickInfo} />
             <div className="m-7">
-              <div
-                className="flex flex-row justify-end"
-                onClick={handleShuffle}
-              >
-                <ShuffleIcon className="cursor-pointer" />
+              <div className="flex flex-row justify-end">
+                <FriendRerollModal handleShuffle={handleShuffle} />
               </div>
               <div className="flex flex-row justify-center">
                 <Choice

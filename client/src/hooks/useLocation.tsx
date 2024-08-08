@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { isLoginState } from 'atoms/UserAtoms';
+import { accessTokenState, isLoginState } from 'atoms/UserAtoms';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from 'recoil';
 
@@ -16,6 +16,7 @@ export const useLocation = () => {
     const [error, setError] = useState<string | undefined>()
     const [client, setClient] = useState<Client | undefined>(undefined);
     const isLogin = useRecoilValue(isLoginState);
+    const accessToken = useRecoilValue(accessTokenState)
 
     useEffect(() => {
         fetchLocation();
@@ -44,11 +45,9 @@ export const useLocation = () => {
 
         client.publish({
             destination: '/pub/location/update',
-            body: JSON.stringify({
-                userId: 10,
-                geo: {
-                    latitude: coords.latitude,
-                    longitude: coords.longitude
+            body: JSON.stringify({geo: {
+                    latitude: coords.latitude + 0.0004,
+                    longitude: coords.longitude - 0.0002
                 }
             })
         })
@@ -59,6 +58,9 @@ export const useLocation = () => {
 
         const client = new Client({
             brokerURL: process.env.REACT_APP_BACKEND_SOCKET_HOST,
+            connectHeaders: {
+                Authorization: `Bearer ${accessToken}`
+            },
             onConnect: () => {
                 client!!.subscribe('/sub/location/update', (message) => {
                     console.log(message)

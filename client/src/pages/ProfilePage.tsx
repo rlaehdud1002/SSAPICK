@@ -21,7 +21,7 @@ const Profile = () => {
   const setProfileImage = useSetRecoilState(profileImageState);
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
-    queryKey: ["information"],
+    queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
 
@@ -31,9 +31,12 @@ const Profile = () => {
   return (
     <div>
       {information && <ProfileContent information={information} />}
-      <div className="mb-20">
+      <div>
         <Link to="/modiinfoinsert">
-          <ProfileAlarm title="개인정보 수정" content="힌트로 제공할 나의 정보 수정">
+          <ProfileAlarm
+            title="개인정보 수정"
+            content="힌트로 제공할 나의 정보 수정"
+          >
             <UserInfoIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
@@ -43,7 +46,10 @@ const Profile = () => {
           </ProfileAlarm>
         </Link>
         <Link to="/profile/friendlist">
-          <ProfileAlarm title="친구 관리" content="내가 PICK하고 싶은 친구 찾기">
+          <ProfileAlarm
+            title="친구 관리"
+            content="내가 PICK하고 싶은 친구 찾기"
+          >
             <FriendAlarmIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
@@ -53,17 +59,26 @@ const Profile = () => {
           </ProfileAlarm>
         </Link>
         <Link to="/profile/attendance">
-          <ProfileAlarm title="출석 체크" content="연속 출석 도전하고 PICKCO 얻자 !">
+          <ProfileAlarm
+            title="출석 체크"
+            content="연속 출석 도전하고 PICKCO 얻자 !"
+          >
             <AttendanceIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
         <Link to="/profile/locationalarm">
-          <ProfileAlarm title="내 주위 사람" content="주위 사람 찾고 PICKCO 얻자 !">
+          <ProfileAlarm
+            title="내 주위 사람"
+            content="주위 사람 찾고 PICKCO 얻자 !"
+          >
             <LocationAlarmIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
         <Link to="/profile/questionlist">
-          <ProfileAlarm title="질문 리스트" content="나와 관련된 질문을 확인해보세요 !">
+          <ProfileAlarm
+            title="질문 리스트"
+            content="나와 관련된 질문을 확인해보세요 !"
+          >
             <QuestionAlarmIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>

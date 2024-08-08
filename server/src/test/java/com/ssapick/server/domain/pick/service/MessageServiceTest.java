@@ -132,16 +132,16 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 
+
 		// 실제 사용되는 스텁만 설정
-		lenient().when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
+		lenient().when(pickRepository.findByIdWithSender(any())).thenReturn(Optional.of(pick));
 		lenient().when(pick.isMessageSend()).thenReturn(false);
 		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
-		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		messageService.createMessage(sender, create);
@@ -160,15 +160,14 @@ class MessageServiceTest extends UserSupport {
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 
 		// 실제 사용되는 스텁만 설정
-		lenient().when(pickRepository.findById(pick.getId())).thenReturn(Optional.of(pick));
+		lenient().when(pickRepository.findByIdWithSender(pick.getId())).thenReturn(Optional.of(pick));
 		lenient().when(pick.isMessageSend()).thenReturn(false);
-		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
 		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
@@ -188,12 +187,11 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Long pickId = 1L;
 
-		when(pickRepository.findById(pickId)).thenReturn(Optional.empty());
+		when(pickRepository.findByIdWithSender(pickId)).thenReturn(Optional.empty());
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pickId);
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
@@ -212,14 +210,13 @@ class MessageServiceTest extends UserSupport {
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
 
-		when(pickRepository.findById(1L)).thenReturn(Optional.of(pick));
+		when(pickRepository.findByIdWithSender(1L)).thenReturn(Optional.of(pick));
 		when(pick.getId()).thenReturn(1L);
 		when(pick.isMessageSend()).thenReturn(true);
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);

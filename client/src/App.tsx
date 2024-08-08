@@ -1,23 +1,20 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import CommonRoute from 'components/Routes/CommonRoute';
-import ProfileRoute from 'components/Routes/ProfileRoute';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import Footer from './components/common/Footer';
-import Header from './components/common/Header';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CommonRoute from "components/Routes/CommonRoute";
+import ProfileRoute from "components/Routes/ProfileRoute";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Footer from "./components/common/Footer";
+import Header from "./components/common/Header";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { validState } from 'atoms/ValidAtoms';
+import { isValidateState, validState } from "atoms/ValidAtoms";
 
-import { refresh } from 'api/authApi';
-import {
-  accessTokenState,
-  isLoginState,
-  refreshRequestState,
-} from 'atoms/UserAtoms';
-import { initializeApp } from 'firebase/app';
-import NotFoundPage from 'pages/NotFoundPage';
-import { useEffect } from 'react';
+import { initializeApp } from "firebase/app";
+import NotFoundPage from "pages/NotFoundPage";
+import { useEffect } from "react";
+import { validCheck } from "api/validApi";
+import { accessTokenState, isLoginState, refreshRequestState } from "atoms/UserAtoms";
+import { refresh } from "api/authApi";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -31,23 +28,28 @@ const firebaseConfig = {
 
 function App() {
   initializeApp(firebaseConfig);
-  const location = useLocation().pathname.split('/')[1];
+  const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
-  const [refreshRequest, setRefreshRequest] =
-    useRecoilState(refreshRequestState);
-  const setAccessToken = useSetRecoilState(accessTokenState);                        
+
+  const navigate = useNavigate();
+  const isValid = useRecoilValue(isValidateState);
+  const setValidState = useSetRecoilState(validState);
+  const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
+  const setAccessToken = useSetRecoilState(accessTokenState);
+  const isAuthenticated = useRecoilValue(isLoginState);
 
   const headerFooter = () => {
     return (
-      location !== '' && // 로그인 페이지
-      location !== 'splash' && // 스플래시 페이지
-      location !== 'mattermost' && // mm 인증 페이지
-      location !== '404' && // 404 페이지
-      location !== 'infoinsert' // 추가 정보 입력 페이지
+      location !== "" && // 로그인 페이지
+      location !== "splash" && // 스플래시 페이지
+      location !== "mattermost" && // mm 인증 페이지
+      location !== "404" && // 404 페이지
+      location !== "infoinsert" // 추가 정보 입력 페이지
     );
   };
 
   useEffect(() => {
+    console.log(refreshRequest);
     if (!refreshRequest) {
       refresh()
         .then((response) => {
@@ -59,50 +61,36 @@ function App() {
           setRefreshRequest(true);
         });
     }
-  }, []);
+  }, [refreshRequest, setAccessToken, setRefreshRequest]);
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate('/home');
-  //   }
-  // }, [isAuthenticated]);
-
-  // useEffect(() => {
-  //   const checkValidity = async () => {
-  //     try {
-  //       console.log('location', location);
-  //       console.log('ValidState', ValidState);
-  //       if (location === 'splash') {
-  //         return;
-  //       }
-  //       const data = await validCheck();
-  //       setValidState(data);
-  //       console.log('data', data);
-  //       if (data.lockedUser) {
-  //         console.log('유저 잠김');
-  //         navigate('/');
-  //         return;
-  //       }
-  //       if (!data.mattermostConfirmed) {
-  //         console.log('mm 미확인');
-  //         navigate('/mattermost');
-  //         return;
-  //       }
-  //       if (!data.validInfo && !location.includes('infoinsert')) {
-  //         navigate('/infoinsert');
-  //         return;
-  //       }
-  //       if (data.validInfo) {
-  //         navigate('/home');
-  //         return;
-  //       }
-  //     } catch (error) {
-  //       console.error('유효성 검사 실패', error);
-  //       navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
-  //     }
-  //   };
-  //   checkValidity();
-  // }, [navigate, setValidState]);
+  useEffect(() => {
+    const checkValidity = async () => {
+      try {
+        if (location === "splash") {
+          return;
+        }
+        if (isValid) return;
+        const data = await validCheck();
+        setValidState(data);
+        if (data.lockedUser) {
+          navigate("/");
+          return;
+        }
+        if (!data.mattermostConfirmed) {
+          navigate("/mattermost");
+          return;
+        }
+        if (!data.validInfo && !location.includes('infoinsert')) {
+          navigate('/infoinsert');
+          return;
+        }
+      } catch (error) {
+        console.error("유효성 검사 실패", error);
+        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+      }
+    };
+    checkValidity();
+  }, [refreshRequest]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -124,7 +112,7 @@ function App() {
       </div> */}
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
-        <main className="flex-grow">
+        <main className="flex-grow mb-[70px]">
           <Routes>
             <Route path="/*" element={<CommonRoute />} />
             <Route path="/profile/*" element={<ProfileRoute />} />
