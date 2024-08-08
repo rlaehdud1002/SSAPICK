@@ -189,7 +189,7 @@ public class QuestionService {
      */
     public List<QuestionData.Search> searchQuestionsRank(Long userId) {
         return questionRepository.findQRankingByUserId(userId)
-                .stream()
+                .stream().limit(3)
                 .map(QuestionData.Search::fromEntity)
                 .toList();
     }
