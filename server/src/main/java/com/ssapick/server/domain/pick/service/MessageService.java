@@ -82,7 +82,7 @@ public class MessageService {
     @Async("apiExecutor")
     @Transactional
     public void createMessage(User sender, MessageData.Create create) {
-        Pick pick = pickRepository.findById(create.getPickId()).orElseThrow(
+        Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
             () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
         );
 
@@ -92,7 +92,7 @@ public class MessageService {
 		pick.send();
 
 
-        User receiver = userRepository.findById(pick.getReceiver().getId()).orElseThrow(
+        User receiver = userRepository.findById(pick.getSender().getId()).orElseThrow(
             () -> new BaseException(ErrorCode.NOT_FOUND_USER)
         );
 

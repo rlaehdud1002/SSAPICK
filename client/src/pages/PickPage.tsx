@@ -1,13 +1,6 @@
 import Question from 'components/PickPage/QuestionBox';
 import Choice from 'components/PickPage/ChoiceBox';
-import ShuffleIcon from 'icons/ShuffleIcon';
-import {
-  QueryClient,
-  QueryErrorResetBoundary,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
 import { getQuestion } from 'api/questionApi';
 import { IFriend } from 'atoms/Friend.type';
@@ -17,8 +10,8 @@ import { getPickInfo, postCreatePick } from 'api/pickApi';
 import { useRecoilState } from 'recoil';
 import { questionState } from 'atoms/PickAtoms';
 import PickComplete from 'components/PickPage/PickComplete';
-import CoolTime from 'pages/CoolTimePage';
 import { Navigate } from 'react-router-dom';
+import FriendRerollModal from 'components/modals/FriendRerollModal';
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
@@ -128,11 +121,8 @@ const Pick = () => {
               pickInfo={pickInfo}
             />
             <div className="m-7">
-              <div
-                className="flex flex-row justify-end"
-                onClick={handleShuffle}
-              >
-                <ShuffleIcon className="cursor-pointer" />
+              <div className="flex flex-row justify-end">
+                <FriendRerollModal handleShuffle={handleShuffle} />
               </div>
               <div className="flex flex-row justify-center">
                 <Choice

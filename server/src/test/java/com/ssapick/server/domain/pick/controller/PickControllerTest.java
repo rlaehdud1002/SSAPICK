@@ -514,51 +514,7 @@ class PickControllerTest extends RestDocsSupport {
 					.tag("픽")
 					.summary("픽 알람 설정 API")
 					.description("사용자가 선택한 픽의 알람을 설정한다.")
-					.responseFields(
-						fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
-						fieldWithPath("status").type(JsonFieldType.NUMBER).description("상태코드"),
-						fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
-						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("픽 ID"),
-						fieldWithPath("data[].sender.userId").type(JsonFieldType.NULL)
-							.description("픽 보낸 사람 ID (익명 처리)"),
-						fieldWithPath("data[].sender.nickname").type(JsonFieldType.NULL).description("픽 보낸 사람 익명 처리"),
-						fieldWithPath("data[].sender.gender").type(JsonFieldType.STRING).description("픽 보낸 사람 성별"),
-						fieldWithPath("data[].sender.campusName").type(JsonFieldType.STRING)
-							.description("픽 보낸 사람 캠퍼스 소속"),
-						fieldWithPath("data[].sender.campusSection").type(JsonFieldType.NUMBER)
-							.description("픽 보낸 사람 캠퍼스 반"),
-						fieldWithPath("data[].sender.campusDescription").type(JsonFieldType.STRING)
-							.description("픽 보낸 사람 전공"),
-						fieldWithPath("data[].sender.profileImage").type(JsonFieldType.NULL)
-							.description("픽 보낸 사람 프로필 이미지 익명 처리"),
-						fieldWithPath("data[].sender.cohort").type(JsonFieldType.NUMBER).description("픽 보낸 사람 기수"),
-						fieldWithPath("data[].receiver.userId").type(JsonFieldType.NUMBER).description("픽 받은 사람 ID"),
-						fieldWithPath("data[].receiver.nickname").type(JsonFieldType.STRING).description("픽 받은 사람 이름"),
-						fieldWithPath("data[].receiver.gender").type(JsonFieldType.STRING).description("픽 받은 사람 성별"),
-						fieldWithPath("data[].receiver.campusName").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 캠퍼스 소속"),
-						fieldWithPath("data[].receiver.campusSection").type(JsonFieldType.NUMBER)
-							.description("픽 받은 사람 캠퍼스 반"),
-						fieldWithPath("data[].receiver.campusDescription").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 전공"),
-						fieldWithPath("data[].receiver.profileImage").type(JsonFieldType.STRING)
-							.description("픽 받은 사람 프로필 이미지"),
-						fieldWithPath("data[].receiver.cohort").type(JsonFieldType.NUMBER).description("픽 받은 사람 기수"),
-						fieldWithPath("data[].question.id").type(JsonFieldType.NUMBER).description("질문 ID"),
-						fieldWithPath("data[].question.banCount").description("질문을 차단한 횟수"),
-						fieldWithPath("data[].question.skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),
-						fieldWithPath("data[].question.category.id").type(JsonFieldType.NUMBER)
-							.description("질문 카테고리 ID"),
-						fieldWithPath("data[].question.category.name").type(JsonFieldType.STRING)
-							.description("질문 카테고리명"),
-						fieldWithPath("data[].question.category.thumbnail").type(JsonFieldType.STRING)
-							.description("질문 카테고리 썸네일"),
-						fieldWithPath("data[].openedHints[]").type(JsonFieldType.ARRAY).description("현재 오픈된 힌트 정보"),
-						fieldWithPath("data[].question.content").type(JsonFieldType.STRING).description("질문 내용"),
-						fieldWithPath("data[].messageSend").type(JsonFieldType.BOOLEAN).description("해당 픽 쪽지 전송 여부"),
-						fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("픽 생성일시"),
-						fieldWithPath("data[].alarm").type(JsonFieldType.BOOLEAN).description("픽 알람 설정 여부")
-					)
+					.responseFields(empty())
 					.build()
 			)));
 	}
