@@ -28,6 +28,7 @@ import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
@@ -56,6 +57,8 @@ class MessageServiceTest extends UserSupport {
 	@Mock
 	private UserRepository userRepository;
 	@Mock
+	private UserBanRepository userBanRepository;
+	@Mock
 	private ApplicationEventPublisher publisher;
 
 	@Test
@@ -77,6 +80,8 @@ class MessageServiceTest extends UserSupport {
 
 		when(messageRepository.findSentMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
 			.thenReturn(messagePage);
+
+		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
 
 		// * WHEN: 이걸 실행하면
 		List<MessageData.Search> searches = messageService.searchSendMessage(sender, PageRequest.of(0, 10)).getContent();
@@ -111,6 +116,7 @@ class MessageServiceTest extends UserSupport {
 		when(messageRepository.findReceivedMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
 			.thenReturn(messagePage);
 
+		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
 
 		// * WHEN: 서비스 메서드 호출
 		List<MessageData.Search> searches = messageService.searchReceiveMessage(sender, PageRequest.of(0, 10)).getContent();

@@ -24,6 +24,7 @@ public class MessageRepositoryImpl implements MessageQueryRepository {
     public Page<Message> findReceivedMessageByUserId(Long userId, Pageable pageable) {
         List<Message> messages = queryFactory.selectFrom(message)
             .leftJoin(message.sender).fetchJoin() // 패치 조인
+            .leftJoin(message.sender.profile).fetchJoin()
             .where(message.receiver.id.eq(userId)
                 .and(message.isReceiverDeleted.isFalse()))
             .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
@@ -39,6 +40,7 @@ public class MessageRepositoryImpl implements MessageQueryRepository {
     public Page<Message> findSentMessageByUserId(Long userId, Pageable pageable) {
         List<Message> messages = queryFactory.selectFrom(message)
             .leftJoin(message.receiver).fetchJoin() // 패치 조인
+            .leftJoin(message.receiver.profile).fetchJoin()
             .where(message.sender.id.eq(userId)
                 .and(message.isSenderDeleted.isFalse()))
             .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
