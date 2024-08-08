@@ -230,6 +230,7 @@ public class PickService {
 
 	}
 
+	@Transactional
 	public void reRoll(User user) {
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
