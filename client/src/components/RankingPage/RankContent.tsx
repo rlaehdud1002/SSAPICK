@@ -31,15 +31,18 @@ const RankContent = ({ title, rankInfo }: RankContentProps) => {
           return (
             <div
               key={index}
-              className="flex flex-row items-center border border-white rounded-lg m-3 p-2"
+              className="flex flex-row items-center justify-between border border-white rounded-lg m-3 p-2"
             >
-              <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl pt-2">
-                {rankNum++}
-              </span>
-              <span className="ms-2">
-                {rank.user.campusName}캠퍼스 {rank.user.cohort}기{' '}
-                {rank.user.section}반 {rank.user.name}
-              </span>
+              <div>
+                <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl pt-2">
+                  {rankNum++}
+                </span>
+                <span className="ms-2">
+                  {rank.user.campusName}캠퍼스 {rank.user.cohort}기{' '}
+                  {rank.user.section}반 {rank.user.name}
+                </span>
+              </div>
+              <span className="luckiest_guy mr-4 text-indigo-500 text-xl">{rank.count}</span>
             </div>
           );
         })

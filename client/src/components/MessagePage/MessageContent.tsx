@@ -12,20 +12,34 @@ const MessageContent = ({ message, status }: MessageContentProps) => {
     <div className="mx-2 my-5 border-b-[1px]">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center">
-          <UserPickIcon
-            gen={
-              status === 'send' ? message.senderGender : message.receiverGender
-            }
-            width={32}
-            height={32}
-          />
+          {status === 'send' ? (
+            <UserPickIcon
+              gen={
+                status === 'send'
+                  ? message.senderGender
+                  : message.receiverGender
+              }
+              width={32}
+              height={32}
+            />
+          ) : (
+            <img
+              src={message.senderProfileImage}
+              alt="noProfileImage"
+              className="rounded-full w-8 h-8"
+            />
+          )}
+
           <h1 className="ms-3">
-            {status === 'send' ? '익명' : message.senderName} 
+            {status === 'send'
+              ? `${message.receiverCampus}캠퍼스 ${message.receiverSection}반`
+              : message.senderName}
           </h1>
         </div>
         <WarningDelete message={message} />
       </div>
-      <div className="text-center text-gray-500 my-4">
+      <div className="text-center text-gray-500 my-4 flex flex-row items-center justify-center">
+        <h1 className="ml-3 mr-3 luckiest_guy text-lg">Q</h1>
         {message.questionContent}
       </div>
       <div className="flex flex-row items-center bg-white/50 rounded-lg p-2">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteReceivedMessage, deleteSendMessage } from 'api/messageApi';
 import ResultCheckModal from 'components/modals/ResultCheckModal';
 import DeleteIcon from 'icons/DeleteIcon';
@@ -38,21 +38,22 @@ const WarningDeleteModal = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
-    mutationKey: ['delete'],
+    mutationKey: ['block', 'user'],
     mutationFn: blockUser,
     onSuccess: () => {
-      console.log('유저 차단 성공');
+      console.log('쪽지 신고 성공');
+      queryClient.invalidateQueries({ queryKey: ['message'] });
     },
   });
 
   // 쪽지 삭제 mutation
   const deleteMutation = useMutation({
     mutationKey: ['message', 'delete'],
-    mutationFn: async ({
+    mutationFn: ({
       messageId,
       location,
     }: {
@@ -60,17 +61,18 @@ const WarningDeleteModal = ({
       location: string;
     }) => {
       if (location === 'send') {
-        return await deleteSendMessage(messageId);
+        return deleteSendMessage(messageId); // Promise를 반환
       } else if (location === 'received') {
-        return await deleteReceivedMessage(messageId);
+        return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
         throw new Error('Invalid location');
       }
     },
+
     // 쪽지 삭제 후 쪽지 목록 새로 고침
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['message'],
+        queryKey: ['message', location === 'send' ? 'send' : 'received'],
       });
     },
   });
@@ -80,14 +82,19 @@ const WarningDeleteModal = ({
     if (step === WarningDeleteStep.ALERT) {
       const timer = setTimeout(() => {
         setIsModalVisible(false);
-      }, 1000);
+      }, 500);
 
       return () => clearTimeout(timer);
     }
   }, [step]);
 
   const onClick = () => {
-    deleteMutation.mutate({ messageId, location });
+    if (title === '신고') {
+      blockMutatiion.mutate(messageId);
+    } else {
+      deleteMutation.mutate({ messageId, location });
+    }
+
     setStep(WarningDeleteStep.ALERT);
   };
 

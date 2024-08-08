@@ -1,16 +1,16 @@
-import HintModal from "components/modals/HintModal";
-import MessageModal from "components/modals/MessageModal";
-import UserMaskIcon from "icons/UserMaskIcon";
+import HintModal from 'components/modals/HintModal';
+import MessageModal from 'components/modals/MessageModal';
+import UserMaskIcon from 'icons/UserMaskIcon';
 
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "components/ui/accordion";
+} from 'components/ui/accordion';
 
-import { IPick } from "atoms/Pick.type";
-import { useCallback, useEffect, useState } from "react";
+import { IPick } from 'atoms/Pick.type';
+import { useCallback, useEffect, useState } from 'react';
 
 interface ResponseProps {
   picks: IPick[];
@@ -63,7 +63,9 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                         onAlarmUpdate={handleAlarmUpdate}
                       />
                     </div>
-                    <h3 className="mx-3 text-color-000855">11기 {pick.sender.campusSection}반</h3>
+                    <h3 className="mx-3 text-color-000855">
+                      11기 {pick.sender.campusSection}반
+                    </h3>
                   </div>
                 </div>
               </AccordionTrigger>
@@ -72,13 +74,19 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                 <div className="flex flex-row justify-center">
                   <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
                     <HintModal
-                      title={pick.openedHints.length === 0 ? "?" : pick.openedHints[0]}
+                      title={
+                        pick.openedHints.length === 0
+                          ? '?'
+                          : pick.openedHints[0]
+                      }
                       pickId={pick.id}
                     />
                   </div>
                   <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
                     <HintModal
-                      title={pick.openedHints.length <= 1 ? "?" : pick.openedHints[1]}
+                      title={
+                        pick.openedHints.length <= 1 ? '?' : pick.openedHints[1]
+                      }
                       pickId={pick.id}
                     />
                   </div>
