@@ -28,6 +28,8 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 			.selectFrom(question)
 			.leftJoin(question.questionCategory).fetchJoin()
 			.leftJoin(question.author).fetchJoin()
+			.leftJoin(question.author.profile).fetchJoin()
+			.leftJoin(question.author.alarm).fetchJoin()
 			.where(question.isDeleted.eq(false))
 			.fetch();
 	}
