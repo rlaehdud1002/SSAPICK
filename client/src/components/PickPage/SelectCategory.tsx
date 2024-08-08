@@ -36,8 +36,6 @@ const SelectCategory = ({
     queryFn: getCategory,
   });
 
-  console.log('categorys', categorys);
-
   return (
     <div className='my-3'>
       <div>
