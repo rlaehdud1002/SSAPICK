@@ -129,7 +129,7 @@ function App() {
       </div> */}
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
-        <main className="flex-grow">
+        <main className="flex-grow mb-[70px]">
           <Routes>
             <Route path="/*" element={<CommonRoute />} />
             <Route path="/profile/*" element={<ProfileRoute />} />

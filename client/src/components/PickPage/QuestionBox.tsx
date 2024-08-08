@@ -53,8 +53,8 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
           <img
             src={question.category.thumbnail}
             alt="categoryImg"
-            width={200}
-            height={200}
+            width={100}
+            height={100}
           />
         </div>
       </div>
