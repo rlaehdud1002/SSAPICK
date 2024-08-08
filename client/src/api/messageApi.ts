@@ -28,8 +28,6 @@ export const getReceivedMessage = async (): Promise<IPaging<IMessage[]>> => {
     throw new Error('받은 메시지 조회 실패');
   }
 
-  console.log('getReceivedMessage');
-
   return data;
 };
 
@@ -42,8 +40,6 @@ export const getSendMessage = async (): Promise<IPaging<IMessage[]>> => {
   if (!success) {
     throw new Error('보낸 메시지 조회 실패');
   }
-
-  console.log('getSendMessage');
 
   return data;
 };

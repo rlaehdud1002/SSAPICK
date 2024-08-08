@@ -1,7 +1,6 @@
 import { IAuth, JwtToken } from "atoms/Auth.type";
 import { BaseResponse, IUserInfo } from "atoms/User.type";
 import instance from "./clientApi";
-import { access } from "fs";
 
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
