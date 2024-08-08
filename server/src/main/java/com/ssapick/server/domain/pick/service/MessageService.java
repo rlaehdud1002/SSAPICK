@@ -81,7 +81,7 @@ public class MessageService {
 		pick.send();
 
 
-        User receiver = userRepository.findById(create.getReceiverId()).orElseThrow(
+        User receiver = userRepository.findById(pick.getReceiver().getId()).orElseThrow(
             () -> new BaseException(ErrorCode.NOT_FOUND_USER)
         );
 
