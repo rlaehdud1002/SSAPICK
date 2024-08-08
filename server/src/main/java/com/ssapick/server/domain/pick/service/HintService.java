@@ -1,5 +1,16 @@
 package com.ssapick.server.domain.pick.service;
 
+import static com.ssapick.server.core.constants.PickConst.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
@@ -8,18 +19,9 @@ import com.ssapick.server.domain.pick.repository.HintRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.event.PickcoEvent;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import static com.ssapick.server.core.constants.PickConst.HINT_OPEN_COIN;
 
 @Slf4j
 @Service
@@ -46,12 +48,9 @@ public class HintService {
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.GENDER));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_NAME));
-		// test
-		// hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
-		// hints.removeIf(hint -> hint.getHintType().equals(HintType.INTEREST));
-		// hints.removeIf(hint -> hint.getHintType().equals(HintType.MAJOR));
-		// hints.removeIf(hint -> hint.getHintType().equals(HintType.RESIDENTIAL_AREA));
-		//
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
+		hints.removeIf(hint -> hint.getHintType().equals(HintType.COHORT));
+		
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
 		log.info("힌트 아이디: {}", availableHints);
@@ -85,7 +84,7 @@ public class HintService {
 		addHintOpenToPick(pick, openHint, hintContent);
 
 		publisher.publishEvent(new PickcoEvent(
-				pick.getReceiver(), PickcoLogType.HINT_OPEN, HINT_OPEN_COIN));
+			pick.getReceiver(), PickcoLogType.HINT_OPEN, HINT_OPEN_COIN));
 
 		return hintContent;
 	}

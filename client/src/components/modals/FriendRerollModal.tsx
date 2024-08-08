@@ -26,7 +26,7 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     mutationKey: ['reroll'],
     mutationFn: patchPickUserReRoll,
     onSuccess: () => {
-      console.log('차단 해제 성공');
+      handleShuffle();
     },
     onError: ()=>{
       console.log('에러 ㅈㅈ')
@@ -35,8 +35,6 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
 
   const onClick = () => {
     mutation.mutate();
-
-    handleShuffle();
     setOpen(false);
   };
 
