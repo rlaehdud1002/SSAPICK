@@ -107,8 +107,8 @@ class QuestionControllerTest extends RestDocsSupport {
 				.andDo(restDocs.document(resource(
 						ResourceSnippetParameters.builder()
 								.tag("질문")
-								.summary("모든 질문 조회 API")
-								.description("모든 질문을 조회한다.")
+								.summary("내가 생성한 질문 조회 API")
+								.description("내가 생성한 질문을 조회한다.")
 								.responseFields(response(
 										fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 ID"),
 										fieldWithPath("data[].banCount").description("질문을 차단한 횟수"),
