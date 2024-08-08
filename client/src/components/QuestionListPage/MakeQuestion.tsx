@@ -16,7 +16,7 @@ const MakeQuestion = () => {
   console.log("questions : ", questions);
 
   if (!questions || questions.length === 0) {
-    return <div>질문이 없습니다.</div>;
+    return <div className="text-sm flex justify-center">생성한 질문이 없습니다.</div>;
   }
 
   return (

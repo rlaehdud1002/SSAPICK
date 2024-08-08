@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query';
 import { USER_REROLL_COIN } from 'coins/coins';
 import { Button } from 'components/ui/button';
 import {
@@ -11,6 +12,7 @@ import {
 import CoinIcon from 'icons/CoinIcon';
 import ShuffleIcon from 'icons/ShuffleIcon';
 import { useState } from 'react';
+import { patchPickUserReRoll } from 'api/pickApi'
 
 interface FriendRerollModalProps {
   handleShuffle: () => void;
@@ -19,8 +21,20 @@ interface FriendRerollModalProps {
 const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
+
+  const mutation = useMutation({
+    mutationKey: ['reroll'],
+    mutationFn: patchPickUserReRoll,
+    onSuccess: () => {
+      handleShuffle();
+    },
+    onError: ()=>{
+      console.log('에러 ㅈㅈ')
+    }
+  });
+
   const onClick = () => {
-    handleShuffle();
+    mutation.mutate();
     setOpen(false);
   };
 

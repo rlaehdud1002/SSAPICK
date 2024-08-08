@@ -5,18 +5,25 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.auth.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @Component
 public class StompHandler implements ChannelInterceptor {
     private final JWTService jwtService;
+
+
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -24,28 +31,29 @@ public class StompHandler implements ChannelInterceptor {
 
         if (accessor.getCommand() == StompCommand.CONNECT) {
             String accessToken = accessor.getFirstNativeHeader("Authorization");
-            if (!validateAccessToken(accessToken)) {
+            Authentication authentication = parseAccessToken(accessToken);
+            if (authentication == null) {
                 throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
             }
+            log.debug("authentication: {}", authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            accessor.setUser(authentication);
         }
-
         return message;
     }
 
-    private boolean validateAccessToken(String accessToken) {
-        if (accessToken == null) return false;
-
-        String bearerToken = accessToken.trim();
-        if (!bearerToken.trim().isEmpty() && bearerToken.startsWith("Bearer ")) {
-            accessToken = bearerToken.substring(7);
-
-            try {
-                jwtService.getUsername(accessToken);
-                return true;
-            } catch (Exception e) {
-                log.error("error ", e);
+    private Authentication parseAccessToken(String accessToken) {
+        if (accessToken != null) {
+            String bearerToken = accessToken.trim();
+            if (!bearerToken.trim().isEmpty() && bearerToken.startsWith("Bearer ")) {
+                accessToken = bearerToken.substring(7);
+                try {
+                    return jwtService.parseAuthentication(accessToken);
+                } catch (Exception e) {
+                    log.error("error ", e);
+                }
             }
         }
-        return false;
+        throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
     }
 }

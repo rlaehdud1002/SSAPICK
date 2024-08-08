@@ -10,11 +10,4 @@ public class LocationData {
         private double latitude;
         private double longitude;
     }
-
-    @Data
-    @AllArgsConstructor(staticName = "of")
-    public static class Request {
-        private Long userId;
-        private Geo geo;
-    }
 }

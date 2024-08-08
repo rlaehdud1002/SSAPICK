@@ -33,7 +33,7 @@ const ProfileCameraIcon = ({ defaultImage, setUploadImage }: ProfileCameraIconPr
   return (
 
     <div className="relative">
-      <img width={180} height={180} className="rounded-full" src={imageSrc} alt="profile" />
+      <img  className="rounded-full w-40 h-40" src={imageSrc} alt="profile" />
       <div className="absolute w-10 bottom-1 right-2">
         <label htmlFor="profile-image">
           <img src="/icons/Camera.png" alt="camera" />

@@ -19,18 +19,37 @@ public class MessageData {
 		private String content;
 		private String questionContent;
 
+		private String senderProfileImage;
+		private String receiverProfileImage;
+		private String senderCampus;
+		private String receiverCampus;
+		private short senderSection;
+		private short receiverSection;
+		private short senderCohort;
+		private short receiverCohort;
+
+
 		public static Search fromEntity(Message message, boolean isReceived) {
 			Search search = new Search();
-			if (isReceived) {
-				search.senderName = "익명";
-			} else {
-				search.senderName = message.getSender().getName();
+			if (!isReceived) {
+				search.receiverName = message.getReceiver().getName();
+				search.receiverGender = message.getReceiver().getGender();
+				search.receiverCohort = message.getReceiver().getProfile().getCohort();
 			}
+
+			search.senderCohort = message.getSender().getProfile().getCohort();
+			search.senderName = message.getSender().getName();
+			search.senderProfileImage = message.getSender().getProfile().getProfileImage();
+			search.senderCampus = message.getSender().getProfile().getCampus().getName();
+			search.senderSection = message.getSender().getProfile().getCampus().getSection();
+
+			search.receiverCampus = message.getReceiver().getProfile().getCampus().getName();
+			search.receiverSection = message.getReceiver().getProfile().getCampus().getSection();
+
 			search.id = message.getId();
 			search.senderId = message.getSender().getId();
-			search.receiverName = message.getReceiver().getName();
+
 			search.senderGender = message.getSender().getGender();
-			search.receiverGender = message.getReceiver().getGender();
 			search.createdAt = message.getCreatedAt();
 			search.content = message.getContent();
 			search.questionContent = message.getPick().getQuestion().getContent();
