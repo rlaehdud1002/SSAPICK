@@ -141,7 +141,6 @@ class MessageServiceTest extends UserSupport {
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		messageService.createMessage(sender, create);
@@ -168,7 +167,6 @@ class MessageServiceTest extends UserSupport {
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
@@ -193,7 +191,6 @@ class MessageServiceTest extends UserSupport {
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pickId);
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);
@@ -219,7 +216,6 @@ class MessageServiceTest extends UserSupport {
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());
 		create.setContent("테스트 메시지");
-		create.setReceiverId(receiver.getId());
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> messageService.createMessage(sender, create);

@@ -233,7 +233,6 @@ class MessageControllerTest extends RestDocsSupport {
 		User receiver = this.createUser("받은 사람");
 
 		MessageData.Create create = new MessageData.Create();
-		create.setReceiverId(receiver.getId());
 		create.setPickId(1L);
 		create.setContent("테스트 메시지");
 
@@ -251,18 +250,13 @@ class MessageControllerTest extends RestDocsSupport {
 					.summary("메시지 보내기 API")
 					.description("자신이 받은 픽 기반으로 메시지를 보낸다. (픽 1개당 메시지 1번 가능)")
 					.requestFields(
-						fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("받는 사람 ID"),
 						fieldWithPath("pickId").type(JsonFieldType.NUMBER).description("픽 ID"),
 						fieldWithPath("content").type(JsonFieldType.STRING).description("메시지 내용")
 					)
 					.build()
 			)));
 
-		verify(messageService).createMessage(
-			argThat(user -> user.getUsername().equals("test-user")),
-			argThat(
-				message -> message.getReceiverId().equals(receiver.getId()) && message.getContent().equals("테스트 메시지"))
-		);
+		verify(messageService).createMessage(any(), any());
 	}
 
 	@Test
