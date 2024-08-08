@@ -9,6 +9,7 @@ const SetAccount = () => {
   const navigate = useNavigate();
   const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
+
   const mutation = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
@@ -19,7 +20,11 @@ const SetAccount = () => {
   });
 
   const onLogout = () => {
-    mutation.mutate(`Bearer ${accessToken}`);
+    console.log(`Bearer ${accessToken}`);
+    const realAccessToken = accessToken?.split("-")[0];
+    console.log(realAccessToken);
+    mutation.mutate(`Bearer ${realAccessToken}`);
+
   }
 
   // const handleLogout = async () => {
@@ -29,7 +34,7 @@ const SetAccount = () => {
   return (
     <div className="ml-4">
       <div className="text-xl mb-10 mt-3">계정 설정</div>
-      <div className="text-sm ml-2" onClick={onLogout}  style={{ cursor: "pointer" }}>
+      <div className="text-sm ml-2" onClick={onLogout} style={{ cursor: "pointer" }}>
         로그아웃
       </div>
       <div className="bg-white mr-5 my-3 h-px w-auto"></div>

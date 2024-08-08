@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { UserSend } from 'api/authApi';
-import { sendUserInfoState } from 'atoms/UserAtoms';
+import { profileImageState, sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 interface AddUserForm {
   mbti: string;
@@ -19,6 +19,7 @@ interface AddUserForm {
 const UserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
+  const profileImage = useRecoilValue(profileImageState)
 
   const mutation = useMutation({
     mutationKey: ["user", "send"],
@@ -38,7 +39,6 @@ const UserAddInfo = () => {
   console.log(SendUserInfo)
 
   const onSubmit = (data: AddUserForm) => {
-    const form = new FormData();
     // 유저 정보 저장
     setSendUserInfo((prev) => {
       return {
@@ -50,15 +50,16 @@ const UserAddInfo = () => {
         residentialArea: data.town,
       }
     });
-    console.log("sendinfo",SendUserInfo);
-    form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
-
-    mutation.mutate(form);
+    console.log("sendinfo", SendUserInfo);
   };
 
   useEffect(() => {
     if (!SendUserInfo.mbti) return;
     const form = new FormData();
+
+    if (profileImage) {
+      form.append("profileImage", profileImage);
+    }
 
     form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
 

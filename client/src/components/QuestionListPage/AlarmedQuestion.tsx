@@ -14,7 +14,7 @@ const AlarmedQuestion = ({ gender, title }: AlarmedQuestionProps) => {
         <span className="ml-10">{title}..</span>
         {/* <Separator className="my-4 mx-4" />  */}
       </div>
-      <div className="bg-white h-px w-90 mx-2 mt-5"></div>
+      {/* <div className="bg-white h-px w-90 mx-2 mt-5"></div> */}
     </div>
   );
 };
