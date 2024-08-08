@@ -11,7 +11,7 @@ const Home = () => {
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<IPaging<IPick[]>>({
       queryKey: ["pick", "receive"],
-      queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number),
+      queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number, 10),
       getNextPageParam: (lastPage, pages) => {
         if (!lastPage.last) {
           return pages.length;
@@ -20,6 +20,8 @@ const Home = () => {
       },
       initialPageParam: 0,
     });
+
+  console.log("data11 : ", data);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -49,7 +51,8 @@ const Home = () => {
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [target] = entries;
-      if (target.isIntersecting && hasNextPage) {
+      if (target && hasNextPage) {
+        scrollPosition.current = window.scrollY;
         fetchNextPage();
       }
     },
@@ -72,16 +75,11 @@ const Home = () => {
     }
   }, [data, hasNextPage]);
 
-  // 스크롤 위치 복원
   useEffect(() => {
-    if (isFetchingNextPage) {
-      scrollPosition.current = window.scrollY;
-    } else {
+    if (!isFetchingNextPage) {
       window.scrollTo(0, scrollPosition.current);
     }
   }, [isFetchingNextPage]);
-
-  if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러 발생...</div>;
 
   return (

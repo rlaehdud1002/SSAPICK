@@ -1,23 +1,17 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import CommonRoute from 'components/Routes/CommonRoute';
-import ProfileRoute from 'components/Routes/ProfileRoute';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import Footer from './components/common/Footer';
-import Header from './components/common/Header';
-
-import { validState } from 'atoms/ValidAtoms';
-
-import { initializeApp } from 'firebase/app';
-import NotFoundPage from 'pages/NotFoundPage';
-import { useEffect } from 'react';
-import { validCheck } from 'api/validApi';
-import {
-  accessTokenState,
-  isLoginState,
-  refreshRequestState,
-} from 'atoms/UserAtoms';
-import { refresh } from 'api/authApi';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CommonRoute from "components/Routes/CommonRoute";
+import ProfileRoute from "components/Routes/ProfileRoute";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import Footer from "./components/common/Footer";
+import Header from "./components/common/Header";
+import { validState } from "atoms/ValidAtoms";
+import { initializeApp } from "firebase/app";
+import NotFoundPage from "pages/NotFoundPage";
+import { useEffect } from "react";
+import { validCheck } from "api/validApi";
+import { accessTokenState, isLoginState, refreshRequestState } from "atoms/UserAtoms";
+import { refresh } from "api/authApi";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -31,23 +25,22 @@ const firebaseConfig = {
 
 function App() {
   initializeApp(firebaseConfig);
-  const location = useLocation().pathname.split('/')[1];
+  const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
 
   const navigate = useNavigate();
   const [ValidState, setValidState] = useRecoilState(validState);
-  const [refreshRequest, setRefreshRequest] =
-    useRecoilState(refreshRequestState);
+  const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const isAuthenticated = useRecoilValue(isLoginState);
 
   const headerFooter = () => {
     return (
-      location !== '' && // 로그인 페이지
-      location !== 'splash' && // 스플래시 페이지
-      location !== 'mattermost' && // mm 인증 페이지
-      location !== '404' && // 404 페이지
-      location !== 'infoinsert' // 추가 정보 입력 페이지
+      location !== "" && // 로그인 페이지
+      location !== "splash" && // 스플래시 페이지
+      location !== "mattermost" && // mm 인증 페이지
+      location !== "404" && // 404 페이지
+      location !== "infoinsert" // 추가 정보 입력 페이지
     );
   };
 
@@ -63,47 +56,46 @@ function App() {
           setRefreshRequest(true);
         });
     }
-  }, []);
+  }, [refreshRequest, setAccessToken, setRefreshRequest]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/home');
+      navigate("/home");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    console.log('location', location);
     const checkValidity = async () => {
       try {
-        console.log('location', location);
-        console.log('ValidState', ValidState);
-        if (location === 'splash') {
+        if (location === "splash") {
           return;
         }
         const data = await validCheck();
         setValidState(data);
-        console.log('data', data);
         if (data.lockedUser) {
-          console.log('유저 잠김');
-          navigate('/');
+          navigate("/");
           return;
         }
         if (!data.mattermostConfirmed) {
-          console.log('mm 미확인');
-          navigate('/mattermost');
+          navigate("/mattermost");
           return;
         }
-        if (!data.validInfo && !location.includes('infoinsert')) {
-          navigate('/infoinsert');
+        if (!data.validInfo && !location.includes("infoinsert")) {
+          navigate("/infoinsert");
           return;
         }
       } catch (error) {
-        console.error('유효성 검사 실패', error);
-        navigate('/'); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        console.error("유효성 검사 실패", error);
+        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
       }
     };
     checkValidity();
-  }, [navigate, setValidState]);
+  }, [location, navigate, setValidState]);
+
+  useEffect(() => {
+    // 스크롤을 항상 최하단으로 이동
+    window.scrollTo(0, document.body.scrollHeight);
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -116,9 +108,7 @@ function App() {
               <Route path="/profile/*" element={<ProfileRoute />} />
               <Route path="/404" element={<NotFoundPage />} />
             </Routes>
-            <div className="flex flex-col max-h-screen">
-              {headerFooter() && <Footer />}
-            </div>
+            <div className="flex flex-col max-h-screen">{headerFooter() && <Footer />}</div>
           </div>
         </div>
       </div>

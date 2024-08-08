@@ -3,10 +3,10 @@ import { IPaging, IPick, IPickCreate, IPickInfo } from "atoms/Pick.type";
 import { BaseResponse } from "atoms/User.type";
 
 // 받은 pick 조회
-export const getReceivePick = async (page: number): Promise<IPaging<IPick[]>> => {
+export const getReceivePick = async (page: number, size: number): Promise<IPaging<IPick[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPaging<IPick[]>>>(`/pick/receive?page=${page}`);
+  } = await instance.get<BaseResponse<IPaging<IPick[]>>>(`/pick/receive?page=${page}&size=${size}`);
 
   if (!success) {
     throw new Error("받은 pick 조회 실패");
@@ -65,10 +65,10 @@ export const getHint = async (pickId: number): Promise<string> => {
 };
 
 // pick 알림 설정
-export const patchPickAlarm = async (pickId: number): Promise<IPick[]> => {
+export const patchPickAlarm = async (pickId: number): Promise<void> => {
   const {
     data: { success, data },
-  } = await instance.patch<BaseResponse<IPick[]>>(`/pick/${pickId}`);
+  } = await instance.patch<BaseResponse<void>>(`/pick/${pickId}`);
 
   if (!success) {
     throw new Error("pick 알림 설정 실패");

@@ -18,15 +18,24 @@ interface ResponseProps {
 }
 
 const Response = ({ picks, isLoading }: ResponseProps) => {
-  const [updatedPicks, setUpdatedPicks] = useState<IPick[]>(picks);
+  const [updatedPicks, setUpdatedPicks] = useState<IPick[]>([]);
 
   useEffect(() => {
-    console.log("updatedPicks", updatedPicks);
-    setUpdatedPicks(updatedPicks);
-  }, [updatedPicks]);
+    setUpdatedPicks(picks);
+  }, [picks]);
 
-  const handleAlarmUpdate = (newPicks: IPick[]) => {
-    setUpdatedPicks(newPicks);
+  const handleAlarmUpdate = (pickId: number) => {
+    setUpdatedPicks((prevPicks) => {
+      const newPicks = prevPicks.map((pick) => {
+        if (pick.id === pickId) {
+          return { ...pick, alarm: !pick.alarm };
+        } else if (pick.alarm) {
+          return { ...pick, alarm: false };
+        }
+        return pick;
+      });
+      return newPicks;
+    });
   };
 
   const handleAccordionClick = useCallback((e: React.MouseEvent) => {
@@ -36,10 +45,6 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   const handleMaskClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
-
-  if (isLoading) {
-    return <div>로딩중...</div>;
-  }
 
   return (
     <div>
