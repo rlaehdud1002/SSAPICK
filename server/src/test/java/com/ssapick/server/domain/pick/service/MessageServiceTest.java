@@ -162,7 +162,7 @@ class MessageServiceTest extends UserSupport {
 		// 실제 사용되는 스텁만 설정
 		lenient().when(pickRepository.findByIdWithSender(pick.getId())).thenReturn(Optional.of(pick));
 		lenient().when(pick.isMessageSend()).thenReturn(false);
-		lenient().when(userRepository.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+		lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
 		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
 
 		MessageData.Create create = new MessageData.Create();
