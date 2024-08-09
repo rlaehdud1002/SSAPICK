@@ -10,4 +10,27 @@ public class LocationData {
         private double latitude;
         private double longitude;
     }
+
+    @Data
+    @AllArgsConstructor
+    public static class Request {
+        private String profileImage;
+        private Geo geo;
+    }
+
+    @Data
+    public static class Response {
+        private String username;
+        private String profileImage;
+        private Position position;
+        private double distance;
+        private boolean isAlarm;
+    }
+
+    @Data
+    @AllArgsConstructor(staticName = "of")
+    public static class Position {
+        private double x;
+        private double y;
+    }
 }

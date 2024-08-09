@@ -32,4 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserQueryRepo
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.profile p LEFT JOIN FETCH p.campus WHERE u.name LIKE %:keyword%")
     List<User> findUserByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.profile p WHERE u.username IN :usernames")
+    List<User> findUserByUserNames(@Param("usernames") List<String> usernames);
 }

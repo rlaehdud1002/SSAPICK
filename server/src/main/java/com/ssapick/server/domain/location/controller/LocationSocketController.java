@@ -5,10 +5,11 @@ import com.ssapick.server.domain.location.listener.LocationPublisher;
 import com.ssapick.server.domain.location.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
+
+import java.security.Principal;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,12 +20,10 @@ public class LocationSocketController {
 
     @MessageMapping("/location/update")
     public void update(
-            @Header("Authorization") String authentication,
-            LocationData.Geo geo
+            Principal principal,
+            @Payload LocationData.Request request
     ) {
-        log.debug("user: {}, geo: {}", authentication, geo);
-        log.debug("authentication: {}", SecurityContextHolder.getContext().getAuthentication());
-        locationService.saveUserLocation("user.getUsername()", geo);
-        locationPublisher.publish(geo);
+        locationService.saveUserLocation(principal.getName(), request);
+        locationPublisher.publish(request.getGeo());
     }
 }

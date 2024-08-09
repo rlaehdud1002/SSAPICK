@@ -8,11 +8,19 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LocationModal from 'components/modals/LocationModal';
 import { useLocation } from 'hooks/useLocation';
+import { useQuery } from '@tanstack/react-query';
+import { findFriends } from 'api/locationApi';
 
 const LocationAlarm = () => {
   const nav = useNavigate();
   const [dot, setDot] = useState('');
-  const {coords, error} = useLocation()
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["location"],
+    queryFn: findFriends
+  })
+  const {coords, error} = useLocation({
+    refetch: refetch
+  })
 
   // search text
   useEffect(() => {
@@ -45,13 +53,14 @@ const LocationAlarm = () => {
         </div>
       </div>
       <div className="text-center mt-9">
-        <span className="luckiest_guy text-[#3D6CE6] text-3xl">
+        <div className="flex flex-col font-bold space-y-3">
+          <span className='text-[#3D6CE6] text-xl'>
+            현재 위치: {coords.latitude} / {coords.longitude}
+          </span>
+          <span className='luckiest_guy text-[#3D6CE6] text-3xl'>
           SEARCHING{dot}
-        </span>
-      </div>
-      <div className="flex flex-col">
-        <LocationModal />
-        <LocationCheckModal latitude={coords.latitude} longitude={coords.longitude} />
+          </span>
+        </div>
       </div>
     </div>
   );

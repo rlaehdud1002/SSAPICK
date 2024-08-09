@@ -8,7 +8,11 @@ interface Position {
     longitude: number;
 }
 
-export const useLocation = () => {
+interface UseLocationProps {
+    refetch: () => void
+}
+
+export const useLocation = ({refetch}: UseLocationProps) => {
     const [coords, setCoords] = useState<Position>({
         latitude: 0,
         longitude: 0
@@ -27,8 +31,6 @@ export const useLocation = () => {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     setCoords(position.coords);
-
-
                 },
                 (error) => {
                     setError(error.message);
@@ -45,14 +47,13 @@ export const useLocation = () => {
 
         client.publish({
             destination: '/pub/location/update',
-            body: JSON.stringify({geo: {
+            body: JSON.stringify({
+                profileImage: "https://d2yu3js5fxqm1g.cloudfront.net/5b7275ac-d%EB%AF%BC%EC%A4%80%EC%88%98.png",
+                geo: {
                     latitude: coords.latitude + 0.0004,
                     longitude: coords.longitude - 0.0002
                 }
             }),
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
         })
     }, [coords, client, client?.connected])
 
@@ -66,7 +67,7 @@ export const useLocation = () => {
             },
             onConnect: () => {
                 client!!.subscribe('/sub/location/update', (message) => {
-                    console.log(message)
+                    refetch();
                 })
             }
         })
