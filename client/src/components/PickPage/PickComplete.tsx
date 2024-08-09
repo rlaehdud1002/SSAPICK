@@ -20,10 +20,13 @@ const PickComplete = ({ setQuestion }: PickCompleteProps) => {
     // 현재 시간으로부터 1분 뒤의 시간 설정
     const now = new Date().getTime();
     const newCoolTime = now + 60 * 1000; // 현재 시간 + 1분
+    console.log('now', now)
+    console.log('newCoolTime', newCoolTime);
     setCoolTime(newCoolTime);
-    setQuestion([]);
+    console.log('coolTime', coolTime)
+    // setQuestion([]);
     setIsUpdated(false);
-  }, [setCoolTime, setQuestion, setIsUpdated]);
+  }, []);
 
   return (
     <div
