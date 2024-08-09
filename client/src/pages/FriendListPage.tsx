@@ -1,4 +1,4 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getUserInfo } from 'api/authApi';
 import { getFriendsList } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
@@ -10,19 +10,20 @@ import SearchIcon from 'icons/SearchIcon';
 import { Link, useNavigate } from 'react-router-dom';
 
 const FriendList = () => {
+  // 친구 리스트 조회
   const { data: friends, isLoading } = useQuery<IFriend[]>({
     queryKey: ['friends'],
-    queryFn: async () => await getFriendsList(),
+    queryFn: getFriendsList,
   });
 
-  const {data: userInfo} = useQuery<IUserInfo>({
+  // 유저 정보 조회 -> 반 정보 가져오기 위함
+  const { data: userInfo } = useQuery<IUserInfo>({
     queryKey: ['userInfo'],
     queryFn: async () => await getUserInfo(),
   });
 
-  const navigate = useNavigate();
 
-  console.log(friends, userInfo);
+  const navigate = useNavigate();
 
   return (
     <div className='mb-25'>
@@ -40,6 +41,7 @@ const FriendList = () => {
           </Link>
         </div>
       </div>
+
       {friends &&
         friends.map((friend, index) => (
           <div className="mt-6" key={index}>
@@ -49,8 +51,10 @@ const FriendList = () => {
               campusDescription={friend.campusDescription}
               name={friend.nickname}
               userId={friend.userId}
-              userClass = {userInfo?.section}
+              profileImage={friend.profileImage}
+              userClass={userInfo?.section}
             />
+
           </div>
         ))}
     </div>
