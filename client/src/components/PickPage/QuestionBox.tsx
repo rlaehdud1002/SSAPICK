@@ -1,7 +1,6 @@
 import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import WarningModal from 'components/modals/WarningModal';
-import PassIcon from 'icons/PassIcon';
 import { Progress } from 'components/ui/progress';
 
 interface QuestionProps {
@@ -12,7 +11,7 @@ interface QuestionProps {
 
 const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
   const blockPassCount = pickInfo.blockCount + pickInfo.passCount;
-  console.log('blockPassCount', blockPassCount);
+  const pickBlockCount = pickInfo.pickCount + pickInfo.blockCount;
 
   return (
     <div
@@ -27,10 +26,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
       </div>
       <div className="m-4 flex flex-col justify-center">
         <div className="flex justify-center">
-          <Progress
-            value={(pickInfo.pickCount + pickInfo.blockCount) * 10}
-            className="mb-4 w-4/5"
-          />
+          <Progress value={pickBlockCount * 10} className="mb-4 w-4/5" />
         </div>
         <h1 className="text-center text-lg">{question.content}</h1>
         {blockPassCount < 5 && (
@@ -53,6 +49,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
           <img
             src={question.category.thumbnail}
             alt="categoryImg"
+            className='w-[100px] h-[100px]'
             width={100}
             height={100}
           />
