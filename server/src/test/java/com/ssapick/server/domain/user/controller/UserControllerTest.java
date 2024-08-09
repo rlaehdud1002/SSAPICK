@@ -16,15 +16,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -165,8 +168,32 @@ class UserControllerTest extends RestDocsSupport {
 
     @Test
     @DisplayName("유저 검색을 하면 검색어를 포함하는 유저 프로필 데이터를 반환한다.")
-    void searchUserProfile() {
+    void searchUserProfile() throws Exception {
+//        String keyword = "김싸";
+//
+//        List<User> users = List.of(
+//            createUser("김싸일"),
+//            createUser("김싸이"),
+//            createUser("김싸삼"),
+//            createUser("김싸사")
+//        );
+//
+//
+//        when(userService.getUserByKeyword(eq(keyword), any()))
+//                .thenReturn((Page<UserData.Search>) users.stream().map(UserData.Search::fromEntity).toList());
+//
+//
+//        ResultActions perform = this.mockMvc.perform(get("/api/v1/user/me/search")
+//                .param("q", keyword));
+//
+//        perform.andExpect(status().isOk());
+    }
 
+    public User createUser(String username) {
+        User user = spy(User.createUser("user", username, 'M', ProviderType.GOOGLE, "exampleProviderId"));
+        when(user.getId()).thenReturn(1L);
+        user.getProfile().updateCampus(Campus.createCampus("광주", (short) 2, "전공"));
+        return user;
     }
 
 }
