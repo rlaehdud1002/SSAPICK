@@ -50,7 +50,7 @@ public class HintService {
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_NAME));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.COHORT));
-		
+
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
 
 		log.info("힌트 아이디: {}", availableHints);
@@ -63,25 +63,28 @@ public class HintService {
 
 		switch (openHint.getHintType()) {
 			case NAME -> {
-				hintContent = processNameHint(hintContent);
+				hintContent = "초성 : " + processNameHint(hintContent);
 			}
 			case AGE -> {
 				int birthYear = Integer.parseInt(hintContent.split("-")[0]);
 				int age = LocalDate.now().getYear() - birthYear + 1;
-				hintContent = age + "세";
+				hintContent = "나이 : " + age + "세";
 			}
-			case COHORT -> {
-				hintContent = hintContent + "기";
+			case RESIDENTIAL_AREA -> {
+				hintContent = "거주지 : " + hintContent;
 			}
-			case CAMPUS_NAME -> {
-				hintContent = hintContent + "캠퍼스";
+			case MAJOR -> {
+				hintContent = "전공 : " + hintContent;
 			}
-			case CAMPUS_SECTION -> {
-				hintContent = hintContent + "반";
+			case MBTI -> {
+				hintContent = "MBTI : " + hintContent;
+			}
+			case INTEREST -> {
+				hintContent = "관심사 : " + hintContent;
 			}
 		}
 
-		addHintOpenToPick(pick, openHint, hintContent);
+		addHintOpenToPick(pick, hintContent, openHint.getHintType());
 
 		publisher.publishEvent(new PickcoEvent(
 			pick.getReceiver(), PickcoLogType.HINT_OPEN, HINT_OPEN_COIN));
@@ -90,14 +93,13 @@ public class HintService {
 	}
 
 	public List<Long> getAvailableHintIds(Pick pick, List<Hint> hints) {
-		List<Long> openedHintIds = pick.getHintOpens().stream()
-			.map(HintOpen::getHint)
-			.map(Hint::getId)
+		List<HintType> openedHintTypes = pick.getHintOpens().stream()
+			.map(HintOpen::getHintType)
 			.toList();
 
 		return hints.stream()
+			.filter(hint -> !openedHintTypes.contains(hint.getHintType()))
 			.map(Hint::getId)
-			.filter(hintId -> !openedHintIds.contains(hintId))
 			.collect(Collectors.toList());
 	}
 
@@ -112,11 +114,11 @@ public class HintService {
 			.orElseThrow(() -> new IllegalArgumentException("힌트를 찾을 수 없습니다."));
 	}
 
-	public void addHintOpenToPick(Pick pick, Hint openHint, String content) {
+	public void addHintOpenToPick(Pick pick, String content, HintType hintType) {
 		HintOpen hintOpen = HintOpen.builder()
-			.hint(openHint)
 			.pick(pick)
 			.content(content)
+			.hintType(hintType)
 			.build();
 		pick.getHintOpens().add(hintOpen);
 	}
