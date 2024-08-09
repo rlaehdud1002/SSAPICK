@@ -20,7 +20,7 @@ export const getFriendsList = async (): Promise<IFriend[]> => {
 // 유저 팔로우
 export const postAddFriend = async (userId: number): Promise<void> => {
   const {
-    data: { success, data, message },
+    data: { success, data },
   } = await instance.post<BaseResponse<void>>(`/follow/${userId}`);
 
   if (!success) {
@@ -34,17 +34,11 @@ export const postAddFriend = async (userId: number): Promise<void> => {
 
 // 유저 언팔로우
 export const deleteFriend = async (userId: number): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.delete(`/follow/${userId}`);
+  const response = await instance.delete(`/follow/${userId}`);
 
-  if (!success) {
+  if (response.status !== 204) {
     throw new Error('친구 언팔로우 실패');
   }
-
-  console.log('deleteFriend');
-
-  return data;
 };
 
 // 추천 친구 목록 조회
@@ -59,5 +53,18 @@ export const getRecommendFriendsList = async (): Promise<IFriend[]> => {
 
   console.log('getRecommendFriendsList');
 
+  return data;
+};
+
+// 친구 검색 리스트
+export const getSearchFriendsList = async (q:string): Promise<IFriend[]> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<IFriend[]>>(`/uesr/search/${q}`);
+
+  if (!success) {
+    throw new Error('친구 검색 실패');
+  }
+  console.log("검색 친구 조회 성공")
   return data;
 };
