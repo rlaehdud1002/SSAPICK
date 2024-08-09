@@ -49,7 +49,7 @@ public class UserController {
 	@GetMapping(value = "/search")
 	public SuccessResponse<Page<UserData.Search>> searchUser(
 			@CurrentUser User user,
-			@RequestParam(value = "q") String keyword,
+			@RequestParam(value = "q", defaultValue = "", required = false) String keyword,
 			Pageable pageable
 	) {
 		return SuccessResponse.of(userService.getUserByKeyword(user, keyword, pageable));
