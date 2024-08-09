@@ -72,7 +72,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
               <p className="text-center my-4">{pick.question.content}</p>
               <AccordionContent>
                 <div className="flex flex-row justify-center items-center">
-                  <div className="rounded-lg bg-white/50 p-3 mx-10 `min`-w-20 max-w-40 text-center">
+                  <div className="rounded-lg bg-white/50 p-3 mx-10 min-w-20 max-w-40 text-center">
                     <HintModal
                       title={
                         pick.openedHints.length === 0
