@@ -74,8 +74,8 @@ export interface IUserAdd {
   location: string;
   interest: string;
 }
-export interface IUserCoin {
-  coin: number;
+export interface IPickco {
+  pickco: number;
 }
 
 export interface IUserFriend {
@@ -90,3 +90,4 @@ export interface IUserAttendance {
   streak: number;
   todayChecked: boolean;
 }
+
