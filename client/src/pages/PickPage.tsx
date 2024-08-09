@@ -94,6 +94,8 @@ const Pick = () => {
     return <div>데이터 준비중입니다.</div>;
   }
 
+  
+
   return (
     <div className="relative">
       {pickInfo.cooltime ? (

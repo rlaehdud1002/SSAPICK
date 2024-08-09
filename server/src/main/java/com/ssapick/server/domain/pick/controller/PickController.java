@@ -118,4 +118,10 @@ public class PickController {
 		return SuccessResponse.empty();
 	}
 
+	@GetMapping("/alarm")
+	public SuccessResponse<PickData.Search> getPickAlarm(
+		@CurrentUser User user
+	) {
+		return SuccessResponse.of(pickService.getPickWithAlarmOn(user));
+	}
 }
