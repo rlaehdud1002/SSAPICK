@@ -99,10 +99,10 @@ function App() {
         }
         if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
           if (
-            location === "infoinsert" ||
-            location === "mattermost" ||
-            location === "splash" ||
-            location === ""
+            location.includes("splash") ||
+            location.includes("mattermost") ||
+            location.includes("infoinsert") ||
+            location.includes("")
           ) {
             navigate("/home");
             return;
