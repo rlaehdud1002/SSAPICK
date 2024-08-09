@@ -15,11 +15,7 @@ const MessageContent = ({ message, status }: MessageContentProps) => {
         <div className="flex flex-row items-center">
           {status === 'send' ? (
             <UserPickIcon
-              gen={
-                status === 'send'
-                  ? message.senderGender
-                  : message.receiverGender
-              }
+              gen={message.receiverGender}
               width={32}
               height={32}
             />
