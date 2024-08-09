@@ -12,3 +12,9 @@ export const endCoolTimeState = atom<number>({
   key: 'endCoolTimeState',
   default: 0,
 });
+
+// 질문 업데이트 여부
+export const isQuestionUpdatedState = atom<boolean>({
+  key: 'isQuestionUpdatedState',
+  default: false,
+});
