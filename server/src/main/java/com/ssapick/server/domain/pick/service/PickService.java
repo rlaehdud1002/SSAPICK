@@ -159,14 +159,13 @@ public class PickService {
 			}
 		}
 		index++;
+		pickCacheRepository.increaseIndex(sender.getId());
 
 
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.init(sender.getId());
 			pickCacheRepository.setCooltime(sender.getId());
-			return PickData.PickCondition.builder()
-				.isCooltime(true)
-				.build();
+			return PickData.PickCondition.cooltime();
 		}
 
 		return PickData.PickCondition.builder()
@@ -177,30 +176,28 @@ public class PickService {
 			.build();
 	}
 
+	/**
+	 * 
+	 * 현재 픽 진행 상태 조회하기
+	 * @param sender
+	 * @return
+	 */
 	public PickData.PickCondition getPickCondition(User sender) {
 
-		if (pickCacheRepository.isCooltime(sender.getId())) {
-			return PickData.PickCondition.builder()
-				.isCooltime(true)
-				.build();
-		}
-
-		Integer index = pickCacheRepository.getIndex(sender.getId());
-
-		if (index == null) {
+		if (pickCacheRepository.isEmpty(sender.getId())) {
 			pickCacheRepository.init(sender.getId());
-			index = 0;
+			return PickData.PickCondition.init();
 		}
 
-		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
-		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
-		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
+		if (pickCacheRepository.isCooltime(sender.getId())) {
+			return PickData.PickCondition.cooltime();
+		}
 
 		return PickData.PickCondition.builder()
-			.index(index)
-			.pickCount(pickCount)
-			.blockCount(blockCount)
-			.passCount(passCount)
+			.index(pickCacheRepository.getIndex(sender.getId()))
+			.pickCount(pickCacheRepository.getPickCount(sender.getId()))
+			.blockCount(pickCacheRepository.getBlockCount(sender.getId()))
+			.passCount(pickCacheRepository.getPassCount(sender.getId()))
 			.build();
 	}
 
