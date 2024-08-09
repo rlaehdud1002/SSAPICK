@@ -16,10 +16,12 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -110,12 +112,10 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
 
-	public List<UserData.Search> getUserByKeyword(String keyword) {
-		List<User> users = userRepository.findUserByKeyword(keyword);
+	public Page<UserData.Search> getUserByKeyword(User user, String keyword, Pageable pageable) {
+		Page<User> users = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
 
-		return users.stream()
-				.map(UserData.Search::fromEntity)
-				.toList();
+		return users.map(UserData.Search::fromEntity);
 	}
 
 }

@@ -10,9 +10,11 @@ import com.ssapick.server.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -47,10 +49,12 @@ public class UserController {
 
 
 	@GetMapping(value = "/search")
-	public SuccessResponse<List<UserData.Search>> searchUser(
-			@RequestParam(value = "q") String keyword
+	public SuccessResponse<Page<UserData.Search>> searchUser(
+			@CurrentUser User user,
+			@RequestParam(value = "q") String keyword,
+			Pageable pageable
 	) {
-		return SuccessResponse.of(userService.getUserByKeyword(keyword));
+		return SuccessResponse.of(userService.getUserByKeyword(user, keyword, pageable));
 	}
 
 	@PatchMapping(value = "", consumes = "multipart/form-data")
