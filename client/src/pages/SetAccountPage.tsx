@@ -20,10 +20,7 @@ const SetAccount = () => {
   });
 
   const onLogout = () => {
-    console.log(`Bearer ${accessToken}`);
-    const realAccessToken = accessToken?.split("-")[0];
-    console.log(realAccessToken);
-    mutation.mutate(`Bearer ${realAccessToken}`);
+    mutation.mutate();
 
   }
 

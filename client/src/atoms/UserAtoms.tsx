@@ -2,6 +2,7 @@ import { ISendUser, IUser, IUserAdd, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
 
+
 // 유저 입력 정보
 export const sendUserInfoState = atom<ISendUser>({
   key: 'sendUserInfoState',
@@ -74,6 +75,7 @@ export const userAttendanceState = atom<boolean>({
   default: false,
 });
 
+// 유저 프로필 이미지
 export const profileImageState = atom<File | undefined>({
   key: 'profileImageState',
   default: undefined,
