@@ -73,26 +73,32 @@ function App() {
         const data = await validCheck();
         console.log("유효성 검사", data.lockedUser, data.mattermostConfirmed, data.validInfo);
         setValidState(data);
-        if (data.lockedUser) {
+
+        if (data.lockedUser && !location.includes("/")) {
+          console.log("락 유저");
           navigate("/");
           return;
         }
-        if (!data.mattermostConfirmed) {
+        if (!data.mattermostConfirmed && !location.includes("mattermost")) {
+          console.log("MM 유효X");
           navigate("/mattermost");
           return;
         }
         if (!data.validInfo && !location.includes("infoinsert")) {
+          console.log("정보 유효X");
           navigate("/infoinsert");
           return;
         }
         if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
+          console.log("유효성 검사 완료");
           if (
-            location.includes("infoinsert") ||
-            location.includes("mattermost") ||
-            location.includes("splash") ||
-            location.includes("")
+            location === "infoinsert" ||
+            location === "mattermost" ||
+            location === "splash" ||
+            location === ""
           ) {
             navigate("/home");
+            return;
           }
         }
       } catch (error) {

@@ -5,15 +5,15 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from 'components/ui/dialog';
+} from "components/ui/dialog";
 
-import { Button } from 'components/ui/button';
-import CoinUseModal from 'components/modals/CoinUseModal';
+import { Button } from "components/ui/button";
+import CoinUseModal from "components/modals/CoinUseModal";
 
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { getHint } from 'api/pickApi';
-import { HINT_OPEN_COIN } from 'coins/coins';
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { getHint } from "api/pickApi";
+import { HINT_OPEN_COIN } from "coins/coins";
 
 interface HintModalProps {
   title: string;
@@ -26,40 +26,31 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
 
   // 힌트 조회 mutation
   const mutation = useMutation({
-    mutationKey: ['hint', 'get'],
+    mutationKey: ["hint", "get"],
     mutationFn: getHint,
 
     // 힌트 조회 성공 시
     onSuccess: (data) => {
-      console.log('hint', data);
+      console.log("hint", data);
       setHint(data);
     },
   });
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => !open && setOpen((prev) => !prev)}
-    >
+    <Dialog open={open} onOpenChange={(open) => !open && setOpen((prev) => !prev)}>
       <DialogTrigger
+        className="text-color-5F86E9"
         onClick={() => {
-          if (hint === '?') {
+          if (hint === "?") {
             setOpen(true);
           }
         }}
       >
-        <div className='my-1 text-xs text-[#5f86e9]'>
-          {hint.split(':')[0]}
-        </div>
-        <div className='text-base text-[#000855]'>
-          {hint.split(':')[1]}
-        </div>
+        {hint}
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
-          <DialogTitle className="flex flex-start text-color-5F86E9">
-            힌트 공개
-          </DialogTitle>
+          <DialogTitle className="flex flex-start text-color-5F86E9">힌트 공개</DialogTitle>
           <CoinUseModal coin={HINT_OPEN_COIN} />
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end">

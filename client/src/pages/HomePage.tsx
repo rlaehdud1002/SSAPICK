@@ -6,6 +6,9 @@ import Response from "components/MainPage/Response";
 import Initial from "components/MainPage/Initial";
 import AttendanceModal from "components/modals/AttendanceModal";
 import { getAttendance, postAttendance } from "api/attendanceApi";
+import { IUserAttendance } from "atoms/User.type";
+import { userAttendanceState } from "atoms/UserAtoms";
+import { useRecoilState } from "recoil";
 
 const Home = () => {
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -22,26 +25,29 @@ const Home = () => {
     });
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [streak, setStreak] = useState(0);
+  const [hasCheckedAttendance, setHasCheckedAttendance] = useState(false);
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
 
-  const { data: attendance, isLoading: isLoadingAttendance } = useQuery({
+  const [attendanceStatus, setAttendanceStatus] = useRecoilState(userAttendanceState);
+
+  const { data: attendance } = useQuery<IUserAttendance>({
     queryKey: ["getattendance"],
     queryFn: getAttendance,
+    enabled: !attendanceStatus.todayChecked,
   });
-
-  const [isAttendance, setIsAttendance] = useState(attendance?.todayChecked);
 
   const postMutation = useMutation({
     mutationKey: ["postAttendance"],
     mutationFn: postAttendance,
     onSuccess: (data) => {
-      setIsAttendance(data.todayChecked);
-      setStreak(data.streak);
+      setAttendanceStatus({
+        todayChecked: data.todayChecked,
+        streak: data.streak,
+      });
       setModalOpen(true);
     },
-    onError: (error) => {
+    onError: () => {
       console.log("이미 출석체크 완료");
     },
   });
@@ -78,6 +84,15 @@ const Home = () => {
       window.scrollTo(0, scrollPosition.current);
     }
   }, [isFetchingNextPage]);
+
+  useEffect(() => {
+    console.log("asd : ", attendanceStatus.todayChecked, attendance, "asd: ", hasCheckedAttendance);
+    if (!attendanceStatus.todayChecked && attendance && !hasCheckedAttendance) {
+      postMutation.mutate();
+      setHasCheckedAttendance(true);
+    }
+  }, [attendance, attendanceStatus.todayChecked, hasCheckedAttendance, postMutation]);
+
   if (isError) return <div>에러 발생...</div>;
 
   return (
@@ -92,7 +107,9 @@ const Home = () => {
       )}
       <div ref={observerElem} />
       {isFetchingNextPage && <div>로딩 중...</div>}
-      {modalOpen && <AttendanceModal date={streak} onClose={() => setModalOpen(false)} />}
+      {modalOpen && (
+        <AttendanceModal date={attendanceStatus.streak} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 };
