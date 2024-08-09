@@ -71,6 +71,7 @@ function App() {
         }
         if (isValid) return;
         const data = await validCheck();
+        console.log(data.lockedUser, data.mattermostConfirmed, data.validInfo);
         setValidState(data);
         if (data.lockedUser) {
           navigate("/");
@@ -80,9 +81,14 @@ function App() {
           navigate("/mattermost");
           return;
         }
-        if (!data.validInfo && !location.includes('infoinsert')) {
-          navigate('/infoinsert');
+        if (!data.validInfo && !location.includes("infoinsert")) {
+          navigate("/infoinsert");
           return;
+        }
+        if (!data.lockedUser && data.mattermostConfirmed && data.validInfo) {
+          if (location === "") {
+            navigate("/home");
+          }
         }
       } catch (error) {
         console.error("유효성 검사 실패", error);

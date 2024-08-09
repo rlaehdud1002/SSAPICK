@@ -36,6 +36,7 @@ public class UserBanservice {
 	@Transactional
 	public void banUser(User user, Long userId) {
 		User findUser = userRepository.findById(userId).orElseThrow(
+
 			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
 		);
 
@@ -55,7 +56,6 @@ public class UserBanservice {
 		findUser.increaseBanCount();
 		userBanRepository.save(UserBan.of(user, findUser));
 	}
-
 
 	/**
 	 * 사용자 차단 목록 조회

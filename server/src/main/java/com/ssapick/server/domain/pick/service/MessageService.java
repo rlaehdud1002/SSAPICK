@@ -1,10 +1,10 @@
 package com.ssapick.server.domain.pick.service;
 
+import static com.ssapick.server.core.constants.PickConst.*;
+
 import java.util.List;
 import java.util.Objects;
 
-import com.ssapick.server.domain.user.entity.PickcoLogType;
-import com.ssapick.server.domain.user.event.PickcoEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,23 +21,22 @@ import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import static com.ssapick.server.core.constants.PickConst.HINT_OPEN_COIN;
-import static com.ssapick.server.core.constants.PickConst.MESSAGE_COIN;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageService {
-    private final MessageRepository messageRepository;
-    private final PickRepository pickRepository;
-    private final CommentAnalyzerService commentAnalyzer;
-    private final UserRepository userRepository;
+	private final MessageRepository messageRepository;
+	private final PickRepository pickRepository;
+	private final CommentAnalyzerService commentAnalyzer;
+	private final UserRepository userRepository;
 	private final ApplicationEventPublisher publisher;
 	private final UserBanRepository userBanRepository;
 
@@ -54,7 +53,8 @@ public class MessageService {
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
 
 		List<MessageData.Search> messages = messagesPage.stream()
-			.filter(message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
+			.filter(message -> banUsers.stream()
+				.noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
 
@@ -73,44 +73,43 @@ public class MessageService {
 
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
 		List<MessageData.Search> messages = messagesPage.stream()
-			.filter(message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
-			.map(message -> MessageData.Search.fromEntity(message, false))
+			.filter(
+				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
+			.map(message -> MessageData.Search.fromEntity(message, true))
 			.toList();
 
-		return new  PageImpl<>(messages, pageable, messagesPage.getTotalElements());
+		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
-    /**
-     * 메시지 보내기
-     * 메시지를 보내고 픽의 메시지 전송 여부를 true 로 변경한다.
-     *
-     * @param sender 보내는 사람
-     * @param create {@link MessageData.Create} 메시지 생성 정보
-     */
-    @Async("apiExecutor")
-    @Transactional
-    public void createMessage(User sender, MessageData.Create create) {
-        Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
-            () ->new BaseException(ErrorCode.NOT_FOUND_PICK)
-        );
+	/**
+	 * 메시지 보내기
+	 * 메시지를 보내고 픽의 메시지 전송 여부를 true 로 변경한다.
+	 *
+	 * @param sender 보내는 사람
+	 * @param create {@link MessageData.Create} 메시지 생성 정보
+	 */
+	@Async("apiExecutor")
+	@Transactional
+	public void createMessage(User sender, MessageData.Create create) {
+		Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
+			() -> new BaseException(ErrorCode.NOT_FOUND_PICK)
+		);
 
 		if (pick.isMessageSend()) {
 			throw new BaseException(ErrorCode.ALREADY_SEND_MESSAGE);
 		}
 		pick.send();
 
+		User receiver = userRepository.findById(pick.getSender().getId()).orElseThrow(
+			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
+		);
 
-        User receiver = userRepository.findById(pick.getSender().getId()).orElseThrow(
-            () -> new BaseException(ErrorCode.NOT_FOUND_USER)
-        );
-
-
-        if (commentAnalyzer.isCommentOffensive(create.getContent())){
-            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
-        }
+		if (commentAnalyzer.isCommentOffensive(create.getContent())) {
+			throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+		}
 
 		publisher.publishEvent(new PickcoEvent(
-				pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN));
+			pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN));
 
 		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 	}
