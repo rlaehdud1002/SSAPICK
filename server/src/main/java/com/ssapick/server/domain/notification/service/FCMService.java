@@ -51,6 +51,8 @@ public class FCMService {
                     notificationEvent.getUser(),
                     notificationEvent.getType(),
                     notificationEvent.getNotificationId(),
+                    notificationEvent.getTitle(),
+                    notificationEvent.getMessage(),
                     stringApiFuture.get()
             ));
             updateSendState(notificationEvent.getType(), notificationEvent.getNotificationId());
@@ -75,9 +77,10 @@ public class FCMService {
         }
     }
 
-    @Transactional
-    public void createUserToken(User user, String token) {
-        user.getProfile().updateFcmToken(token);
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createUserToken(FCMData.FCMRegister register) {
+        register.getUser().getProfile().updateFcmToken(register.getToken());
     }
 
     private String getUserToken(User user) {

@@ -2,18 +2,7 @@ package com.ssapick.server.domain.notification.entity;
 
 import com.ssapick.server.core.entity.TimeEntity;
 import com.ssapick.server.domain.user.entity.User;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,15 +31,22 @@ public class Notification extends TimeEntity {
 	@Column(name = "is_read")
 	private boolean isRead = false;
 
+	private String title;
+
 	private String message;
 
+	@Column(name = "fcm_id")
+	private String fcmId;
+
 	public static Notification createNotification(User user, NotificationType notificationType, Long referenceId,
-		String message) {
+		String title, String message, String fcmId) {
 		Notification notification = new Notification();
 		notification.user = user;
 		notification.notificationType = notificationType;
 		notification.referenceId = referenceId;
+		notification.title = title;
 		notification.message = message;
+		notification.fcmId = fcmId;
 		return notification;
 	}
 }
