@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSearchFriendsList } from "api/friendApi";
-import { IFriend } from "atoms/Friend.type";
+import { ISearchFriend } from "atoms/Friend.type";
 import { Input } from "components/ui/input";
 import { Separator } from "components/ui/separator";
 import BackIcon from "icons/BackIcon";
@@ -18,22 +18,23 @@ interface FriendSearchForm {
 }
 
 const FriendSearch = () => {
-
-  const { register, handleSubmit, reset, formState: { isSubmitSuccessful } } = useForm<FriendSearchForm>();
+  const { register, handleSubmit, reset, watch, formState: { isSubmitSuccessful } } = useForm<FriendSearchForm>();
 
   const navigate = useNavigate();
 
   const onSubmit = (data: FriendSearchForm) => {
-    console.log(data)
+
+    console.log(data.search)
+    refetch()
   }
 
   // 검색 친구 리스트 조회
-  const { data: searchFriend, isLoading } = useQuery<IFriend[]>({
-    queryKey: ['searchFriends'],
-    queryFn: async () => await getSearchFriendsList(""),
-
+  const { data: searchFriend, isLoading, refetch } = useQuery<ISearchFriend>({
+    queryKey: ['searchFriends', watch("search")],
+    queryFn: async () => await getSearchFriendsList(watch("search")),
   });
-  console.log("friend",searchFriend)
+
+  console.log("friend", searchFriend?.content)
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -42,7 +43,8 @@ const FriendSearch = () => {
 
   }, [isSubmitSuccessful, reset]);
 
-  
+
+
   return (
 
     <div className="relative flex flex-col">
@@ -74,7 +76,6 @@ const FriendSearch = () => {
           </div>
         </form>
       </div>
-
       {/* <div className="flex flex-col"> */}
       {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="민준수" /> */}
       {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="이호영" /> */}
@@ -82,15 +83,18 @@ const FriendSearch = () => {
       {/* <div className="flex ml-8 mb-3">
         <FriendIcon width={20} height={20} isDefault={true} />
         <span className="ml-2">친구찾기</span>
-
-
       {/* </div> */}
-      {[0, 1].map((index) => (
-        <FriendSearchContent key={index} campus="광주" th={11} classNum={2} name="민준수" />
-      ))}
-      {[0, 1, 2, 3, 4, 5].map((index) => (
-        <FriendSearchContent key={index} campus="광주" th={11} classNum={2} name="이호영" />
-      ))}
+      {searchFriend?.content.length ? (
+        searchFriend.content.map((friend, index) => (
+          <FriendSearchContent key={index} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
+        ))
+      ) : (
+        <div className="flex justify-center">
+          <span className='text-xs mt-3'> 검색한 친구가 없습니다</span>
+        </div>
+      )}
+
+
 
     </div>
   )
