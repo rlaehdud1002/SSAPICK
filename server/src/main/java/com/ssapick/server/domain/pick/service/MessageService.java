@@ -119,7 +119,7 @@ public class MessageService {
 				receiver,
 				message.getId(),
 				"누군가가 당신에게 쪽지를 보냈습니다.",
-				"지금 접속해서 확인해보세요.",
+				create.getContent(),
 				null
 		));
 	}
