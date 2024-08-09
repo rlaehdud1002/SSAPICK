@@ -16,6 +16,9 @@ import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,12 +113,13 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
 
-	public List<UserData.Search> getUserByKeyword(String keyword) {
-		List<User> users = userRepository.findUserByKeyword(keyword);
+	public Page<UserData.Search> getUserByKeyword(User user, String keyword, Pageable pageable) {
+		Page<User> usersPage = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
+		List<User> users = usersPage.getContent();
 
-		return users.stream()
-				.map(UserData.Search::fromEntity)
-				.toList();
+		List<UserData.Search> search = users.stream().map(UserData.Search::fromEntity).toList();
+
+		return new PageImpl<>(search, pageable, usersPage.getTotalElements());
 	}
 
 }

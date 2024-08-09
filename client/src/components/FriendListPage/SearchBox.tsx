@@ -7,7 +7,7 @@ interface FriendSearchForm {
 }
 
 const Search = () => {
-
+  
   const { register, handleSubmit, reset, formState: { isSubmitSuccessful } } = useForm<FriendSearchForm>();
 
   useEffect(() => {
@@ -21,12 +21,8 @@ const Search = () => {
 
   }
 
-  const onInvalid = (errors: any) => {
-    console.log(errors)
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex relative items-center space-x-2 m-auto">
         <div className="w-4/5 flex flex-row m-auto">
           <Input className="w-full bg-white h-10" type="text" placeholder="친구 검색" register={register("search")} />

@@ -24,7 +24,7 @@ const Profile = () => {
     queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
-
+  
 
   console.log(information);
 

@@ -1,6 +1,8 @@
 package com.ssapick.server.domain.user.repository;
 
 import com.ssapick.server.domain.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserQueryRepo
     List<User> findUserByKeyword(@Param("keyword") String keyword);
 
 
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.profile p WHERE u.username IN :usernames")
+    List<User> findUserByUserNames(@Param("usernames") List<String> usernames);
 }
