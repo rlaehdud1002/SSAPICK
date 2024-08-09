@@ -92,6 +92,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                             : pick.openedHints[0]
                         }
                         pickId={pick.id}
+                        pickco={pickco.pickco}
                       />
                     </div>
                     <div className="rounded-lg bg-white/50 p-3 mx-10 min-w-20 max-w-40 text-center">
@@ -102,12 +103,13 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
                             : pick.openedHints[1]
                         }
                         pickId={pick.id}
+                        pickco={pickco.pickco}
                       />
                     </div>
                   </div>
-                  {!pick.messageSend && pickco && (
+                  {!pick.messageSend && (
                     <div className="float-end">
-                      <MessageModal pick={pick} pickco={pickco.pickco}/>
+                      <MessageModal pick={pick} pickco={pickco.pickco} />
                     </div>
                   )}
                 </AccordionContent>
