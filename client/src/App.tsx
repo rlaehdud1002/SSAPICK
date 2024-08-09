@@ -8,7 +8,6 @@ import Header from "./components/common/Header";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { isValidateState, validState } from "atoms/ValidAtoms";
-
 import { initializeApp } from "firebase/app";
 import NotFoundPage from "pages/NotFoundPage";
 import { useEffect } from "react";
@@ -18,6 +17,7 @@ import { refresh } from "api/authApi";
 import { getMessaging, onMessage } from "firebase/messaging";
 import { requestPermission } from "firebase-messaging-sw";
 
+// Firebase 설정
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -28,39 +28,31 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const messaging = getMessaging(firebaseApp);
+initializeApp(firebaseConfig);
+
+const messaging = getMessaging();
 
 function App() {
-  const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
-  console.dir(messaging);
-  onMessage(messaging, (payload) => {
-    console.log("Message received. ", payload);
-  });
-
-  useEffect(() => {
-    requestPermission(messaging);
-  }, []);
-
+  const location = useLocation().pathname.split("/")[1];
   const navigate = useNavigate();
+
+  // Recoil 상태 및 setter
   const isValid = useRecoilValue(isValidateState);
   const setValidState = useSetRecoilState(validState);
   const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
   const setAccessToken = useSetRecoilState(accessTokenState);
-  const isAuthenticated = useRecoilValue(isLoginState);
-  const headerFooter = () => {
-    return (
-      location !== "" && // 로그인 페이지
-      location !== "splash" && // 스플래시 페이지
-      location !== "mattermost" && // mm 인증 페이지
-      location !== "404" && // 404 페이지
-      location !== "infoinsert" // 추가 정보 입력 페이지
-    );
-  };
 
+  // Firebase 메시징 설정
   useEffect(() => {
-    console.log(refreshRequest);
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+    });
+    requestPermission(messaging);
+  }, []);
+
+  // 토큰 리프레시 처리
+  useEffect(() => {
     if (!refreshRequest) {
       refresh()
         .then((response) => {
@@ -74,68 +66,49 @@ function App() {
     }
   }, [refreshRequest, setAccessToken, setRefreshRequest]);
 
+  // 유효성 검사 및 리다이렉션 처리
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash" || location === "") {
-          return;
-        }
+        if (location === "splash" || location === "") return;
+
         if (isValid) return;
+
         const data = await validCheck();
-        console.log("유효성 검사", data.lockedUser, data.mattermostConfirmed, data.validInfo);
+        console.log("유효성 검사", data);
+
         setValidState(data);
 
-        if (data.lockedUser && !location.includes("/")) {
+        if (data.lockedUser) {
           navigate("/");
-          return;
-        }
-        if (!data.mattermostConfirmed && !location.includes("mattermost")) {
+        } else if (!data.mattermostConfirmed) {
           navigate("/mattermost");
-          return;
-        }
-        if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo) {
           navigate("/infoinsert");
-          return;
-        }
-        if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          if (
-            location.includes("splash") ||
-            location.includes("mattermost") ||
-            location.includes("infoinsert") ||
-            location.includes("")
-          ) {
+        } else if (data.mattermostConfirmed && data.validInfo) {
+          if (location === "splash" || location === "mattermost" || location === "infoinsert") {
             navigate("/home");
-            return;
           }
         }
       } catch (error) {
         console.error("유효성 검사 실패", error);
-        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        navigate("/");
       }
     };
+
     checkValidity();
-  }, [refreshRequest]);
+  }, [isValid, location, navigate, setValidState]);
+
+  // 헤더 및 푸터 렌더링 조건
+  const shouldShowHeaderFooter = () => {
+    return !["", "splash", "mattermost", "404", "infoinsert"].includes(location);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      {/* <div className="flex flex-col relative">
-        <div className="flex flex-col h-screen">
-          {headerFooter() && <Header />}
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/*" element={<CommonRoute />} />
-              <Route path="/profile/*" element={<ProfileRoute />} />
-              <Route path="/404" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-          <div className="flex flex-col h-screen">
-            {headerFooter() && <Footer />}
-          </div>
-        </div>
-      </div> */}
       <div className="flex flex-col relative min-h-screen">
-        {headerFooter() && <Header />}
+        {shouldShowHeaderFooter() && <Header />}
         <main className="flex-grow mb-[70px]">
           <Routes>
             <Route path="/*" element={<CommonRoute />} />
@@ -143,7 +116,7 @@ function App() {
             <Route path="/404" element={<NotFoundPage />} />
           </Routes>
         </main>
-        {headerFooter() && <Footer />}
+        {shouldShowHeaderFooter() && <Footer />}
       </div>
     </QueryClientProvider>
   );
