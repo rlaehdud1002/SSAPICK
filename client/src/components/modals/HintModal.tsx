@@ -49,7 +49,12 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
           }
         }}
       >
-        {hint}
+        <div className='my-1 text-xs text-[#5f86e9]'>
+          {hint.split(':')[0]}
+        </div>
+        <div className='text-base text-[#000855]'>
+          {hint.split(':')[1]}
+        </div>
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
