@@ -26,7 +26,6 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 		JOIN FETCH p.question 
 		JOIN FETCH p.question.questionCategory 
 		LEFT JOIN FETCH p.hintOpens ho 
-		LEFT JOIN FETCH ho.hint h 
 		WHERE p.receiver.id = :userId
 		ORDER BY p.id DESC
 		""")
@@ -38,7 +37,6 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 		JOIN FETCH p.question 
 		JOIN FETCH p.question.questionCategory 
 		LEFT JOIN FETCH p.hintOpens ho 
-		LEFT JOIN FETCH ho.hint h 
 		WHERE p.id IN :ids
 		ORDER BY p.id DESC 
 		""")
@@ -75,6 +73,8 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 		JOIN FETCH p.question q
 		JOIN FETCH r.profile rp 
 		JOIN FETCH s.profile sp 
+		JOIN FETCH r.alarm ra
+		JOIN FETCH s.alarm sa
 		JOIN FETCH rp.campus rc 
 		JOIN FETCH sp.campus sc
 		""")
@@ -83,6 +83,6 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	@Query("SELECT p FROM Pick p WHERE p.receiver.id = :receiverId AND p.alarm = true")
 	Optional<Pick> findByReceiverIdWithAlarm(@Param("receiverId") Long receiverId);
 
-    @Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.receiver WHERE p.id = :pickId")
-    Optional<Pick> findByIdWithSender(Long pickId);
+	@Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.receiver WHERE p.id = :pickId")
+	Optional<Pick> findByIdWithSender(Long pickId);
 }

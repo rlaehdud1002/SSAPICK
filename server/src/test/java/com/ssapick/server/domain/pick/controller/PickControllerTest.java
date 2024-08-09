@@ -31,7 +31,6 @@ import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.PickData;
-import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintOpen;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -63,18 +62,18 @@ class PickControllerTest extends RestDocsSupport {
 			Question question = spy(createQuestion("테스트 질문 " + i));
 			QuestionCategory category = spy(QuestionCategory.create("TEST_CATEGORY", "테스트 카테고리 썸네일"));
 
-			when(category.getId()).thenReturn((long) i);
+			when(category.getId()).thenReturn((long)i);
 			when(question.getQuestionCategory()).thenReturn(category);
-			when(question.getId()).thenReturn((long) i);
+			when(question.getId()).thenReturn((long)i);
 			when(question.getCreatedAt()).thenReturn(LocalDateTime.now());
 
 			Pick pick = spy(createPick(sender, receiver, question));
-			when(pick.getId()).thenReturn((long) i);
+			when(pick.getId()).thenReturn((long)i);
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
-					.hint(Hint.createHint("힌트1", HintType.COHORT))
 					.pick(pick)
+					.hintType(HintType.NAME)
 					.build()
 			));
 			return PickData.Search.fromEntity(pick, true);
@@ -111,70 +110,163 @@ class PickControllerTest extends RestDocsSupport {
 							fieldWithPath("status").description("HTTP 상태 코드"),
 							fieldWithPath("message").description("응답 메시지"),
 							fieldWithPath("data").description("응답 데이터").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.totalElements").description("총 요소 수").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.totalPages").description("총 페이지 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.totalElements").description("총 요소 수")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.totalPages").description("총 페이지 수")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
 							fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
 							fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
 							fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+							fieldWithPath("data.sort.sorted").description("정렬 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
 							fieldWithPath("data.pageable").description("페이지 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.pageable.pageNumber").description("페이지 번호").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.pageable.pageSize").description("페이지 크기").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.pageable.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.pageable.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.pageable.unpaged").description("비페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.pageable.paged").description("페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.numberOfElements").description("페이지 내 요소 수").type(JsonFieldType.NUMBER).optional(),
+							fieldWithPath("data.pageable.pageNumber").description("페이지 번호")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.pageable.pageSize").description("페이지 크기")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.pageable.offset").description("오프셋")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.pageable.sort").description("정렬 정보")
+								.type(JsonFieldType.OBJECT)
+								.optional(),
+							fieldWithPath("data.pageable.sort.sorted").description("정렬 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.pageable.unpaged").description("비페이지 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.pageable.paged").description("페이지 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.numberOfElements").description("페이지 내 요소 수")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
 							fieldWithPath("data.empty").description("비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
 							fieldWithPath("data.content").description("픽 데이터 목록").type(JsonFieldType.ARRAY).optional(),
-							fieldWithPath("data.content[].id").description("픽 ID").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].sender").description("송신자 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.content[].sender.userId").description("송신자 ID").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].sender.nickname").description("송신자 닉네임").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].sender.gender").description("송신자 성별").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].sender.campusName").description("송신자 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].sender.campusSection").description("송신자 캠퍼스 섹션").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].sender.campusDescription").description("송신자 캠퍼스 설명").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].sender.profileImage").description("송신자 프로필 이미지").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].sender.cohort").description("송신자 코호트").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].receiver").description("수신자 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.content[].receiver.userId").description("수신자 ID").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].receiver.nickname").description("수신자 닉네임").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].receiver.gender").description("수신자 성별").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].receiver.campusName").description("수신자 캠퍼스 이름").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].receiver.campusSection").description("수신자 캠퍼스 섹션").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].receiver.campusDescription").description("수신자 캠퍼스 설명").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].receiver.profileImage").description("수신자 프로필 이미지").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].receiver.cohort").description("수신자 코호트").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].question").description("질문 정보").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.content[].question.id").description("질문 ID").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].question.banCount").description("질문 금지 수").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].question.skipCount").description("질문 스킵 수").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].question.category").description("질문 카테고리").type(JsonFieldType.OBJECT).optional(),
-							fieldWithPath("data.content[].question.category.id").description("질문 카테고리 ID").type(JsonFieldType.NUMBER).optional(),
-							fieldWithPath("data.content[].question.category.name").description("질문 카테고리 이름").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].question.category.thumbnail").description("질문 카테고리 썸네일").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].question.content").description("질문 내용").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].alarm").description("알림 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.content[].createdAt").description("생성 일시").type(JsonFieldType.STRING).optional(),
-							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부").type(JsonFieldType.BOOLEAN).optional(),
-							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록").type(JsonFieldType.ARRAY).optional(),
-							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID").type(JsonFieldType.NUMBER).optional()
+							fieldWithPath("data.content[].id").description("픽 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].sender").description("송신자 정보")
+								.type(JsonFieldType.OBJECT)
+								.optional(),
+							fieldWithPath("data.content[].sender.userId").description("송신자 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].sender.nickname").description("송신자 닉네임")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].sender.gender").description("송신자 성별")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].sender.campusName").description("송신자 캠퍼스 이름")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].sender.campusSection").description("송신자 캠퍼스 섹션")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].sender.campusDescription").description("송신자 캠퍼스 설명")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].sender.profileImage").description("송신자 프로필 이미지")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].sender.cohort").description("송신자 코호트")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].receiver").description("수신자 정보")
+								.type(JsonFieldType.OBJECT)
+								.optional(),
+							fieldWithPath("data.content[].receiver.userId").description("수신자 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].receiver.nickname").description("수신자 닉네임")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].receiver.gender").description("수신자 성별")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].receiver.campusName").description("수신자 캠퍼스 이름")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].receiver.campusSection").description("수신자 캠퍼스 섹션")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].receiver.campusDescription").description("수신자 캠퍼스 설명")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].receiver.profileImage").description("수신자 프로필 이미지")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].receiver.cohort").description("수신자 코호트")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].question").description("질문 정보")
+								.type(JsonFieldType.OBJECT)
+								.optional(),
+							fieldWithPath("data.content[].question.id").description("질문 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].question.banCount").description("질문 금지 수")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].question.skipCount").description("질문 스킵 수")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].question.category").description("질문 카테고리")
+								.type(JsonFieldType.OBJECT)
+								.optional(),
+							fieldWithPath("data.content[].question.category.id").description("질문 카테고리 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional(),
+							fieldWithPath("data.content[].question.category.name").description("질문 카테고리 이름")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].question.category.thumbnail").description("질문 카테고리 썸네일")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].question.content").description("질문 내용")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].alarm").description("알림 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.content[].createdAt").description("생성 일시")
+								.type(JsonFieldType.STRING)
+								.optional(),
+							fieldWithPath("data.content[].messageSend").description("메시지 전송 여부")
+								.type(JsonFieldType.BOOLEAN)
+								.optional(),
+							fieldWithPath("data.content[].openedHints").description("열린 힌트 목록")
+								.type(JsonFieldType.ARRAY)
+								.optional(),
+							fieldWithPath("data.content[].openedHints[].id").description("힌트 ID")
+								.type(JsonFieldType.NUMBER)
+								.optional()
 						)
 						.build()
 				)
 			));
 	}
-
-
-
 
 	@Test
 	@DisplayName("보낸 픽 조회 성공 테스트")
@@ -273,204 +365,202 @@ class PickControllerTest extends RestDocsSupport {
 		create.setIndex(1);
 		create.setStatus(PickData.PickStatus.PASS);
 
-        PickData.PickCondition pickCondition = PickData.PickCondition.builder()
-            .index(1)
-            .pickCount(1)
-            .blockCount(1)
-            .passCount(1)
-            .isCooltime(false)
-            .build();
-
-        when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
-
-        // * WHEN: 이걸 실행하면
-        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(create))
-        );
-
-        // * THEN: 이런 결과가 나와야 한다
-        perform.andExpect(status().isOk())
-                .andDo(this.restDocs.document(resource(
-                        ResourceSnippetParameters.builder()
-                                .tag("픽")
-                                .summary("픽 생성 API")
-                                .description("사용자가 패스한 픽을 처리한다.")
-                                .requestFields(
-                                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
-                                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
-                                )
-                                .responseFields(response(
-                                    fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
-                                    fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                                    fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                    fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                                    fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
-                                    fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
-                                    fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-                                    fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
-                                ))
-                                .build()
-                )));
-    }
-
-
-    @Test
-    @DisplayName("픽_선택_시_질문_차단")
-    @WithMockUser(username = "test-user")
-    void 픽_선택_시_질문_차단() throws Exception {
-        // * GIVEN: 이런게 주어졌을 때
-        User user = createUser("test");
-
-        Question question = spy(this.createQuestion("테스트 질문"));
-        when(question.getId()).thenReturn(1L);
-
-        PickData.Create create = new PickData.Create();
-        create.setQuestionId(question.getId());
-        create.setIndex(1);
-        create.setStatus(PickData.PickStatus.BLOCK);
-
-        PickData.PickCondition pickCondition = PickData.PickCondition.builder()
-            .index(1)
-            .pickCount(1)
-            .blockCount(1)
-            .passCount(1)
-            .isCooltime(false)
-            .build();
-
-        when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
-        // * WHEN: 이걸 실행하면
-        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(toJson(create))
-        );
-
-        // * THEN: 이런 결과가 나와야 한다
-        perform.andExpect(status().isOk())
-            .andDo(this.restDocs.document(resource(
-                ResourceSnippetParameters.builder()
-                    .tag("픽")
-                    .summary("픽 생성 API")
-                    .description("픽_선택_시_질문_차단을_하는_경우를_처리한다.")
-                    .requestFields(
-                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
-                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
-                    )
-                    .responseFields(response(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
-                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                        fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                        fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
-                        fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
-                        fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-                        fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
-                    ))
-                    .build()
-            )));
-    }
-
-
-    @Test
-    @DisplayName("픽_선택_테스트")
-    @WithMockUser(username = "test-user")
-    void 픽_선택_생성_테스트() throws Exception {
-        // * GIVEN: 이런게 주어졌을 때
-        User receiver = this.createUser("받은 사람");
-        Question question = spy(this.createQuestion("테스트 질문"));
-        when(question.getId()).thenReturn(1L);
-
-        PickData.Create create = new PickData.Create();
-        create.setReceiverId(receiver.getId());
-        create.setQuestionId(question.getId());
-        create.setIndex(1);
-        create.setStatus(PickData.PickStatus.PICKED);
-
-        PickData.PickCondition pickCondition = PickData.PickCondition.builder()
-            .index(1)
-            .pickCount(1)
-            .blockCount(1)
-            .passCount(1)
-            .isCooltime(false)
-            .build();
+		PickData.PickCondition pickCondition = PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build();
 
 		when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
 
-        // * WHEN: 이걸 실행하면
-        ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(toJson(create))
-        );
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(toJson(create))
+		);
 
-        // * THEN: 이런 결과가 나와야 한다
-        perform.andExpect(status().isOk())
-            .andDo(this.restDocs.document(resource(
-                ResourceSnippetParameters.builder()
-                    .tag("픽")
-                    .summary("픽 생성 API")
-                    .description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
-                    .requestFields(
-                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
-                        fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
-                        fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                        fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
-                    )
-                    .responseFields(response(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
-                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                        fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                        fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
-                        fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
-                        fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-                        fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
-                    ))
-                    .build()
-            )));
-    }
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(this.restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("픽")
+					.summary("픽 생성 API")
+					.description("사용자가 패스한 픽을 처리한다.")
+					.requestFields(
+						fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+						fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+					)
+					.responseFields(response(
+						fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+						fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+						fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+						fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
+						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
+						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+					))
+					.build()
+			)));
+	}
 
-    @Test
-    @DisplayName("픽_진행_상태_조회_테스트")
-    @WithMockUser(username = "test-user")
-    void 픽_진행_상태_조회_테스트() throws Exception {
-        // * GIVEN: 이런게 주어졌을 때
-        PickData.PickCondition pickCondition = PickData.PickCondition.builder()
-            .index(1)
-            .pickCount(1)
-            .blockCount(1)
-            .passCount(1)
-            .isCooltime(false)
-            .build();
+	@Test
+	@DisplayName("픽_선택_시_질문_차단")
+	@WithMockUser(username = "test-user")
+	void 픽_선택_시_질문_차단() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User user = createUser("test");
 
-        when(pickService.getPickCondition(any())).thenReturn(pickCondition);
+		Question question = spy(this.createQuestion("테스트 질문"));
+		when(question.getId()).thenReturn(1L);
 
-        // * WHEN: 이걸 실행하면
-        ResultActions perform = this.mockMvc.perform(get("/api/v1/pick")
-            .contentType(MediaType.APPLICATION_JSON)
-        );
+		PickData.Create create = new PickData.Create();
+		create.setQuestionId(question.getId());
+		create.setIndex(1);
+		create.setStatus(PickData.PickStatus.BLOCK);
 
-        // * THEN: 이런 결과가 나와야 한다
-        perform.andExpect(status().isOk())
-            .andDo(this.restDocs.document(resource(
-                ResourceSnippetParameters.builder()
-                    .tag("픽")
-                    .summary("픽 진행 상태 조회 API")
-                    .description("사용자의 픽 진행 상태를 조회한다.")
-                    .responseFields(
-                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
-                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                        fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
-                        fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
-                        fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
-                        fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-                        fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
-                    )
-                    .build()
-            )));
-    }
+		PickData.PickCondition pickCondition = PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build();
+
+		when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(toJson(create))
+		);
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(this.restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("픽")
+					.summary("픽 생성 API")
+					.description("픽_선택_시_질문_차단을_하는_경우를_처리한다.")
+					.requestFields(
+						fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+						fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+					)
+					.responseFields(response(
+						fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+						fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+						fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+						fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
+						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
+						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+					))
+					.build()
+			)));
+	}
+
+	@Test
+	@DisplayName("픽_선택_테스트")
+	@WithMockUser(username = "test-user")
+	void 픽_선택_생성_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User receiver = this.createUser("받은 사람");
+		Question question = spy(this.createQuestion("테스트 질문"));
+		when(question.getId()).thenReturn(1L);
+
+		PickData.Create create = new PickData.Create();
+		create.setReceiverId(receiver.getId());
+		create.setQuestionId(question.getId());
+		create.setIndex(1);
+		create.setStatus(PickData.PickStatus.PICKED);
+
+		PickData.PickCondition pickCondition = PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build();
+
+		when(pickService.createPick(any(User.class), any(PickData.Create.class))).thenReturn(pickCondition);
+
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(post("/api/v1/pick")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(toJson(create))
+		);
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(this.restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("픽")
+					.summary("픽 생성 API")
+					.description("사용자가 선택한 픽을 데이터베이스에 생성한다.")
+					.requestFields(
+						fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("픽 받을 사람 ID"),
+						fieldWithPath("questionId").type(JsonFieldType.NUMBER).description("질문 ID"),
+						fieldWithPath("index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("status").type(JsonFieldType.STRING).description("픽 상태 (선택, 패스, 차단)")
+					)
+					.responseFields(response(
+						fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+						fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+						fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+						fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
+						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
+						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+					))
+					.build()
+			)));
+	}
+
+	@Test
+	@DisplayName("픽_진행_상태_조회_테스트")
+	@WithMockUser(username = "test-user")
+	void 픽_진행_상태_조회_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		PickData.PickCondition pickCondition = PickData.PickCondition.builder()
+			.index(1)
+			.pickCount(1)
+			.blockCount(1)
+			.passCount(1)
+			.isCooltime(false)
+			.build();
+
+		when(pickService.getPickCondition(any())).thenReturn(pickCondition);
+
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(get("/api/v1/pick")
+			.contentType(MediaType.APPLICATION_JSON)
+		);
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isOk())
+			.andDo(this.restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("픽")
+					.summary("픽 진행 상태 조회 API")
+					.description("사용자의 픽 진행 상태를 조회한다.")
+					.responseFields(
+						fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+						fieldWithPath("status").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+						fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+						fieldWithPath("data.index").type(JsonFieldType.NUMBER).description("현재 질문 리스트의 인덱스 번호"),
+						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
+						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
+						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+					)
+					.build()
+			)));
+	}
 
 	@Test
 	@DisplayName("픽_알람_설정_테스트")
@@ -493,8 +583,8 @@ class PickControllerTest extends RestDocsSupport {
 			when(pick.getCreatedAt()).thenReturn(LocalDateTime.now());
 			when(pick.getHintOpens()).thenReturn(List.of(
 				HintOpen.builder()
-					.hint(Hint.createHint("힌트1", HintType.COHORT))
 					.pick(pick)
+					.hintType(HintType.COHORT)
 					.build()
 			));
 			return pick;
@@ -519,7 +609,6 @@ class PickControllerTest extends RestDocsSupport {
 			)));
 	}
 
-
 	@Test
 	@DisplayName("픽 사용자 리롤시 픽코 사용")
 	@WithMockUser(username = "test-user")
@@ -531,14 +620,14 @@ class PickControllerTest extends RestDocsSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		perform.andExpect(status().isOk())
-				.andDo(this.restDocs.document(resource(
-						ResourceSnippetParameters.builder()
-								.tag("픽")
-								.summary("사용자 리롤 픽코 사용 API")
-								.description("사용자를 리롤하면 픽코를 사용한다")
-								.responseFields(empty())
-								.build()
-				)));
+			.andDo(this.restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("픽")
+					.summary("사용자 리롤 픽코 사용 API")
+					.description("사용자를 리롤하면 픽코를 사용한다")
+					.responseFields(empty())
+					.build()
+			)));
 	}
 
 	private Pick createPick(User sender, User receiver, Question question) {
