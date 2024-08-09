@@ -22,6 +22,7 @@ const Home = () => {
         return undefined;
       },
       initialPageParam: 0,
+      refetchInterval: 2000
     });
 
   const [modalOpen, setModalOpen] = useState(false);

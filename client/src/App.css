@@ -4,13 +4,6 @@
   font-style: normal;
 }
 
-.logo_font_style {
-  color: #5f86e9;
-  font-size: 30px;
-  padding-left: 20px;
-  padding-top: 20px;
-}
-
 #root {
   max-width: 400px;
   max-height: 100vh;

@@ -15,6 +15,8 @@ import { useEffect } from "react";
 import { validCheck } from "api/validApi";
 import { accessTokenState, isLoginState, refreshRequestState } from "atoms/UserAtoms";
 import { refresh } from "api/authApi";
+import { getMessaging, onMessage } from "firebase/messaging";
+import { requestPermission } from "firebase-messaging-sw";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -26,10 +28,20 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
+const firebaseApp = initializeApp(firebaseConfig);
+const messaging = getMessaging(firebaseApp);
+
 function App() {
-  initializeApp(firebaseConfig);
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
+  console.dir(messaging);
+  onMessage(messaging, (payload) => {
+    console.log("Message received. ", payload);
+  });
+
+  useEffect(() => {
+    requestPermission(messaging);
+  }, []);
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
@@ -37,7 +49,6 @@ function App() {
   const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
   const setAccessToken = useSetRecoilState(accessTokenState);
   const isAuthenticated = useRecoilValue(isLoginState);
-
   const headerFooter = () => {
     return (
       location !== "" && // 로그인 페이지
@@ -75,22 +86,18 @@ function App() {
         setValidState(data);
 
         if (data.lockedUser && !location.includes("/")) {
-          console.log("락 유저");
           navigate("/");
           return;
         }
         if (!data.mattermostConfirmed && !location.includes("mattermost")) {
-          console.log("MM 유효X");
           navigate("/mattermost");
           return;
         }
         if (!data.validInfo && !location.includes("infoinsert")) {
-          console.log("정보 유효X");
           navigate("/infoinsert");
           return;
         }
         if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          console.log("유효성 검사 완료");
           if (
             location === "infoinsert" ||
             location === "mattermost" ||

@@ -9,6 +9,9 @@ const CoolTime = () => {
   const [timeLeft, setTimeLeft] = useState<number>(coolTime);
   const navigate = useNavigate();
 
+  console.log('coolTime', coolTime);
+  console.log('timeLeft', timeLeft);
+
   useEffect(() => {
     const updateTimeLeft = () => {
       const now = new Date().getTime();
@@ -28,6 +31,8 @@ const CoolTime = () => {
   if (timeLeft <= 0) {
     navigate('/pick');
   }
+
+  console.log('timeLeft', timeLeft);
 
   return (
     <div
