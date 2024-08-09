@@ -71,7 +71,7 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
               </AccordionTrigger>
               <p className="text-center my-4">{pick.question.content}</p>
               <AccordionContent>
-                <div className="flex flex-row justify-center">
+                <div className="flex flex-row justify-center items-center">
                   <div className="rounded-lg bg-white/50 p-3 mx-10 w-20 text-center">
                     <HintModal
                       title={
