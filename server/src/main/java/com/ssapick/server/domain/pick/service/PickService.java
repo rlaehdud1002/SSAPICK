@@ -238,4 +238,10 @@ public class PickService {
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
 
+	public PickData.Search getPickWithAlarmOn(User user) {
+		Optional<Pick> pick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+
+        return pick.map(value -> PickData.Search.fromEntity(value, true)).orElse(null);
+    }
+
 }
