@@ -1,117 +1,124 @@
 package com.ssapick.server.domain.pick.repository;
 
 import java.time.Duration;
-import java.util.List;
+import java.time.LocalDateTime;
+
+import javax.annotation.Resource;
+
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
-import org.springframework.stereotype.Repository;
-
-import com.ssapick.server.domain.pick.dto.PickData;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PickCacheRepository {
     public static final int PASS_BLOCK_LIMIT = 5;
-    public static final int COOL_TIME = 1;
-    public static final String CACHE_INFO = "pick:cacheInfo:";
 
-    private final RedisTemplate<String, Object> redisTemplate;
+	public static final int COOL_TIME = 1;
 
+    public static final String PICK_CACHE = "pick:";
+	public static final String INDEX_KEY = "index";
+	public static final String PICK_COUNT_KEY = "pickCount";
+	public static final String PASS_COUNT_KEY = "passCount";
+	public static final String BLOCK_COUNT_KEY = "blockCount";
+	public static final String COOL_TIME_KEY = "coolTime";
+
+    // private final RedisTemplate<String, Object> redisTemplate;
+
+	@Resource(name = "redisTemplate")
+	private HashOperations<String, String, String> hashOperations;
 
 
     public void init(Long userId) {
-        String key = CACHE_INFO + userId;
+		String key = PICK_CACHE + userId;
 
-        redisTemplate.opsForValue().set(key, PickData.Cache.builder()
-            .index(0)
-            .pickCount(0)
-            .passCount(0)
-            .blockCount(0)
-            .isCooltime(false)
-            .build(), Duration.ofDays(1));
+		hashOperations.put(key, INDEX_KEY, "0");
+		hashOperations.put(key, PICK_COUNT_KEY, "0");
+		hashOperations.put(key, PASS_COUNT_KEY, "0");
+		hashOperations.put(key, BLOCK_COUNT_KEY, "0");
+		hashOperations.put(key, COOL_TIME_KEY, LocalDateTime.now().toString());
+	}
 
+	public void increaseIndex(Long userId) {
+		String key = PICK_CACHE + userId;
 
+		hashOperations.put(key, INDEX_KEY, String.valueOf(Integer.parseInt(hashOperations.get(key, INDEX_KEY)) + 1));
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
+	}
+	public void pick(Long userId) {
+		String key = PICK_CACHE + userId;
+
+		hashOperations.put(key, PICK_COUNT_KEY, String.valueOf(Integer.parseInt(hashOperations.get(key, PICK_COUNT_KEY)) + 1));
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
     }
 
-
-    public void pick(Long userId) {
-        String key = CACHE_INFO + userId;
-
-        PickData.Cache cache = (PickData.Cache)redisTemplate.opsForValue().get(key);
-
-        cache.setPickCount(cache.getPickCount() + 1);
-        cache.setIndex(cache.getIndex() + 1);
-
-        redisTemplate.opsForValue().set(key, cache, Duration.ofDays(1));
-    }
     public void block(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache)redisTemplate.opsForValue().get(key);
+		String key = PICK_CACHE + userId;
 
-
-        cache.setBlockCount(cache.getBlockCount() + 1);
-        cache.setIndex(cache.getIndex() + 1);
-
-        redisTemplate.opsForValue().set(key, cache, Duration.ofDays(1));
+		hashOperations.put(key, BLOCK_COUNT_KEY, String.valueOf(Integer.parseInt(hashOperations.get(key, BLOCK_COUNT_KEY)) + 1));
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
     }
 
     public void pass(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache)redisTemplate.opsForValue().get(key);
+		String key = PICK_CACHE + userId;
 
-
-        cache.setPassCount(cache.getPassCount() + 1);
-        cache.setIndex(cache.getIndex() + 1);
-
-        redisTemplate.opsForValue().set(key, cache, Duration.ofDays(1));
+		hashOperations.put(key, PASS_COUNT_KEY, String.valueOf(Integer.parseInt(hashOperations.get(key, PASS_COUNT_KEY)) + 1));
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
     }
 
     public Integer getIndex(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
-        return cache.getIndex();
+		String key = PICK_CACHE + userId;
+
+		String index = hashOperations.get(key, INDEX_KEY);
+
+		if (index == null) {
+			init(userId);
+			return 0;
+		}
+
+		return Integer.parseInt(index);
     }
 
     public Integer getPickCount(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
-        return cache.getPickCount();
+		String key = PICK_CACHE + userId;
+
+		return Integer.parseInt(hashOperations.get(key, PICK_COUNT_KEY));
     }
 
     public Integer getPassCount(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
-        return cache.getPassCount();
+		String key = PICK_CACHE + userId;
+
+		return Integer.parseInt(hashOperations.get(key, PASS_COUNT_KEY));
     }
 
     public Integer getBlockCount(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
-        return cache.getBlockCount();
+		String key = PICK_CACHE + userId;
+
+		return Integer.parseInt(hashOperations.get(key, BLOCK_COUNT_KEY));
     }
 
 
     public void setCooltime(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
+		String key = PICK_CACHE + userId;
 
-        cache.setCooltime(true);
-
-        redisTemplate.opsForValue().set(key, cache, Duration.ofMinutes(COOL_TIME));
+		hashOperations.put(key, COOL_TIME_KEY, LocalDateTime.now().plusMinutes(COOL_TIME).toString());
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
     }
 
     public boolean isCooltime(Long userId) {
-        String key = CACHE_INFO + userId;
-        PickData.Cache cache = (PickData.Cache) redisTemplate.opsForValue().get(key);
+		String key = PICK_CACHE + userId;
 
-        return cache.isCooltime();
+		String coolTime = hashOperations.get(key, COOL_TIME_KEY);
+		return LocalDateTime.now().isBefore(LocalDateTime.parse(coolTime));
     }
+
+	public boolean isEmpty(Long userId) {
+		String key = PICK_CACHE + userId;
+
+		return hashOperations.size(key) ==0;
+	}
 
 }
