@@ -1,5 +1,5 @@
 import instance from 'api/clientApi';
-import { IFriend } from 'atoms/Friend.type';
+import { IFriend, ISearchFriend } from 'atoms/Friend.type';
 import { BaseResponse } from 'atoms/User.type';
 
 // 친구 목록 get
@@ -57,10 +57,10 @@ export const getRecommendFriendsList = async (): Promise<IFriend[]> => {
 };
 
 // 친구 검색 리스트
-export const getSearchFriendsList = async (q:string): Promise<IFriend[]> => {
+export const getSearchFriendsList = async (q: string | undefined): Promise<ISearchFriend> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IFriend[]>>(`/uesr/search/${q}`);
+  } = await instance.get<BaseResponse<ISearchFriend>>('/user/search', { params: { q } });
 
   if (!success) {
     throw new Error('친구 검색 실패');

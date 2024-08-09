@@ -1,86 +1,74 @@
-import { Separator } from 'components/ui/separator';
-import PlusDeleteButton from 'buttons/PlusDeleteButton';
-import { Fragment, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteFriend, postAddFriend } from 'api/friendApi';
-import BaseImageIcon from 'icons/BaseImageIcon';
+import { Separator } from "components/ui/separator";
+import PlusDeleteButton from "buttons/PlusDeleteButton";
+import { Fragment, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteFriend, postAddFriend } from "api/friendApi";
 
 interface FriendSearchContentProps {
-  campus: string;
-  th: number;
-  classNum: number;
+  cohort: number;
+  classSection: number;
   name: string;
   userid?: number;
 }
 
-const FriendSearchContent = ({
-  campus,
-  th,
-  classNum,
-  name,
-}: FriendSearchContentProps) => {
+const FriendSearchContent = ({ name, cohort, classSection,userid }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
-
+  
   // 친구 추가
   const addMutation = useMutation({
-    mutationKey: ['addFriend'],
+    mutationKey: ["addFriend",],
     mutationFn: postAddFriend,
-
+  
     onSuccess: () => {
-      console.log('친구 추가 성공');
+      console.log("친구 추가 성공");
     },
   });
-
+  
   const deleteMutation = useMutation({
-    mutationKey: ['deleteFriend'],
+    mutationKey: ["deleteFriend",],
     mutationFn: deleteFriend,
-
+    
     onSuccess: () => {
-      console.log('친구 삭제 성공');
+      console.log("친구 삭제 성공");
     },
   });
 
   const onPlus = () => {
-    {
-      isPlus ? setIsPlus(false) : setIsPlus(true);
-    }
-  };
+    {isPlus ? 
+      (setIsPlus(false)) 
+      : 
+      (setIsPlus(true))}
+  }
 
-  return (
-    <Fragment>
-      <div className="flex items-center mt-5 justify-between mx-8">
-        <div>
-          <BaseImageIcon width={64} height={64} />
-        </div>
-        <div className="">
-          {campus}캠퍼스 {th}기 {classNum}반 {name}
-        </div>
-        <div>
-          {isPlus ? (
-            <div
-              onClick={() => {
-                addMutation.mutate(0);
-                onPlus();
-              }}
-            >
-              <PlusDeleteButton title="팔로우" isDelete={true} />
-            </div>
-          ) : (
-            <div
-              onClick={() => {
-                deleteMutation.mutate(0);
-                onPlus();
-              }}
-            >
-              <PlusDeleteButton title="언팔로우" />
-            </div>
-          )}
-        </div>
+  return <Fragment>
+    <div className="flex items-center mt-5 justify-between mx-8">
+      <div>
+        <img className="w-14 h-14" src="../icons/Profile.png" alt="profile" />
       </div>
-      <Separator className="my-4 mx-4" />
-      {/* <div className="bg-white h-px w-90 mx-8 mt-5"></div> */}
-    </Fragment>
-  );
-};
+      <div className=""> {cohort}기 {classSection}반 {name}</div>
+      <div>
+        {isPlus ? (
+          <div onClick={()=>{
+            addMutation.mutate(0);
+            onPlus();
+          }}>
+            <PlusDeleteButton title="팔로우" isDelete={true} />
+          </div>
+        ) : (
+          <div onClick={
+            ()=>{
+              deleteMutation.mutate(0);
+              onPlus();
+            }
+          }>
+            <PlusDeleteButton title="언팔로우" />
+          </div>
+        )}
+      </div>
+    </div>
+    <Separator className="my-4 mx-4" />  
+    {/* <div className="bg-white h-px w-90 mx-8 mt-5"></div> */}
+  </Fragment>
+}
 
 export default FriendSearchContent;

@@ -1,5 +1,13 @@
 package com.ssapick.server.domain.notification.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssapick.server.core.annotation.CurrentUser;
 import com.ssapick.server.core.response.SuccessResponse;
 import com.ssapick.server.domain.notification.dto.FCMData;
@@ -7,10 +15,8 @@ import com.ssapick.server.domain.notification.dto.NotificationData;
 import com.ssapick.server.domain.notification.service.FCMService;
 import com.ssapick.server.domain.notification.service.NotificationService;
 import com.ssapick.server.domain.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,8 +31,12 @@ public class NotificationController {
 		return SuccessResponse.empty();
 	}
 
-	@GetMapping("/list")
-	public SuccessResponse<List<NotificationData.Search>> list(@CurrentUser User user) {
-		return SuccessResponse.of(notificationService.list(user.getId()));
+	@GetMapping("")
+	public SuccessResponse<Page<NotificationData.Search>> list(
+		@CurrentUser User user,
+		Pageable pageable
+	) {
+		Page<NotificationData.Search> notificationPage = notificationService.list(user.getId(), pageable);
+		return SuccessResponse.of(notificationPage);
 	}
 }
