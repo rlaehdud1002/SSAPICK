@@ -132,6 +132,7 @@ class NotificationControllerTest extends RestDocsSupport {
                                     fieldWithPath("data.content[].type").type(SimpleType.STRING).description("받은 알림 종류"),
                                     fieldWithPath("data.content[].title").type(SimpleType.STRING).description("받은 알림의 제목"),
                                     fieldWithPath("data.content[].message").type(SimpleType.STRING).description("받은 알림의 내용"),
+                                    fieldWithPath("data.content[].createdAt").type(SimpleType.STRING).description("메시지 받은 시간"),
                                     fieldWithPath("data.content[].read").type(SimpleType.BOOLEAN).description("메시지 읽었는지 여부")
                             ))
                             .build()
