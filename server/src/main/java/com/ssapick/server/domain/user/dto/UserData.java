@@ -180,4 +180,13 @@ public class UserData {
 			return search;
 		}
 	}
+
+	@Data
+	public static class Pickco {
+		private int pickco;
+
+		public Pickco(int pickco) {
+			this.pickco = pickco;
+		}
+	}
 }

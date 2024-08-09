@@ -95,6 +95,38 @@ class UserControllerTest extends RestDocsSupport {
                 )));
     }
 
+
+    @Test
+    @DisplayName("로그인한 유저의 픽코를 반환한다")
+    @WithMockUser(username = "test-user")
+    void findCurrentUserPickco() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User user = spy(User.createUser("user", "김싸피", 'M', ProviderType.GOOGLE, "exampleProviderId"));
+        user.getProfile().updateProfile((short) 11, Campus.createCampus("광주", (short) 2, "전공"));
+        user.getProfile().updateProfileImage("profileImage");
+        when(user.getId()).thenReturn(1L);
+        UserData.Pickco pickco = new UserData.Pickco(100);
+        when(userService.getPickco(any())).thenReturn(pickco);
+
+        // * WHEN: 이걸 실행하면
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/user/pickco"));
+
+        // * THEN: 이런 결과가 나와야 한다
+        perform.andExpect(status().isOk())
+                .andDo(restDocs.document(resource(
+                        ResourceSnippetParameters
+                                .builder()
+                                .tag("유저")
+                                .description("로그인한 유저의 픽코 조회 API")
+                                .summary("로그인한 유저 정보를 조회한다.")
+                                .responseFields(response(
+                                        fieldWithPath("data.pickco").type(JsonFieldType.NUMBER).description("식별자")
+                                ))
+                                .build()
+                )));
+    }
+
+
     @Test
     @DisplayName("유저_정보_수정 테스트")
     @WithMockUser(username = "test-user")
