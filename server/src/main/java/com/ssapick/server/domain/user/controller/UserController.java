@@ -34,6 +34,16 @@ public class UserController {
 	}
 
 	/**
+	 * 사용자 픽코 조회 API
+	 */
+	@GetMapping(value = "/pickco")
+	public SuccessResponse<UserData.Pickco> findPickco(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getPickco(user));
+	}
+
+
+
+	/**
 	 * 사용자 정보 유효 여부 조회 API
 	 * @param user
 	 * @return {@link UserData.IsValid} 사용자 정보 유효 여부

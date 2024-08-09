@@ -122,4 +122,10 @@ public class UserService {
 		return new PageImpl<>(search, pageable, usersPage.getTotalElements());
 	}
 
+	public UserData.Pickco getPickco(User user) {
+		User findUser = userRepository.findUserWithProfileById(user.getId())
+			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
+
+		return new UserData.Pickco(findUser.getProfile().getPickco());
+	}
 }
