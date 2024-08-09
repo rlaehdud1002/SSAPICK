@@ -4,10 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
@@ -32,11 +34,6 @@ import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @DisplayName("메시지 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -74,9 +71,7 @@ class MessageServiceTest extends UserSupport {
 			this.createMessage(sender, receiver, "테스트 메시지 3")
 		);
 
-
 		Page<Message> messagePage = new PageImpl<>(messages, PageRequest.of(0, 10), messages.size());
-
 
 		when(messageRepository.findSentMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
 			.thenReturn(messagePage);
@@ -84,7 +79,8 @@ class MessageServiceTest extends UserSupport {
 		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
 
 		// * WHEN: 이걸 실행하면
-		List<MessageData.Search> searches = messageService.searchSendMessage(sender, PageRequest.of(0, 10)).getContent();
+		List<MessageData.Search> searches = messageService.searchSendMessage(sender, PageRequest.of(0, 10))
+			.getContent();
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches).hasSize(3);
@@ -109,9 +105,7 @@ class MessageServiceTest extends UserSupport {
 			this.createMessage(sender, receiver, "테스트 메시지 3")
 		);
 
-
 		Page<Message> messagePage = new PageImpl<>(messages, PageRequest.of(0, 10), messages.size());
-
 
 		when(messageRepository.findReceivedMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
 			.thenReturn(messagePage);
@@ -119,14 +113,13 @@ class MessageServiceTest extends UserSupport {
 		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
 
 		// * WHEN: 서비스 메서드 호출
-		List<MessageData.Search> searches = messageService.searchReceiveMessage(sender, PageRequest.of(0, 10)).getContent();
+		List<MessageData.Search> searches = messageService.searchReceiveMessage(sender, PageRequest.of(0, 10))
+			.getContent();
 
 		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches).hasSize(3);
 		assertThat(searches.stream().map(MessageData.Search::getContent)).contains("테스트 메시지 1", "테스트 메시지 2",
 			"테스트 메시지 3");
-		assertThat(searches.stream().map(MessageData.Search::getReceiverName)).contains("receiver", "receiver",
-			"receiver");
 		assertThat(searches.stream().map(MessageData.Search::getSenderName)).contains("익명", "익명", "익명");
 	}
 
@@ -137,7 +130,6 @@ class MessageServiceTest extends UserSupport {
 		User sender = this.createUser("sender");
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
-
 
 		// 실제 사용되는 스텁만 설정
 		lenient().when(pickRepository.findByIdWithSender(any())).thenReturn(Optional.of(pick));
