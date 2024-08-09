@@ -38,12 +38,12 @@ const RankContent = ({ title, rankInfo }: RankContentProps) => {
                 <span className={`luckiest_guy ${rankColor[index]} mx-2 text-2xl pt-2`}>
                   {++index}
                 </span>
-                <span className="ms-2">
-                  {rank.user.campusName}캠퍼스 {rank.user.cohort}기{' '}
-                  {rank.user.section}반 {rank.user.name}
+                <span className="ms-2">{rank.user.name} </span>
+                <span className='text-xs text-[#5f86e9] ml-1'>
+                  {rank.user.campusName} {rank.user.cohort}기{' '} {rank.user.section}반 
                 </span>
               </div>
-              <span className="luckiest_guy mr-4 text-indigo-500 text-xl">{rank.count}</span>
+              <span className="luckiest_guy mr-4 text-[#5f86e9] text-xl">{rank.count}</span>
             </div>
           );
         })
