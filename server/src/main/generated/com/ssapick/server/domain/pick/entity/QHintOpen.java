@@ -29,7 +29,7 @@ public class QHintOpen extends EntityPathBase<HintOpen> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final QHint hint;
+    public final EnumPath<HintType> hintType = createEnum("hintType", HintType.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -56,7 +56,6 @@ public class QHintOpen extends EntityPathBase<HintOpen> {
 
     public QHintOpen(Class<? extends HintOpen> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.hint = inits.isInitialized("hint") ? new QHint(forProperty("hint"), inits.get("hint")) : null;
         this.pick = inits.isInitialized("pick") ? new QPick(forProperty("pick"), inits.get("pick")) : null;
     }
 
