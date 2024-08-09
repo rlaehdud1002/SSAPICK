@@ -18,9 +18,10 @@ import { HINT_OPEN_COIN } from 'coins/coins';
 interface HintModalProps {
   title: string;
   pickId: number;
+  pickco: number;
 }
 
-const HintModal = ({ title, pickId }: HintModalProps) => {
+const HintModal = ({ title, pickId, pickco }: HintModalProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [hint, setHint] = useState<string>(title);
 
@@ -48,12 +49,8 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
           }
         }}
       >
-        <div className='my-1 text-xs text-[#5f86e9]'>
-          {hint.split(':')[0]}
-        </div>
-        <div className='text-base text-[#000855]'>
-          {hint.split(':')[1]}
-        </div>
+        <div className="my-1 text-xs text-[#5f86e9]">{hint.split(':')[0]}</div>
+        <div className="text-base text-[#000855]">{hint.split(':')[1]}</div>
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
@@ -62,9 +59,9 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
           </DialogTitle>
           <CoinUseModal coin={HINT_OPEN_COIN} />
         </DialogHeader>
-        <DialogFooter className="flex flex-row justify-end">
+        <DialogFooter className="flex flex-row justify-end relative">
           <Button
-            variant="ssapick"
+            variant={pickco >= HINT_OPEN_COIN ? 'ssapick' : 'fault'}
             size="md"
             onClick={() => {
               mutation.mutate(pickId);
@@ -73,6 +70,11 @@ const HintModal = ({ title, pickId }: HintModalProps) => {
           >
             확인
           </Button>
+          {pickco < HINT_OPEN_COIN && (
+            <span className="text-red-400 fixed bottom-1.5 right-[14px] text-[10px]">
+              <span className="luckiest_guy">PICKCO</span>가 부족합니다!
+            </span>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
