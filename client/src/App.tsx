@@ -66,12 +66,12 @@ function App() {
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash") {
+        if (location === "splash" || location === "") {
           return;
         }
         if (isValid) return;
         const data = await validCheck();
-        console.log(data.lockedUser, data.mattermostConfirmed, data.validInfo);
+        console.log("유효성 검사", data.lockedUser, data.mattermostConfirmed, data.validInfo);
         setValidState(data);
         if (data.lockedUser) {
           navigate("/");
@@ -85,8 +85,13 @@ function App() {
           navigate("/infoinsert");
           return;
         }
-        if (!data.lockedUser && data.mattermostConfirmed && data.validInfo) {
-          if (location === "") {
+        if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
+          if (
+            location.includes("infoinsert") ||
+            location.includes("mattermost") ||
+            location.includes("splash") ||
+            location.includes("")
+          ) {
             navigate("/home");
           }
         }
