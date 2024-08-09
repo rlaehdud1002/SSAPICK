@@ -20,6 +20,7 @@ const rankName: RankTitle = {
 
 const RankContent = ({ title, rankInfo }: RankContentProps) => {
   let rankNum = 1;
+  const rankColor = ["text-[#D5A11E]", "text-[#A3A3A3]", "text-[#CD7F32]",]
   return (
     <div className="mb-10">
       <div className="flex flex-row">
@@ -34,8 +35,8 @@ const RankContent = ({ title, rankInfo }: RankContentProps) => {
               className="flex flex-row items-center justify-between border border-white rounded-lg m-3 p-2"
             >
               <div>
-                <span className="luckiest_guy text-color-5F86E9 mx-2 text-2xl pt-2">
-                  {rankNum++}
+                <span className={`luckiest_guy ${rankColor[index]} mx-2 text-2xl pt-2`}>
+                  {++index}
                 </span>
                 <span className="ms-2">
                   {rank.user.campusName}캠퍼스 {rank.user.cohort}기{' '}

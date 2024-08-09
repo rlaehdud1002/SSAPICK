@@ -6,7 +6,7 @@ export const WEEK_ATTENDANCE_COIN = 200;
 export const TWO_WEEK_ATTENDANCE_COIN = 500;
 // 픽
 export const PICK_COIN = 30;
-export const TOTAL_PICK_COIN = 30;
+export const TOTAL_PICK_COIN = 300;
 // 질문 생성
 export const QUESTION_CREATE_COIN = 20;
 // 힌트 오픈

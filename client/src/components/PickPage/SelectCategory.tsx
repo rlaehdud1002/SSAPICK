@@ -40,7 +40,7 @@ const SelectCategory = ({
     <div className='my-3'>
       <div>
         <Select {...register} onValueChange={handleChange}>
-          <SelectTrigger className="w-32 h-7 border-[#7EAFFF]">
+          <SelectTrigger className="w-35 h-7 border-[#7EAFFF]">
             <SelectValue placeholder={title} />
           </SelectTrigger>
           <SelectContent>
