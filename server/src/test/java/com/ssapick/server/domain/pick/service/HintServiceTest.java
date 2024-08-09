@@ -154,7 +154,6 @@ class HintServiceTest extends HintServiceTestSupport {
 
 		// then
 		assertThat(hintOpens).hasSize(1);
-		assertThat(hintOpens.get(0).getHint().getId()).isEqualTo(7L);
 	}
 
 	@Test

@@ -42,7 +42,7 @@ public abstract class HintServiceTestSupport {
 	}
 
 	protected HintOpen createMockHintOpen(Hint mockHint, Pick mockPick) {
-		return HintOpen.builder().hint(mockHint).pick(mockPick).build();
+		return HintOpen.builder().pick(mockPick).build();
 	}
 
 	protected Profile createMockProfile(User user, Campus campus) {

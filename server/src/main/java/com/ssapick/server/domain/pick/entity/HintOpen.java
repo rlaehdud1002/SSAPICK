@@ -6,13 +6,14 @@ import com.ssapick.server.core.entity.TimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,10 +29,6 @@ public class HintOpen extends TimeEntity {
 	@Column(name = "hint_open_id")
 	private Long id;
 
-	@OneToOne(fetch = LAZY)
-	@JoinColumn(name = "hint_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_hint_open_hint_id"))
-	private Hint hint;
-
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "pick_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "foreign_key_hint_open_pick_id"))
 	private Pick pick;
@@ -39,11 +36,15 @@ public class HintOpen extends TimeEntity {
 	@Column(name = "content")
 	private String content;
 
+	@Column(name = "hint_type")
+	@Enumerated(EnumType.STRING)
+	private HintType hintType;
+
 	@Builder
-	private HintOpen(Hint hint, Pick pick, String content) {
-		this.hint = hint;
+	private HintOpen(Pick pick, String content, HintType hintType) {
 		this.pick = pick;
 		this.content = content;
+		this.hintType = hintType;
 	}
 
 	public void setPick(Pick pick) {

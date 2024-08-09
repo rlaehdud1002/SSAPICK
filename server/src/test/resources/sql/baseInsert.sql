@@ -110,10 +110,10 @@ VALUES (NOW(), NOW(), TRUE, FALSE, 1, 2, 1, 1),
        (NOW(), NOW(), TRUE, TRUE, 1, 1, 3, 8);
 
 -- hint_open
-INSERT INTO public.hint_open (created_at, updated_at, hint_id, pick_id, hint_open_id)
-VALUES (NOW(), NOW(), 1, 1, 1),
-       (NOW(), NOW(), 2, 2, 2),
-       (NOW(), NOW(), 3, 3, 3);
+INSERT INTO public.hint_open (created_at, updated_at, pick_id, hint_open_id, hint_type)
+VALUES (NOW(), NOW(), 1, 1, 'NAME'),
+       (NOW(), NOW(), 2, 2, 'MBTI'),
+       (NOW(), NOW(), 3, 3, 'AGE');
 
 -- message
 INSERT INTO public.message (created_at, updated_at, content, is_alarm_sent, is_receiver_deleted, is_sender_deleted,
