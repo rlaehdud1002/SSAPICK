@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,9 +114,12 @@ public class UserService {
 	}
 
 	public Page<UserData.Search> getUserByKeyword(User user, String keyword, Pageable pageable) {
-		Page<User> users = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
+		Page<User> usersPage = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
+		List<User> users = usersPage.getContent();
 
-		return users.map(UserData.Search::fromEntity);
+		List<UserData.Search> search = users.stream().map(UserData.Search::fromEntity).toList();
+
+		return new PageImpl<>(search, pageable, usersPage.getTotalElements());
 	}
 
 }
