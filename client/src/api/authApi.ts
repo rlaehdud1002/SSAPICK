@@ -1,24 +1,22 @@
-import { IAuth, JwtToken } from "atoms/Auth.type";
-import { BaseResponse, IUserInfo } from "atoms/User.type";
-import instance from "./clientApi";
+import { IAuth, JwtToken } from 'atoms/Auth.type';
+import { BaseResponse, IPickco, IUserInfo } from 'atoms/User.type';
+import instance from './clientApi';
 
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
   const {
     data: { success, data, message },
-  } = await instance.get<BaseResponse<IUserInfo>>("/user/me");
+  } = await instance.get<BaseResponse<IUserInfo>>('/user/me');
 
   if (!success) {
-    console.log(message)
+    console.log(message);
     throw new Error('유저 정보 조회 실패');
   }
   return data;
 };
 
 // 유저 정보 전송
-export const UserSend = async (
-  userdata: FormData,
-): Promise<void> => {
+export const UserSend = async (userdata: FormData): Promise<void> => {
   const {
     data: { success },
   } = await instance.patch<BaseResponse<null>>('/user', userdata, {
@@ -27,7 +25,7 @@ export const UserSend = async (
     },
   });
   if (!success) {
-    throw new Error("유저 정보 전송 실패");
+    throw new Error('유저 정보 전송 실패');
   }
 
   console.log('유저 정보 입력 성공');
@@ -37,11 +35,11 @@ export const UserSend = async (
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
   const {
     data: { success, data, message, status },
-  } = await instance.post("/auth/mattermost-confirm", authData);
+  } = await instance.post('/auth/mattermost-confirm', authData);
   console.log(status);
   if (!success) {
     console.log(message);
-    throw new Error("실패");
+    throw new Error('실패');
   }
   return data;
 };
@@ -54,7 +52,7 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
     BaseResponse<{
       authenticated: boolean;
     }>
-  >("/auth/mattermost-confirm");
+  >('/auth/mattermost-confirm');
   if (!success) {
     throw new Error(message);
   }
@@ -65,7 +63,7 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 export const signOut = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.post("/auth/sign-out");
+  } = await instance.post('/auth/sign-out');
   if (!success) {
     throw new Error(message);
   }
@@ -76,20 +74,33 @@ export const signOut = async (): Promise<void> => {
 export const withdrawal = async (): Promise<void> => {
   const {
     data: { success, data, message },
-  } = await instance.delete("/auth");
+  } = await instance.delete('/auth');
   if (!success) {
     throw new Error(message);
   }
   return data;
 };
 
-
+// refresh token 요청
 export const refresh = async (): Promise<JwtToken> => {
   const {
-    data: { success, data, message }
-  } = await instance.post<BaseResponse<JwtToken>>("/auth/refresh")
+    data: { success, data, message },
+  } = await instance.post<BaseResponse<JwtToken>>('/auth/refresh');
   if (!success) {
     throw new Error(message);
   }
   return data;
-}
+};
+
+// pickco 조회
+export const getPickco = async (): Promise<IPickco> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<IPickco>>('/user/pickco');
+
+  if (!success) {
+    throw new Error('픽코 조회 실패');
+  }
+
+  return data;
+};

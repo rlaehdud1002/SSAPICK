@@ -20,16 +20,18 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         ssapick: 'bg-ssapick',
+        fault: 'bg-fault text-white',
       },
       size: {
         default: 'h-9 w-20 px-4 py-2',
         sm: 'h-8 w-20 rounded-lg px-3 text-xs',
         md: 'h-9 w-20 rounded-lg px-4',
         lg: 'h-10 w-20 rounded-lg px-8',
-        messageButton: "h-10 w-[100px] rounded-lg px-8",
+        messageButton: 'h-10 w-[100px] rounded-lg px-8',
         icon: 'h-9 w-9',
       },
     },
+
     defaultVariants: {
       variant: 'default',
       size: 'default',
