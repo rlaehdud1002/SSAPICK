@@ -66,7 +66,11 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
               type="submit"
               // variant="ssapick"
               variant={pickco.pickco >= USER_REROLL_COIN ? 'ssapick' : 'fault'}
-              onClick={onClick}
+              onClick={() => {
+                if (pickco.pickco >= USER_REROLL_COIN) {
+                  onClick();
+                }
+              }}
               size="messageButton"
             >
               <CoinIcon width={20} height={20} />

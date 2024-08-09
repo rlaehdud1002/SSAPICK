@@ -64,8 +64,10 @@ const HintModal = ({ title, pickId, pickco }: HintModalProps) => {
             variant={pickco >= HINT_OPEN_COIN ? 'ssapick' : 'fault'}
             size="md"
             onClick={() => {
-              mutation.mutate(pickId);
-              setOpen(false);
+              if (pickco >= HINT_OPEN_COIN) {
+                mutation.mutate(pickId);
+                setOpen(false);
+              }
             }}
           >
             확인
