@@ -5,14 +5,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteFriend, postAddFriend } from "api/friendApi";
 
 interface FriendSearchContentProps {
-  campus: string;
-  th: number;
-  classNum: number;
+  cohort: number;
+  classSection: number;
   name: string;
   userid?: number;
 }
 
-const FriendSearchContent = ({ campus, th, classNum, name }: FriendSearchContentProps) => {
+const FriendSearchContent = ({ name, cohort, classSection,userid }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
   
   // 친구 추가
@@ -46,7 +45,7 @@ const FriendSearchContent = ({ campus, th, classNum, name }: FriendSearchContent
       <div>
         <img className="w-14 h-14" src="../icons/Profile.png" alt="profile" />
       </div>
-      <div className="">{campus}캠퍼스 {th}기 {classNum}반 {name}</div>
+      <div className=""> {cohort}기 {classSection}반 {name}</div>
       <div>
         {isPlus ? (
           <div onClick={()=>{
