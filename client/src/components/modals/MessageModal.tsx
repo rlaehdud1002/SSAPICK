@@ -129,16 +129,17 @@ const MessageModal = ({ pick, pickco }: MessageModalProps) => {
                 })}
                 errors={errors}
               />
-              <DialogFooter className="flex flex-row justify-end mt-3">
+              <DialogFooter className="flex flex-row justify-end mt-3 relative">
                 <Button
                   type="submit"
-                  // variant="ssapick"
                   variant={pickco >= MESSAGE_COIN ? 'ssapick' : 'fault'}
                   size="messageButton"
                   className="flex flex-row items-center"
                   onClick={() => {
-                    handleSubmit(onSubmit, onInvalid)();
-                  }}  
+                    if (pickco >= MESSAGE_COIN) {
+                      handleSubmit(onSubmit, onInvalid)();
+                    }
+                  }}
                 >
                   <CoinIcon width={25} height={25} />
                   <h3 className="luckiest_guy ms-2 me-4 pt-1">
@@ -146,6 +147,11 @@ const MessageModal = ({ pick, pickco }: MessageModalProps) => {
                   </h3>
                   전송
                 </Button>
+                {pickco < MESSAGE_COIN && (
+                  <span className="text-red-400 fixed bottom-2 right-[25px] text-[10px]">
+                    <span className="luckiest_guy">PICKCO</span>가 부족합니다!
+                  </span>
+                )}
               </DialogFooter>
             </div>
           )}
