@@ -86,4 +86,14 @@ public class PickData {
         @NotNull(message = "픽 상태는 필수입니다.")
         private PickStatus status;
     }
+
+	@Data
+	@Builder
+	public static class Cache {
+		private Integer index;
+		private Integer pickCount;
+		private Integer blockCount;
+		private Integer passCount;
+		private boolean isCooltime;
+	}
 }
