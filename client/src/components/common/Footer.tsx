@@ -11,10 +11,6 @@ import { requestPermission } from 'firebase-messaging-sw';
 const Footer = () => {
   const location = useLocation().pathname.split('/')[1];
 
-  useEffect(() => {
-    requestPermission();
-  }, [location]);
-
   return (
     <div className="fixed bottom-0 bg-white h-[70px]">
       <div className="flex flex-row justify-around h-14 p-4 items-center w-screen">
