@@ -21,22 +21,20 @@ const Home = () => {
       initialPageParam: 0,
     });
 
-  console.log("data11 : ", data);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [streak, setStreak] = useState(0);
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
 
   const { data: attendance, isLoading: isLoadingAttendance } = useQuery({
-    queryKey: ['getattendance'],
+    queryKey: ["getattendance"],
     queryFn: getAttendance,
   });
 
   const [isAttendance, setIsAttendance] = useState(attendance?.todayChecked);
 
   const postMutation = useMutation({
-    mutationKey: ['postAttendance'],
+    mutationKey: ["postAttendance"],
     mutationFn: postAttendance,
     onSuccess: (data) => {
       setIsAttendance(data.todayChecked);
@@ -44,7 +42,7 @@ const Home = () => {
       setModalOpen(true);
     },
     onError: (error) => {
-      console.log('이미 출석체크 완료');
+      console.log("이미 출석체크 완료");
     },
   });
 
