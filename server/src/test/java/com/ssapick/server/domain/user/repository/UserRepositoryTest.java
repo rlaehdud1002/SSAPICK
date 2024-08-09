@@ -137,4 +137,29 @@ class UserRepositoryTest extends TestDatabaseContainer {
         // * THEN: 이런 결과가 나와야 한다
         Assertions.assertThat(findUsers.size()).isEqualTo(4);
     }
+
+    @Test
+    @DisplayName("빈_키워드로 유저를 검색하면 전체 조회")
+    void 빈_키워드로_유저_조회() {
+        // * GIVEN: 이런게 주어졌을 때
+
+        // * WHEN: 이걸 실행하면
+        List<User> findUsers = userRepository.findUserByKeyword("");
+
+        // * THEN: 이런 결과가 나와야 한다
+        Assertions.assertThat(findUsers.size()).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("없는 유를 검색하면 빈 리스트")
+    void 없는_키워드로_유저_조회() {
+        // * GIVEN: 이런게 주어졌을 때
+
+        // * WHEN: 이걸 실행하면
+        List<User> findUsers = userRepository.findUserByKeyword("@!$@");
+
+        // * THEN: 이런 결과가 나와야 한다
+        Assertions.assertThat(findUsers.size()).isEqualTo(0);
+    }
+
 }
