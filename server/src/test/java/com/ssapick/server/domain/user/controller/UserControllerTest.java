@@ -5,6 +5,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
+import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.ProviderType;
@@ -17,6 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,6 +29,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -89,7 +94,7 @@ class UserControllerTest extends RestDocsSupport {
                                 .build()
                 )));
     }
-    
+
     @Test
     @DisplayName("유저_정보_수정 테스트")
     @WithMockUser(username = "test-user")
@@ -169,29 +174,92 @@ class UserControllerTest extends RestDocsSupport {
     @Test
     @DisplayName("유저 검색을 하면 검색어를 포함하는 유저 프로필 데이터를 반환한다.")
     void searchUserProfile() throws Exception {
-//        String keyword = "김싸";
-//
-//        List<User> users = List.of(
-//            createUser("김싸일"),
-//            createUser("김싸이"),
-//            createUser("김싸삼"),
-//            createUser("김싸사")
-//        );
-//
-//
-//        when(userService.getUserByKeyword(eq(keyword), any()))
-//                .thenReturn((Page<UserData.Search>) users.stream().map(UserData.Search::fromEntity).toList());
-//
-//
-//        ResultActions perform = this.mockMvc.perform(get("/api/v1/user/me/search")
-//                .param("q", keyword));
-//
-//        perform.andExpect(status().isOk());
+        String keyword = "김싸";
+
+        List<User> users = List.of(
+                createUser("김싸일"),
+                createUser("김싸이"),
+                createUser("김싸삼"),
+                createUser("김싸사")
+        );
+
+        List<UserData.Search> searches = users.stream().map(UserData.Search::fromEntity).toList();
+
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<UserData.Search> pickPage = new PageImpl<>(searches, pageable, searches.size());
+
+        when(userService.getUserByKeyword(any(), eq(keyword), eq(pageable))).thenReturn(pickPage);
+
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/user/search")
+                .param("q", keyword)
+                .param("page", "0")
+                .param("size", "10"));
+
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .tag("유저")
+                                        .summary("친구로 추가할 사용자 목록 조회 API")
+                                        .description("친구목록에 추가할 사용자를 검색합니다.")
+                                        .queryParameters(
+                                                parameterWithName("q").description("검색어").optional(),
+                                                parameterWithName("page").description("페이지 번호").optional(),
+                                                parameterWithName("size").description("페이지 크기").optional()
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("success").description("성공 여부"),
+                                                fieldWithPath("status").description("HTTP 상태 코드"),
+                                                fieldWithPath("message").description("응답 메시지"),
+                                                fieldWithPath("data.totalElements").description("총 요소 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+                                                fieldWithPath("data.totalPages").description("총 페이지 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+                                                fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+                                                fieldWithPath("data.sort.sorted").description("정렬 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.pageable.unpaged").description("비페이지 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.pageable.paged").description("페이지 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.numberOfElements").description("페이지 내 요소 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+                                                fieldWithPath("data.content[]").description("유저 데이터 목록").type(JsonFieldType.ARRAY).optional(),
+                                                fieldWithPath("data.content[].name").description("이름").type(JsonFieldType.STRING).optional(),
+                                                fieldWithPath("data.content[].cohort").description("기수").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.content[].campusSection").description("반").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.pageable.pageNumber").description("페이지번호").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.pageable.pageSize").description("페이지 사이즈").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.pageable.sort").description("정렬").type(JsonFieldType.OBJECT).optional(),
+                                                fieldWithPath("data.pageable.sort.empty").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.sort.sorted").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.sort.unsorted").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.empty").description("현재 페이지가 비어 있는지 여부").type(JsonFieldType.BOOLEAN).optional()
+                                        )
+                                        .build()
+                        )));
     }
 
     public User createUser(String username) {
         User user = spy(User.createUser("user", username, 'M', ProviderType.GOOGLE, "exampleProviderId"));
-        when(user.getId()).thenReturn(1L);
         user.getProfile().updateCampus(Campus.createCampus("광주", (short) 2, "전공"));
         return user;
     }

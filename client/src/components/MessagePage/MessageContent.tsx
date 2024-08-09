@@ -1,5 +1,6 @@
 import { IMessage } from 'atoms/Message.type';
 import WarningDelete from 'components/common/WarningDelete';
+import BaseImageIcon from 'icons/BaseImageIcon';
 import MessageQuestionIcon from 'icons/MessageQuestionIcon';
 import UserPickIcon from 'icons/UserPickIcon';
 interface MessageContentProps {
@@ -22,12 +23,14 @@ const MessageContent = ({ message, status }: MessageContentProps) => {
               width={32}
               height={32}
             />
-          ) : (
+          ) : message.senderProfileImage ? (
             <img
               src={message.senderProfileImage}
               alt="noProfileImage"
               className="rounded-full w-8 h-8"
             />
+          ) : (
+            <BaseImageIcon width={32} height={32} />
           )}
 
           <h1 className="ms-3">

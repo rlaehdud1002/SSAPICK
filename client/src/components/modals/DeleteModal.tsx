@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from 'components/ui/dialog';
 
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteFriend } from 'api/friendApi';
 import { Button } from 'components/ui/button';
 import { useEffect, useState } from 'react';
@@ -26,17 +26,22 @@ interface DeleteModalProps {
 }
 
 const DeleteModal = ({ title, userId }: DeleteModalProps) => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   // 친구 삭제 mutation
   const mutation = useMutation({
-    mutationKey: ['friends', 'delete'],
+    mutationKey: ['friends'],
     mutationFn: deleteFriend,
     // 친구 삭제 후 친구 목록 새로 고침
     onSuccess: () => {
+      console.log('친구 삭제 성공');
       queryClient.invalidateQueries({
         queryKey: ['friends'],
       });
     },
+    onError: (error) => {
+      console.log('친구 삭제 실패: ', error
+      );
+    }
   });
 
   const [open, setOpen] = useState<boolean>(false);
@@ -64,6 +69,7 @@ const DeleteModal = ({ title, userId }: DeleteModalProps) => {
   const onUnfollow = () => {
     setStep(DeletelStep.ALERT);
     // 삭제할 userId 넣어주기
+    console.log("삭제: " + userId);
     mutation.mutate(userId);
   };
 
@@ -76,9 +82,9 @@ const DeleteModal = ({ title, userId }: DeleteModalProps) => {
     <div>
       <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
         <div className='bg-blue-300 rounded-lg px-2 py-0.5 text-sm text-white'>
-        <DialogTrigger onClick={() => setOpen(true)}>
-          {title}
-        </DialogTrigger>
+          <DialogTrigger onClick={() => setOpen(true)}>
+            {title}
+          </DialogTrigger>
         </div>
         {isModalVisible && (
           <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">

@@ -42,94 +42,52 @@ class FollowServiceTest extends UserSupport {
 		// * GIVEN: 이런게 주어졌을 때
 		User userA = this.createUser("userA");
 
-		User userB = this.createUser("userB");
-		User userC = this.createUser("userC");
-		User userD = this.createUser("userD");
-
 		User userF = this.createUser("userF");
 		User userG = this.createUser("userG");
 		User userH = this.createUser("userH");
 
-		// 추천 친구 스코어 F : 3, G : 2, H : 1
-		when(followRepository.findByFollowUser(userA)).thenReturn(List.of(
-			this.createFollow(userA, userB),
-			this.createFollow(userA, userC),
-			this.createFollow(userA, userD)
-		));
-
-		when(followRepository.findByFollowUser(userB)).thenReturn(List.of(
-			this.createFollow(userB, userF),
-			this.createFollow(userB, userG),
-			this.createFollow(userB, userH)
-		));
-		when(followRepository.findByFollowUser(userC)).thenReturn(List.of(
-			this.createFollow(userC, userF),
-			this.createFollow(userC, userG)));
-
-		when(followRepository.findByFollowUser(userD)).thenReturn(List.of(
-			this.createFollow(userD, userF)
-		));
 
 		// 벤한 사용자는 없도록 설정
 		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(List.of());
+		when(followRepository.findRecommendUserIds(userA)).thenReturn(List.of(userF, userG, userH));
 
 		// * WHEN: 이걸 실행하면
+
 		List<ProfileData.Search> searches = followService.recommendFollow(userA);
 
 		// * THEN: 이런 결과가 나와야 한다
-//		assertThat(searches.size()).isEqualTo(3);
-//		assertThat(searches).containsExactly(
-//			ProfileData.Search.fromEntity(userF.getProfile()),
-//			ProfileData.Search.fromEntity(userG.getProfile()),
-//			ProfileData.Search.fromEntity(userH.getProfile())
-//		);
+		assertThat(searches.size()).isEqualTo(3);
+		assertThat(searches).containsExactly(
+			ProfileData.Search.fromEntity(userF.getProfile()),
+			ProfileData.Search.fromEntity(userG.getProfile()),
+			ProfileData.Search.fromEntity(userH.getProfile())
+		);
 
 	}
 
 	@Test
 	@DisplayName("차단한_친구가_있을_때_추천_친구_목록_조회_테스트")
 	void 차단한_친구가_있을_때_추천_친구_목록_조회_테스트() throws Exception {
-	    // * GIVEN: 이런게 주어졌을 때
+		// * GIVEN: 이런게 주어졌을 때
 		User userA = this.createUser("userA");
-
-		User userB = this.createUser("userB");
-		User userC = this.createUser("userC");
-		User userD = this.createUser("userD");
 
 		User userF = this.createUser("userF");
 		User userG = this.createUser("userG");
 		User userH = this.createUser("userH");
 
-		when(followRepository.findByFollowUser(userA)).thenReturn(List.of(
-			this.createFollow(userA, userB),
-			this.createFollow(userA, userC),
-			this.createFollow(userA, userD)
-		));
+		when(followRepository.findRecommendUserIds(userA)).thenReturn(List.of(userF, userG, userH));
+		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(List.of(userF));
 
-		when(followRepository.findByFollowUser(userB)).thenReturn(List.of(
-			this.createFollow(userB, userF),
-			this.createFollow(userB, userG),
-			this.createFollow(userB, userH)
-		));
-		when(followRepository.findByFollowUser(userC)).thenReturn(List.of(
-			this.createFollow(userC, userF),
-			this.createFollow(userC, userG)));
-
-		when(followRepository.findByFollowUser(userD)).thenReturn(List.of(
-			this.createFollow(userD, userF)
-		));
-
-		when(userBanRepository.findBanUsersByFromUser(userA)).thenReturn(List.of(userG));
-
-	    // * WHEN: 이걸 실행하면
+		// * WHEN: 이걸 실행하면
 		List<ProfileData.Search> searches = followService.recommendFollow(userA);
 
-	    // * THEN: 이런 결과가 나와야 한다
+		// * THEN: 이런 결과가 나와야 한다
 		assertThat(searches.size()).isEqualTo(2);
 		assertThat(searches).containsExactly(
-			ProfileData.Search.fromEntity(userF.getProfile()),
+			ProfileData.Search.fromEntity(userG.getProfile()),
 			ProfileData.Search.fromEntity(userH.getProfile())
 		);
+
 	}
 
 	private Follow createFollow(User followingUser, User followUser) {

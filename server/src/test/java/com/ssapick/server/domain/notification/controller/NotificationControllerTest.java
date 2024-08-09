@@ -16,6 +16,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -23,6 +28,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -89,7 +95,9 @@ class NotificationControllerTest extends RestDocsSupport {
             return search;
         }).toList();
 
-        when(notificationService.list(anyLong())).thenReturn(searches);
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<NotificationData.Search> searchPage = new PageImpl<>(searches, pageable, 10);
+        when(notificationService.list(anyLong(), any())).thenReturn(searchPage);
 
         // * WHEN: 이걸 실행하면
         ResultActions perform = this.mockMvc.perform(get("/api/v1/notification"));
@@ -102,10 +110,29 @@ class NotificationControllerTest extends RestDocsSupport {
                             .summary("받은 알림 목록 조회 API")
                             .description("자신이 지금까지 받은 알람들의 목록을 조회한다.")
                             .responseFields(response(
-                                    fieldWithPath("data[].type").type(SimpleType.STRING).description("받은 알림 종류"),
-                                    fieldWithPath("data[].title").type(SimpleType.STRING).description("받은 알림의 제목"),
-                                    fieldWithPath("data[].message").type(SimpleType.STRING).description("받은 알림의 내용"),
-                                    fieldWithPath("data[].read").type(SimpleType.BOOLEAN).description("메시지 읽었는지 여부")
+                                    fieldWithPath("data.totalElements").description("총 요소 수").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.totalPages").description("총 페이지 수").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.pageable.pageNumber").description("페이지 번호").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.pageable.pageSize").description("페이지 크기").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.pageable.sort.sorted").description("정렬 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.pageable.sort.unsorted").description("정렬되지 않음 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.pageable.sort.empty").description("정렬 정보 비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.pageable.unpaged").description("비페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.pageable.paged").description("페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.numberOfElements").description("페이지 내 요소 수").type(JsonFieldType.NUMBER).optional(),
+                                    fieldWithPath("data.empty").description("비어 있음 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                    fieldWithPath("data.content[].type").type(SimpleType.STRING).description("받은 알림 종류"),
+                                    fieldWithPath("data.content[].title").type(SimpleType.STRING).description("받은 알림의 제목"),
+                                    fieldWithPath("data.content[].message").type(SimpleType.STRING).description("받은 알림의 내용"),
+                                    fieldWithPath("data.content[].read").type(SimpleType.BOOLEAN).description("메시지 읽었는지 여부")
                             ))
                             .build()
                 )));

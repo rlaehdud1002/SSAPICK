@@ -1,17 +1,21 @@
-import { useMutation } from "@tanstack/react-query";
-import { blockCancel } from "api/blockApi";
-import PlusDeleteButton from "buttons/PlusDeleteButton";
+import { useMutation } from '@tanstack/react-query';
+import { blockCancel } from 'api/blockApi';
+import PlusDeleteButton from 'buttons/PlusDeleteButton';
+import BaseImageIcon from 'icons/BaseImageIcon';
 
 interface BlockFriendContentProps {
   campusName: string;
   campusSection: number;
   name: string;
   userId: number;
-  
 }
 
-const BlockFriendContent = ({ campusName, campusSection, name, userId }: BlockFriendContentProps) => {
-
+const BlockFriendContent = ({
+  campusName,
+  campusSection,
+  name,
+  userId,
+}: BlockFriendContentProps) => {
   const mutation = useMutation({
     mutationKey: ['deleteBlock'],
     mutationFn: blockCancel,
@@ -25,17 +29,23 @@ const BlockFriendContent = ({ campusName, campusSection, name, userId }: BlockFr
     <div>
       <div className="flex items-center mt-5 justify-between mx-8">
         <div>
-          <img className="w-14 h-14" src="/icons/Profile.png" alt="profile" />
+          <BaseImageIcon width={64} height={64} />
         </div>
-        <div className="">{campusName} {campusSection} {name}</div>
-        <div onClick={()=>{mutation.mutate(userId)}}>
-          <PlusDeleteButton title="삭제"/>
+        <div>
+          {campusName} {campusSection} {name}
+        </div>
+        <div
+          onClick={() => {
+            mutation.mutate(userId);
+          }}
+        >
+          <PlusDeleteButton title="삭제" />
         </div>
       </div>
       {/* <Separator className="my-4 mx-4" />  */}
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
-  )
-}
+  );
+};
 
-export default BlockFriendContent
+export default BlockFriendContent;

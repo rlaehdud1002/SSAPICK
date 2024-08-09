@@ -9,9 +9,9 @@ import com.ssapick.server.domain.notification.service.NotificationService;
 import com.ssapick.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +29,10 @@ public class NotificationController {
 
 	@Authenticated
 	@GetMapping("")
-	public SuccessResponse<List<NotificationData.Search>> list(@CurrentUser User user) {
-		return SuccessResponse.of(notificationService.list(user.getId()));
+	public SuccessResponse<Page<NotificationData.Search>> list(
+			@CurrentUser User user,
+			Pageable pageable
+		) {
+		return SuccessResponse.of(notificationService.list(user.getId(), pageable));
 	}
 }
