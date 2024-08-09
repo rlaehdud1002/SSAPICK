@@ -5,9 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 const CoolTime = () => {
-  const coolTime = useRecoilValue(endCoolTimeState);
-  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const coolTime = useRecoilValue<number>(endCoolTimeState);
+  const [timeLeft, setTimeLeft] = useState<number>(coolTime);
   const navigate = useNavigate();
+
+  console.log('coolTime', coolTime);
+  console.log('timeLeft', timeLeft);
 
   useEffect(() => {
     const updateTimeLeft = () => {
@@ -19,15 +22,17 @@ const CoolTime = () => {
     updateTimeLeft(); // 컴포넌트 마운트 시 초기값 설정
     const timer = setInterval(updateTimeLeft, 1000); // 1초마다 시간 업데이트
 
-    if (timeLeft <= 0) {
-      console.log('coolTime finish');
-    }
-
     return () => clearInterval(timer); // 컴포넌트 언마운트 시 타이머 정리
   }, [coolTime]);
 
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60));
   const seconds = String(Math.floor((timeLeft / 1000) % 60));
+
+  if (timeLeft <= 0) {
+    navigate('/pick');
+  }
+
+  console.log('timeLeft', timeLeft);
 
   return (
     <div

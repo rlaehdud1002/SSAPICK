@@ -5,8 +5,7 @@ import { Button } from 'components/ui/button';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';
@@ -21,8 +20,10 @@ import {
   DialogTrigger,
   DialogFooter,
 } from 'components/ui/dialog';
+
 import { IPick } from 'atoms/Pick.type';
 import { MESSAGE_COIN } from 'coins/coins';
+import { getPickco } from 'api/authApi';
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -36,9 +37,10 @@ interface MessageForm {
 
 interface MessageModalProps {
   pick: IPick;
+  pickco: number;
 }
 
-const MessageModal = ({ pick }: MessageModalProps) => {
+const MessageModal = ({ pick, pickco }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
@@ -127,14 +129,16 @@ const MessageModal = ({ pick }: MessageModalProps) => {
                 })}
                 errors={errors}
               />
-              <DialogFooter className="flex flex-row justify-end mt-3">
+              <DialogFooter className="flex flex-row justify-end mt-3 relative">
                 <Button
                   type="submit"
-                  variant="ssapick"
+                  variant={pickco >= MESSAGE_COIN ? 'ssapick' : 'fault'}
                   size="messageButton"
                   className="flex flex-row items-center"
                   onClick={() => {
-                    handleSubmit(onSubmit, onInvalid)();
+                    if (pickco >= MESSAGE_COIN) {
+                      handleSubmit(onSubmit, onInvalid)();
+                    }
                   }}
                 >
                   <CoinIcon width={25} height={25} />
@@ -143,6 +147,11 @@ const MessageModal = ({ pick }: MessageModalProps) => {
                   </h3>
                   전송
                 </Button>
+                {pickco < MESSAGE_COIN && (
+                  <span className="text-red-400 fixed bottom-2 right-[25px] text-[10px]">
+                    <span className="luckiest_guy">PICKCO</span>가 부족합니다!
+                  </span>
+                )}
               </DialogFooter>
             </div>
           )}

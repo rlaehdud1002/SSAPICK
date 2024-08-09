@@ -169,13 +169,24 @@ public class UserData {
 		String name;
 		short cohort;
 		short campusSection;
+		String profileImage;
 
 		public static Search fromEntity(User user) {
 			Search search = new Search();
 			search.name = user.getName();
 			search.cohort = user.getProfile().getCohort();
 			search.campusSection = user.getProfile().getCampus().getSection();
+			search.profileImage = user.getProfile().getProfileImage();
 			return search;
+		}
+	}
+
+	@Data
+	public static class Pickco {
+		private int pickco;
+
+		public Pickco(int pickco) {
+			this.pickco = pickco;
 		}
 	}
 }
