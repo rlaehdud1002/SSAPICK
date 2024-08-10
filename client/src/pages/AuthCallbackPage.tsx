@@ -1,6 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "api/authApi";
-import { IUserInfo } from "atoms/User.type";
 import { accessTokenState } from "atoms/UserAtoms";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -17,8 +14,6 @@ const AuthCallback = () => {
     if (accessToken) {
       setAccessToken(accessToken);
       navigate('/mattermost');
-      
-      // {isAuth ? navigate('/home') : navigate('/mattermost')}
     }
   }, [])
 
