@@ -18,7 +18,6 @@ export interface ISearchFriend {
       name: string;
       cohort: number;
       campusSection: number;
-
     }
   ];
   number?: number;
