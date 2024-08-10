@@ -17,10 +17,15 @@ export const postMessageSend = async (messageData: ISendMessage): Promise<void> 
 };
 
 // 받은 메시지 조회
-export const getReceivedMessage = async (): Promise<IPaging<IMessage[]>> => {
+export const getReceivedMessage = async (
+  page: number,
+  size: number
+): Promise<IPaging<IMessage[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>("/message/receive");
+  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>(
+    `/message/receive?page=${page}&size=${size}`
+  );
 
   console.log(success);
 
