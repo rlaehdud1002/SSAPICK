@@ -5,6 +5,8 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.service.CommentAnalyzerService;
 import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
 import com.ssapick.server.core.service.SentenceSimilarityResponse;
+import com.ssapick.server.domain.notification.dto.FCMData;
+import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
@@ -141,7 +143,22 @@ public class QuestionService {
 
         publisher.publishEvent(new PickcoEvent(user, PickcoLogType.QUESTION_CREATE, QUESTION_CREATE_COIN));
         Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
+
+        publisher.publishEvent(
+            FCMData.NotificationEvent.of(
+                NotificationType.ADD_QUESTION,
+                user,
+                saveQuestion.getId(),
+                "당신의 질문이 등록 됐어요!",
+                addQuestionEventMessage(saveQuestion.getContent()),
+                null
+            ));
+        
         questionCacheRepository.add(saveQuestion);
+    }
+
+    private String addQuestionEventMessage(String message) {
+        return message;
     }
 
     /**
