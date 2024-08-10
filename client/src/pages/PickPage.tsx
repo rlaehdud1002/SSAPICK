@@ -102,7 +102,8 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        question[pickInfo.index] && (
+        question[pickInfo.index] &&
+        pickFriends && (
           <div>
             <Question
               question={question[pickInfo.index]}
