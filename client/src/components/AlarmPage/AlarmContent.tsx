@@ -12,7 +12,6 @@ const AlarmContent = ({ notification }: AlarmContentProps) => {
   const createTime = new Date(notification.createdAt).getTime();
   const currentTime = new Date().getTime();
   const diffTime = currentTime - createTime;
-  console.log('time', createTime, currentTime, diffTime);
 
   const months = String(
     Math.floor((diffTime / (1000 * 60 * 60 * 24 * 30)) % 12),
@@ -20,8 +19,6 @@ const AlarmContent = ({ notification }: AlarmContentProps) => {
   const days = String(Math.floor((diffTime / (1000 * 60 * 60 * 24)) % 30));
   const hours = String(Math.floor((diffTime / (1000 * 60 * 60)) % 24));
   const minutes = String(Math.floor((diffTime / (1000 * 60)) % 60));
-
-  console.log('time', months, days, hours, minutes);
 
   let receivedTime;
 
