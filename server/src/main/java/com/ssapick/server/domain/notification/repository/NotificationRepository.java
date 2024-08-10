@@ -13,8 +13,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	@Query("SELECT n FROM Notification n WHERE n.user.id = :userId")
-	Page<Notification> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
+	@Query("SELECT n.id FROM Notification n WHERE n.user.id = :userId ORDER BY n.id DESC")
+	List<Long> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
 	@Query("SELECT n FROM Notification n WHERE n.id IN :ids ORDER BY n.id DESC")
 	List<Notification> findAllByIdLatest(List<Long> ids);

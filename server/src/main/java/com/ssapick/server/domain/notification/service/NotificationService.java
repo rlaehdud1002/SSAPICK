@@ -19,8 +19,7 @@ public class NotificationService {
 	private final NotificationRepository notificationRepository;
 
 	public Page<NotificationData.Search> list(Long userId, Pageable pageable) {
-		Page<Notification> notificationIds = notificationRepository.findAllByUserId(userId, pageable);
-		List<Long> ids = notificationIds.getContent().stream().map(Notification::getId).toList();
+		List<Long> ids = notificationRepository.findAllByUserId(userId, pageable);
 
 		if (ids.isEmpty()) {
 			return Page.empty();
@@ -32,6 +31,6 @@ public class NotificationService {
 			.map(NotificationData.Search::fromEntity)
 			.toList();
 
-		return new PageImpl<>(searchList, pageable, notificationIds.getTotalElements());
+		return new PageImpl<>(searchList, pageable, ids.size());
 	}
 }
