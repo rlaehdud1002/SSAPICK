@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ssapick
       POSTGRES_PASSWORD: ssapick
       POSTGRES_DB: ssapick
-      TZ: Asia/Seoul
+      TIMEZONE: Asia/Seoul
     ports:
       - "5432:5432"
     volumes:
