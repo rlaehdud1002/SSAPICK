@@ -5,7 +5,7 @@ import { Button } from 'components/ui/button';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';
@@ -23,7 +23,6 @@ import {
 
 import { IPick } from 'atoms/Pick.type';
 import { MESSAGE_COIN } from 'coins/coins';
-import { getPickco } from 'api/authApi';
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
