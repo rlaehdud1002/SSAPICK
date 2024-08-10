@@ -21,6 +21,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         ssapick: 'bg-ssapick',
         fault: 'bg-fault text-white',
+        warining: 'bg-warining text-white',
       },
       size: {
         default: 'h-9 w-20 px-4 py-2',

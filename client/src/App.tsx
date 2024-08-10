@@ -131,21 +131,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      {/* <div className="flex flex-col relative">
-        <div className="flex flex-col h-screen">
-          {headerFooter() && <Header />}
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/*" element={<CommonRoute />} />
-              <Route path="/profile/*" element={<ProfileRoute />} />
-              <Route path="/404" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-          <div className="flex flex-col h-screen">
-            {headerFooter() && <Footer />}
-          </div>
-        </div>
-      </div> */}
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
         <main className="flex-grow mb-[70px]">
