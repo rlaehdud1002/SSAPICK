@@ -19,13 +19,13 @@ public class NotificationService {
 	private final NotificationRepository notificationRepository;
 
 	public Page<NotificationData.Search> list(Long userId, Pageable pageable) {
-		List<Long> ids = notificationRepository.findAllByUserId(userId, pageable);
+		List<Long> ids = notificationRepository.findAllByUserId(userId);
 
 		if (ids.isEmpty()) {
 			return Page.empty();
 		}
 
-		List<Notification> notifications = notificationRepository.findAllByIdLatest(ids);
+		List<Notification> notifications = notificationRepository.findAllByIdLatest(ids, pageable);
 
 		List<NotificationData.Search> searchList = notifications.stream()
 			.map(NotificationData.Search::fromEntity)
