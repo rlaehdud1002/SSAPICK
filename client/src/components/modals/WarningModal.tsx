@@ -81,26 +81,26 @@ const WarningModal = ({
           </DialogHeader>
           {step === WarningStep.CHECK && (
             <div>
-              <div className="flex flex-col items-center my-12 text-center">
+              <div className="flex flex-col items-center mt-12 mb-10 text-center">
                 <p>
                   이 질문을 {title === 'block' ? '신고' : '패스'}하시겠습니까?
                 </p>
-                <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
+                <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 my-3">
                   {question.content}
                 </p>
-                <p>{blockPassCount} / 5</p>
+                <p className="text-ssapick">{blockPassCount} / 5</p>
               </div>
               <DialogFooter className="flex flex-row justify-center">
                 <Button
                   type="submit"
-                  className={`bg-[${title === 'block' ? '#8C8C8C' : '#E95F5F'}] `}
-                  onClick={handlePick}
+                  className={`bg-${title === 'block' ? 'fault' : 'warining'} mx-2`}
+                  onClick={() => setOpen(false)}
                 >
                   취소
                 </Button>
                 <Button
                   type="submit"
-                  className={`bg-[${title === 'block' ? '#E95F5F' : '#5F86E9'}] `}
+                  className={`bg-${title === 'block' ? 'warining' : 'ssapick'} mx-2`}
                   onClick={handlePick}
                 >
                   {title === 'block' ? '신고' : '패스'}

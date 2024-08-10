@@ -55,6 +55,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         fault: 'rgba(102, 102, 102, 0.5)',
+        warining: 'rgba(233, 95, 95)',
       },
       borderRadius: {
         lg: "var(--radius)",

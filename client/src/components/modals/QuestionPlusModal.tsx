@@ -117,6 +117,10 @@ const QuestionPlusModal = () => {
                       value: 100,
                       message: '100글자 이하로 입력해주세요.',
                     },
+                    minLength: {
+                      value: 5,
+                      message: '5글자 이상 입력해주세요.',
+                    },
                   })}
                   errors={errors}
                 />
