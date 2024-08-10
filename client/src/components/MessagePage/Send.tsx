@@ -55,7 +55,7 @@ const Send = () => {
   }
 
   if (isError) {
-    return <div>Error occurred while fetching messages.</div>;
+    return <div>에러</div>;
   }
 
   return (
