@@ -46,7 +46,8 @@ const Pick = () => {
   }, [friends]);
 
   useEffect(() => {
-    if (friends.length === 0) {
+    if (pickFriends.length === 0) {
+      console.log('친구 셔플');
       handleShuffle();
     }
   }, [handleShuffle, friends]);
@@ -101,8 +102,7 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        question[pickInfo.index] &&
-        pickFriends.length > 0 && (
+        question[pickInfo.index] && (
           <div>
             <Question
               question={question[pickInfo.index]}
