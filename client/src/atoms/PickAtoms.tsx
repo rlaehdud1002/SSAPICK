@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil';
 import { IQuestion } from './Pick.type';
 import { persistAtom } from 'atoms/RecoilPersist';
+import { IFriend } from 'atoms/Friend.type';
 
 // 질문 리스트
 export const questionState = atom<IQuestion[]>({

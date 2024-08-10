@@ -12,6 +12,7 @@ import { isQuestionUpdatedState, questionState } from 'atoms/PickAtoms';
 import PickComplete from 'components/PickPage/PickComplete';
 import { Navigate } from 'react-router-dom';
 import FriendRerollModal from 'components/modals/FriendRerollModal';
+import { pickFriendState } from 'atoms/FriendAtoms';
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
@@ -34,7 +35,8 @@ const Pick = () => {
     queryFn: getFriendsList,
   });
 
-  const [pickFriends, setPickFriends] = useState<IFriend[]>([]);
+  const [pickFriends, setPickFriends] =
+    useRecoilState<IFriend[]>(pickFriendState);
 
   const handleShuffle = useCallback(() => {
     if (friends.length > 0) {
@@ -44,7 +46,7 @@ const Pick = () => {
   }, [friends]);
 
   useEffect(() => {
-    if (friends.length > 0) {
+    if (friends.length === 0) {
       handleShuffle();
     }
   }, [handleShuffle, friends]);
@@ -93,8 +95,6 @@ const Pick = () => {
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
     return <div>데이터 준비중입니다.</div>;
   }
-
-  
 
   return (
     <div className="relative">
