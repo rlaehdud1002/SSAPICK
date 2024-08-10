@@ -34,7 +34,7 @@ const RankContent = ({ title, rankInfo }: RankContentProps) => {
               key={index}
               className="flex flex-row items-center justify-between border border-white rounded-lg m-3 p-2"
             >
-              <div>
+              <div className='flex items-center'>
                 <span className={`luckiest_guy ${rankColor[index]} mx-2 text-2xl pt-2`}>
                   {++index}
                 </span>
