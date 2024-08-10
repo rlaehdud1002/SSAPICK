@@ -2,6 +2,6 @@ export interface INotification {
   type: string;
   title: string;
   message: string;
-  createdAt: null;
+  createdAt: string;
   read: boolean;
 }
