@@ -40,6 +40,7 @@ public class PickCacheRepository {
 		hashOperations.put(key, PASS_COUNT_KEY, "0");
 		hashOperations.put(key, BLOCK_COUNT_KEY, "0");
 		hashOperations.put(key, COOL_TIME_KEY, LocalDateTime.now().toString());
+		hashOperations.getOperations().expire(key, Duration.ofDays(1));
 	}
 
 	public void increaseIndex(Long userId) {
