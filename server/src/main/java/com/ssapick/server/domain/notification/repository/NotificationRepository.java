@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.notification.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +15,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	@Query("SELECT n FROM Notification n WHERE n.user.id = :userId")
 	Page<Notification> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
+
+
+	List<Notification> findAllByIdsOrderBOrderByCreatedAtDesc(Iterable<Long> ids);
+
 
 }

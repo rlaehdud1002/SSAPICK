@@ -26,7 +26,8 @@ public class NotificationService {
 			return Page.empty();
 		}
 
-		List<Notification> notifications = notificationRepository.findAllById(ids);
+		List<Notification> notifications = notificationRepository.findAllByIdsOrderBOrderByCreatedAtDesc(ids);
+
 
 		List<NotificationData.Search> searchList = notifications.stream()
 			.map(NotificationData.Search::fromEntity)
