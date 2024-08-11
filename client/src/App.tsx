@@ -100,7 +100,7 @@ function App() {
         }
       } catch (error) {
         console.error("유효성 검사 실패", error);
-        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        navigate("/");
       }
     };
     checkValidity();
