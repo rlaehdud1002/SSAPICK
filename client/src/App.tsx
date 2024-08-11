@@ -82,7 +82,7 @@ function App() {
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === 'splash' || location === '') {
+        if (location === 'splash') {
           return;
         }
         if (isValid) return;
@@ -126,11 +126,11 @@ function App() {
       }
     };
     checkValidity();
-  }, [refreshRequest]);
+  }, [isAuthenticated, isValid, location, navigate, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools buttonPosition='top-left'  initialIsOpen={false} />
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
         <main className="flex-grow mb-[70px]">
