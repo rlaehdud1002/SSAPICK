@@ -63,7 +63,6 @@ const Home = () => {
 
   useEffect(() => {
     if (attendance && !attendance.todayChecked) {
-      console.log('here');
       postMutation.mutate();
     }
   }, [attendance]);
@@ -102,7 +101,7 @@ const Home = () => {
   }, [isFetchingNextPage]);
   if (isError) return <div>에러 발생...</div>;
 
-  if (isLoading || isLoadingAttendance) {
+  if (isLoading || isLoadingAttendance || !attendance) {
     return <Loading />;
   }
 
