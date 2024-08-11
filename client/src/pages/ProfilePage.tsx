@@ -1,38 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "api/authApi";
-import { IUserInfo } from "atoms/User.type";
-import { profileImageState, userInfostate } from "atoms/UserAtoms";
-import Loading from "components/common/Loading";
-import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
-import ProfileContent from "components/ProfilePage/ProfileContent";
-import AccountIcon from "icons/AccountIcon";
-import AttendanceIcon from "icons/AttendanceIcon";
-import BlockIcon from "icons/BlockIcon";
-import FriendAlarmIcon from "icons/FriendAlarmIcon";
-import LocationAlarmIcon from "icons/LocationAlarmIcon";
-import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
-import SetAlarmIcon from "icons/SetAlarmIcon";
-import UserInfoIcon from "icons/UserInfoIcon";
-import { useEffect } from "react";
-import { set } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { setRecoil } from "recoil-nexus";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getUserInfo, signOut } from 'api/authApi';
+import { IUserInfo } from 'atoms/User.type';
+import { accessTokenState } from 'atoms/UserAtoms';
+import ProfileAlarm from 'components/ProfilePage/ProfileAlarm';
+import ProfileContent from 'components/ProfilePage/ProfileContent';
+import Loading from 'components/common/Loading';
+import AccountIcon from 'icons/AccountIcon';
+import AttendanceIcon from 'icons/AttendanceIcon';
+import BlockIcon from 'icons/BlockIcon';
+import FriendAlarmIcon from 'icons/FriendAlarmIcon';
+import LocationAlarmIcon from 'icons/LocationAlarmIcon';
+import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
+import SetAlarmIcon from 'icons/SetAlarmIcon';
+import UserInfoIcon from 'icons/UserInfoIcon';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 const Profile = () => {
-  const setUserInfo = useSetRecoilState(userInfostate)
-  const setProfileImage = useSetRecoilState(profileImageState);
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
     queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
 
-  
-  
+  const navigate = useNavigate();
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
-  
-  
+  const mutation = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      console.log('로그아웃 성공');
+      setAccessToken('');
+      navigate('/');
+    },
+  });
+
+  const onLogout = () => {
+    mutation.mutate();
+  };
+
   console.log(information);
 
   if (isLoading) {
