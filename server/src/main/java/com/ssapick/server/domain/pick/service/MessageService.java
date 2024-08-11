@@ -51,21 +51,15 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
-		log.debug("=============================MESSAGE=============================");
 		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
-		log.debug("==========================================================");
 
-		log.debug("=============================USERBAN=============================");
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
-		log.debug("===============================================================");
 
-		log.debug("=============================Other=============================");
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(message -> banUsers.stream()
 				.noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
-		log.debug("==========================================================");
 
 		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
@@ -78,21 +72,15 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 받은 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
-		log.debug("=============================MESSAGE=============================");
 		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
-		log.debug("==========================================================");
 
-		log.debug("=============================USERBAN=============================");
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
-		log.debug("===============================================================");
 
-		log.debug("=============================Other=============================");
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(
 				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, true))
 			.toList();
-		log.debug("==========================================================");
 
 		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
