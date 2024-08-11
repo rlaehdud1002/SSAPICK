@@ -26,7 +26,9 @@ export const useLocation = ({refetch}: UseLocationProps) => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
+                    console.log(position.coords)
                     setCoords((prev) => {
+                        console.log(prev, position.coords)
                         if (computeDistance(prev, position.coords) < 0.1) return prev;
                         return {
                             latitude: position.coords.latitude,
@@ -35,6 +37,7 @@ export const useLocation = ({refetch}: UseLocationProps) => {
                     });
                 },
                 (error) => {
+                    console.log(error)
                     setError(error.message);
                 },
             );
@@ -45,6 +48,7 @@ export const useLocation = ({refetch}: UseLocationProps) => {
 
     useEffect(() => {
         const parseLocation = setInterval(() => {
+            console.log('fetching location')
             fetchLocation();
         }, 3000)
 
