@@ -1,16 +1,14 @@
 package com.ssapick.server.domain.user.dto;
 
-import java.util.List;
-
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
+import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
-
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.checkerframework.checker.units.qual.A;
+
+import java.util.List;
 
 public class UserData {
 
@@ -189,6 +187,26 @@ public class UserData {
 
 		public Pickco(int pickco) {
 			this.pickco = pickco;
+		}
+	}
+
+	@Data
+	public static class PickcoLogResponse {
+		private Long id;
+		private String pickcoLogType;
+		private int change;
+		private int remain;
+		private String createdAt;
+
+		public static PickcoLogResponse fromEntity(PickcoLog pickcoLog) {
+			PickcoLogResponse pickcoLogResponse = new PickcoLogResponse();
+			pickcoLogResponse.id = pickcoLog.getId();
+			pickcoLogResponse.pickcoLogType = pickcoLog.getPickcoLogType().name();
+			pickcoLogResponse.change = pickcoLog.getChange();
+			pickcoLogResponse.remain = pickcoLog.getRemain();
+			pickcoLogResponse.createdAt = pickcoLog.getCreatedAt().toString();
+
+			return pickcoLogResponse;
 		}
 	}
 }
