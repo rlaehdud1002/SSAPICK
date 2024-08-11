@@ -246,7 +246,7 @@ public class QuestionService {
         QuestionBan questionBan = questionBanRepository.findBanByUserIdAndQuestionId(user.getId(), questionId)
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_BAN));
 
-        question.decreeaseBanCount();
+        question.decreaseBanCount();
 
         if (question.getBanCount() >= 10) {
             questionCacheRepository.remove(question.getId());
