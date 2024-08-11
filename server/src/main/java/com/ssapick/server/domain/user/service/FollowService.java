@@ -2,6 +2,9 @@ package com.ssapick.server.domain.user.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,9 +65,11 @@ public class FollowService {
      * @param user
      * @return List<ProfileData.Search>
      */
-    public List<ProfileData.Friend> recommendFollow(User user) {
+    public Page<ProfileData.Friend> recommendFollow(User user, Pageable pageable) {
         // 불변 리스트를 방지하기 위해 ArrayList로 변환합니다.
-        List<ProfileData.Friend> recommends = followRepository.findRecommendFriends(user.getId());
+        log.debug("=====================================================");
+        List<ProfileData.Friend> recommends = followRepository.findRecommendFriends(user.getId(), pageable);
+        log.debug("=====================================================");
 
         // 차단된 사용자를 목록에서 제거합니다.
         List<Long> bannedUserIds = userBanRepository.findBanUsersByFromUser(user).stream()
@@ -72,6 +77,6 @@ public class FollowService {
 
         recommends.removeIf(recommend -> bannedUserIds.contains(recommend.getUserId()));
 
-        return recommends;
+        return new PageImpl<>(recommends, pageable, recommends.size());
     }
 }

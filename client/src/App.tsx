@@ -31,17 +31,18 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
+
+
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
-  console.dir(messaging);
+
+  requestPermission(messaging);
+  
   onMessage(messaging, (payload) => {
     console.log("Message received. ", payload);
   });
-
-  useEffect(() => {
-    requestPermission(messaging);
-  }, []);
+  
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);

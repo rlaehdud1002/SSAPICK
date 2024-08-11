@@ -34,7 +34,7 @@ const BlockQuestionContent = ({
         <div className='bg-white/60 w-16 h-16 flex justify-center items-center rounded-full'>
           <img className='w-12 h-12' src={thumbnail} alt="thumbnail" />
         </div>
-        <div className="">{question}</div>
+        <div>{question}</div>
         <div
           onClick={() => {
             mutation.mutate(questionId);
