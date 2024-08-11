@@ -15,6 +15,6 @@ public interface PickcoLogRepository extends JpaRepository<PickcoLog, Long> {
     @Query("SELECT p FROM PickcoLog p JOIN FETCH p.user WHERE p.change < 0")
     List<PickcoLog> findAllSpendWithUser();
 
-    @Query("SELECT p FROM PickcoLog p WHERE p.user.id = :id")
+    @Query("SELECT p FROM PickcoLog p WHERE p.user.id = :id ORDER BY p.createdAt DESC")
     Page<PickcoLog> findAllByUserId(Long id, Pageable pageable);
 }
