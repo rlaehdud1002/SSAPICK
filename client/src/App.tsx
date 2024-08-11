@@ -87,21 +87,14 @@ function App() {
         if (data.lockedUser) {
           navigate("/");
           return;
-        }
-        if (!data.mattermostConfirmed) {
+        } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
           navigate("/mattermost");
           return;
-        }
-        if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo && !location.includes("infoinsert")) {
           navigate("/infoinsert");
           return;
-        }
-        if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          if (
-            location.includes("infoinsert") ||
-            location.includes("mattermost") ||
-            location.includes("splash")
-          ) {
+        } else if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
+          if (location.includes("infoinsert") || location.includes("mattermost")) {
             navigate("/home");
           }
         }

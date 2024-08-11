@@ -1,12 +1,14 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getUserInfo, mmAuthConfirm, mmAuthSend } from 'api/authApi';
-import { IUserInfo } from 'atoms/User.type';
-import DoneButton from 'buttons/DoneButton';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import AuthInput from '../components/MattermostPage/AuthInput';
-import MattermostIcon from '../icons/MattermostIcon';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUserInfo, mmAuthConfirm, mmAuthSend } from "api/authApi";
+import { IUserInfo } from "atoms/User.type";
+import DoneButton from "buttons/DoneButton";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import AuthInput from "../components/MattermostPage/AuthInput";
+import MattermostIcon from "../icons/MattermostIcon";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isValidateState, validState } from "atoms/ValidAtoms";
 
 interface AuthFormm {
   id: string;
@@ -16,34 +18,43 @@ interface AuthFormm {
 const Mattermost = () => {
   // const setUserInfo = useSetRecoilState(userInfostate);
   // 유저 정보 조회
-  const { data: information } = useQuery<IUserInfo | undefined>({
-    queryKey: ['information'],
-    queryFn: async () => await getUserInfo(),
-  }) ?? {};
+  const { data: information } =
+    useQuery<IUserInfo | undefined>({
+      queryKey: ["information"],
+      queryFn: async () => await getUserInfo(),
+    }) ?? {};
 
-  // mm 인증 확인 -> 인증이 되어있으면, 유저 정보 입력 페이지로 이동
-  const { data: authenticated } = useQuery<boolean>({
-    queryKey: ['authenticated'],
-    queryFn: async () => await mmAuthConfirm(),
-  });
+  const isValid = useRecoilValue(isValidateState);
+  const setValidState = useSetRecoilState(validState);
 
   const navigate = useNavigate();
 
+  const { data: authenticated } = useQuery<boolean>({
+    queryKey: ["authenticated"],
+    queryFn: async () => await mmAuthConfirm(),
+  });
+
+  useEffect(() => {
+    if (isValid) {
+      navigate("/home");
+    }
+  });
+
   const mutation = useMutation({
-    mutationKey: ['auth', 'send'],
+    mutationKey: ["auth", "send"],
     mutationFn: mmAuthSend,
     // 성공시, 유저 정보 입력 페이지로 이동
     onSuccess: () => {
       // if (!information) return;
       // setUserInfo(information);
-      navigate('/infoinsert');
-      console.log('성공');
+      navigate("/infoinsert");
+      console.log("성공");
     },
   });
 
   useEffect(() => {
     if (authenticated) {
-      navigate('/infoinsert');
+      navigate("/infoinsert");
     }
   }, [authenticated, navigate]);
 
@@ -54,7 +65,6 @@ const Mattermost = () => {
       loginId: data.id,
       password: data.password,
     });
-
   };
 
   const onInvalid = (errors: any) => {
@@ -67,8 +77,8 @@ const Mattermost = () => {
         <h1 className="my-5">Mattermost 인증</h1>
         <MattermostIcon />
         <span className="text-xs mt-2 mb-20">
-          본 인증은 <span className="luckiest_guy">ssapick</span> 서비스 이용을
-          위한 필수 사항입니다.{' '}
+          본 인증은 <span className="luckiest_guy">ssapick</span> 서비스 이용을 위한 필수
+          사항입니다.{" "}
         </span>
         {/* 에러시, 메세지 */}
         {/* <span className="text-xs mt-3 text-red-500">
@@ -78,21 +88,19 @@ const Mattermost = () => {
           title="매터모스트 아이디"
           type="text"
           placeholder="아이디를 입력해주세요."
-          register={register('id', {
-            required: '매터모스트 아이디를 입력해주세요.',
+          register={register("id", {
+            required: "매터모스트 아이디를 입력해주세요.",
           })}
         />
         <AuthInput
           title="매터모스트 비밀번호"
           type="password"
           placeholder="비밀번호를 입력해주세요."
-          register={register('password', {
-            required: '매터모스트 비밀번호를 입력해주세요.',
+          register={register("password", {
+            required: "매터모스트 비밀번호를 입력해주세요.",
           })}
         />
-        <span className="text-xs">
-          입력하신 인증정보는 오직 인증을 목적으로만 사용됩니다.
-        </span>
+        <span className="text-xs">입력하신 인증정보는 오직 인증을 목적으로만 사용됩니다.</span>
         <div className="mt-10">
           <DoneButton title="인증하기" />
         </div>
