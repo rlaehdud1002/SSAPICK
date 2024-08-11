@@ -122,7 +122,8 @@ public class MessageService {
 				NotificationType.MESSAGE,
 				receiver,
 				message.getId(),
-				"누군가가 당신에게 쪽지를 보냈습니다.",
+			sender.getProfile().getCohort()+ "기 " + sender.getProfile().getCampus().getSection() + "반 " + sender.getName()+"님이 당신에게 쪽지를 보냈습니다."
+				+ "\n당신의 픽 : " + message.getPick().getQuestion().getContent(),
 				create.getContent(),
 				null
 		));
