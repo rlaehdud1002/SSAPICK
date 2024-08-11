@@ -97,3 +97,19 @@ export const patchPickUserReRoll = async (): Promise<void> => {
 
   return data;
 };
+
+
+export const getAlarmPick = async (
+): Promise<IPick> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<IPick>>(
+    `/pick/alarm`,
+  );
+
+  if (!success) {
+    throw new Error('받은 알람 조회');
+  }
+
+  return data;
+};
