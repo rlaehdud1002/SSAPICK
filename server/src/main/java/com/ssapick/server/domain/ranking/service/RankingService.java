@@ -9,6 +9,7 @@ import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.PickcoLogRepository;
+import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +28,14 @@ public class RankingService {
     private final PickRepository pickRepository;
     private final MessageRepository messageRepository;
     private final PickcoLogRepository pickcoLogRepository;
+    private final UserRepository userRepository;
 
     public RankingData.Response getAllRanking() {
 
         List<Pick> picks = pickRepository.findAllWithReceiverAndSenderAndQuestion();
         List<Message> messages = messageRepository.findAllWithReceiverAndSender();
         List<PickcoLog> pickcoLogs = pickcoLogRepository.findAllSpendWithUser();
+        List<User> pickcoUsers = userRepository.findTopPickcoUsers();
 
 
         List<RankingData.UserCount> topPickReceivers = getTopUsers(picks, Pick::getReceiver);
@@ -41,14 +44,32 @@ public class RankingService {
         List<RankingData.UserCount> topMessageSenders = getTopUsers(messages, Message::getSender);
 
         List<RankingData.UserCount> topSpendPickcoUsers = getTopSpendPickcoUsers(pickcoLogs);
+        List<RankingData.UserCount> topReservePickcoUsers = getTopReservePickcoUsers(pickcoUsers);
+
+
 
         return new RankingData.Response(
                 topPickReceivers,
                 topPickSenders,
                 topMessageReceivers,
                 topMessageSenders,
-                topSpendPickcoUsers
+                topSpendPickcoUsers,
+                topReservePickcoUsers
         );
+    }
+
+    private static List<RankingData.UserCount> getTopReservePickcoUsers(List<User> pickcoUsers) {
+        return pickcoUsers.stream()
+                .map(user -> new RankingData.UserCount(
+                        new RankingData.UserRankingProfile(
+                                user.getName(),
+                                user.getProfile().getCohort(),
+                                user.getProfile().getCampus(),
+                                user.getProfile().getProfileImage()
+                        ),
+                        (long) user.getProfile().getPickco()
+                ))
+                .toList();
     }
 
     private <T> List<RankingData.UserCount> getTopUsers(List<T> items, Function<T, User> userExtractor) {
