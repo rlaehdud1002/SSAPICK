@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import AuthInput from '../components/MattermostPage/AuthInput';
 import MattermostIcon from '../icons/MattermostIcon';
+import Loading from 'components/common/Loading';
 
 interface AuthFormm {
   id: string;
@@ -16,10 +17,11 @@ interface AuthFormm {
 const Mattermost = () => {
   // const setUserInfo = useSetRecoilState(userInfostate);
   // 유저 정보 조회
-  const { data: information } = useQuery<IUserInfo | undefined>({
-    queryKey: ['information'],
-    queryFn: async () => await getUserInfo(),
-  }) ?? {};
+  const { data: information, isLoading } =
+    useQuery<IUserInfo | undefined>({
+      queryKey: ['information'],
+      queryFn: async () => await getUserInfo(),
+    }) ?? {};
 
   // mm 인증 확인 -> 인증이 되어있으면, 유저 정보 입력 페이지로 이동
   const { data: authenticated } = useQuery<boolean>({
@@ -54,12 +56,15 @@ const Mattermost = () => {
       loginId: data.id,
       password: data.password,
     });
-
   };
 
   const onInvalid = (errors: any) => {
     console.log(errors);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>

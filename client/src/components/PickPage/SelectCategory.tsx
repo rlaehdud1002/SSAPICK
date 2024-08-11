@@ -11,6 +11,7 @@ import {
 } from 'components/ui/select';
 import { useQuery } from '@tanstack/react-query';
 import { getCategory } from 'api/questionApi';
+import Loading from 'components/common/Loading';
 
 interface SelectCategoryProps {
   title: string;
@@ -36,8 +37,12 @@ const SelectCategory = ({
     queryFn: getCategory,
   });
 
+  if (categoryLoading) {
+    return <Loading />;
+  }
+
   return (
-    <div className='my-3'>
+    <div className="my-3">
       <div>
         <Select {...register} onValueChange={handleChange}>
           <SelectTrigger className="w-35 h-7 border-[#7EAFFF]">
@@ -45,13 +50,14 @@ const SelectCategory = ({
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {categorys && categorys.map((category, index) => {
-                return (
-                  <SelectItem key={index} value={String(category.id)}>
-                    {category.name}
-                  </SelectItem>
-                );
-              })}
+              {categorys &&
+                categorys.map((category, index) => {
+                  return (
+                    <SelectItem key={index} value={String(category.id)}>
+                      {category.name}
+                    </SelectItem>
+                  );
+                })}
             </SelectGroup>
           </SelectContent>
         </Select>
