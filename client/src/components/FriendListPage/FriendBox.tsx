@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postAddFriend } from 'api/friendApi';
+import { deleteFriend, postAddFriend } from 'api/friendApi';
+import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import DeleteModal from 'components/modals/DeleteModal';
 import BaseImageIcon from 'icons/BaseImageIcon';
+import { useState } from 'react';
 
 interface FriendProps {
   campus: string;
@@ -34,6 +36,34 @@ const Friend = ({
     },
   });
 
+  // let isPlus = true;
+  const [isPlus, setIsPlus] = useState<boolean>(true);
+
+  const addMutation = useMutation({
+    mutationKey: ["addFriend",],
+    mutationFn: postAddFriend,
+  
+    onSuccess: () => {
+      console.log("친구 추가 성공");
+    },
+  });
+  
+  const deleteMutation = useMutation({
+    mutationKey: ["deleteFriend",],
+    mutationFn: deleteFriend,
+    
+    onSuccess: () => {
+      console.log("친구 삭제 성공");
+    },
+  });
+
+  const onPlus = () => {
+    {isPlus ? 
+      (setIsPlus(false)) 
+      : 
+      (setIsPlus(true))}
+  }
+
   return (
     <div className="flex flex-col relative">
       <div className="flex items-center ml-5 mr-5 justify-between">
@@ -60,21 +90,42 @@ const Friend = ({
             </span>
           </div>
         </div>
-        {userClass !== campusSection ? (
+        {/* {userClass !== campusSection ? (
           <DeleteModal title="언팔로우" userId={userId} />
         ) : (
           <span></span>
         )}
-        {/* <div>{userId}</div> */}
-        {/* <DeleteModal title="언팔로우" userId={userId} /> */}
         <DeleteModal title="언팔로우" userId={userId} />
+
         <button
           onClick={() => {
             mutation.mutate(userId);
           }}
         >
           팔로우
-        </button>
+        </button> */}
+
+        <div>
+        {isPlus ? (
+          <div onClick={()=>{
+            addMutation.mutate(userId);
+            onPlus();
+            
+          }}>
+            <PlusDeleteButton title="팔로우" isDelete={true} />
+          </div>
+        ) : (
+          <div onClick={
+            ()=>{
+              deleteMutation.mutate(userId);
+              onPlus();
+             
+            }
+          }>
+            <PlusDeleteButton title="언팔로우" />
+          </div>
+        )}
+      </div>
       </div>
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>

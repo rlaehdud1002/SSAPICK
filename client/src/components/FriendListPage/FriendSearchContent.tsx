@@ -14,7 +14,7 @@ interface FriendSearchContentProps {
 
 const FriendSearchContent = ({ name, cohort, classSection,userid, profileImage }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
-  
+ 
   // 친구 추가
   const addMutation = useMutation({
     mutationKey: ["addFriend",],
