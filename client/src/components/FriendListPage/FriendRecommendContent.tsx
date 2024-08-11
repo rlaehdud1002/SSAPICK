@@ -26,21 +26,11 @@ const FriendRecommendContent = () => {
     <div className="w-full">
       <div>
         <div className="flex overflow-x-scroll scrollbar-hide">
-          {recommendFriends.length ? (
-            recommendFriends.map((friend, index) => (
-              <ToPlusIcon
-                key={index}
-                campus={friend.campusName}
-                classNum={friend.campusSection}
-                name={friend.nickname}
-                profileImage={friend.profileImage}
-              />
-            ))
-          ) : (
-            <span className="text-xs ml-36 mt-3">
-              추천하는 친구가 없습니다.
-            </span>
-          )}
+          {recommendFriends.length? (recommendFriends.map((friend, index) => (
+            <ToPlusIcon key={index} classNum={friend.campusSection} name={friend.name} profileImage={friend.profileImage} userId={friend.userId}/>
+          ))):(
+            <span className='text-xs ml-36 mt-3'>추천하는 친구가 없습니다.</span>
+          )}  
         </div>
       </div>
     </div>

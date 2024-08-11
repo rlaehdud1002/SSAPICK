@@ -39,9 +39,9 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 							.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
 					u.profile.campus.section.eq(section)
 			)).from(u)
-			.leftJoin(u.profile, profile).fetchJoin()
-			.leftJoin(u.alarm, alarm).fetchJoin()
-			.leftJoin(u.profile.campus, campus).fetchJoin()
+			.leftJoin(u.profile, profile)
+			.leftJoin(u.profile.campus, campus)
+			.leftJoin(u.followings, follow)
 			.where(u.id.in(JPAExpressions.select(f2.followingUser.id)
 				.from(f1)
 				.join(f2).on(f1.followingUser.eq(f2.followUser))
