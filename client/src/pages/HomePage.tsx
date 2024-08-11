@@ -1,5 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { getReceivePick } from 'api/pickApi';
 import { IPaging, IPick } from 'atoms/Pick.type';
 import Response from 'components/MainPage/Response';
@@ -25,7 +30,6 @@ const Home = () => {
       return undefined;
     },
     initialPageParam: 0,
-    refetchInterval: 2000,
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,24 +38,32 @@ const Home = () => {
   const scrollPosition = useRef(0);
 
   const { data: attendance, isLoading: isLoadingAttendance } = useQuery({
-    queryKey: ['getattendance'],
+    queryKey: ['attendance'],
     queryFn: getAttendance,
   });
 
-  const [isAttendance, setIsAttendance] = useState(attendance?.todayChecked);
+  const queryClient = useQueryClient();
 
   const postMutation = useMutation({
     mutationKey: ['postAttendance'],
     mutationFn: postAttendance,
     onSuccess: (data) => {
-      setIsAttendance(data.todayChecked);
-      setStreak(data.streak);
+      queryClient.invalidateQueries({ queryKey: ['attendance'] });
       setModalOpen(true);
     },
     onError: (error) => {
       console.log('이미 출석체크 완료');
     },
   });
+
+  console.log('attendance', attendance);
+
+  useEffect(() => {
+    if (attendance && !attendance.todayChecked) {
+      console.log('here');
+      postMutation.mutate();
+    }
+  }, [attendance]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {

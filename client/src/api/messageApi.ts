@@ -19,10 +19,15 @@ export const postMessageSend = async (
 };
 
 // 받은 메시지 조회
-export const getReceivedMessage = async (): Promise<IPaging<IMessage[]>> => {
+export const getReceivedMessage = async (
+  page: number,
+  size: number,
+): Promise<IPaging<IMessage[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>('/message/receive');
+  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>(
+    `/message/receive?page=${page}&size=${size}`,
+  );
 
   console.log(success);
 
@@ -34,10 +39,15 @@ export const getReceivedMessage = async (): Promise<IPaging<IMessage[]>> => {
 };
 
 // 보낸 메시지 조회
-export const getSendMessage = async (): Promise<IPaging<IMessage[]>> => {
+export const getSendMessage = async (
+  page: number,
+  size: number,
+): Promise<IPaging<IMessage[]>> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>('/message/send');
+  } = await instance.get<BaseResponse<IPaging<IMessage[]>>>(
+    `/message/send?page=${page}&size=${size}`,
+  );
 
   if (!success) {
     throw new Error('보낸 메시지 조회 실패');
@@ -53,6 +63,8 @@ export const deleteReceivedMessage = async (
   const response = await instance.delete<BaseResponse<IEmpty>>(
     `/message/${messageId}/receive`,
   );
+
+  console.log(response);
 
   if (response.status !== 204) {
     throw new Error('받은 메시지 삭제 실패');
