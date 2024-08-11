@@ -1,23 +1,28 @@
-import RankContent from "components/RankingPage/RankContent";
-import { getRankList } from "api/rankApi";
-import { useQuery } from "@tanstack/react-query";
-import { IRank, IRankList } from "atoms/Rank.type";
+import RankContent from 'components/RankingPage/RankContent';
+import { getRankList } from 'api/rankApi';
+import { useQuery } from '@tanstack/react-query';
+import { IRank, IRankList } from 'atoms/Rank.type';
+import Loading from 'components/common/Loading';
 
 const rankName = [
-  "topMessageReceivers",
-  "topMessageSenders",
-  "topPickReceivers",
-  "topPickSenders",
-  "topSpendPickcoUsers",
+  'topMessageReceivers',
+  'topMessageSenders',
+  'topPickReceivers',
+  'topPickSenders',
+  'topSpendPickcoUsers',
 ] as const;
 
 const Ranking = () => {
   const { data: rankList, isLoading } = useQuery<IRank>({
-    queryKey: ["rank"],
+    queryKey: ['rank'],
     queryFn: async () => await getRankList(),
   });
 
-  console.log("rankList", rankList, isLoading);
+  console.log('rankList', rankList, isLoading);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="m-6">

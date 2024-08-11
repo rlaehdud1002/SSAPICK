@@ -9,6 +9,7 @@ import AuthInput from "../components/MattermostPage/AuthInput";
 import MattermostIcon from "../icons/MattermostIcon";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isValidateState, validState } from "atoms/ValidAtoms";
+import Loading from "components/common/Loading";
 
 interface AuthFormm {
   id: string;
@@ -18,7 +19,7 @@ interface AuthFormm {
 const Mattermost = () => {
   // const setUserInfo = useSetRecoilState(userInfostate);
   // 유저 정보 조회
-  const { data: information } =
+  const { data: information, isLoading } =
     useQuery<IUserInfo | undefined>({
       queryKey: ["information"],
       queryFn: async () => await getUserInfo(),
@@ -70,6 +71,10 @@ const Mattermost = () => {
   const onInvalid = (errors: any) => {
     console.log(errors);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>

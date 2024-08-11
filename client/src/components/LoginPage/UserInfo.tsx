@@ -11,6 +11,7 @@ import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
 import { isValidateState, validState } from "atoms/ValidAtoms";
 import { useNavigate } from "react-router-dom";
+import Loading from "components/common/Loading";
 
 interface UserForm {
   name: string;
@@ -96,7 +97,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
     }
   }, [information, isLoading, reset]);
 
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>

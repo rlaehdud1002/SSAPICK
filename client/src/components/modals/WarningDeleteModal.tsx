@@ -15,6 +15,7 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 import { blockUser } from 'api/blockApi';
+import { useNavigate } from 'react-router-dom';
 
 enum WarningDeleteStep {
   CHECK,
@@ -22,31 +23,39 @@ enum WarningDeleteStep {
 }
 
 interface WarningDeleteModalProps {
+  senderId: number;
   messageId: number;
   title: string;
   message: string;
   location: string;
+  setPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WarningDeleteModal = ({
+  senderId,
   messageId,
   title,
   message,
   location,
+  setPopoverOpen,
 }: WarningDeleteModalProps) => {
   const [step, setStep] = useState<WarningDeleteStep>(WarningDeleteStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
+  const nav = useNavigate();
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
     mutationKey: ['block', 'user'],
     mutationFn: blockUser,
+
     onSuccess: () => {
       console.log('쪽지 신고 성공');
-      queryClient.invalidateQueries({ queryKey: ['message'] });
+      queryClient.invalidateQueries({
+        queryKey: ['message', 'send'],
+      });
     },
   });
 
@@ -63,6 +72,7 @@ const WarningDeleteModal = ({
       if (location === 'send') {
         return deleteSendMessage(messageId); // Promise를 반환
       } else if (location === 'received') {
+        console.log('받은 메시지 삭제 method 들어옴');
         return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
         throw new Error('Invalid location');
@@ -90,12 +100,14 @@ const WarningDeleteModal = ({
 
   const onClick = () => {
     if (title === '신고') {
-      blockMutatiion.mutate(messageId);
+      blockMutatiion.mutate(senderId);
     } else {
+      console.log('메시지 삭제', location);
       deleteMutation.mutate({ messageId, location });
     }
 
     setStep(WarningDeleteStep.ALERT);
+    setPopoverOpen(false);
   };
 
   const onClose = () => {
