@@ -5,7 +5,7 @@ import { Button } from 'components/ui/button';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';

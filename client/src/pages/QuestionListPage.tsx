@@ -18,7 +18,7 @@ const QuestionList = () => {
           생성한 질문
         </Link>
       </div>
-      <div className="mt-5">
+      <div>
         <Outlet />
       </div>
     </div>
