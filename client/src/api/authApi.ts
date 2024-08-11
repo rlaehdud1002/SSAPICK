@@ -70,17 +70,6 @@ export const signOut = async (): Promise<void> => {
   return data;
 };
 
-// 회원 탈퇴 요청
-export const withdrawal = async (): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.delete('/auth');
-  if (!success) {
-    throw new Error(message);
-  }
-  return data;
-};
-
 // refresh token 요청
 export const refresh = async (): Promise<JwtToken> => {
   const {
