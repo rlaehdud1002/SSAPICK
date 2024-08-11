@@ -14,5 +14,10 @@ export interface IBlockQuestion {
   id: number,
   banCount: number,
   skipCount: number,
-  category: object,
+  category: {
+    id: number,
+    name: string,
+    thumbnail: string,
+  },
+  content: string,
 }

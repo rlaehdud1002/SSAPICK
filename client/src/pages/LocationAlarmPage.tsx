@@ -14,8 +14,27 @@ import { IUserInfo } from "atoms/User.type";
 import { getUserInfo } from "api/authApi";
 import LocationImage from "components/LocationPage/LocationImage";
 
+interface Position{
+  t:number;
+  b:number;
+  l:number;
+  r:number;
+}
 
 const LocationAlarm = () => {
+  const [positionList] = useState<Position[]>([
+    {t:10,l:10,b:0,r:0},
+    {t:5, l:10,b:0,r:0},
+    {t:5, l:48,b:0,r:0},
+    {t:0, l:0,b:0,r:0},
+    {t:80, l:72,b:0,r:0},
+    {t:80, l:10,b:0,r:0},
+    {t:80, l:36,b:0,r:0},
+    {t:2, l:48,b:0,r:0},
+    {t:48, l:2,b:0,r:0},
+    {t:36, l:80,b:0,r:0}
+  ])
+
   const userInfo = useRecoilValue(userInfostate)
   const nav = useNavigate();
   const [dot, setDot] = useState("");
@@ -57,17 +76,15 @@ const LocationAlarm = () => {
           {searchFriends? (
             searchFriends.data.map((friend:any, index:number) => (
               <div>
-                <img 
-                className="rounded-full w-16 h-16 absolute top- left-48" 
-                src={friend.profileImage} alt="" />
-              {/* <LocationImage 
+                {/* <img 
+                className="absolute rounded-full w-16 h-16 top-5 left-10" 
+                src={friend.profileImage} alt="" /> */}
+              <LocationImage 
               key={index} 
-              top={0}
-              left={0}
-              // left={parseFloat(friend.position.x.toFixed(0))}
-              // top={parseFloat(friend.position.y.toFixed(0))}
+              top={positionList[index].t}
+              left={positionList[index].l}
               profileImage={friend.profileImage}
-              /> */}
+              />
               </div>
               ))
           ):(

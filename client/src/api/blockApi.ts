@@ -19,14 +19,11 @@ export const getBlockedList = async (): Promise<IBlock[]> => {
 
 // 유저 차단 해제
 export const blockCancel = async (userId: number): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.delete(`/user-ban/${userId}`);
+  const response = await instance.delete(`/user-ban/${userId}`);
 
-  if (!success) {
-    throw new Error(message);
+  if (response.status !== 204) {
+    throw new Error('유저 차단 해제 실패');
   }
-  return data;
 };
 
 // 차단 질문 목록 조회
@@ -43,14 +40,11 @@ export const getBlockedQuestionList = async (): Promise<IBlockQuestion[]> => {
 
 // 질문 차단 해제
 export const blockQuestionCancel = async (questionId: number): Promise<void> => {
-  const {
-    data: { success, data, message },
-} = await instance.delete(`/questions/${questionId}/ban`);
+  const response = await instance.delete(`/questions/${questionId}/ban`);
 
-  if (!success) {
-    throw new Error(message);
+  if (response.status !== 204) {
+    throw new Error('질문 차단 해제 실패');
   }
-  return data;
 };
 
 // 유저 차단 (쪽지)

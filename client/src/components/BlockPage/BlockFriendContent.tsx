@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { blockCancel } from 'api/blockApi';
 import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import BaseImageIcon from 'icons/BaseImageIcon';
@@ -18,12 +18,16 @@ const BlockFriendContent = ({
   userId,
   profileImage
 }: BlockFriendContentProps) => {
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ['deleteBlock'],
     mutationFn: blockCancel,
 
     onSuccess: () => {
       console.log('차단 해제 성공');
+      queryClient.invalidateQueries({
+        queryKey: ['blocks'],
+      });
     },
   });
 
@@ -35,7 +39,7 @@ const BlockFriendContent = ({
             <img
               src={profileImage}
               alt="profileImage"
-              className="w-[75px] h-[75px] rounded-full"
+              className="w-[55px] h-[55px] rounded-full"
             />
           ) : (
             <BaseImageIcon width={64} height={64} />
