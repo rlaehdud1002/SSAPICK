@@ -15,10 +15,6 @@ const Attendance = () => {
     queryFn: getAttendance,
   });
 
-  console.log('attendance', attendance);
-
-  
-
   return (
     <div className="m-2">
       <div
@@ -35,7 +31,11 @@ const Attendance = () => {
           </div>
           <AttendanceCheck date={attendance.streak} />
           <div
-            className={`flex flex-row justify-center items-center rounded-lg w-3/5 mx-auto mb-4 py-2 bg-[${attendance.streak !== 14 ? '#E2E3F4' : '#6F7CFF'}]`}
+            className={`flex flex-row justify-center items-center rounded-lg w-3/5 mx-auto mb-4 py-2 ${
+              attendance.streak === 14
+                ? 'bg-[#6F7CFF] text-white'
+                : 'bg-[#E2E3F4]'
+            }`}
           >
             <CoinIcon width={30} height={30} />
             <span className="mx-2">
