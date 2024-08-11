@@ -1,19 +1,27 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteFriend, getRecommendFriendsList, postAddFriend } from 'api/friendApi';
+import {
+  deleteFriend,
+  getRecommendFriendsList,
+  postAddFriend,
+} from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
+import Loading from 'components/common/Loading';
 import ProfileIcon from 'icons/ProfileIcon';
 import ToPlusIcon from 'icons/ToPlusIcon';
 
 const FriendRecommendContent = () => {
   // 추천 친구 목록 조회
-  const { data: recommendFriends = [], isLoading: LoadingRecommendFriends } = useQuery<IFriend[]>({
-    queryKey: ['recommendFriends'],
-    queryFn: async () => await getRecommendFriendsList(),
-  });
-  console.log(recommendFriends)
+  const { data: recommendFriends = [], isLoading: LoadingRecommendFriends } =
+    useQuery<IFriend[]>({
+      queryKey: ['recommendFriends'],
+      queryFn: async () => await getRecommendFriendsList(),
+    });
+  console.log(recommendFriends);
 
-  
-  
+  if (LoadingRecommendFriends) {
+    return <Loading />;
+  }
+
   return (
     <div className="w-full">
       <div>

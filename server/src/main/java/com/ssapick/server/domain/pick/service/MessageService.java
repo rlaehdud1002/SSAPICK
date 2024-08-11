@@ -16,6 +16,8 @@ import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,6 +31,7 @@ import java.util.Objects;
 
 import static com.ssapick.server.core.constants.PickConst.MESSAGE_COIN;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -72,6 +75,7 @@ public class MessageService {
 		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
 
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
+
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(
 				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
@@ -118,8 +122,8 @@ public class MessageService {
 				NotificationType.MESSAGE,
 				receiver,
 				message.getId(),
-				"누군가가 당신에게 쪽지를 보냈습니다.",
-				create.getContent(),
+			sender.getProfile().getCohort()+ "기 " + sender.getProfile().getCampus().getSection() + "반 " + sender.getName()+"님이 당신에게 쪽지를 보냈습니다.",
+				"당신의 픽 : " + pick.getQuestion().getContent() + "\n" + create.getContent(),
 				null
 		));
 	}

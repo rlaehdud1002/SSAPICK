@@ -166,6 +166,7 @@ public class UserData {
 
 	@Data
 	public static class Search {
+		Long id;
 		String name;
 		short cohort;
 		short campusSection;
@@ -173,6 +174,7 @@ public class UserData {
 
 		public static Search fromEntity(User user) {
 			Search search = new Search();
+			search.id = user.getId();
 			search.name = user.getName();
 			search.cohort = user.getProfile().getCohort();
 			search.campusSection = user.getProfile().getCampus().getSection();

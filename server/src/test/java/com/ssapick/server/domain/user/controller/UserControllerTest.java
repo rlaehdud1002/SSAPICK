@@ -6,6 +6,7 @@ import com.ssapick.server.core.configuration.SecurityConfig;
 import com.ssapick.server.core.filter.JWTFilter;
 import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.pick.dto.PickData;
+import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.ProviderType;
@@ -209,17 +210,17 @@ class UserControllerTest extends RestDocsSupport {
         String keyword = "김싸";
 
         List<User> users = List.of(
-                createUser("김싸일"),
-                createUser("김싸이"),
-                createUser("김싸삼"),
-                createUser("김싸사")
+                this.createUser("김싸일"),
+                this.createUser("김싸이"),
+                this.createUser("김싸삼"),
+                this.createUser("김싸사")
         );
 
-        List<UserData.Search> searches = users.stream().map(UserData.Search::fromEntity).toList();
+        List<ProfileData.Friend> searches = users.stream().map(ProfileData.Friend::fromEntity).toList();
 
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<UserData.Search> pickPage = new PageImpl<>(searches, pageable, searches.size());
+        Page<ProfileData.Friend> pickPage = new PageImpl<>(searches, pageable, searches.size());
 
         when(userService.getUserByKeyword(any(), eq(keyword), eq(pageable))).thenReturn(pickPage);
 
@@ -273,11 +274,13 @@ class UserControllerTest extends RestDocsSupport {
                                                 fieldWithPath("data.numberOfElements").description("페이지 내 요소 수")
                                                         .type(JsonFieldType.NUMBER)
                                                         .optional(),
-                                                fieldWithPath("data.content[]").description("유저 데이터 목록").type(JsonFieldType.ARRAY).optional(),
-                                                fieldWithPath("data.content[].name").description("이름").type(JsonFieldType.STRING).optional(),
-                                                fieldWithPath("data.content[].cohort").description("기수").type(JsonFieldType.NUMBER).optional(),
-                                                fieldWithPath("data.content[].campusSection").description("반").type(JsonFieldType.NUMBER).optional(),
-                                                fieldWithPath("data.content[].profileImage").description("프로필 이미지").type(JsonFieldType.STRING).optional(),
+                                                fieldWithPath("data.content[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                                                fieldWithPath("data.content[].name").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                                fieldWithPath("data.content[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                                fieldWithPath("data.content[].cohort").type(JsonFieldType.NUMBER).description("기수 정보"),
+                                                fieldWithPath("data.content[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
+                                                fieldWithPath("data.content[].follow").type(JsonFieldType.BOOLEAN).description("유저 팔로우 여부"),
+                                                fieldWithPath("data.content[].sameCampus").type(JsonFieldType.BOOLEAN).description("유저 동일 캠퍼스 여부"),
                                                 fieldWithPath("data.pageable.pageNumber").description("페이지번호").type(JsonFieldType.NUMBER).optional(),
                                                 fieldWithPath("data.pageable.pageSize").description("페이지 사이즈").type(JsonFieldType.NUMBER).optional(),
                                                 fieldWithPath("data.pageable.sort").description("정렬").type(JsonFieldType.OBJECT).optional(),
@@ -290,11 +293,4 @@ class UserControllerTest extends RestDocsSupport {
                                         .build()
                         )));
     }
-
-    public User createUser(String username) {
-        User user = spy(User.createUser("user", username, 'M', ProviderType.GOOGLE, "exampleProviderId"));
-        user.getProfile().updateCampus(Campus.createCampus("광주", (short) 2, "전공"));
-        return user;
-    }
-
 }

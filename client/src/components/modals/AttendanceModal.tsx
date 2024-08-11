@@ -1,4 +1,8 @@
-import { DAILY_ATTENDANCE_COIN, TWO_WEEK_ATTENDANCE_COIN, WEEK_ATTENDANCE_COIN } from 'coins/coins';
+import {
+  DAILY_ATTENDANCE_COIN,
+  TWO_WEEK_ATTENDANCE_COIN,
+  WEEK_ATTENDANCE_COIN,
+} from 'coins/coins';
 import { Button } from 'components/ui/button';
 import {
   Dialog,
@@ -38,15 +42,17 @@ const AttendanceModal = ({ date, onClose }: AttendanceModalProps) => {
             <span className="bg-[#5F86E9]/70 rounded-lg text-white px-12 py-1 mb-6">
               <b className="luckiest_guy">{date}</b>일 연속 출석 완료!
             </span>
-            <h3 className="luckiest_guy ml-1 mr-2 pt-1">
-              {
-                date === 7
+            <div className='flex flex-row'>
+              <CoinIcon width={25} height={25} />
+              <h3 className="luckiest_guy ml-1 mr-1 pt-1">
+                {date === 7
                   ? WEEK_ATTENDANCE_COIN
                   : date === 14
                     ? TWO_WEEK_ATTENDANCE_COIN
-                    : DAILY_ATTENDANCE_COIN
-              }
-            </h3>을 획득하셨습니다!
+                    : DAILY_ATTENDANCE_COIN}
+              </h3>
+              을 획득하셨습니다!
+            </div>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-end mt-3">

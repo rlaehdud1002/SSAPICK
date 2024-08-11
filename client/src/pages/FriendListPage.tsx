@@ -4,6 +4,7 @@ import { getFriendsList } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
 import { IUserInfo } from 'atoms/User.type';
 import Friend from 'components/FriendListPage/FriendBox';
+import Loading from 'components/common/Loading';
 import BackIcon from 'icons/BackIcon';
 import FriendIcon from 'icons/FriendIcon';
 import SearchIcon from 'icons/SearchIcon';
@@ -19,8 +20,12 @@ const FriendList = () => {
   console.log(friends);
   const navigate = useNavigate();
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <div className='mb-25'>
+    <div className="mb-25">
       <div className="flex justify-between">
         <div className="flex ml-2">
           <div onClick={() => navigate(-1)} className="mr-2">
@@ -47,7 +52,6 @@ const FriendList = () => {
               follow={friend.follow}
               sameCampus={friend.sameCampus}
             />
-
           </div>
         ))}
     </div>

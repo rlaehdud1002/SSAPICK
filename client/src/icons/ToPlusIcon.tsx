@@ -20,7 +20,7 @@ const ToPlusIcon = ({ classNum, name, profileImage,userId }: ToPlusIconProps) =>
 
   // 유저 팔로우
   const addMutation = useMutation({
-    mutationKey: ["addFriend",],
+    mutationKey: ["addFriend"],
     mutationFn: postAddFriend,
   
     onSuccess: () => {
@@ -29,7 +29,7 @@ const ToPlusIcon = ({ classNum, name, profileImage,userId }: ToPlusIconProps) =>
   });
   // 유저 언팔로우
   const deleteMutation = useMutation({
-    mutationKey: ["deleteFriend",],
+    mutationKey: ["deleteFriend"],
     mutationFn: deleteFriend,
     
     onSuccess: () => {

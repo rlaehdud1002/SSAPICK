@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
 import { IUserInfo } from "atoms/User.type";
 import { profileImageState, userInfostate } from "atoms/UserAtoms";
+import Loading from "components/common/Loading";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import AccountIcon from "icons/AccountIcon";
@@ -33,6 +34,10 @@ const Profile = () => {
   
   
   console.log(information);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div>
@@ -88,11 +93,11 @@ const Profile = () => {
             <QuestionAlarmIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
-        <Link to="/profile/setaccount">
-          <ProfileAlarm title="계정 설정" content="나의 계정 설정">
+        <div onClick={onLogout}>
+          <ProfileAlarm title="로그아웃">
             <AccountIcon width={50} height={50} />
           </ProfileAlarm>
-        </Link>
+        </div>
       </div>
     </div>
   );
