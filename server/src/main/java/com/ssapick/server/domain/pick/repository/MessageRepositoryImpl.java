@@ -26,7 +26,7 @@ public class MessageRepositoryImpl implements MessageQueryRepository {
             .leftJoin(message.sender).fetchJoin() // 패치 조인
             .leftJoin(message.sender.profile).fetchJoin()
             .where(message.receiver.id.eq(userId)
-                .and(message.isReceiverDeleted.isFalse()))
+                .and(message.isReceiverDeleted.eq(false)))
             .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -42,7 +42,7 @@ public class MessageRepositoryImpl implements MessageQueryRepository {
             .leftJoin(message.receiver).fetchJoin() // 패치 조인
             .leftJoin(message.receiver.profile).fetchJoin()
             .where(message.sender.id.eq(userId)
-                .and(message.isSenderDeleted.isFalse()))
+                .and(message.isSenderDeleted.eq(false)))
             .orderBy(message.id.desc()) // 메시지 ID를 역순으로 정렬
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
