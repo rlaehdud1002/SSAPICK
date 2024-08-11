@@ -4,6 +4,7 @@ import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.location.dto.LocationData;
 import com.ssapick.server.domain.user.entity.User;
+import com.ssapick.server.domain.user.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.Distance;
@@ -12,6 +13,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.domain.geo.GeoReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,20 +32,25 @@ import static org.springframework.data.redis.domain.geo.Metrics.METERS;
 public class LocationService {
     private final static String GEO_LOCATION_KEY = "geolocation:members";
     private final static String GEO_PROFILE_IMAGE_KEY = "geolocation:members:profile";
+    private final static int LOCATION_LIMIT_TIME = 60 * 5;
+    private final ProfileRepository profileRepository;
+
 
     @Resource(name = "redisTemplate")
     private GeoOperations<String, String> geoOperations;
 
     @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> hashOperations;
+    private ValueOperations<String, String> valueOperations;
 
     @Transactional
-    public void saveUserLocation(String username, LocationData.Request request) {
+    public void saveUserLocation(String username, LocationData.Geo geo) {
         if (!StringUtils.hasText(username)) {
             throw new BaseException(ErrorCode.NOT_FOUND_USER);
         }
-        hashOperations.put(GEO_PROFILE_IMAGE_KEY, username, request.getProfileImage());
-        Point point = new Point(request.getGeo().getLongitude(), request.getGeo().getLatitude());
+        String profileImage = profileRepository.findProfileImageByUsername(username)
+                .orElse("");
+        valueOperations.set(username, profileImage, LOCATION_LIMIT_TIME);
+        Point point = new Point(geo.getLatitude(), geo.getLongitude());
         geoOperations.add(GEO_LOCATION_KEY, point, username);
     }
 
@@ -62,15 +69,18 @@ public class LocationService {
 
         assert search != null;
 
-        return search.getContent().stream().map(geo -> {
-            LocationData.Response response = new LocationData.Response();
-            String username = geo.getContent().getName();
-            Point point = geo.getContent().getPoint();
-            response.setUsername(username);
-            response.setProfileImage(hashOperations.get(GEO_PROFILE_IMAGE_KEY, username));
-            response.setDistance(geo.getDistance().getValue());
-            response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
-            return response;
-        }).toList();
+        return search.getContent().stream()
+                .filter(geo -> !geo.getContent().getName().equals(user.getUsername()))
+                .filter(geo -> valueOperations.get(geo.getContent().getName()) != null)
+                .map(geo -> {
+                    LocationData.Response response = new LocationData.Response();
+                    String username = geo.getContent().getName();
+                    Point point = geo.getContent().getPoint();
+                    response.setUsername(username);
+                    response.setProfileImage(valueOperations.get(username));
+                    response.setDistance(geo.getDistance().getValue());
+                    response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
+                    return response;
+                }).toList();
     }
 }
