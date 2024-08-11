@@ -45,9 +45,6 @@ public class User extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "followingUser")
 	private final List<Follow> followings = new ArrayList<>();
 
-	// @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL)
-	// private final List<UserBan> bannedUser = new ArrayList<>();
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<Hint> hints = new ArrayList<>();
 
@@ -59,10 +56,10 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Profile profile;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Alarm alarm;
 
 	@Column(nullable = false)

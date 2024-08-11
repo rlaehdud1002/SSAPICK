@@ -2,6 +2,7 @@ package com.ssapick.server.domain.user.repository;
 
 import com.ssapick.server.core.config.JpaTestConfig;
 import com.ssapick.server.core.container.TestDatabaseContainer;
+import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
@@ -119,11 +120,11 @@ class UserRepositoryTest extends TestDatabaseContainer {
         // 유저는 2 번, 4번 유저를 팔로우 중이고 유저 3과 같은 반이다.
 
         // * WHEN: 이걸 실행하면
-        List<User> findUsers = userQueryRepository.findFollowUserByUserId(1L);
+        List<ProfileData.Friend> findUsers = userQueryRepository.findFollowUserByUserId(1L);
 
         // * THEN: 이런 결과가 나와야 한다
         Assertions.assertThat(findUsers.size()).isEqualTo(3);
-        Assertions.assertThat(findUsers.stream().map(User::getId)).containsExactlyInAnyOrder(2L, 3L, 4L);
+        Assertions.assertThat(findUsers.stream().map(ProfileData.Friend::getUserId)).containsExactlyInAnyOrder(2L, 3L, 4L);
 
     }
 

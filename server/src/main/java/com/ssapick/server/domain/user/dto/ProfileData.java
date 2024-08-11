@@ -2,6 +2,7 @@ package com.ssapick.server.domain.user.dto;
 
 import java.time.LocalDate;
 
+import com.ssapick.server.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
@@ -58,6 +59,29 @@ public class ProfileData {
 		private String location;
 		private short section;
 
+	}
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class Friend {
+		private Long userId;
+		private String name;
+		private String profileImage;
+		private short cohort;
+		private short campusSection;
+		private boolean follow;
+		private boolean sameCampus;
+
+		public static Friend fromEntity(User user) {
+			Friend friend = new Friend();
+			friend.userId = user.getId();
+			friend.name = user.getName();
+			friend.profileImage = user.getProfile().getProfileImage();
+			friend.cohort = user.getProfile().getCohort();
+			friend.campusSection = user.getProfile().getCampus().getSection();
+			return friend;
+		}
 	}
 
 	@Data
