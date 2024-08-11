@@ -22,7 +22,7 @@ const Home = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery<IPaging<IPick[]>>({
-    queryKey: ['pick', 'receive'],
+    queryKey: ['receivedPick'],
     queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number, 10),
     getNextPageParam: (lastPage, pages) => {
       if (!lastPage.last) {
@@ -51,7 +51,9 @@ const Home = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['attendance'] });
       setModalOpen(true);
+      setStreak(data.streak);
     },
+
     onError: (error) => {
       console.log('이미 출석체크 완료');
     },
@@ -107,15 +109,12 @@ const Home = () => {
   return (
     <div className="m-6">
       {data?.pages.flatMap((page) => page.content).length ? (
-        <Response
-          picks={data.pages.flatMap((page) => page.content)}
-          isLoading={isLoading || isFetchingNextPage}
-        />
+        <Response picks={data.pages.flatMap((page) => page.content)} />
       ) : (
         <Initial />
       )}
       <div ref={observerElem} />
-      {isFetchingNextPage && <div>로딩 중...</div>}
+      {isFetchingNextPage && <Loading />}
       {modalOpen && (
         <AttendanceModal date={streak} onClose={() => setModalOpen(false)} />
       )}
