@@ -13,11 +13,13 @@ interface FriendProps {
   profileImage?: string;
   follow: boolean;
   sameCampus: boolean;
+  cohort: number;
 }
 
 const Friend = ({
   userId,
   name,
+  cohort,
   campusSection,
   profileImage,
   sameCampus,
@@ -70,7 +72,21 @@ const Friend = ({
   }
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col">
+      {/* <div className="flex flex-row justify-end">
+          <div>
+            {sameCampus && (
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center px-1 py-1 mr-2">
+              반 친구
+            </span>
+            )}
+            {follow && (
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] px-1 py-1 text-center ">
+              찐친
+            </span>
+              )}
+              </div>
+          </div> */}
       <div className="flex items-center ml-5 mr-5 justify-between">
         {profileImage ? (
           <img
@@ -82,24 +98,24 @@ const Friend = ({
           <BaseImageIcon width={64} height={64} className="ml-6" />
         )}
 
-        <div className="flex flex-col">
-          <span>
-             {campusSection}반 {name}
+        <div className="flex flex-col justify-start w-32">
+          <span className=''>
+             {cohort}기 {campusSection}반 {name}
           </span>
-          <div className="flex flex-row">
-            {sameCampus && (
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1 mr-2">
+          <div>
+             {sameCampus && (
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center px-1 py-1 mr-2">
               반 친구
             </span>
             )}
             {follow && (
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1">
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] px-1 py-1 text-center ">
               찐친
             </span>
               )}
-          </div>
+            </div>
         </div>
-        <div>
+        <div className='w-20'>
         { follow ? (
           <div onClick={
             ()=>{
@@ -108,19 +124,19 @@ const Friend = ({
             }
           }>
             <PlusDeleteButton title="언팔로우" />
+            
           </div>
-        ) : (
-          
-
-<div onClick={()=>{
-  addMutation.mutate(userId);
-  onPlus();
-}}>
-  <PlusDeleteButton title="팔로우" isDelete={true} />
-</div>
+          ) : (
+          <div onClick={()=>{
+          addMutation.mutate(userId);
+          onPlus();
+          }}>
+          <PlusDeleteButton title="팔로우" isDelete={true} />
+          </div>
         )}
-      </div>
-      </div>
+          </div>
+          </div>
+      
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
   );
