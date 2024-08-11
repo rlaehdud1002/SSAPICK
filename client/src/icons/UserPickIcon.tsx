@@ -1,5 +1,5 @@
 interface UserPickIconProps {
-  gen: string;
+  gen?: string;
   width: number;
   height: number;
   className? : string;

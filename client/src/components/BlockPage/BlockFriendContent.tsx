@@ -7,7 +7,8 @@ interface BlockFriendContentProps {
   campusName: string;
   campusSection: number;
   name: string;
-  userId: number;
+  userId: number
+  profileImage: string
 }
 
 const BlockFriendContent = ({
@@ -15,6 +16,7 @@ const BlockFriendContent = ({
   campusSection,
   name,
   userId,
+  profileImage
 }: BlockFriendContentProps) => {
   const mutation = useMutation({
     mutationKey: ['deleteBlock'],
@@ -29,7 +31,15 @@ const BlockFriendContent = ({
     <div>
       <div className="flex items-center mt-5 justify-between mx-8">
         <div>
-          <BaseImageIcon width={64} height={64} />
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt="profileImage"
+              className="w-[75px] h-[75px] rounded-full"
+            />
+          ) : (
+            <BaseImageIcon width={64} height={64} />
+          )}
         </div>
         <div>
           {campusName} {campusSection} {name}

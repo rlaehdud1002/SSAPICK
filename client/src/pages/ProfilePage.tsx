@@ -1,22 +1,26 @@
-import { useQuery } from '@tanstack/react-query';
-import { getUserInfo } from 'api/authApi';
-import { IUserInfo } from 'atoms/User.type';
-import { profileImageState } from 'atoms/UserAtoms';
-import ProfileAlarm from 'components/ProfilePage/ProfileAlarm';
-import ProfileContent from 'components/ProfilePage/ProfileContent';
-import Loading from 'components/common/Loading';
-import AccountIcon from 'icons/AccountIcon';
-import AttendanceIcon from 'icons/AttendanceIcon';
-import BlockIcon from 'icons/BlockIcon';
-import FriendAlarmIcon from 'icons/FriendAlarmIcon';
-import LocationAlarmIcon from 'icons/LocationAlarmIcon';
-import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
-import SetAlarmIcon from 'icons/SetAlarmIcon';
-import UserInfoIcon from 'icons/UserInfoIcon';
-import { Link } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useQuery } from "@tanstack/react-query";
+import { getUserInfo } from "api/authApi";
+import { IUserInfo } from "atoms/User.type";
+import { profileImageState, userInfostate } from "atoms/UserAtoms";
+import Loading from "components/common/Loading";
+import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
+import ProfileContent from "components/ProfilePage/ProfileContent";
+import AccountIcon from "icons/AccountIcon";
+import AttendanceIcon from "icons/AttendanceIcon";
+import BlockIcon from "icons/BlockIcon";
+import FriendAlarmIcon from "icons/FriendAlarmIcon";
+import LocationAlarmIcon from "icons/LocationAlarmIcon";
+import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
+import SetAlarmIcon from "icons/SetAlarmIcon";
+import UserInfoIcon from "icons/UserInfoIcon";
+import { useEffect } from "react";
+import { set } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { setRecoil } from "recoil-nexus";
 
 const Profile = () => {
+  const setUserInfo = useSetRecoilState(userInfostate)
   const setProfileImage = useSetRecoilState(profileImageState);
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
@@ -24,6 +28,11 @@ const Profile = () => {
     queryFn: async () => await getUserInfo(),
   });
 
+  
+  
+
+  
+  
   console.log(information);
 
   if (isLoading) {
@@ -84,11 +93,11 @@ const Profile = () => {
             <QuestionAlarmIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
-        <Link to="/profile/setaccount">
-          <ProfileAlarm title="계정 설정" content="나의 계정 설정">
+        <div onClick={onLogout}>
+          <ProfileAlarm title="로그아웃">
             <AccountIcon width={50} height={50} />
           </ProfileAlarm>
-        </Link>
+        </div>
       </div>
     </div>
   );

@@ -30,21 +30,15 @@ const FriendSearch = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: FriendSearchForm) => {
-    console.log(data.search);
-    refetch();
-  };
+  }
 
   // 검색 친구 리스트 조회
-  const {
-    data: searchFriend,
-    isLoading,
-    refetch,
-  } = useQuery<ISearchFriend>({
-    queryKey: ['searchFriends', watch('search')],
-    queryFn: async () => await getSearchFriendsList(watch('search')),
+  const { data: searchFriend, isLoading, refetch } = useQuery<ISearchFriend>({
+    queryKey: ['searchFriends', watch("search")],
+    queryFn: () => getSearchFriendsList(watch("search"))
   });
 
-  console.log('friend', searchFriend?.content);
+  console.log("friend", searchFriend)
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -91,22 +85,9 @@ const FriendSearch = () => {
           </div>
         </form>
       </div>
-      {/* <div className="flex flex-col"> */}
-      {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="민준수" /> */}
-      {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="이호영" /> */}
-      {/* </div> */}
-      {/* <div className="flex ml-8 mb-3">
-        <FriendIcon width={20} height={20} isDefault={true} />
-        <span className="ml-2">친구찾기</span>
-      {/* </div> */}
       {searchFriend?.content.length ? (
         searchFriend.content.map((friend, index) => (
-          <FriendSearchContent
-            key={index}
-            cohort={friend.cohort}
-            classSection={friend.campusSection}
-            name={friend.name}
-          />
+          <FriendSearchContent key={index} profileImage={friend.profileImage} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
         ))
       ) : (
         <div className="flex justify-center">
