@@ -21,9 +21,8 @@ const PickComplete = ({ setQuestion }: PickCompleteProps) => {
     const now = new Date().getTime();
     const newCoolTime = now + 60 * 1000; // 현재 시간 + 1분
     setCoolTime(newCoolTime);
-    setQuestion([]);
     setIsUpdated(false);
-  }, [setCoolTime, setQuestion, setIsUpdated]);
+  }, []);
 
   return (
     <div

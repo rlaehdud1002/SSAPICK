@@ -15,6 +15,8 @@ import { useEffect } from "react";
 import { validCheck } from "api/validApi";
 import { accessTokenState, isLoginState, refreshRequestState } from "atoms/UserAtoms";
 import { refresh } from "api/authApi";
+import { getMessaging, onMessage } from "firebase/messaging";
+import { requestPermission } from "firebase-messaging-sw";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -26,18 +28,26 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
+const firebaseApp = initializeApp(firebaseConfig);
+const messaging = getMessaging(firebaseApp);
+
+
+
 function App() {
-  initializeApp(firebaseConfig);
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
+
+  requestPermission(messaging);
+  
+  onMessage(messaging, (payload) => {
+    console.log("Message received. ", payload);
+  });
+  
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
   const setValidState = useSetRecoilState(validState);
-  const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
-  const setAccessToken = useSetRecoilState(accessTokenState);
   const isAuthenticated = useRecoilValue(isLoginState);
-
   const headerFooter = () => {
     return (
       location !== "" && // 로그인 페이지
@@ -49,78 +59,39 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(refreshRequest);
-    if (!refreshRequest) {
-      refresh()
-        .then((response) => {
-          setAccessToken(response.accessToken);
-          setRefreshRequest(true);
-        })
-        .catch((error) => {
-          console.error(error);
-          setRefreshRequest(true);
-        });
-    }
-  }, [refreshRequest, setAccessToken, setRefreshRequest]);
-
-  useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash" || location === "") {
+        if (location === "splash") {
           return;
         }
         if (isValid) return;
         const data = await validCheck();
-        console.log("유효성 검사", data.lockedUser, data.mattermostConfirmed, data.validInfo);
         setValidState(data);
         if (data.lockedUser) {
           navigate("/");
           return;
-        }
-        if (!data.mattermostConfirmed) {
+        } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
           navigate("/mattermost");
           return;
-        }
-        if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo && !location.includes("infoinsert")) {
           navigate("/infoinsert");
           return;
-        }
-        if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          if (
-            location.includes("infoinsert") ||
-            location.includes("mattermost") ||
-            location.includes("splash") ||
-            location.includes("")
-          ) {
+        } else if (!data.lockedUser && data.mattermostConfirmed && data.validInfo) {
+          if (location.includes("infoinsert") || location.includes("mattermost") || location.includes("")) {
             navigate("/home");
           }
         }
       } catch (error) {
         console.error("유효성 검사 실패", error);
-        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        navigate("/");
       }
     };
     checkValidity();
-  }, [refreshRequest]);
+  }, [isAuthenticated, isValid, location, navigate, setValidState]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      {/* <div className="flex flex-col relative">
-        <div className="flex flex-col h-screen">
-          {headerFooter() && <Header />}
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/*" element={<CommonRoute />} />
-              <Route path="/profile/*" element={<ProfileRoute />} />
-              <Route path="/404" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-          <div className="flex flex-col h-screen">
-            {headerFooter() && <Footer />}
-          </div>
-        </div>
-      </div> */}
+      <ReactQueryDevtools buttonPosition="top-left" initialIsOpen={false} />
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
         <main className="flex-grow mb-[70px]">

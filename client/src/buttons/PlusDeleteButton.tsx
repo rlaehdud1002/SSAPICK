@@ -6,7 +6,7 @@ interface PlusDeleteButtonProps {
 const PlusDeleteButton = ({title,isDelete}:PlusDeleteButtonProps) => {
   
   return <div>
-    {isDelete ?(<button type="submit" className="text-white background-color-5F86E9 font-medium rounded-lg text-xs py-1 px-2">{title}</button>)
+    {isDelete ?(<button type="submit" className="text-white bg-blue-300 font-medium rounded-lg text-xs py-1 px-2">{title}</button>)
     :(<button type="submit" className="text-white bg-slate-400 font-medium rounded-lg text-xs py-1 px-2 ">{title}</button>)}
     </div>
 }

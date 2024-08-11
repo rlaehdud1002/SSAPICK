@@ -21,4 +21,11 @@ public class FCMData {
     public static class Register {
         private String token;
     }
+
+    @Data
+    @AllArgsConstructor(staticName = "of")
+    public static class FCMRegister {
+        private User user;
+        private String token;
+    }
 }

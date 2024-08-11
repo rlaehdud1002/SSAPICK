@@ -36,7 +36,6 @@ public class MessageData {
 				search.receiverGender = message.getReceiver().getGender();
 				search.receiverCohort = message.getReceiver().getProfile().getCohort();
 			}
-
 			search.senderCohort = message.getSender().getProfile().getCohort();
 			search.senderName = message.getSender().getName();
 			search.senderProfileImage = message.getSender().getProfile().getProfileImage();

@@ -4,6 +4,7 @@ import { getFriendsList } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
 import { IUserInfo } from 'atoms/User.type';
 import Friend from 'components/FriendListPage/FriendBox';
+import Loading from 'components/common/Loading';
 import BackIcon from 'icons/BackIcon';
 import FriendIcon from 'icons/FriendIcon';
 import SearchIcon from 'icons/SearchIcon';
@@ -16,17 +17,15 @@ const FriendList = () => {
     queryFn: getFriendsList,
   });
 
-  // 유저 정보 조회 -> 반 정보 가져오기 위함
-  const { data: userInfo } = useQuery<IUserInfo>({
-    queryKey: ['userInfo'],
-    queryFn: async () => await getUserInfo(),
-  });
-
-
+  console.log(friends);
   const navigate = useNavigate();
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <div className='mb-25'>
+    <div className="mb-25">
       <div className="flex justify-between">
         <div className="flex ml-2">
           <div onClick={() => navigate(-1)} className="mr-2">
@@ -46,13 +45,13 @@ const FriendList = () => {
         friends.map((friend, index) => (
           <div className="mt-6" key={index}>
             <Friend
-              campus={friend.campusName}
               campusSection={friend.campusSection}
-              campusDescription={friend.campusDescription}
-              name={friend.nickname}
+              name={friend.name}
               userId={friend.userId}
               profileImage={friend.profileImage}
-              userClass={userInfo?.section}
+              follow={friend.follow}
+              sameCampus={friend.sameCampus}
+              cohort={friend.cohort}
             />
           </div>
         ))}

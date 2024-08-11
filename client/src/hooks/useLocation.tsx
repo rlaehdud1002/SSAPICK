@@ -22,17 +22,21 @@ export const useLocation = ({refetch}: UseLocationProps) => {
     const isLogin = useRecoilValue(isLoginState);
     const accessToken = useRecoilValue(accessTokenState)
 
-    useEffect(() => {
-        fetchLocation();
-    }, []);
-
     const fetchLocation = () => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    setCoords(position.coords);
+                    console.log(position.coords)
+                    setCoords((prev) => {
+                        if (computeDistance(prev, position.coords) < 0.1) return prev;
+                        return {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        }
+                    });
                 },
                 (error) => {
+                    console.log(error)
                     setError(error.message);
                 },
             );
@@ -42,17 +46,43 @@ export const useLocation = ({refetch}: UseLocationProps) => {
     }
 
     useEffect(() => {
+        const parseLocation = setInterval(() => {
+            console.log('fetching location')
+            fetchLocation();
+        }, 3000)
+
+        return () => {
+            clearInterval(parseLocation);
+        }
+    }, []);
+
+    function computeDistance(startCoords: Position, destCoords: Position) {
+        var startLatRads = degreesToRadians(startCoords.latitude);
+        var startLongRads = degreesToRadians(startCoords.longitude);
+        var destLatRads = degreesToRadians(destCoords.latitude);
+        var destLongRads = degreesToRadians(destCoords.longitude);
+    
+        var Radius = 6371;
+        var distance = Math.acos(Math.sin(startLatRads) * Math.sin(destLatRads) + 
+                        Math.cos(startLatRads) * Math.cos(destLatRads) *
+                        Math.cos(startLongRads - destLongRads)) * Radius;
+    
+        return distance;
+    }
+    
+    function degreesToRadians(degrees: number) {
+        return (degrees * Math.PI)/180;
+    }
+
+    useEffect(() => {
         if ((coords.latitude === 0 && coords.longitude === 0)) return;
         if (!client || !client.connected) return;
 
         client.publish({
             destination: '/pub/location/update',
             body: JSON.stringify({
-                profileImage: "https://d2yu3js5fxqm1g.cloudfront.net/5b7275ac-d%EB%AF%BC%EC%A4%80%EC%88%98.png",
-                geo: {
-                    latitude: coords.latitude + 0.0004,
-                    longitude: coords.longitude - 0.0002
-                }
+                latitude: coords.latitude,
+                longitude: coords.longitude
             }),
         })
     }, [coords, client, client?.connected])

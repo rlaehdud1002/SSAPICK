@@ -1,23 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.service.CommentAnalyzerService;
@@ -32,8 +14,24 @@ import com.ssapick.server.domain.question.entity.QuestionCategory;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.*;
 
 @DisplayName("메시지 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -130,12 +128,15 @@ class MessageServiceTest extends UserSupport {
 		User sender = this.createUser("sender");
 		User receiver = this.createUser("receiver");
 		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+		Message message = spy(Message.class);
+		when(message.getId()).thenReturn(1L);
 
 		// 실제 사용되는 스텁만 설정
 		lenient().when(pickRepository.findByIdWithSender(any())).thenReturn(Optional.of(pick));
 		lenient().when(pick.isMessageSend()).thenReturn(false);
 		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(false);
 		lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
+		lenient().when(messageRepository.save(any())).thenReturn(message);
 
 		MessageData.Create create = new MessageData.Create();
 		create.setPickId(pick.getId());

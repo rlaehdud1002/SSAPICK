@@ -5,13 +5,16 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
+import com.ssapick.server.domain.user.entity.PickcoLog;
 import com.ssapick.server.domain.user.entity.Profile;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.FollowRepository;
+import com.ssapick.server.domain.user.repository.PickcoLogRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,7 @@ public class UserService {
 	private final PickRepository pickRepository;
 	private final FollowRepository followRepository;
 	private final CampusRepository campusRepository;
+	private final PickcoLogRepository pickcoLogRepository;
 
 	public UserData.UserInfo getUserInfo(User user) {
 		User findUser = userRepository.findUserWithProfileById(user.getId())
@@ -113,13 +117,25 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
 
-	public Page<UserData.Search> getUserByKeyword(User user, String keyword, Pageable pageable) {
-		Page<User> usersPage = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
-		List<User> users = usersPage.getContent();
-
-		List<UserData.Search> search = users.stream().map(UserData.Search::fromEntity).toList();
-
-		return new PageImpl<>(search, pageable, usersPage.getTotalElements());
+	public Page<ProfileData.Friend> getUserByKeyword(User user, String keyword, Pageable pageable) {
+		return userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
 	}
 
+	public UserData.Pickco getPickco(User user) {
+		User findUser = userRepository.findUserWithProfileById(user.getId())
+			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
+
+		return new UserData.Pickco(findUser.getProfile().getPickco());
+	}
+
+	public Page<UserData.PickcoLogResponse> getPickcoLogs(User user, Pageable pageable) {
+		Page<PickcoLog> pickcoLogsPage = pickcoLogRepository.findAllByUserId(user.getId(), pageable);
+		List<PickcoLog> pickcoLogs =pickcoLogsPage.getContent();
+
+		List<UserData.PickcoLogResponse> pickcoLogResponse = pickcoLogs.stream()
+			.map(UserData.PickcoLogResponse::fromEntity)
+			.toList();
+
+		return new PageImpl<>(pickcoLogResponse, pageable, pickcoLogsPage.getTotalElements());
+	}
 }

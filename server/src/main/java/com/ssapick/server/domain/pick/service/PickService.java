@@ -1,21 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import static com.ssapick.server.core.constants.PickConst.*;
-import static com.ssapick.server.domain.pick.repository.PickCacheRepository.*;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.notification.dto.FCMData;
@@ -31,10 +15,23 @@ import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
-
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.ssapick.server.core.constants.PickConst.PICK_COIN;
+import static com.ssapick.server.core.constants.PickConst.USER_REROLL_COIN;
+import static com.ssapick.server.domain.pick.repository.PickCacheRepository.PASS_BLOCK_LIMIT;
 
 @Slf4j
 @Service
@@ -132,8 +129,14 @@ public class PickService {
 				User reference = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
 				publisher.publishEvent(
-					FCMData.NotificationEvent.of(NotificationType.PICK, reference, pick.getId(), "누군가가 당신을 선택했어요!",
-						pickEventMessage(question.getContent()), null));
+					FCMData.NotificationEvent.of(
+							NotificationType.PICK,
+							reference,
+							pick.getId(),
+							"누군가가 당신을 선택했어요!",
+						    pickEventMessage(question.getContent()),
+							null
+                ));
 				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
@@ -156,14 +159,13 @@ public class PickService {
 			}
 		}
 		index++;
+		pickCacheRepository.increaseIndex(sender.getId());
 
 
 		if (pickCount + blockCount >= 10) {
 			pickCacheRepository.init(sender.getId());
 			pickCacheRepository.setCooltime(sender.getId());
-			return PickData.PickCondition.builder()
-				.isCooltime(true)
-				.build();
+			return PickData.PickCondition.cooltime();
 		}
 
 		return PickData.PickCondition.builder()
@@ -174,30 +176,28 @@ public class PickService {
 			.build();
 	}
 
+	/**
+	 * 
+	 * 현재 픽 진행 상태 조회하기
+	 * @param sender
+	 * @return
+	 */
 	public PickData.PickCondition getPickCondition(User sender) {
 
-		if (pickCacheRepository.isCooltime(sender.getId())) {
-			return PickData.PickCondition.builder()
-				.isCooltime(true)
-				.build();
-		}
-
-		Integer index = pickCacheRepository.getIndex(sender.getId());
-
-		if (index == null) {
+		if (pickCacheRepository.isEmpty(sender.getId())) {
 			pickCacheRepository.init(sender.getId());
-			index = 0;
+			return PickData.PickCondition.init();
 		}
 
-		Integer pickCount = pickCacheRepository.getPickCount(sender.getId());
-		Integer blockCount = pickCacheRepository.getBlockCount(sender.getId());
-		Integer passCount = pickCacheRepository.getPassCount(sender.getId());
+		if (pickCacheRepository.isCooltime(sender.getId())) {
+			return PickData.PickCondition.cooltime();
+		}
 
 		return PickData.PickCondition.builder()
-			.index(index)
-			.pickCount(pickCount)
-			.blockCount(blockCount)
-			.passCount(passCount)
+			.index(pickCacheRepository.getIndex(sender.getId()))
+			.pickCount(pickCacheRepository.getPickCount(sender.getId()))
+			.blockCount(pickCacheRepository.getBlockCount(sender.getId()))
+			.passCount(pickCacheRepository.getPassCount(sender.getId()))
 			.build();
 	}
 
@@ -234,5 +234,11 @@ public class PickService {
 	public void reRoll(User user) {
 		publisher.publishEvent(new PickcoEvent(user, PickcoLogType.RE_ROLL, USER_REROLL_COIN));
 	}
+
+	public PickData.Search getPickWithAlarmOn(User user) {
+		Optional<Pick> pick = pickRepository.findByReceiverIdWithAlarm(user.getId());
+
+        return pick.map(value -> PickData.Search.fromEntity(value, true)).orElse(null);
+    }
 
 }

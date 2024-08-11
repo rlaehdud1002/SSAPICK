@@ -23,20 +23,22 @@ public abstract class UserSupport {
     private CampusRepository campusRepository;
 
     protected User createUser() {
-        User user = spy(User.createUser("test", "테스트 유저", 'M', ProviderType.KAKAO, "123456"));
-        Profile profile = Profile.createProfile(user, (short) 1, createCampus());
-        lenient().when(user.getProfile()).thenReturn(profile);
-        lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
-        return user;
+        return createUser("test-user");
     }
 
     protected User createUser(String name) {
         User user = spy(User.createUser(name, name, 'M', ProviderType.KAKAO, "123456"));
-        Profile profile = spy(Profile.createProfile(user, (short) 1, createCampus()));
+        Campus campus = spy(createCampus());
+        Profile profile = spy(Profile.createProfile(user, (short) 1, campus));
         long id = atomicLong.incrementAndGet();
+        lenient().when(campus.getSection()).thenReturn((short) 1);
         lenient().when(user.getProfile()).thenReturn(profile);
         lenient().when(profile.getId()).thenReturn(id);
+        lenient().when(profile.getCampus()).thenReturn(campus);
+        lenient().when(profile.getCohort()).thenReturn((short) 1);
+        lenient().when(profile.getProfileImage()).thenReturn("프로필 이미지");
         lenient().when(user.getId()).thenReturn(atomicLong.incrementAndGet());
+        lenient().when(user.getName()).thenReturn(name);
         lenient().when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         return user;
     }

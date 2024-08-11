@@ -34,6 +34,27 @@ public class UserController {
 	}
 
 	/**
+	 * 사용자 픽코 조회 API
+	 */
+	@GetMapping(value = "/pickco")
+	public SuccessResponse<UserData.Pickco> findPickco(@CurrentUser User user) {
+		return SuccessResponse.of(userService.getPickco(user));
+	}
+
+	/**
+	 * 사용자 픽코 로그 조회 API
+	 */
+	@GetMapping(value = "/pickco-log")
+	public SuccessResponse<Page<UserData.PickcoLogResponse>> findPickcoLogs(
+			@CurrentUser User user,
+			Pageable pageable
+	) {
+		return SuccessResponse.of(userService.getPickcoLogs(user, pageable));
+	}
+
+
+
+	/**
 	 * 사용자 정보 유효 여부 조회 API
 	 * @param user
 	 * @return {@link UserData.IsValid} 사용자 정보 유효 여부
@@ -47,7 +68,7 @@ public class UserController {
 
 
 	@GetMapping(value = "/search")
-	public SuccessResponse<Page<UserData.Search>> searchUser(
+	public SuccessResponse<Page<ProfileData.Friend>> searchUser(
 			@CurrentUser User user,
 			@RequestParam(value = "q", defaultValue = "", required = false) String keyword,
 			Pageable pageable

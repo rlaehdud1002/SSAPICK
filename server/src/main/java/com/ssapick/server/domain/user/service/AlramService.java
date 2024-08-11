@@ -1,12 +1,13 @@
 package com.ssapick.server.domain.user.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
+import com.ssapick.server.domain.user.dto.AlarmData;
+import com.ssapick.server.domain.user.entity.Alarm;
+import com.ssapick.server.domain.user.repository.AlarmRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.ssapick.server.domain.user.dto.AlarmData;
-import com.ssapick.server.domain.user.repository.AlarmRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,11 @@ public class AlramService {
 	 */
 	@Transactional
 	public void updateAlarm(Long userId, AlarmData.Update update) {
-		alarmRepository.findByUserId(userId).ifPresent(alarm -> alarm.update(update));
+		Alarm alarm = alarmRepository.findByUserId(userId).orElseThrow(
+				() -> new BaseException(ErrorCode.NOT_FOUND_USER)
+		);
+
+		alarm.update(update);
 	}
 
 	/**
@@ -38,6 +43,10 @@ public class AlramService {
 	 */
 	@Transactional
 	public void updateAllAlarm(Long userId, boolean onOff) {
-		alarmRepository.findByUserId(userId).ifPresent(alarm -> alarm.updateAll(onOff));
+		Alarm alarm = alarmRepository.findByUserId(userId).orElseThrow(
+				() -> new BaseException(ErrorCode.NOT_FOUND_USER)
+		);
+
+		alarm.updateAll(onOff);
 	}
 }

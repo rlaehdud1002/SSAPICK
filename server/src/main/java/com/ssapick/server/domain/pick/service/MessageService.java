@@ -1,21 +1,10 @@
 package com.ssapick.server.domain.pick.service;
 
-import static com.ssapick.server.core.constants.PickConst.*;
-
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.service.CommentAnalyzerService;
+import com.ssapick.server.domain.notification.dto.FCMData;
+import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.pick.dto.MessageData;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
@@ -26,9 +15,23 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+
+import static com.ssapick.server.core.constants.PickConst.MESSAGE_COIN;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -72,6 +75,7 @@ public class MessageService {
 		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
 
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
+
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(
 				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
@@ -108,10 +112,20 @@ public class MessageService {
 			throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
 		}
 
-		publisher.publishEvent(new PickcoEvent(
-			pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN));
+		Message message = messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
 
-		messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
+		publisher.publishEvent(new PickcoEvent(
+			pick.getReceiver(), PickcoLogType.MESSAGE, MESSAGE_COIN)
+		);
+
+		publisher.publishEvent(FCMData.NotificationEvent.of(
+				NotificationType.MESSAGE,
+				receiver,
+				message.getId(),
+			sender.getProfile().getCohort()+ "기 " + sender.getProfile().getCampus().getSection() + "반 " + sender.getName()+"님이 당신에게 쪽지를 보냈습니다.",
+				"당신의 픽 : " + pick.getQuestion().getContent() + "\n" + create.getContent(),
+				null
+		));
 	}
 
 	/**

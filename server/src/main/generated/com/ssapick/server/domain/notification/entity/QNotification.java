@@ -27,6 +27,8 @@ public class QNotification extends EntityPathBase<Notification> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final StringPath fcmId = createString("fcmId");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isRead = createBoolean("isRead");
@@ -36,6 +38,8 @@ public class QNotification extends EntityPathBase<Notification> {
     public final EnumPath<NotificationType> notificationType = createEnum("notificationType", NotificationType.class);
 
     public final NumberPath<Long> referenceId = createNumber("referenceId", Long.class);
+
+    public final StringPath title = createString("title");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

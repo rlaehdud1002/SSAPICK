@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,13 +17,19 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.redis.core.RedisHash;
 
 public class PickData {
 	public enum PickStatus {
@@ -70,6 +77,22 @@ public class PickData {
 		private Integer blockCount;
 		private Integer passCount;
 		boolean isCooltime;
+
+		public static PickCondition init() {
+			return PickCondition.builder()
+				.index(0)
+				.pickCount(0)
+				.blockCount(0)
+				.passCount(0)
+				.isCooltime(false)
+				.build();
+		}
+
+		public static PickCondition cooltime() {
+			return PickCondition.builder()
+				.isCooltime(true)
+				.build();
+		}
 	}
 
     @Data

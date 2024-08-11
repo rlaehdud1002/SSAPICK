@@ -8,6 +8,9 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +25,7 @@ public class FollowController {
 
     @Authenticated
     @GetMapping(value = "")
-    public SuccessResponse<List<ProfileData.Search>> findFollow(@CurrentUser User user) {
+    public SuccessResponse<List<ProfileData.Friend>> findFollow(@CurrentUser User user) {
         log.debug("user: {}", user);
         return SuccessResponse.of(followService.findFollowUsers(user));
     }
@@ -51,7 +54,7 @@ public class FollowController {
     @Authenticated
     @GetMapping(value = "/recommend")
     @ResponseStatus(HttpStatus.OK)
-    public SuccessResponse<List<ProfileData.Search>> recommendFollow(@CurrentUser User user) {
-        return SuccessResponse.of(followService.recommendFollow(user));
+    public SuccessResponse<Page<ProfileData.Friend>> recommendFollow(@CurrentUser User user, Pageable pageable) {
+        return SuccessResponse.of(followService.recommendFollow(user, pageable));
     }
 }

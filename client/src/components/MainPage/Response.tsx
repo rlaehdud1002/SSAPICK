@@ -11,14 +11,22 @@ import {
 
 import { IPick } from 'atoms/Pick.type';
 import { useCallback, useEffect, useState } from 'react';
+import { getPickco } from 'api/authApi';
+import { useQuery } from '@tanstack/react-query';
+import { IPickco } from 'atoms/User.type';
+import Loading from 'components/common/Loading';
 
 interface ResponseProps {
   picks: IPick[];
-  isLoading: boolean;
 }
 
-const Response = ({ picks, isLoading }: ResponseProps) => {
+const Response = ({ picks }: ResponseProps) => {
   const [updatedPicks, setUpdatedPicks] = useState<IPick[]>([]);
+
+  const { data: pickco, isLoading: isLoadingPickco } = useQuery<IPickco>({
+    queryKey: ['pickco'],
+    queryFn: getPickco,
+  });
 
   useEffect(() => {
     setUpdatedPicks(picks);
@@ -46,12 +54,30 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
     e.stopPropagation();
   }, []);
 
+  const handleMessageSent = useCallback((pickId: number) => {
+    setUpdatedPicks((prevPicks) =>
+      prevPicks.map((pick) =>
+        pick.id === pickId ? { ...pick, messageSend: true } : pick,
+      ),
+    );
+  }, []);
+
+  if (isLoadingPickco || !pickco) {
+    return <Loading />;
+  }
+
   return (
     <div>
-      {updatedPicks.map((pick) => (
+      {updatedPicks.map((pick, index) => (
         <div key={pick.id} className="rounded-lg bg-white/50 p-4 mb-5">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="item-1" className="border-none">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue={
+              pick.openedHints.length !== 0 ? String(index) : undefined
+            }
+          >
+            <AccordionItem value={String(index)} className="border-none">
               <AccordionTrigger className="p-0" onClick={handleAccordionClick}>
                 <div className="flex flex-col">
                   <div className="flex flex-row">
@@ -72,28 +98,28 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
               <p className="text-center my-4">{pick.question.content}</p>
               <AccordionContent>
                 <div className="flex flex-row justify-center items-center">
-                  <div className="rounded-lg bg-white/50 p-3 mx-10 `min`-w-20 max-w-40 text-center">
-                    <HintModal
-                      title={
-                        pick.openedHints.length === 0
-                          ? '?'
-                          : pick.openedHints[0]
-                      }
-                      pickId={pick.id}
-                    />
-                  </div>
-                  <div className="rounded-lg bg-white/50 p-3 mx-10 min-w-20 max-w-40 text-center">
-                    <HintModal
-                      title={
-                        pick.openedHints.length <= 1 ? '?' : pick.openedHints[1]
-                      }
-                      pickId={pick.id}
-                    />
-                  </div>
+                  <HintModal
+                    title={
+                      pick.openedHints.length === 0 ? '?' : pick.openedHints[0]
+                    }
+                    pickId={pick.id}
+                    pickco={pickco.pickco}
+                  />
+                  <HintModal
+                    title={
+                      pick.openedHints.length <= 1 ? '?' : pick.openedHints[1]
+                    }
+                    pickId={pick.id}
+                    pickco={pickco.pickco}
+                  />
                 </div>
                 {!pick.messageSend && (
                   <div className="float-end">
-                    <MessageModal pick={pick} />
+                    <MessageModal
+                      pick={pick}
+                      pickco={pickco.pickco}
+                      onMessageSent={() => handleMessageSent(pick.id)}
+                    />
                   </div>
                 )}
               </AccordionContent>

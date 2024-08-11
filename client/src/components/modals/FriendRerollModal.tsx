@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { USER_REROLL_COIN } from 'coins/coins';
 import { Button } from 'components/ui/button';
 import {
@@ -12,7 +12,10 @@ import {
 import CoinIcon from 'icons/CoinIcon';
 import ShuffleIcon from 'icons/ShuffleIcon';
 import { useState } from 'react';
-import { patchPickUserReRoll } from 'api/pickApi'
+import { patchPickUserReRoll } from 'api/pickApi';
+import { IPickco } from 'atoms/User.type';
+import { getPickco } from 'api/authApi';
+import Loading from 'components/common/Loading';
 
 interface FriendRerollModalProps {
   handleShuffle: () => void;
@@ -21,6 +24,10 @@ interface FriendRerollModalProps {
 const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
+  const { data: pickco, isLoading: isLoadingPickco } = useQuery<IPickco>({
+    queryKey: ['pickco'],
+    queryFn: getPickco,
+  });
 
   const mutation = useMutation({
     mutationKey: ['reroll'],
@@ -28,15 +35,19 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     onSuccess: () => {
       handleShuffle();
     },
-    onError: ()=>{
-      console.log('에러 ㅈㅈ')
-    }
+    onError: () => {
+      console.log('에러 ㅈㅈ');
+    },
   });
 
   const onClick = () => {
     mutation.mutate();
     setOpen(false);
   };
+
+  if (isLoadingPickco) {
+    return <Loading />;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -54,18 +65,32 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
             </div>
           </div>
         </DialogHeader>
-        <DialogFooter className="flex flex-row justify-end">
-          <Button
-            type="submit"
-            variant="ssapick"
-            onClick={onClick}
-            size="messageButton"
-          >
-            <CoinIcon width={20} height={20} />
-            <span className="luckiest_guy ml-1 mr-2 mt-1">{USER_REROLL_COIN}</span>
-            <span>셔플</span>
-          </Button>
-        </DialogFooter>
+        {pickco && (
+          <DialogFooter className="flex flex-row justify-end relative">
+            <Button
+              type="submit"
+              // variant="ssapick"
+              variant={pickco.pickco >= USER_REROLL_COIN ? 'ssapick' : 'fault'}
+              onClick={() => {
+                if (pickco.pickco >= USER_REROLL_COIN) {
+                  onClick();
+                }
+              }}
+              size="messageButton"
+            >
+              <CoinIcon width={20} height={20} />
+              <span className="luckiest_guy ml-1 mr-2 mt-1">
+                {USER_REROLL_COIN}
+              </span>
+              <span>셔플</span>
+            </Button>
+            {pickco.pickco < USER_REROLL_COIN && (
+              <span className="text-red-400 fixed bottom-2 right-[25px] text-[10px]">
+                <span className="luckiest_guy">PICKCO</span>가 부족합니다!
+              </span>
+            )}
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

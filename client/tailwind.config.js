@@ -23,7 +23,7 @@ module.exports = {
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
-        // ring: "hsl(var(--ring))",
+        ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -54,6 +54,8 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        fault: 'rgba(102, 102, 102, 0.5)',
+        warining: 'rgba(233, 95, 95)',
       },
       borderRadius: {
         lg: "var(--radius)",

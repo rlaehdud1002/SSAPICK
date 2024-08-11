@@ -77,11 +77,15 @@ public class Question extends BaseEntity {
 		}
 	}
 
+	public void sendAlarm() {
+		this.isAlarmSent = true;
+	}
+
 	public void skip() {
 		this.skipCount++;
 	}
 
-	public void decreeaseBanCount() {
+	public void decreaseBanCount() {
 		this.banCount--;
 	}
 }

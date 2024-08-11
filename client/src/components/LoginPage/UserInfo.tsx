@@ -6,9 +6,12 @@ import DoneButton from "buttons/DoneButton";
 import ProfileCameraIcon from "icons/ProfileCameraIcon";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import InfoInput from "./InfoInput";
 import InfoSelect from "./InfoSelect";
+import { isValidateState, validState } from "atoms/ValidAtoms";
+import { useNavigate } from "react-router-dom";
+import Loading from "components/common/Loading";
 
 interface UserForm {
   name: string;
@@ -26,6 +29,16 @@ const UserInfo = ({ next }: UserInfoProps) => {
   const setSendUserInfo = useSetRecoilState(sendUserInfoState);
   const setProfileImage = useSetRecoilState<File | undefined>(profileImageState);
 
+  const isValid = useRecoilValue(isValidateState);
+  const setValidState = useSetRecoilState(validState);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isValid) {
+      navigate("/home");
+    }
+  });
+
   const {
     register,
     reset,
@@ -38,7 +51,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
       campus: "",
       gender: "",
       class: 0,
-    }
+    },
   });
 
   const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
@@ -57,10 +70,11 @@ const UserInfo = ({ next }: UserInfoProps) => {
         campusSection: data.class,
         cohort: data.th,
         campusName: data.campus,
-      }
+      };
     });
-    if (uploadImage)
+    if (uploadImage) {
       setProfileImage(uploadImage);
+    }
     next();
   };
 
@@ -68,8 +82,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
     console.log("error", errors);
   };
 
-
-  console.log(information)
+  console.log(information);
 
   useEffect(() => {
     if (!isLoading && information) {
@@ -80,20 +93,20 @@ const UserInfo = ({ next }: UserInfoProps) => {
         gender: information.gender || "",
         class: information.section || 0,
         campus: information.campusName || "",
-      })
+      });
     }
+  }, [information, isLoading, reset]);
 
-  }, [information, isLoading, reset])
-
-
-
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
-          <ProfileCameraIcon defaultImage={information?.profileImage} setUploadImage={setUploadImage} />
+          <ProfileCameraIcon
+            defaultImage={information?.profileImage}
+            setUploadImage={setUploadImage}
+          />
         </div>
         <InfoInput
           name="name"
@@ -134,7 +147,6 @@ const UserInfo = ({ next }: UserInfoProps) => {
             required: "기수를 선택해주세요.",
           })}
           setValue={(value: number) => setValue("th", value)}
-          // defaultValue={information?.cohort}
           errors={errors}
         />
 
@@ -153,7 +165,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
         </div>
       </div>
     </form>
-  )
+  );
 };
 
 export default UserInfo;
