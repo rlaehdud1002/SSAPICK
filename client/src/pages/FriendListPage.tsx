@@ -51,6 +51,7 @@ const FriendList = () => {
               profileImage={friend.profileImage}
               follow={friend.follow}
               sameCampus={friend.sameCampus}
+              cohort={friend.cohort}
             />
           </div>
         ))}

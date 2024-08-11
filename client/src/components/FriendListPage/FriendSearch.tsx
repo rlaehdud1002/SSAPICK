@@ -30,6 +30,7 @@ const FriendSearch = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: FriendSearchForm) => {
+
   }
 
   // 검색 친구 리스트 조회
@@ -46,9 +47,9 @@ const FriendSearch = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <div className="relative flex flex-col">

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import BlockFriendContent from './BlockFriendContent';
 import { blockCancel, getBlockedList } from 'api/blockApi';
 import { IBlock } from 'atoms/Block.type';
@@ -7,8 +7,9 @@ import Loading from 'components/common/Loading';
 const BlockFriend = () => {
   const { data: blocks, isLoading } = useQuery<IBlock[]>({
     queryKey: ['blocks'],
-    queryFn: async () => await getBlockedList(),
+    queryFn:getBlockedList,
   });
+
 
   if (isLoading) {
     return <Loading />;
