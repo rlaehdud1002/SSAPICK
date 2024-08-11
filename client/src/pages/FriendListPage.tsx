@@ -54,7 +54,6 @@ const FriendList = () => {
               profileImage={friend.profileImage}
               userClass={userInfo?.section}
             />
-
           </div>
         ))}
     </div>

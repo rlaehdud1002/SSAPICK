@@ -11,7 +11,21 @@ export const sendUserInfoState = atom<ISendUser>({
 
 export const userInfostate = atom<IUserInfo>({
   key: 'userInfostate',
-  default: undefined,
+  default: {
+  id: 0,
+  username: "",
+  name: "",
+  profileImage: "",
+  gender: "",
+  cohort: 0,
+  campusName: "",
+  section: 0,
+  pickco: 0,
+  pickCount: 0,
+  followingCount: 0,
+  hints: [],
+
+  },
 })
 
 // 로그인 상태
@@ -41,29 +55,6 @@ export const refreshRequestState = atom<boolean>({
   effects_UNSTABLE: [persistAtom]
 })
 
-
-// export const userState = atom<IUser>({
-//   key: 'userState',
-//   default: {
-//     profileImage: '',
-//     name: '',
-//     th: '',
-//     campusName: '',
-//     gender: '',
-//   }
-// });
-
-// export const userAddState = atom<IUserAdd>({
-//   key: 'userAddState',
-//   default: {
-//     mbti: '',
-//     classNum: 1,
-//     major: '',
-//     birth: '',
-//     location: '',
-//     interest: '',
-//   },
-// });
 
 export const userCoinState = atom<number>({
   key: 'userCoinState',

@@ -1,4 +1,5 @@
 import instance from "api/clientApi";
+import { IPickAlarm } from "atoms/Alarm.type";
 import { IPaging, IPick, IPickCreate, IPickInfo } from "atoms/Pick.type";
 import { BaseResponse } from "atoms/User.type";
 
@@ -91,5 +92,18 @@ export const patchPickUserReRoll = async (): Promise<void> => {
 
   console.log("patchPickUserReRoll");
 
+  return data;
+};
+
+
+// 알람 설정한 픽 조회
+export const getAlarmPick = async (): Promise<IPickAlarm> => {
+  const {
+    data: { success, data },
+  } = await instance.get<BaseResponse<IPickAlarm>>(`/pick/alarm`);
+
+  if (!success) {
+    throw new Error("알람 설정한 픽 조회 실패");
+  }
   return data;
 };

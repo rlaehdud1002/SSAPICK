@@ -76,14 +76,6 @@ const FriendSearch = () => {
           </div>
         </form>
       </div>
-      {/* <div className="flex flex-col"> */}
-      {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="민준수" /> */}
-      {/* <FriendSearchContent campus="광주" th={11} classNum={2} name="이호영" /> */}
-      {/* </div> */}
-      {/* <div className="flex ml-8 mb-3">
-        <FriendIcon width={20} height={20} isDefault={true} />
-        <span className="ml-2">친구찾기</span>
-      {/* </div> */}
       {searchFriend?.content.length ? (
         searchFriend.content.map((friend, index) => (
           <FriendSearchContent key={index} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />

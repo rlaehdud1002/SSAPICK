@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
 import { IUserInfo } from "atoms/User.type";
-import { profileImageState } from "atoms/UserAtoms";
+import { profileImageState, userInfostate } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import AccountIcon from "icons/AccountIcon";
@@ -13,20 +13,30 @@ import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
 import { useEffect } from "react";
-import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const Profile = () => {
+  const [userInfo, setUserInfo] = useRecoilState(userInfostate)
   const setProfileImage = useSetRecoilState(profileImageState);
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
     queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
-  
 
-  console.log(information);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setUserInfo((prev) => {
+        return {
+          ...prev,
+          ...information,
+        }
+      })
+    }
+  }, [information, isLoading])
+
 
   return (
     <div>

@@ -11,7 +11,7 @@ const ProfileContent: React.FC<ProfileContentProps> = ({ information }) => {
   const userYear = information.hints[7].content.split('-')[0]
   const year = new Date().getFullYear();
   const age = year - (userYear as unknown as number) + 1;
-  console.log(age);
+  
 
   return (
     <div
