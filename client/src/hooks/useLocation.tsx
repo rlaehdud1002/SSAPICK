@@ -28,7 +28,6 @@ export const useLocation = ({refetch}: UseLocationProps) => {
                 (position) => {
                     console.log(position.coords)
                     setCoords((prev) => {
-                        console.log(prev, position.coords)
                         if (computeDistance(prev, position.coords) < 0.1) return prev;
                         return {
                             latitude: position.coords.latitude,

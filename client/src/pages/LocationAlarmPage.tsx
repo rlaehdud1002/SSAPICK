@@ -41,7 +41,7 @@ const LocationAlarm = () => {
     queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
-  console.log(information)
+  console.log("search", searchFriends)
 
   return (
     <div>
@@ -54,20 +54,20 @@ const LocationAlarm = () => {
       <div className="relative flex justify-center items-center">
           <LocationCircle />
           <img className="absolute rounded-full w-16 h-16 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src={information?.profileImage} alt="" />
-          {searchFriends? (
+          {/* {searchFriends? (
             searchFriends.data.map((friend:any, index:number) => (
               <div>
                 <img 
                 className="rounded-full w-16 h-16 absolute top- left-48" 
                 src={friend.profileImage} alt="" />
-              {/* <LocationImage 
+              { <LocationImage 
               key={index} 
               top={0}
               left={0}
               // left={parseFloat(friend.position.x.toFixed(0))}
               // top={parseFloat(friend.position.y.toFixed(0))}
               profileImage={friend.profileImage}
-              /> */}
+              /> }
               </div>
               ))
           ):(
@@ -75,7 +75,7 @@ const LocationAlarm = () => {
               <img src="" alt="" />
             </span>
           )
-        }
+        } */}
       </div>
       <div className="text-center mt-9">
         <div className="flex flex-col font-bold space-y-3">

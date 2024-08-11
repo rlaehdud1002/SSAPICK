@@ -50,6 +50,7 @@ public class LocationService {
         }
         String profileImage = profileRepository.findProfileImageByUsername(username)
                 .orElse("");
+        log.debug("profileImage: {}", profileImage);
         valueOperations.set(GEO_PROFILE_IMAGE_KEY + username, profileImage, LOCATION_LIMIT_TIME, TimeUnit.SECONDS);
         Point point = new Point(geo.getLongitude(), geo.getLatitude());
         geoOperations.add(GEO_LOCATION_KEY, point, username);
@@ -78,7 +79,7 @@ public class LocationService {
                     String username = geo.getContent().getName();
                     Point point = geo.getContent().getPoint();
                     response.setUsername(username);
-                    response.setProfileImage(GEO_PROFILE_IMAGE_KEY + valueOperations.get(username));
+                    response.setProfileImage(valueOperations.get(GEO_PROFILE_IMAGE_KEY + username));
                     response.setDistance(geo.getDistance().getValue());
                     response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
                     return response;
