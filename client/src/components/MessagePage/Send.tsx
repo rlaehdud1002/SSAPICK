@@ -1,24 +1,31 @@
-import { useEffect, useRef, useCallback } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import MessageContent from "components/MessagePage/MessageContent";
-import { IMessage } from "atoms/Message.type";
-import { getSendMessage } from "api/messageApi";
-import NoMessage from "components/MessagePage/NoMessage";
-import { IPaging } from "atoms/Pick.type";
+import { useEffect, useRef, useCallback } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import MessageContent from 'components/MessagePage/MessageContent';
+import { IMessage } from 'atoms/Message.type';
+import { getSendMessage } from 'api/messageApi';
+import NoMessage from 'components/MessagePage/NoMessage';
+import { IPaging } from 'atoms/Pick.type';
+import Loading from 'components/common/Loading';
 
 const Send = () => {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<IPaging<IMessage[]>>({
-      queryKey: ["message", "send"],
-      queryFn: ({ pageParam = 0 }) => getSendMessage(pageParam as number, 10),
-      getNextPageParam: (lastPage, pages) => {
-        if (!lastPage.last) {
-          return pages.length;
-        }
-        return undefined;
-      },
-      initialPageParam: 0,
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<IPaging<IMessage[]>>({
+    queryKey: ['message', 'send'],
+    queryFn: ({ pageParam = 0 }) => getSendMessage(pageParam as number, 10),
+    getNextPageParam: (lastPage, pages) => {
+      if (!lastPage.last) {
+        return pages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
 
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
@@ -31,7 +38,7 @@ const Send = () => {
         fetchNextPage();
       }
     },
-    [fetchNextPage, hasNextPage]
+    [fetchNextPage, hasNextPage],
   );
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const Send = () => {
   }, [isFetchingNextPage]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (isError) {
@@ -63,7 +70,9 @@ const Send = () => {
       {data?.pages.flatMap((page) => page.content).length ? (
         data.pages
           .flatMap((page) => page.content)
-          .map((message, index) => <MessageContent key={index} message={message} status="send" />)
+          .map((message, index) => (
+            <MessageContent key={index} message={message} status="send" />
+          ))
       ) : (
         <NoMessage content="No sent messages." />
       )}
