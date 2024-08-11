@@ -11,6 +11,8 @@ import com.ssapick.server.domain.notification.entity.Notification;
 import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.notification.repository.NotificationRepository;
 import com.ssapick.server.domain.pick.entity.Pick;
+import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.user.entity.Alarm;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +47,10 @@ public class FCMService {
                         .build()
                 ).build();
         try {
-            ApiFuture<String> stringApiFuture = FirebaseMessaging.getInstance().sendAsync(message);
+            String fcmId = null;
+            if (isAlarmAvailable(notificationEvent.getUser(), notificationEvent.getType())) {
+                fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
+            }
 
             notificationRepository.save(Notification.createNotification(
                     notificationEvent.getUser(),
@@ -53,11 +58,32 @@ public class FCMService {
                     notificationEvent.getNotificationId(),
                     notificationEvent.getTitle(),
                     notificationEvent.getMessage(),
-                    stringApiFuture.get()
+                    fcmId
             ));
+
             updateSendState(notificationEvent.getType(), notificationEvent.getNotificationId());
         } catch (Exception e) {
             throw new BaseException(NOTIFICATION_SEND_FAIL, e);
+        }
+    }
+
+    private boolean isAlarmAvailable(User user, NotificationType type) {
+        switch (type) {
+            case MESSAGE -> {
+                return user.getAlarm().isMessageAlarm();
+            }
+            case PICK -> {
+                return user.getAlarm().isPickAlarm();
+            }
+            case ADD_QUESTION -> {
+                return user.getAlarm().isAddQuestionAlarm();
+            }
+            case NEARBY -> {
+                return user.getAlarm().isNearbyAlarm();
+            }
+            default -> {
+                return false;
+            }
         }
     }
 
@@ -72,7 +98,8 @@ public class FCMService {
                 pick.sendAlarm();
             }
             case ADD_QUESTION -> {
-
+                Question question = em.find(Question.class, referenceId);
+                question.sendAlarm();
             }
         }
     }
