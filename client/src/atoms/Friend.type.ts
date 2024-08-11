@@ -1,3 +1,4 @@
+import { profile } from 'console';
 export interface IFriend {
   userId: number;
   nickname: string;
@@ -18,6 +19,8 @@ export interface ISearchFriend {
       name: string;
       cohort: number;
       campusSection: number;
+      profileImage: string;
+
     }
   ];
   number?: number;

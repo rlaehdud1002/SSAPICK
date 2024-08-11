@@ -39,7 +39,7 @@ const ToPlusIcon = ({ classNum, name, campus, profileImage }: ToPlusIconProps) =
     <div>
       <div className="mx-5 mt-5 mb-2" style={{ height: '60px', width: '60px' }}>
         <div className="relative">
-          <img width={60} height={60} src={profileImage} alt="profielImage" />
+          <img className="rounded-full w-14 h-14" src={profileImage} alt="profielImage" />
           {isPlus ? (
             <div onClick={
               ()=>{

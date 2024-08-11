@@ -9,9 +9,10 @@ interface FriendSearchContentProps {
   classSection: number;
   name: string;
   userid?: number;
+  profileImage?: string;
 }
 
-const FriendSearchContent = ({ name, cohort, classSection,userid }: FriendSearchContentProps) => {
+const FriendSearchContent = ({ name, cohort, classSection,userid, profileImage }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
   
   // 친구 추가
@@ -43,7 +44,7 @@ const FriendSearchContent = ({ name, cohort, classSection,userid }: FriendSearch
   return <Fragment>
     <div className="flex items-center mt-5 justify-between mx-8">
       <div>
-        <img className="w-14 h-14" src="../icons/Profile.png" alt="profile" />
+        <img className="w-14 h-14 rounded-full" src={profileImage} alt="profile" />
       </div>
       <div className=""> {cohort}기 {classSection}반 {name}</div>
       <div>
