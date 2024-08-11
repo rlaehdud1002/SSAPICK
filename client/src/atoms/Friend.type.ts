@@ -1,12 +1,12 @@
 import { profile } from 'console';
 export interface IFriend {
   userId: number;
-  nickname: string;
-  gender: string;
-  campusName: string;
-  campusSection: number;
-  campusDescription: string;
+  name: string;
   profileImage: string;
+  cohort: number;
+  campusSection: number;
+  follow: boolean;
+  sameCampus: boolean;
 }
 
 export interface ISearchFriend {

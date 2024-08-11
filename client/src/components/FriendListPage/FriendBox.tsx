@@ -3,25 +3,25 @@ import { deleteFriend, postAddFriend } from 'api/friendApi';
 import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import DeleteModal from 'components/modals/DeleteModal';
 import BaseImageIcon from 'icons/BaseImageIcon';
+import { formatWithCursor } from 'prettier';
 import { useState } from 'react';
 
 interface FriendProps {
-  campus: string;
   campusSection: number;
   name: string;
-  campusDescription: string;
   userId: number;
-  userClass?: number;
   profileImage?: string;
+  follow: boolean;
+  sameCampus: boolean;
 }
 
 const Friend = ({
-  campus,
   userId,
   name,
   campusSection,
-  userClass,
   profileImage,
+  sameCampus,
+  follow,
 }: FriendProps) => {
   const queryClient = useQueryClient();
 
@@ -45,15 +45,20 @@ const Friend = ({
   
     onSuccess: () => {
       console.log("친구 추가 성공");
+      queryClient.invalidateQueries({
+        queryKey: ['friends'],
+      })
     },
   });
   
   const deleteMutation = useMutation({
     mutationKey: ["deleteFriend",],
     mutationFn: deleteFriend,
-    
     onSuccess: () => {
       console.log("친구 삭제 성공");
+      queryClient.invalidateQueries({
+        queryKey: ['friends'],
+      })
     },
   });
 
@@ -79,51 +84,40 @@ const Friend = ({
 
         <div className="flex flex-col">
           <span>
-            {campus}캠퍼스 {campusSection}반 {name}
+             {campusSection}반 {name}
           </span>
           <div className="flex flex-row">
+            {sameCampus && (
             <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1 mr-2">
               반 친구
             </span>
+            )}
+            {follow && (
             <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1">
               찐친
             </span>
+              )}
           </div>
         </div>
-        {/* {userClass !== campusSection ? (
-          <DeleteModal title="언팔로우" userId={userId} />
-        ) : (
-          <span></span>
-        )}
-        <DeleteModal title="언팔로우" userId={userId} />
-
-        <button
-          onClick={() => {
-            mutation.mutate(userId);
-          }}
-        >
-          팔로우
-        </button> */}
-
         <div>
-        {isPlus ? (
-          <div onClick={()=>{
-            addMutation.mutate(userId);
-            onPlus();
-            
-          }}>
-            <PlusDeleteButton title="팔로우" isDelete={true} />
-          </div>
-        ) : (
+        { follow ? (
           <div onClick={
             ()=>{
               deleteMutation.mutate(userId);
               onPlus();
-             
             }
           }>
             <PlusDeleteButton title="언팔로우" />
           </div>
+        ) : (
+          
+
+<div onClick={()=>{
+  addMutation.mutate(userId);
+  onPlus();
+}}>
+  <PlusDeleteButton title="팔로우" isDelete={true} />
+</div>
         )}
       </div>
       </div>

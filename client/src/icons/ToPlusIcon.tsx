@@ -4,7 +4,7 @@ import { profile } from "console";
 import { useState } from "react";
 import BaseImageIcon from "./BaseImageIcon";
 interface ToPlusIconProps {
-  campus: string;
+
   classNum: number;
   name: string;
   profileImage?: string;  
@@ -12,7 +12,7 @@ interface ToPlusIconProps {
 
 }
 
-const ToPlusIcon = ({ classNum, name, campus, profileImage,userId }: ToPlusIconProps) => {
+const ToPlusIcon = ({ classNum, name, profileImage,userId }: ToPlusIconProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(false);
   const doClick = () => {
     isPlus ? setIsPlus(false) : setIsPlus(true);
@@ -77,7 +77,7 @@ const ToPlusIcon = ({ classNum, name, campus, profileImage,userId }: ToPlusIconP
           </div>
       </div>
       <div className="flex flex-col items-center">
-        <span className="text-xs text-gray-700">{campus} {classNum}반 </span>
+        <span className="text-xs text-gray-700"> {classNum}반 </span>
         <span className="text-xs text-gray-700">{name}</span>
       </div>
     </div>
