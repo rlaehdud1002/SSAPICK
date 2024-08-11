@@ -31,7 +31,7 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
           <WarningDeleteModal
             senderId={message.senderId}
             messageId={message.id}
-            title="신고"
+            title="차단"
             message={message.content}
             location={location}
             setPopoverOpen={setOpen}

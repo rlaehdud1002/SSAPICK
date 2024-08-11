@@ -1,8 +1,9 @@
+import { IFriend } from 'atoms/Friend.type';
 import { IPickCreate } from 'atoms/Pick.type';
 import BaseImageIcon from 'icons/BaseImageIcon';
 
 interface ChoiceProps {
-  friend: any;
+  friend: IFriend;
   questionId: number;
   userPick: (data: IPickCreate) => void;
 }
@@ -23,7 +24,7 @@ const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
     >
       {friend.profileImage ? (
         <img
-          src={friend?.profileImage}
+          src={friend.profileImage}
           alt="profileImage"
           className="w-[75px] h-[75px] rounded-full"
         />
@@ -31,7 +32,7 @@ const Choice = ({ friend, questionId, userPick }: ChoiceProps) => {
         <BaseImageIcon width={75} height={75} />
       )}
 
-      <p className="pt-2 text-sm">{friend?.nickname || ''}</p>
+      <p className="pt-2 text-sm">{friend.name}</p>
     </div>
   );
 };
