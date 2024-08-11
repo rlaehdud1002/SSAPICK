@@ -5,6 +5,7 @@ import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Hint;
 import com.ssapick.server.domain.pick.entity.HintType;
 import com.ssapick.server.domain.pick.repository.PickRepository;
+import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
 import com.ssapick.server.domain.user.entity.Profile;
@@ -113,13 +114,8 @@ public class UserService {
 			.orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_USER));
 	}
 
-	public Page<UserData.Search> getUserByKeyword(User user, String keyword, Pageable pageable) {
-		Page<User> usersPage = userRepository.findUserByKeywordExcludingFollowedAndBanned(user.getId(), keyword, pageable);
-		List<User> users = usersPage.getContent();
-
-		List<UserData.Search> search = users.stream().map(UserData.Search::fromEntity).toList();
-
-		return new PageImpl<>(search, pageable, usersPage.getTotalElements());
+	public Page<ProfileData.Friend> getUserByKeyword(User user, String keyword, Pageable pageable) {
+		return userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
 	}
 
 	public UserData.Pickco getPickco(User user) {

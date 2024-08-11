@@ -22,7 +22,7 @@ public class FollowController {
 
     @Authenticated
     @GetMapping(value = "")
-    public SuccessResponse<List<ProfileData.Search>> findFollow(@CurrentUser User user) {
+    public SuccessResponse<List<ProfileData.Friend>> findFollow(@CurrentUser User user) {
         log.debug("user: {}", user);
         return SuccessResponse.of(followService.findFollowUsers(user));
     }
@@ -51,7 +51,7 @@ public class FollowController {
     @Authenticated
     @GetMapping(value = "/recommend")
     @ResponseStatus(HttpStatus.OK)
-    public SuccessResponse<List<ProfileData.Search>> recommendFollow(@CurrentUser User user) {
+    public SuccessResponse<List<ProfileData.Friend>> recommendFollow(@CurrentUser User user) {
         return SuccessResponse.of(followService.recommendFollow(user));
     }
 }
