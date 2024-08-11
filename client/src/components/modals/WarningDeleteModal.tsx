@@ -28,6 +28,7 @@ interface WarningDeleteModalProps {
   title: string;
   message: string;
   location: string;
+  setPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WarningDeleteModal = ({
@@ -36,6 +37,7 @@ const WarningDeleteModal = ({
   title,
   message,
   location,
+  setPopoverOpen,
 }: WarningDeleteModalProps) => {
   const [step, setStep] = useState<WarningDeleteStep>(WarningDeleteStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
@@ -54,8 +56,6 @@ const WarningDeleteModal = ({
       queryClient.invalidateQueries({
         queryKey: ['message', 'send'],
       });
-      // 쿼리가 이상하니 임시방편으로 새로고침을 해주자!
-      nav(0);
     },
   });
 
@@ -84,8 +84,6 @@ const WarningDeleteModal = ({
       queryClient.invalidateQueries({
         queryKey: ['message', location === 'send' ? 'send' : 'received'],
       });
-      // 쿼리가 이상하니 임시방편으로 새로고침을 해주자!
-      nav(0);
     },
   });
 
@@ -109,6 +107,7 @@ const WarningDeleteModal = ({
     }
 
     setStep(WarningDeleteStep.ALERT);
+    setPopoverOpen(false);
   };
 
   const onClose = () => {

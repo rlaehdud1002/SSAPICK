@@ -4,6 +4,7 @@ import { IUserInfo } from 'atoms/User.type';
 import { profileImageState, sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
+import Loading from 'components/common/Loading';
 import BackIcon from 'icons/BackIcon';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,16 +22,16 @@ interface AddUserForm {
 const ModiUserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
-  const profileImage = useRecoilValue(profileImageState)
+  const profileImage = useRecoilValue(profileImageState);
 
   // 유저 정보 조회
   const { data: information, isLoading } = useQuery<IUserInfo>({
-    queryKey: ["information"],
+    queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
 
   const mutation = useMutation({
-    mutationKey: ["user", "send"],
+    mutationKey: ['user', 'send'],
     mutationFn: UserSend,
 
     onSuccess: () => {
@@ -46,10 +47,9 @@ const ModiUserAddInfo = () => {
     formState: { errors },
   } = useForm<AddUserForm>();
 
-  console.log(SendUserInfo, profileImage)
+  console.log(SendUserInfo, profileImage);
 
   const onSubmit = (data: AddUserForm) => {
-
     // 유저 정보 저장
     setSendUserInfo((prev) => {
       return {
@@ -59,9 +59,8 @@ const ModiUserAddInfo = () => {
         birth: data.birth,
         interest: data.hobby,
         residentialArea: data.town,
-      }
+      };
     });
-
   };
 
   const onInvalid = (errors: any) => {
@@ -69,34 +68,40 @@ const ModiUserAddInfo = () => {
   };
 
   useEffect(() => {
-    console.log("123123123")
+    console.log('123123123');
     if (SendUserInfo.mbti) {
       const form = new FormData();
       if (profileImage) {
-        form.append("profileImage", profileImage);
+        form.append('profileImage', profileImage);
       }
-      form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
+      form.append(
+        'update',
+        new Blob([JSON.stringify(SendUserInfo)], { type: 'application/json' }),
+      );
 
       mutation.mutate(form);
     }
-  }, [SendUserInfo])
+  }, [SendUserInfo]);
 
   useEffect(() => {
     if (!isLoading && information) {
       reset({
-        mbti: information.hints[5].content || "",
-        major: information.hints[6].content || "",
-        birth: information.hints[7].content || "",
-        town: information.hints[8].content || "",
-        hobby: information.hints[9].content || "",
-      })
+        mbti: information.hints[5].content || '',
+        major: information.hints[6].content || '',
+        birth: information.hints[7].content || '',
+        town: information.hints[8].content || '',
+        hobby: information.hints[9].content || '',
+      });
     }
-  }, [isLoading, information, reset])
+  }, [isLoading, information, reset]);
 
   const goToBack = () => {
     window.location.reload();
-  }
+  };
 
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -108,7 +113,6 @@ const ModiUserAddInfo = () => {
       </div>
       <div className="flex flex-col my-5">
         <div className="ml-10">
-
           <div style={{ fontSize: 11 }}>추후 랜덤 힌트로 사용됩니다.</div>
           <div className="mb-20" style={{ color: 'red', fontSize: 10 }}>
             모든 정보 입력이 필수입니다.

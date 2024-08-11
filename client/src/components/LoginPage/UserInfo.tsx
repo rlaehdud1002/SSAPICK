@@ -1,14 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "api/authApi";
-import { IUserInfo } from "atoms/User.type";
-import { profileImageState, sendUserInfoState } from "atoms/UserAtoms";
-import DoneButton from "buttons/DoneButton";
-import ProfileCameraIcon from "icons/ProfileCameraIcon";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import InfoInput from "./InfoInput";
-import InfoSelect from "./InfoSelect";
+import { useQuery } from '@tanstack/react-query';
+import { getUserInfo } from 'api/authApi';
+import { IUserInfo } from 'atoms/User.type';
+import { profileImageState, sendUserInfoState } from 'atoms/UserAtoms';
+import DoneButton from 'buttons/DoneButton';
+import ProfileCameraIcon from 'icons/ProfileCameraIcon';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
+import InfoInput from './InfoInput';
+import InfoSelect from './InfoSelect';
+import Loading from 'components/common/Loading';
 
 interface UserForm {
   name: string;
@@ -24,7 +25,9 @@ interface UserInfoProps {
 
 const UserInfo = ({ next }: UserInfoProps) => {
   const setSendUserInfo = useSetRecoilState(sendUserInfoState);
-  const setProfileImage = useSetRecoilState<File | undefined>(profileImageState);
+  const setProfileImage = useSetRecoilState<File | undefined>(
+    profileImageState,
+  );
 
   const {
     register,
@@ -34,17 +37,17 @@ const UserInfo = ({ next }: UserInfoProps) => {
     formState: { errors },
   } = useForm<UserForm>({
     defaultValues: {
-      name: "",
-      campus: "",
-      gender: "",
+      name: '',
+      campus: '',
+      gender: '',
       class: 0,
-    }
+    },
   });
 
   const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
 
   const { data: information, isLoading } = useQuery<IUserInfo>({
-    queryKey: ["information"],
+    queryKey: ['information'],
     queryFn: async () => await getUserInfo(),
   });
 
@@ -57,50 +60,48 @@ const UserInfo = ({ next }: UserInfoProps) => {
         campusSection: data.class,
         cohort: data.th,
         campusName: data.campus,
-      }
+      };
     });
-    if (uploadImage)
-      setProfileImage(uploadImage);
+    if (uploadImage) setProfileImage(uploadImage);
     next();
   };
 
   const onInvalid = (errors: any) => {
-    console.log("error", errors);
+    console.log('error', errors);
   };
 
-
-  console.log(information)
+  console.log(information);
 
   useEffect(() => {
     if (!isLoading && information) {
       // setProfileImage(information.profileImage);
       console.log(information);
       reset({
-        name: information.name || "",
-        gender: information.gender || "",
+        name: information.name || '',
+        gender: information.gender || '',
         class: information.section || 0,
-        campus: information.campusName || "",
-      })
+        campus: information.campusName || '',
+      });
     }
+  }, [information, isLoading, reset]);
 
-  }, [information, isLoading, reset])
-
-
-
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
         <div className="mb-10">
-          <ProfileCameraIcon defaultImage={information?.profileImage} setUploadImage={setUploadImage} />
+          <ProfileCameraIcon
+            defaultImage={information?.profileImage}
+            setUploadImage={setUploadImage}
+          />
         </div>
         <InfoInput
           name="name"
           title="이름"
-          register={register("name", {
-            required: "이름을 입력해주세요.",
-            maxLength: { value: 10, message: "10글자이하로 입력해주세요." },
+          register={register('name', {
+            required: '이름을 입력해주세요.',
+            maxLength: { value: 10, message: '10글자이하로 입력해주세요.' },
           })}
           value={information?.name}
           errors={errors}
@@ -109,20 +110,20 @@ const UserInfo = ({ next }: UserInfoProps) => {
         <InfoSelect
           name="gender"
           title="성별"
-          register={register("gender", {
-            required: "성별을 선택해주세요.",
+          register={register('gender', {
+            required: '성별을 선택해주세요.',
           })}
-          setValue={(value: string) => setValue("gender", value)}
+          setValue={(value: string) => setValue('gender', value)}
           defaultValue={information?.gender}
           errors={errors}
         />
         <InfoSelect
           name="class"
           title="반"
-          register={register("class", {
-            required: "반을 선택해주세요.",
+          register={register('class', {
+            required: '반을 선택해주세요.',
           })}
-          setValue={(value: number) => setValue("class", value)}
+          setValue={(value: number) => setValue('class', value)}
           defaultValue={information?.section}
           errors={errors}
         />
@@ -130,10 +131,10 @@ const UserInfo = ({ next }: UserInfoProps) => {
         <InfoSelect
           name="th"
           title="기수"
-          register={register("th", {
-            required: "기수를 선택해주세요.",
+          register={register('th', {
+            required: '기수를 선택해주세요.',
           })}
-          setValue={(value: number) => setValue("th", value)}
+          setValue={(value: number) => setValue('th', value)}
           // defaultValue={information?.cohort}
           errors={errors}
         />
@@ -141,10 +142,10 @@ const UserInfo = ({ next }: UserInfoProps) => {
         <InfoSelect
           name="campus"
           title="캠퍼스"
-          register={register("campus", {
-            required: "캠퍼스를 선택해주세요.",
+          register={register('campus', {
+            required: '캠퍼스를 선택해주세요.',
           })}
-          setValue={(value: string) => setValue("campus", value)}
+          setValue={(value: string) => setValue('campus', value)}
           defaultValue={information?.campusName}
           errors={errors}
         />
@@ -153,7 +154,7 @@ const UserInfo = ({ next }: UserInfoProps) => {
         </div>
       </div>
     </form>
-  )
+  );
 };
 
 export default UserInfo;

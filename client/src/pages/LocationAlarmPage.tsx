@@ -1,21 +1,19 @@
-import BackIcon from "icons/BackIcon";
-import UserPickIcon from "icons/UserPickIcon";
-import LocationCircle from "components/LocationPage/LocationCircle";
-import LocationCheckModal from "components/LocationPage/LocationCheckModal";
-import LocationWatchModal from "components/LocationPage/LocationWatchModal";
+import BackIcon from 'icons/BackIcon';
+import UserPickIcon from 'icons/UserPickIcon';
+import LocationCircle from 'components/LocationPage/LocationCircle';
 
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import LocationModal from "components/modals/LocationModal";
-import { useLocation } from "hooks/useLocation";
-import { useQuery } from "@tanstack/react-query";
-import { findFriends } from "api/locationApi";
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'hooks/useLocation';
+import { useQuery } from '@tanstack/react-query';
+import { findFriends } from 'api/locationApi';
+import Loading from 'components/common/Loading';
 
 const LocationAlarm = () => {
   const nav = useNavigate();
-  const [dot, setDot] = useState("");
+  const [dot, setDot] = useState('');
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["location"],
+    queryKey: ['location'],
     queryFn: findFriends,
   });
   const { coords, error } = useLocation({
@@ -25,15 +23,22 @@ const LocationAlarm = () => {
   // search text
   useEffect(() => {
     const interval = setInterval(() => {
-      setDot((prevDots) => (prevDots === "..." ? "" : prevDots + "."));
+      setDot((prevDots) => (prevDots === '...' ? '' : prevDots + '.'));
     }, 700);
 
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
   }, []);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div>
-      <div className="flex flex-row items-center m-2 cursor-pointer" onClick={() => nav(-1)}>
+      <div
+        className="flex flex-row items-center m-2 cursor-pointer"
+        onClick={() => nav(-1)}
+      >
         <BackIcon />
       </div>
       <div className="relative flex justify-center items-center">
@@ -52,7 +57,9 @@ const LocationAlarm = () => {
           <span className="text-[#3D6CE6] text-xl">
             현재 위치: {coords.latitude} / {coords.longitude}
           </span>
-          <span className="luckiest_guy text-[#3D6CE6] text-3xl">SEARCHING{dot}</span>
+          <span className="luckiest_guy text-[#3D6CE6] text-3xl">
+            SEARCHING{dot}
+          </span>
         </div>
       </div>
     </div>
