@@ -16,6 +16,8 @@ import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.UserBanRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,6 +31,7 @@ import java.util.Objects;
 
 import static com.ssapick.server.core.constants.PickConst.MESSAGE_COIN;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -48,15 +51,21 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
+		log.debug("=============================MESSAGE=============================");
 		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
+		log.debug("==========================================================");
 
+		log.debug("=============================USERBAN=============================");
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
+		log.debug("===============================================================");
 
+		log.debug("=============================Other=============================");
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(message -> banUsers.stream()
 				.noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, false))
 			.toList();
+		log.debug("==========================================================");
 
 		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
@@ -69,14 +78,21 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 받은 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
+		log.debug("=============================MESSAGE=============================");
 		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
+		log.debug("==========================================================");
 
+		log.debug("=============================USERBAN=============================");
 		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
+		log.debug("===============================================================");
+
+		log.debug("=============================Other=============================");
 		List<MessageData.Search> messages = messagesPage.stream()
 			.filter(
 				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
 			.map(message -> MessageData.Search.fromEntity(message, true))
 			.toList();
+		log.debug("==========================================================");
 
 		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
