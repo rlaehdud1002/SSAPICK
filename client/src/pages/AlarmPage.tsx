@@ -8,6 +8,7 @@ import { INotification } from 'atoms/Notification.type';
 import { getNotificationList } from 'api/notificationApi';
 import { IPaging } from 'atoms/Pick.type';
 import { useCallback, useEffect, useRef } from 'react';
+import Loading from 'components/common/Loading';
 
 const Alarm = () => {
   const nav = useNavigate();
@@ -68,7 +69,7 @@ const Alarm = () => {
     }
   }, [isFetchingNextPage]);
 
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div>

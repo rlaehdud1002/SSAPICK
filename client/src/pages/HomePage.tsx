@@ -11,6 +11,7 @@ import Response from 'components/MainPage/Response';
 import Initial from 'components/MainPage/Initial';
 import AttendanceModal from 'components/modals/AttendanceModal';
 import { getAttendance, postAttendance } from 'api/attendanceApi';
+import Loading from 'components/common/Loading';
 
 const Home = () => {
   const {
@@ -98,6 +99,10 @@ const Home = () => {
     }
   }, [isFetchingNextPage]);
   if (isError) return <div>에러 발생...</div>;
+
+  if (isLoading || isLoadingAttendance) {
+    return <Loading />;
+  }
 
   return (
     <div className="m-6">

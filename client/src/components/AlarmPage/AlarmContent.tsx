@@ -28,8 +28,10 @@ const AlarmContent = ({ notification }: AlarmContentProps) => {
     receivedTime = `${days}일 전`;
   } else if (hours !== '0') {
     receivedTime = `${hours}시간 전`;
-  } else {
+  } else if (minutes !== '0') {
     receivedTime = `${minutes}분 전`;
+  } else {
+    receivedTime = '방금';
   }
 
   return (

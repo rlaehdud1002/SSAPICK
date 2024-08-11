@@ -6,6 +6,7 @@ import AttendanceCheck from 'components/AttendancePage/AttendanceCheck';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getAttendance } from 'api/attendanceApi';
+import Loading from 'components/common/Loading';
 
 const Attendance = () => {
   const nav = useNavigate();
@@ -14,6 +15,10 @@ const Attendance = () => {
     queryKey: ['attendance'],
     queryFn: getAttendance,
   });
+  
+  if (isLoading) {
+    return <Loading />
+  }
 
   return (
     <div className="m-2">

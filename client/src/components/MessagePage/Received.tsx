@@ -1,24 +1,31 @@
-import { useEffect, useRef, useCallback } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getReceivedMessage } from "api/messageApi";
-import { IMessage } from "atoms/Message.type";
-import { IPaging } from "atoms/Pick.type";
-import MessageContent from "components/MessagePage/MessageContent";
-import NoMessage from "components/MessagePage/NoMessage";
+import { useEffect, useRef, useCallback } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { getReceivedMessage } from 'api/messageApi';
+import { IMessage } from 'atoms/Message.type';
+import { IPaging } from 'atoms/Pick.type';
+import MessageContent from 'components/MessagePage/MessageContent';
+import NoMessage from 'components/MessagePage/NoMessage';
+import Loading from 'components/common/Loading';
 
 const Received = () => {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<IPaging<IMessage[]>>({
-      queryKey: ["message", "received"],
-      queryFn: ({ pageParam = 0 }) => getReceivedMessage(pageParam as number, 10),
-      getNextPageParam: (lastPage, pages) => {
-        if (!lastPage.last) {
-          return pages.length;
-        }
-        return undefined;
-      },
-      initialPageParam: 0,
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<IPaging<IMessage[]>>({
+    queryKey: ['message', 'received'],
+    queryFn: ({ pageParam = 0 }) => getReceivedMessage(pageParam as number, 10),
+    getNextPageParam: (lastPage, pages) => {
+      if (!lastPage.last) {
+        return pages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
 
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
@@ -31,7 +38,7 @@ const Received = () => {
         fetchNextPage();
       }
     },
-    [fetchNextPage, hasNextPage]
+    [fetchNextPage, hasNextPage],
   );
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const Received = () => {
   }, [isFetchingNextPage]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (isError) {

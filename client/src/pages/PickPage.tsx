@@ -13,6 +13,7 @@ import PickComplete from 'components/PickPage/PickComplete';
 import { Navigate } from 'react-router-dom';
 import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
+import Loading from 'components/common/Loading';
 
 const Pick = () => {
   // ========================================== 질문 조회 ==============================================================
@@ -94,7 +95,7 @@ const Pick = () => {
   }
 
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
-    return <div>데이터 준비중입니다.</div>;
+    return <Loading />;
   }
 
   return (

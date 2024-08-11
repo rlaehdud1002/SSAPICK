@@ -64,7 +64,7 @@ export const deleteReceivedMessage = async (
     `/message/${messageId}/receive`,
   );
 
-  console.log(response);
+  console.log('받은 메시지 삭제 api 요청 들어옴')
 
   if (response.status !== 204) {
     throw new Error('받은 메시지 삭제 실패');

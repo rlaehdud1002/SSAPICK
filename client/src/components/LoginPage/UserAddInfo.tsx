@@ -19,10 +19,10 @@ interface AddUserForm {
 const UserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
-  const profileImage = useRecoilValue(profileImageState)
+  const profileImage = useRecoilValue(profileImageState);
 
   const mutation = useMutation({
-    mutationKey: ["user", "send"],
+    mutationKey: ['user', 'send'],
     mutationFn: UserSend,
     // 성공시, 유저 정보 입력 페이지로 이동
     onSuccess: () => {
@@ -36,7 +36,7 @@ const UserAddInfo = () => {
     formState: { errors },
   } = useForm<AddUserForm>();
 
-  console.log(SendUserInfo)
+  console.log(SendUserInfo);
 
   const onSubmit = (data: AddUserForm) => {
     // 유저 정보 저장
@@ -48,9 +48,9 @@ const UserAddInfo = () => {
         birth: data.birth,
         interest: data.hobby,
         residentialArea: data.town,
-      }
+      };
     });
-    console.log("sendinfo", SendUserInfo);
+    console.log('sendinfo', SendUserInfo);
   };
 
   useEffect(() => {
@@ -58,18 +58,20 @@ const UserAddInfo = () => {
     const form = new FormData();
 
     if (profileImage) {
-      form.append("profileImage", profileImage);
+      form.append('profileImage', profileImage);
     }
 
-    form.append("update", new Blob([JSON.stringify(SendUserInfo)], { type: "application/json" }));
+    form.append(
+      'update',
+      new Blob([JSON.stringify(SendUserInfo)], { type: 'application/json' }),
+    );
 
     mutation.mutate(form);
-  }, [SendUserInfo])
+  }, [SendUserInfo]);
 
   const onInvalid = (errors: any) => {
     console.log(errors);
   };
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
