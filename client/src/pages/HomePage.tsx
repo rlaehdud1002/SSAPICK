@@ -45,6 +45,7 @@ const Home = () => {
       setModalOpen(true);
       setHasCheckedAttendance(true); // 출석 체크 완료 상태로 변경
     },
+
     onError: (error) => {
       console.log("이미 출석체크 완료");
     },
@@ -91,22 +92,19 @@ const Home = () => {
 
   if (isError) return <div>에러 발생...</div>;
 
-  if (isLoading || isLoadingAttendance) {
+  if (isLoading || isLoadingAttendance || !attendance) {
     return <Loading />;
   }
 
   return (
     <div className="m-6">
       {data?.pages.flatMap((page) => page.content).length ? (
-        <Response
-          picks={data.pages.flatMap((page) => page.content)}
-          isLoading={isLoading || isFetchingNextPage}
-        />
+        <Response picks={data.pages.flatMap((page) => page.content)} />
       ) : (
         <Initial />
       )}
       <div ref={observerElem} />
-      {isFetchingNextPage && <div>로딩 중...</div>}
+      {isFetchingNextPage && <Loading />}
       {modalOpen && <AttendanceModal date={streak} onClose={() => setModalOpen(false)} />}
     </div>
   );

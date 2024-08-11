@@ -52,7 +52,7 @@ const WarningDeleteModal = ({
     mutationFn: blockUser,
 
     onSuccess: () => {
-      console.log('쪽지 신고 성공');
+      console.log('쪽지 차단 성공');
       queryClient.invalidateQueries({
         queryKey: ['message', 'send'],
       });
@@ -99,7 +99,7 @@ const WarningDeleteModal = ({
   }, [step]);
 
   const onClick = () => {
-    if (title === '신고') {
+    if (title === '차단') {
       blockMutatiion.mutate(senderId);
     } else {
       console.log('메시지 삭제', location);
@@ -119,7 +119,7 @@ const WarningDeleteModal = ({
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogTrigger onClick={() => setOpen(true)}>
         <div className="flex flex-row">
-          {title === '신고' ? (
+          {title === '차단' ? (
             <WarningIcon width={24} height={24} className="mr-3" />
           ) : (
             <DeleteIcon width={24} height={24} className="mr-3" />
@@ -138,7 +138,7 @@ const WarningDeleteModal = ({
             <div>
               <div className="flex flex-col items-center my-16 text-center">
                 <p>이 쪽지를 {title}하시겠습니까?</p>
-                {title === '신고' && (
+                {title === '차단' && (
                   <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
                     {message}
                   </p>

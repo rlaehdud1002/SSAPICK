@@ -1,4 +1,3 @@
-import { Separator } from '@radix-ui/react-select';
 import { useMutation } from '@tanstack/react-query';
 import { blockQuestionCancel } from 'api/blockApi';
 import PlusDeleteButton from 'buttons/PlusDeleteButton';
@@ -28,7 +27,7 @@ const BlockQuestionContent = ({
         <div>
           <QuestionAlarmIcon width={50} height={50} />
         </div>
-        <div className="">{question}</div>
+        <div>{question}</div>
         <div
           onClick={() => {
             mutation.mutate(questionId);

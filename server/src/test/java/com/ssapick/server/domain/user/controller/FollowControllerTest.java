@@ -14,6 +14,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -24,7 +28,7 @@ import java.util.List;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -135,43 +139,77 @@ class FollowControllerTest extends RestDocsSupport {
 	}
 
 	@Test
-	@DisplayName("추천_팔로우_조회_테스트")
-	void 추천_팔로우_조회_테스트() throws Exception {
-	    // * GIVEN: 이런게 주어졌을 때
-		List<User> users = List.of(this.createUser("테스트 유저 1"), this.createUser("테스트 유저 2"),
-			this.createUser("테스트 유저 3"));
+	@DisplayName("추천_팔로우_조회_테스트_페이징")
+	void 추천_팔로우_조회_테스트_페이징() throws Exception {
+		// * GIVEN: 페이징 처리된 데이터 준비
+		List<User> users = List.of(
+			this.createUser("테스트 유저 1"),
+			this.createUser("테스트 유저 2"),
+			this.createUser("테스트 유저 3")
+		);
 		List<ProfileData.Friend> friends = users.stream()
-				.map(ProfileData.Friend::fromEntity)
-				.toList();
+			.map(ProfileData.Friend::fromEntity)
+			.toList();
 
-		when(followService.recommendFollow(any())).thenReturn(friends);
+		Page<ProfileData.Friend> page = new PageImpl<>(friends, PageRequest.of(0, 10), friends.size());
 
+		when(followService.recommendFollow(any(), any(Pageable.class))).thenReturn(page);
 
-	    // * WHEN: 이걸 실행하면
+		// * WHEN: API 요청
 		ResultActions perform = this.mockMvc.perform(get("/api/v1/follow/recommend")
+			.param("page", "0")  // 페이지 번호
+			.param("size", "10") // 페이지 사이즈
 			.contentType(MediaType.APPLICATION_JSON)
 			.header("Authorization", "Bearer access-token")
 		);
 
-		// * THEN: 이런 결과가 나와야 한다
+		// * THEN: 응답 검증 및 문서화
 		perform.andExpect(status().isOk())
-			.andDo(restDocs.document(resource(
-				ResourceSnippetParameters
-					.builder()
-					.tag("팔로우")
-					.description("추천 팔로우 유저 목록 조회 API")
-					.summary("추천 팔로우 유저 목록 조회 API")
-					.responseFields(response(
-							fieldWithPath("data[]").description("추천 팔로우 유저 목록"),
-							fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
-							fieldWithPath("data[].name").type(JsonFieldType.STRING).description("유저 닉네임"),
-							fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
-							fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보"),
-							fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
-							fieldWithPath("data[].follow").type(JsonFieldType.BOOLEAN).description("유저 팔로우 여부"),
-							fieldWithPath("data[].sameCampus").type(JsonFieldType.BOOLEAN).description("유저 동일 캠퍼스 여부")
-					))
-					.build()
-			)));
+			.andDo(restDocs.document(
+				resource(
+					ResourceSnippetParameters.builder()
+						.tag("팔로우")
+						.summary("추천 팔로우 조회 API")
+						.description("추천 팔로우 유저 목록을 페이징하여 조회한다.")
+						.responseFields(
+							fieldWithPath("success").description("API 호출 성공 여부"),
+							fieldWithPath("status").description("HTTP 상태 코드"),
+							fieldWithPath("message").description("응답 메시지"),
+							fieldWithPath("data").description("페이징된 추천 팔로우 유저 목록"),
+							fieldWithPath("data.totalPages").description("전체 페이지 수"),
+							fieldWithPath("data.totalElements").description("전체 요소 수"),
+							fieldWithPath("data.size").description("현재 페이지의 요소 수"),
+							fieldWithPath("data.numberOfElements").description("현재 페이지의 요소 수"),
+							fieldWithPath("data.number").description("현재 페이지 번호"),
+							fieldWithPath("data.first").description("첫 페이지 여부"),
+							fieldWithPath("data.last").description("마지막 페이지 여부"),
+							fieldWithPath("data.empty").description("비어 있는 페이지 여부"),
+							fieldWithPath("data.content[]").description("추천 팔로우 유저 목록"),
+							fieldWithPath("data.content[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
+							fieldWithPath("data.content[].name").type(JsonFieldType.STRING).description("유저 닉네임"),
+							fieldWithPath("data.content[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+							fieldWithPath("data.content[].cohort").type(JsonFieldType.NUMBER).description("기수 정보"),
+							fieldWithPath("data.content[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
+							fieldWithPath("data.content[].follow").type(JsonFieldType.BOOLEAN).description("유저 팔로우 여부"),
+							fieldWithPath("data.content[].sameCampus").type(JsonFieldType.BOOLEAN).description("유저 동일 캠퍼스 여부"),
+							fieldWithPath("data.sort.empty").description("정렬 정보가 비어 있는지 여부"),
+							fieldWithPath("data.sort.sorted").description("정렬 정보가 정렬되었는지 여부"),
+							fieldWithPath("data.sort.unsorted").description("정렬 정보가 정렬되지 않았는지 여부"),
+							fieldWithPath("data.pageable.pageNumber").description("현재 페이지 번호"),
+							fieldWithPath("data.pageable.pageSize").description("페이지 사이즈"),
+							fieldWithPath("data.pageable.sort.empty").description("정렬 정보가 비어 있는지 여부"),
+							fieldWithPath("data.pageable.sort.sorted").description("정렬 정보가 정렬되었는지 여부"),
+							fieldWithPath("data.pageable.sort.unsorted").description("정렬 정보가 정렬되지 않았는지 여부"),
+							fieldWithPath("data.pageable.offset").description("페이지 오프셋"),
+							fieldWithPath("data.pageable.paged").description("페이징 정보가 존재하는지 여부"),
+							fieldWithPath("data.pageable.unpaged").description("페이징 정보가 없는지 여부")
+						)
+						.build()
+				)
+			));
+
+		verify(followService, times(1)).recommendFollow(any(), any(Pageable.class));
 	}
+
+
 }
