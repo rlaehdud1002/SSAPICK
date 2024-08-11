@@ -5,7 +5,7 @@ interface AlarmedIconProps {
 const AlarmedIcon = ({ gender }: AlarmedIconProps) => {
   return (
     <div>
-      {gender === '여자' ? (
+      {gender === "F" ? (
         <svg
           width="23"
           height="25"
