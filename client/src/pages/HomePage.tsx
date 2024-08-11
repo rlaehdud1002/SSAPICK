@@ -77,7 +77,7 @@ const Home = () => {
   );
 
   useEffect(() => {
-    const element = observerElem.current;
+  const element = observerElem.current;
     const option = { threshold: 1.0 };
     const observer = new IntersectionObserver(handleObserver, option);
     if (element) observer.observe(element);
