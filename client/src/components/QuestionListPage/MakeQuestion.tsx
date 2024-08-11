@@ -1,22 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
-import MakeQuestionContent from "./MakeQuestionlContent";
-import { getQuestionByUser } from "api/questionApi";
-import { IQuestionNoCreatedAt } from "atoms/Pick.type";
+import { useQuery } from '@tanstack/react-query';
+import MakeQuestionContent from './MakeQuestionlContent';
+import { getQuestionByUser } from 'api/questionApi';
+import { IQuestionNoCreatedAt } from 'atoms/Pick.type';
+import Loading from 'components/common/Loading';
 
 const MakeQuestion = () => {
   const { data: questions, isLoading } = useQuery<IQuestionNoCreatedAt[]>({
-    queryKey: ["question", "me"],
+    queryKey: ['question', 'me'],
     queryFn: async () => await getQuestionByUser(),
   });
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <Loading />;
   }
 
-  console.log("questions : ", questions);
+  console.log('questions : ', questions);
 
   if (!questions || questions.length === 0) {
-    return <div className="text-sm flex justify-center">생성한 질문이 없습니다.</div>;
+    return (
+      <div className="text-sm flex justify-center">생성한 질문이 없습니다.</div>
+    );
   }
 
   return (

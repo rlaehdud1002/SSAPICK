@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { patchPickUserReRoll } from 'api/pickApi';
 import { IPickco } from 'atoms/User.type';
 import { getPickco } from 'api/authApi';
+import Loading from 'components/common/Loading';
 
 interface FriendRerollModalProps {
   handleShuffle: () => void;
@@ -43,6 +44,10 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     mutation.mutate();
     setOpen(false);
   };
+
+  if (isLoadingPickco) {
+    return <Loading />;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

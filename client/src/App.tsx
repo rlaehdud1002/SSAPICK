@@ -77,7 +77,7 @@ function App() {
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === 'splash') {
+        if (location === "splash") {
           return;
         }
         if (isValid) return;
@@ -87,21 +87,14 @@ function App() {
         if (data.lockedUser) {
           navigate("/");
           return;
-        }
-        if (!data.mattermostConfirmed) {
+        } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
           navigate("/mattermost");
           return;
-        }
-        if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo && !location.includes("infoinsert")) {
           navigate("/infoinsert");
           return;
-        }
-        if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          if (
-            location.includes("infoinsert") ||
-            location.includes("mattermost") ||
-            location.includes("splash")
-          ) {
+        } else if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
+          if (location.includes("infoinsert") || location.includes("mattermost")) {
             navigate("/home");
           }
         }
@@ -115,7 +108,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools buttonPosition='top-left'  initialIsOpen={false} />
+      <ReactQueryDevtools buttonPosition="top-left" initialIsOpen={false} />
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
         <main className="flex-grow mb-[70px]">

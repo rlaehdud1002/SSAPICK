@@ -14,6 +14,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getPickco } from 'api/authApi';
 import { useQuery } from '@tanstack/react-query';
 import { IPickco } from 'atoms/User.type';
+import Loading from 'components/common/Loading';
 
 interface ResponseProps {
   picks: IPick[];
@@ -53,6 +54,10 @@ const Response = ({ picks, isLoading }: ResponseProps) => {
   const handleMaskClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
+
+  if (isLoadingPickco) {
+    return <Loading />;
+  }
 
   return (
     <div>

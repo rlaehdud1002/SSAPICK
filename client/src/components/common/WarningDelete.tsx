@@ -3,12 +3,15 @@ import PointIcon from 'icons/PointIcon';
 import { useLocation } from 'react-router-dom';
 import WarningDeleteModal from 'components/modals/WarningDeleteModal';
 import { IMessage } from 'atoms/Message.type';
+import { useState } from 'react';
 
 interface WarningDeleteProps {
   message: IMessage;
 }
 
 const WarningDelete = ({ message }: WarningDeleteProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+
   let location = useLocation().pathname.split('/')[2];
 
   if (!location) {
@@ -16,8 +19,11 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
   }
 
   return (
-    <Popover>
-      <PopoverTrigger>
+    <Popover
+      open={open}
+      onOpenChange={(open) => !open && setOpen((prev) => !prev)}
+    >
+      <PopoverTrigger onClick={() => setOpen(true)}>
         <PointIcon />
       </PopoverTrigger>
       <PopoverContent className="mr-4 w-[102px] rounded-lg bg-[#E9F2FD] flex flex-col justify-center">
@@ -28,6 +34,7 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
             title="신고"
             message={message.content}
             location={location}
+            setPopoverOpen={setOpen}
           />
         )}
         <WarningDeleteModal
@@ -36,6 +43,7 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
           title="삭제"
           location={location}
           message={message.content}
+          setPopoverOpen={setOpen}
         />
       </PopoverContent>
     </Popover>

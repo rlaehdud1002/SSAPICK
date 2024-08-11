@@ -57,7 +57,7 @@ public class UserController {
 
 
 	@GetMapping(value = "/search")
-	public SuccessResponse<Page<UserData.Search>> searchUser(
+	public SuccessResponse<Page<ProfileData.Friend>> searchUser(
 			@CurrentUser User user,
 			@RequestParam(value = "q", defaultValue = "", required = false) String keyword,
 			Pageable pageable

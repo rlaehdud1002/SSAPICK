@@ -48,9 +48,8 @@ class FollowControllerTest extends RestDocsSupport {
 		// * GIVEN: 이런게 주어졌을 때
 		List<User> users = List.of(this.createUser("테스트 유저 1"), this.createUser("테스트 유저 2"),
 			this.createUser("테스트 유저 3"));
-		List<ProfileData.Search> profiles = users.stream()
-			.map(User::getProfile)
-			.map(ProfileData.Search::fromEntity)
+		List<ProfileData.Friend> profiles = users.stream()
+			.map(ProfileData.Friend::fromEntity)
 			.toList();
 
 		when(followService.findFollowUsers(any())).thenReturn(profiles);
@@ -71,13 +70,12 @@ class FollowControllerTest extends RestDocsSupport {
 					.responseFields(response(
 						fieldWithPath("data[]").description("팔로우한 유저 목록"),
 						fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
-						fieldWithPath("data[].gender").type(JsonFieldType.STRING).description("유저 성별"),
-						fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-						fieldWithPath("data[].campusName").type(JsonFieldType.STRING).description("캠퍼스 지역"),
-						fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
-						fieldWithPath("data[].campusDescription").type(JsonFieldType.STRING).description("전공 관련 정보"),
+						fieldWithPath("data[].name").type(JsonFieldType.STRING).description("유저 닉네임"),
 						fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
-						fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보")
+						fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보"),
+						fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
+						fieldWithPath("data[].follow").type(JsonFieldType.BOOLEAN).description("유저 팔로우 여부"),
+						fieldWithPath("data[].sameCampus").type(JsonFieldType.BOOLEAN).description("유저 동일 캠퍼스 여부")
 					))
 					.build()
 			)));
@@ -142,12 +140,11 @@ class FollowControllerTest extends RestDocsSupport {
 	    // * GIVEN: 이런게 주어졌을 때
 		List<User> users = List.of(this.createUser("테스트 유저 1"), this.createUser("테스트 유저 2"),
 			this.createUser("테스트 유저 3"));
-		List<ProfileData.Search> profiles = users.stream()
-			.map(User::getProfile)
-			.map(ProfileData.Search::fromEntity)
-			.toList();
+		List<ProfileData.Friend> friends = users.stream()
+				.map(ProfileData.Friend::fromEntity)
+				.toList();
 
-		when(followService.recommendFollow(any())).thenReturn(profiles);
+		when(followService.recommendFollow(any())).thenReturn(friends);
 
 
 	    // * WHEN: 이걸 실행하면
@@ -165,15 +162,14 @@ class FollowControllerTest extends RestDocsSupport {
 					.description("추천 팔로우 유저 목록 조회 API")
 					.summary("추천 팔로우 유저 목록 조회 API")
 					.responseFields(response(
-						fieldWithPath("data[]").description("추천 팔로우 유저 목록"),
-						fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
-						fieldWithPath("data[].gender").type(JsonFieldType.STRING).description("유저 성별"),
-						fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-						fieldWithPath("data[].campusName").type(JsonFieldType.STRING).description("캠퍼스 지역"),
-						fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
-						fieldWithPath("data[].campusDescription").type(JsonFieldType.STRING).description("전공 관련 정보"),
-						fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
-						fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보")
+							fieldWithPath("data[]").description("추천 팔로우 유저 목록"),
+							fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("유저 식별자"),
+							fieldWithPath("data[].name").type(JsonFieldType.STRING).description("유저 닉네임"),
+							fieldWithPath("data[].profileImage").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+							fieldWithPath("data[].cohort").type(JsonFieldType.NUMBER).description("기수 정보"),
+							fieldWithPath("data[].campusSection").type(JsonFieldType.NUMBER).description("캠퍼스 반 정보"),
+							fieldWithPath("data[].follow").type(JsonFieldType.BOOLEAN).description("유저 팔로우 여부"),
+							fieldWithPath("data[].sameCampus").type(JsonFieldType.BOOLEAN).description("유저 동일 캠퍼스 여부")
 					))
 					.build()
 			)));
