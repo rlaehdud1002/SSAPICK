@@ -15,6 +15,7 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 import { blockUser } from 'api/blockApi';
+import { useNavigate } from 'react-router-dom';
 
 enum WarningDeleteStep {
   CHECK,
@@ -22,6 +23,7 @@ enum WarningDeleteStep {
 }
 
 interface WarningDeleteModalProps {
+  senderId: number;
   messageId: number;
   title: string;
   message: string;
@@ -29,6 +31,7 @@ interface WarningDeleteModalProps {
 }
 
 const WarningDeleteModal = ({
+  senderId,
   messageId,
   title,
   message,
@@ -39,14 +42,20 @@ const WarningDeleteModal = ({
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
+  const nav = useNavigate();
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
     mutationKey: ['block', 'user'],
     mutationFn: blockUser,
+
     onSuccess: () => {
       console.log('쪽지 신고 성공');
-      queryClient.invalidateQueries({ queryKey: ['message'] });
+      queryClient.invalidateQueries({
+        queryKey: ['message', 'send'],
+      });
+      // 쿼리가 이상하니 임시방편으로 새로고침을 해주자!
+      nav(0);
     },
   });
 
@@ -63,6 +72,7 @@ const WarningDeleteModal = ({
       if (location === 'send') {
         return deleteSendMessage(messageId); // Promise를 반환
       } else if (location === 'received') {
+        console.log('받은 메시지 삭제 method 들어옴');
         return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
         throw new Error('Invalid location');
@@ -74,6 +84,8 @@ const WarningDeleteModal = ({
       queryClient.invalidateQueries({
         queryKey: ['message', location === 'send' ? 'send' : 'received'],
       });
+      // 쿼리가 이상하니 임시방편으로 새로고침을 해주자!
+      nav(0);
     },
   });
 
@@ -90,8 +102,9 @@ const WarningDeleteModal = ({
 
   const onClick = () => {
     if (title === '신고') {
-      blockMutatiion.mutate(messageId);
+      blockMutatiion.mutate(senderId);
     } else {
+      console.log('메시지 삭제', location);
       deleteMutation.mutate({ messageId, location });
     }
 

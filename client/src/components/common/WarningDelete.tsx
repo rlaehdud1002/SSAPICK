@@ -9,7 +9,11 @@ interface WarningDeleteProps {
 }
 
 const WarningDelete = ({ message }: WarningDeleteProps) => {
-  const location = useLocation().pathname.split('/')[2];
+  let location = useLocation().pathname.split('/')[2];
+
+  if (!location) {
+    location = 'received';
+  }
 
   return (
     <Popover>
@@ -19,6 +23,7 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
       <PopoverContent className="mr-4 w-[102px] rounded-lg bg-[#E9F2FD] flex flex-col justify-center">
         {!(location === 'send') && (
           <WarningDeleteModal
+            senderId={message.senderId}
             messageId={message.id}
             title="신고"
             message={message.content}
@@ -26,6 +31,7 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
           />
         )}
         <WarningDeleteModal
+          senderId={message.senderId}
           messageId={message.id}
           title="삭제"
           location={location}
