@@ -132,7 +132,14 @@ public class QuestionService {
 
         try {
             if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
-                throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);}
+                throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+            }
+        } catch (BaseException e) {
+            if (e.getErrorCode() == ErrorCode.OFFENSIVE_CONTENT) {
+                throw e;
+            } else {
+                throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+            }
         } catch (Exception e) {
             throw new BaseException(ErrorCode.API_REQUEST_ERROR);
         }
