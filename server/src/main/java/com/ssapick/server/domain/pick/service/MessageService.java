@@ -92,7 +92,6 @@ public class MessageService {
 	 * @param sender 보내는 사람
 	 * @param create {@link MessageData.Create} 메시지 생성 정보
 	 */
-	@Async("apiExecutor")
 	@Transactional
 	public void createMessage(User sender, MessageData.Create create) {
 		Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
@@ -112,8 +111,12 @@ public class MessageService {
 			if (commentAnalyzer.isCommentOffensive(create.getContent())) {
 				throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
 			}
-		} catch (Exception e) {
-			throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+		} catch (BaseException e) {
+			if (e.getErrorCode() == ErrorCode.OFFENSIVE_CONTENT) {
+				throw e;
+			} else {
+				throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+			}
 		}
 
 		Message message = messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));

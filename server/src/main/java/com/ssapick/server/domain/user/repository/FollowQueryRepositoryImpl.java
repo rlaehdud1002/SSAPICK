@@ -29,7 +29,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Friend> findRecommendFriends(Long userId, Pageable pageable) {
+	public List<Friend> findRecommendFriends(Long userId) {
 		QFollow f1 = QFollow.follow;
 		QFollow f2 = new QFollow("f2");
 		QUser u = QUser.user;
@@ -57,8 +57,6 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 				u.profile.campus.section
 			)
 			.orderBy(f2.followingUser.count().desc())
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
 			.fetch();
 	}
 
