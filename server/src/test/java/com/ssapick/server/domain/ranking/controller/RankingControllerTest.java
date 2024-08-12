@@ -53,12 +53,22 @@ class RankingControllerTest extends RestDocsSupport {
                 new RankingData.UserCount(userRankingProfile3, 8L)
         );
 
+
+        List<RankingData.QuestionUserRanking> questionUserRanking = List.of(
+                new RankingData.QuestionUserRanking(1L, "question1", 1L, "name1", "", (short) 11, "광주", (short) 1, 10L),
+                new RankingData.QuestionUserRanking(2L, "question2", 2L, "name2", "", (short) 12, "서울", (short) 2, 9L),
+                new RankingData.QuestionUserRanking(3L, "question3", 3L, "name3", "", (short) 13, "구미", (short) 3, 8L)
+        );
+
+
         RankingData.Response response = new RankingData.Response(
                 topUsers,
                 topUsers,
                 topUsers,
                 topUsers,
-                topUsers
+                topUsers,
+                topUsers,
+                questionUserRanking
         );
 
         when(rankingScheduler.getCachedRankingData()).thenReturn(response);
@@ -108,7 +118,25 @@ class RankingControllerTest extends RestDocsSupport {
                                         fieldWithPath("data.topSpendPickcoUsers[].user.campusName").type(JsonFieldType.STRING).description("캠퍼스"),
                                         fieldWithPath("data.topSpendPickcoUsers[].user.section").type(JsonFieldType.NUMBER).description("반"),
                                         fieldWithPath("data.topSpendPickcoUsers[].user.profileImage").type(JsonFieldType.STRING).description("프로필이미지"),
-                                        fieldWithPath("data.topSpendPickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 쓴 수")
+                                        fieldWithPath("data.topSpendPickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 쓴 수"),
+
+                                        fieldWithPath("data.topReservePickcoUsers[].user.name").type(JsonFieldType.STRING).description("이름"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.cohort").type(JsonFieldType.NUMBER).description("기수"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.campusName").type(JsonFieldType.STRING).description("캠퍼스"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.section").type(JsonFieldType.NUMBER).description("반"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.profileImage").type(JsonFieldType.STRING).description("프로필이미지"),
+                                        fieldWithPath("data.topReservePickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 보유량"),
+
+                                        fieldWithPath("data.questionUserRanking[]").type(JsonFieldType.ARRAY).description("질문별 픽을 많이 받은 유저랭킹"),
+                                        fieldWithPath("data.questionUserRanking[].questionId").type(JsonFieldType.NUMBER).description("질문 아이디"),
+                                        fieldWithPath("data.questionUserRanking[].questionContent").type(JsonFieldType.STRING).description("질문 내용"),
+                                        fieldWithPath("data.questionUserRanking[].userId").type(JsonFieldType.NUMBER).description("사용자 아이디"),
+                                        fieldWithPath("data.questionUserRanking[].name").type(JsonFieldType.STRING).description("사용자 이름"),
+                                        fieldWithPath("data.questionUserRanking[].profileImage").type(JsonFieldType.STRING).description("사용자 프로필이미지"),
+                                        fieldWithPath("data.questionUserRanking[].cohort").type(JsonFieldType.NUMBER).description("기수"),
+                                        fieldWithPath("data.questionUserRanking[].campusName").type(JsonFieldType.STRING).description("캠퍼스"),
+                                        fieldWithPath("data.questionUserRanking[].section").type(JsonFieldType.NUMBER).description("반"),
+                                        fieldWithPath("data.questionUserRanking[].count").type(JsonFieldType.NUMBER).description("픽 받은 수")
 
                                 ))
                                 .build())
