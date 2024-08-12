@@ -21,6 +21,7 @@ public class LocationSocketController {
     public void update(
         @Payload LocationData.Request request
     ) {
+        log.debug("request: {}", request);
         locationService.saveUserLocation(request.getUsername(), request.getGeo());
         locationPublisher.publish(request);
     }
