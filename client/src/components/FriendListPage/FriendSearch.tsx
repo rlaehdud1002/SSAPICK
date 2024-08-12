@@ -39,7 +39,7 @@ const FriendSearch = () => {
     queryFn: () => getSearchFriendsList(watch("search"))
   });
 
-  console.log("friend", searchFriend)
+  // console.log("friend", searchFriend)
 
   useEffect(() => {
     if (isSubmitSuccessful) {

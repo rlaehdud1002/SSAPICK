@@ -1,5 +1,5 @@
 import instance from 'api/clientApi';
-import { IFriend, ISearchFriend } from 'atoms/Friend.type';
+import { IContent, IFriend, ISearchData, ISearchFriend } from 'atoms/Friend.type';
 import { BaseResponse } from 'atoms/User.type';
 
 // 친구 목록 get
@@ -12,7 +12,7 @@ export const getFriendsList = async (): Promise<IFriend[]> => {
     throw new Error('친구 목록 조회 실패');
   }
 
-  console.log('getFriendsList');
+
 
   return data;
 };
@@ -27,7 +27,7 @@ export const postAddFriend = async (userId: number): Promise<void> => {
     throw new Error('친구 팔로우 실패');
   }
 
-  console.log('postAddFriend');
+  console.log('친구 팔로우 성공');
 
   return data;
 };
@@ -42,16 +42,16 @@ export const deleteFriend = async (userId: number): Promise<void> => {
 };
 
 // 추천 친구 목록 조회
-export const getRecommendFriendsList = async (): Promise<IFriend[]> => {
+export const getRecommendFriendsList = async (): Promise<ISearchData<IContent[]>> => {
   const {
     data: { success, data, message },
-  } = await instance.get<BaseResponse<IFriend[]>>('/follow/recommend');
+  } = await instance.get<BaseResponse<ISearchData<IContent[]>>>('/follow/recommend');
 
   if (!success) {
     throw new Error('추천 친구 목록 조회 실패');
   }
 
-  console.log('getRecommendFriendsList');
+  console.log('추천 친구 목록 조회 성공');
 
   return data;
 };
