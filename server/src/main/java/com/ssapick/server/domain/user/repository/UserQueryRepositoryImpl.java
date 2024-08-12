@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,6 +30,9 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 		Short section = getSection(userId);
 		return Stream.concat(findUserByCampusId(userId, section).stream(), findUserByFollow(userId, section).stream())
 			.distinct()
+			.sorted(Comparator.comparingInt(Friend::getCohort))
+			.sorted(Comparator.comparingInt(Friend::getCampusSection))
+			.sorted(Comparator.comparing(Friend::getName))
 			.toList();
 	}
 
