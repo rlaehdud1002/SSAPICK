@@ -1,25 +1,16 @@
 package com.ssapick.server.domain.user.repository;
 
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.ProfileData.Friend;
-import com.ssapick.server.domain.user.entity.Follow;
-import com.ssapick.server.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.function.LongSupplier;
 import java.util.stream.Stream;
 
 import static com.ssapick.server.domain.user.entity.QCampus.campus;
@@ -44,9 +35,8 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 	@Override
 	public Page<Friend> searchUserByKeyword(Long userId, String keyword, Pageable pageable) {
 		Short section = getSection(userId);
-		List<Long> searchUserIds = searchUserIds(userId, keyword);
 
-		List<Friend> result = queryFactory.select(Projections.constructor(
+		List<Friend> friends = queryFactory.select(Projections.constructor(
 				Friend.class,
 				user.id,
 				user.name,
@@ -63,7 +53,20 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 			.from(user)
 			.leftJoin(user.profile, profile)
 			.leftJoin(user.profile.campus, campus)
-			.where(user.id.in(searchUserIds))
+			.where(user.id.in(JPAExpressions.select(user.id)
+					.from(user)
+					.leftJoin(user.profile, profile)
+					.leftJoin(user.profile.campus, campus)
+					.where(
+							user.id.notIn(
+									JPAExpressions.select(userBan.toUser.id)
+											.from(userBan)
+											.where(userBan.fromUser.id.eq(userId))
+							),
+							user.id.ne(userId),
+							user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name) .like("%" + keyword + "%")
+					))
+			)
 			.orderBy(user.profile.cohort.asc())
 			.orderBy(user.profile.campus.section.asc())
 			.orderBy(user.name.asc())
@@ -71,14 +74,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		return new PageImpl<>(result, pageable, searchUserIds.size());
-
+		return PageableExecutionUtils.getPage(friends, pageable, () -> searchUserIds(userId, keyword));
 	}
 
-	private List<Long> searchUserIds(Long userId, String keyword){
-		Short section = getSection(userId);
-
-		return queryFactory.select(user.id)
+	private Long searchUserIds(Long userId, String keyword){
+		return queryFactory.select(user.count())
 			.from(user)
 			.leftJoin(user.profile, profile)
 			.leftJoin(user.profile.campus, campus)
@@ -89,9 +89,8 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 						.where(userBan.fromUser.id.eq(userId))
 				),
 				user.id.ne(userId),
-				user.profile.campus.section.eq(section),
 				user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name) .like("%" + keyword + "%")
-			).fetch();
+			).fetchOne();
 	}
 
 
