@@ -1,7 +1,7 @@
 import instance from 'api/clientApi';
 import { IMessage, ISendMessage } from 'atoms/Message.type';
 import { IPaging } from 'atoms/Pick.type';
-import { BaseResponse, IEmpty, SuccessResponse } from 'atoms/User.type';
+import { BaseResponse, IEmpty } from 'atoms/User.type';
 
 // 메시지 보내기
 export const postMessageSend = async (

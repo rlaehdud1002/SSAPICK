@@ -74,7 +74,7 @@ const Send = () => {
             <MessageContent key={index} message={message} status="send" />
           ))
       ) : (
-        <NoMessage content="No sent messages." />
+        <NoMessage content="보낸 쪽지가 없습니다." />
       )}
       <div ref={observerElem} />
       {isFetchingNextPage && <div>Loading more messages...</div>}

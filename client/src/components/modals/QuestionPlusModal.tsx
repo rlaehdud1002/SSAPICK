@@ -141,7 +141,7 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
               </div>
             )}
             {step === NewQuestionStep.ALERT && (
-              <ResultCheckModal content="질문 생성이 완료되었습니다." />
+              <ResultCheckModal content="질문 생성 신청이 완료되었습니다." />
             )}
           </DialogContent>
         )}
