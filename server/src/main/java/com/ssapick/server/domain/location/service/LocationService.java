@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.data.redis.domain.geo.Metrics.METERS;
@@ -35,12 +36,11 @@ public class LocationService {
     private final static int LOCATION_LIMIT_TIME = 60 * 5;
     private final ProfileRepository profileRepository;
 
+    @Resource(name = "redisTemplate")
+    private GeoOperations<String, Object> geoOperations;
 
     @Resource(name = "redisTemplate")
-    private GeoOperations<String, String> geoOperations;
-
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, String> valueOperations;
+    private ValueOperations<String, Object> valueOperations;
 
     @Transactional
     public void saveUserLocation(String username, LocationData.Geo geo) {
@@ -57,7 +57,7 @@ public class LocationService {
 
     public List<LocationData.Response> findFriends(User user) {
         log.debug("user: {}", user);
-        GeoReference<String> reference = GeoReference.fromMember(user.getUsername());
+        GeoReference<Object> reference = GeoReference.fromMember(user.getUsername());
         log.debug("reference: {}", reference);
         Distance distance = new Distance(500, METERS);
 
@@ -68,7 +68,7 @@ public class LocationService {
                 .sortAscending()
                 .limit(10);
 
-        GeoResults<RedisGeoCommands.GeoLocation<String>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
+        GeoResults<RedisGeoCommands.GeoLocation<Object>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
 
         assert search != null;
 
@@ -77,10 +77,10 @@ public class LocationService {
                 .filter(geo -> valueOperations.get(GEO_PROFILE_IMAGE_KEY + geo.getContent().getName()) != null)
                 .map(geo -> {
                     LocationData.Response response = new LocationData.Response();
-                    String username = geo.getContent().getName();
+                    String username = geo.getContent().getName().toString();
                     Point point = geo.getContent().getPoint();
                     response.setUsername(username);
-                    response.setProfileImage(valueOperations.get(GEO_PROFILE_IMAGE_KEY + username));
+                    response.setProfileImage(Objects.requireNonNull(valueOperations.get(GEO_PROFILE_IMAGE_KEY + username)).toString());
                     response.setDistance(geo.getDistance().getValue());
                     response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
                     return response;
