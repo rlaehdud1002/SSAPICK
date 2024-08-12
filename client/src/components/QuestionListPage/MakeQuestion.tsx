@@ -3,6 +3,7 @@ import MakeQuestionContent from './MakeQuestionlContent';
 import { getQuestionByUser } from 'api/questionApi';
 import { IQuestion } from 'atoms/Pick.type';
 import Loading from 'components/common/Loading';
+import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 
 const MakeQuestion = () => {
   const { data: questions, isLoading } = useQuery<IQuestion[]>({
@@ -18,9 +19,7 @@ const MakeQuestion = () => {
 
   return (
     <div className="mb-20">
-      <div className="bg-ssapick rounded-lg text-center mt-4 p-4">
-        질문 생성하기!
-      </div>
+      <QuestionPlusModal location="myquestion" />
       {questions.length !== 0 ? (
         questions.map((question, index) => (
           <MakeQuestionContent key={index} question={question} />

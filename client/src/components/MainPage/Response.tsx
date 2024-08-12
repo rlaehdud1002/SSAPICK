@@ -15,6 +15,7 @@ import { getPickco } from 'api/authApi';
 import { useQuery } from '@tanstack/react-query';
 import { IPickco } from 'atoms/User.type';
 import Loading from 'components/common/Loading';
+import AlarmCheckModal from 'components/modals/AlarmCheckModal';
 
 interface ResponseProps {
   picks: IPick[];
@@ -22,6 +23,8 @@ interface ResponseProps {
 
 const Response = ({ picks }: ResponseProps) => {
   const [updatedPicks, setUpdatedPicks] = useState<IPick[]>([]);
+  const [show, setShow] = useState<boolean>(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
 
   const { data: pickco, isLoading: isLoadingPickco } = useQuery<IPickco>({
     queryKey: ['pickco'],
@@ -44,6 +47,13 @@ const Response = ({ picks }: ResponseProps) => {
       });
       return newPicks;
     });
+
+    const selectedPick = updatedPicks.find((pick) => pick.id === pickId);
+    if (selectedPick) {
+      setSelectedQuestion(selectedPick.question.content);
+    }
+
+    setShow(true);
   };
 
   const handleAccordionClick = useCallback((e: React.MouseEvent) => {
@@ -127,6 +137,9 @@ const Response = ({ picks }: ResponseProps) => {
           </Accordion>
         </div>
       ))}
+      {show && selectedQuestion && (
+        <AlarmCheckModal setShow={setShow} question={selectedQuestion} />
+      )}
       <div className="h-24" />
     </div>
   );
