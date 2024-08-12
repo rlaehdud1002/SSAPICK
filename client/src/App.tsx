@@ -31,18 +31,15 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
-
-
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
 
   requestPermission(messaging);
-  
+
   onMessage(messaging, (payload) => {
     console.log("Message received. ", payload);
   });
-  
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
@@ -70,15 +67,20 @@ function App() {
         if (data.lockedUser) {
           navigate("/");
           return;
-        } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
+        } else if (!data.mattermostConfirmed) {
           navigate("/mattermost");
           return;
-        } else if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo) {
           navigate("/infoinsert");
           return;
         } else if (!data.lockedUser && data.mattermostConfirmed && data.validInfo) {
-          if (location.includes("infoinsert") || location.includes("mattermost") || location.includes("")) {
+          if (
+            location.includes("infoinsert") ||
+            location.includes("mattermost") ||
+            location.includes("")
+          ) {
             navigate("/home");
+            return;
           }
         }
       } catch (error) {

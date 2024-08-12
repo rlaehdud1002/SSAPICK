@@ -19,27 +19,18 @@ interface AuthFormm {
 const Mattermost = () => {
   // const setUserInfo = useSetRecoilState(userInfostate);
   // 유저 정보 조회
-  const { data: information, isLoading } =
-    useQuery<IUserInfo | undefined>({
-      queryKey: ["information"],
-      queryFn: async () => await getUserInfo(),
-    }) ?? {};
-
-  const isValid = useRecoilValue(isValidateState);
-  const setValidState = useSetRecoilState(validState);
+  // const { data: information, isLoading } =
+  //   useQuery<IUserInfo | undefined>({
+  //     queryKey: ["information"],
+  //     queryFn: async () => await getUserInfo(),
+  //   }) ?? {};
 
   const navigate = useNavigate();
 
-  const { data: authenticated } = useQuery<boolean>({
-    queryKey: ["authenticated"],
-    queryFn: async () => await mmAuthConfirm(),
-  });
-
-  useEffect(() => {
-    if (isValid) {
-      navigate("/home");
-    }
-  });
+  // const { data: authenticated } = useQuery<boolean>({
+  //   queryKey: ["authenticated"],
+  //   queryFn: async () => await mmAuthConfirm(),
+  // });
 
   const mutation = useMutation({
     mutationKey: ["auth", "send"],
@@ -49,15 +40,18 @@ const Mattermost = () => {
       // if (!information) return;
       // setUserInfo(information);
       navigate("/infoinsert");
-      console.log("성공");
+      return;
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 
-  useEffect(() => {
-    if (authenticated) {
-      navigate("/infoinsert");
-    }
-  }, [authenticated, navigate]);
+  // useEffect(() => {
+  //   if (authenticated) {
+  //     navigate("/infoinsert");
+  //   }
+  // }, [authenticated, navigate]);
 
   const { register, handleSubmit } = useForm<AuthFormm>();
 
@@ -72,9 +66,9 @@ const Mattermost = () => {
     console.log(errors);
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
