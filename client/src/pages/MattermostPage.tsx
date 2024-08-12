@@ -24,7 +24,7 @@ const Mattermost = () => {
       navigate("/infoinsert");
     },
     onError: (error) => {
-      console.log(error);``
+      console.log(error);
       setIsModalOpen(true); // 에러 발생 시 모달 열기
     },
   });
