@@ -108,8 +108,12 @@ public class MessageService {
 			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
 		);
 
-		if (commentAnalyzer.isCommentOffensive(create.getContent())) {
-			throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+		try {
+			if (commentAnalyzer.isCommentOffensive(create.getContent())) {
+				throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+			}
+		} catch (Exception e) {
+			throw new BaseException(ErrorCode.API_REQUEST_ERROR);
 		}
 
 		Message message = messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));

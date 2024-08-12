@@ -130,14 +130,17 @@ public class QuestionService {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
 
-        // 욕설 모욕 검사
-        if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
-            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        try {
+            if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
+                throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);}
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.API_REQUEST_ERROR);
         }
+
 
         // 기존 질문과 유사도 분석
         SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(create.getContent());
-        if (similarity.getValue() > 0.6) {
+        if (similarity.getValue() > 0.5) {
             throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
