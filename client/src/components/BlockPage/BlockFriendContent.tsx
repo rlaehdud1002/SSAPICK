@@ -7,8 +7,9 @@ interface BlockFriendContentProps {
   campusName: string;
   campusSection: number;
   name: string;
-  userId: number
-  profileImage: string
+  userId: number;
+  profileImage: string;
+  cohort: number;
 }
 
 const BlockFriendContent = ({
@@ -16,7 +17,8 @@ const BlockFriendContent = ({
   campusSection,
   name,
   userId,
-  profileImage
+  profileImage,
+  cohort,
 }: BlockFriendContentProps) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -46,7 +48,7 @@ const BlockFriendContent = ({
           )}
         </div>
         <div>
-          {campusName} {campusSection} {name}
+          {cohort}기 {campusSection}반 {name}
         </div>
         <div
           onClick={() => {
