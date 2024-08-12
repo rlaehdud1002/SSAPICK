@@ -89,12 +89,17 @@ public class LocationService {
         GeoReference<Object> reference = GeoReference.fromMember(user.getUsername());
         Distance distance = new Distance(500, METERS);
 
+        int size = 0;
+        if (setOperations.size(key) != null) {
+            size = Math.toIntExact(setOperations.size(key));
+        }
+
         RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs
                 .newGeoRadiusArgs()
                 .includeDistance()
                 .includeCoordinates()
                 .sortAscending()
-                .limit(10);
+                .limit(30);
         try {
             GeoResults<RedisGeoCommands.GeoLocation<Object>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
 
@@ -113,12 +118,14 @@ public class LocationService {
                         location.setDistance(geo.getDistance().getValue());
                         location.setPosition(LocationData.Position.of(point.getX(), point.getY()));
                         return location;
-                    }).toList();
+                    })
+                    .limit(10 - size)
+                    .toList();
 
-            return new LocationData.Response(setOperations.size(key), geoLocations);
+            return new LocationData.Response(size, geoLocations);
         } catch (Exception e) {
             log.error("error: {}", e.getMessage(), e);
         }
-        return new LocationData.Response(0L, List.of());
+        return new LocationData.Response(size, List.of());
     }
 }
