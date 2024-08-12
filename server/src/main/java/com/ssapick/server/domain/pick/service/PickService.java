@@ -107,7 +107,7 @@ public class PickService {
 	 */
 	@Transactional
 	public PickData.PickCondition createPick(User sender, PickData.Create create) {
-		if (!pickCacheRepository.lock(sender.getId())) {
+		if (pickCacheRepository.lock(sender.getId())) {
 			throw new BaseException(ErrorCode.USER_PICK_LOCK);
 		}
 

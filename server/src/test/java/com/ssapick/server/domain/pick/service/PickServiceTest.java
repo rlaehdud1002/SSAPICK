@@ -137,7 +137,7 @@ class PickServiceTest extends UserSupport {
 		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
-		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 		// * WHEN: 이걸 실행하면
 		PickData.PickCondition pickCondition = pickService.createPick(sender, create);
@@ -182,7 +182,7 @@ class PickServiceTest extends UserSupport {
 		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
-		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 
 		// * WHEN: 이걸 실행하면
@@ -217,7 +217,7 @@ class PickServiceTest extends UserSupport {
 
 		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
-		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 		// * WHEN: 이걸 실행하면
 		pickService.createPick(sender, create);
 
@@ -275,7 +275,7 @@ class PickServiceTest extends UserSupport {
 
 		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.empty());
-		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> pickService.createPick(sender, create);
@@ -371,7 +371,7 @@ class PickServiceTest extends UserSupport {
 		create.setStatus(PickData.PickStatus.PICKED);
 		create.setIndex(1);
 
-		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> pickService.createPick(sender, create);
