@@ -39,17 +39,13 @@ const FriendSearch = () => {
     queryFn: () => getSearchFriendsList(watch("search"))
   });
 
-  // console.log("friend", searchFriend)
+  console.log("friend", searchFriend)
 
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
   }, [isSubmitSuccessful, reset]);
-
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
 
   return (
     <div className="relative flex flex-col">
@@ -88,7 +84,7 @@ const FriendSearch = () => {
       </div>
       {searchFriend?.content.length ? (
         searchFriend.content.map((friend, index) => (
-          <FriendSearchContent key={index} profileImage={friend.profileImage} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
+          <FriendSearchContent key={index} userId={friend.userId}  follow={friend.follow} profileImage={friend.profileImage} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
         ))
       ) : (
         <div className="flex justify-center">

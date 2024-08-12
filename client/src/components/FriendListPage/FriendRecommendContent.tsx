@@ -1,22 +1,38 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import {
-  deleteFriend,
-  getRecommendFriendsList,
-  postAddFriend,
+  getRecommendFriendsList
 } from 'api/friendApi';
-import { IContent, IFriend, ISearchData } from 'atoms/Friend.type';
+import { IContent, ISearchData } from 'atoms/Friend.type';
 import Loading from 'components/common/Loading';
-import ProfileIcon from 'icons/ProfileIcon';
-import ToPlusIcon from 'icons/ToPlusIcon';
+import { useCallback, useRef } from 'react';
 
 const FriendRecommendContent = () => {
   // 추천 친구 목록 조회
-  const { data: recommendFriends = {content:[] as IContent[]}, isLoading: LoadingRecommendFriends } =
-    useQuery<ISearchData<IContent[]>>({
+  const { data: recommendFriends, isLoading: LoadingRecommendFriends, isError, hasNextPage, fetchNextPage } =
+    useInfiniteQuery<ISearchData<IContent[]>>({
       queryKey: ['recommendFriends'],
-      queryFn: getRecommendFriendsList,
+      queryFn: ({ pageParam = 0 }) => getRecommendFriendsList(pageParam as number, 10),
+      getNextPageParam: (lastPage, pages) => {
+        if (!lastPage.last) {
+          return pages.length;
+        }
+        return undefined;
+      },
+      initialPageParam: 0,
     });
-  console.log(recommendFriends.content);
+
+  console.log(recommendFriends?.pages[0].content);
+  const scrollPosition = useRef(0);
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target && hasNextPage) {
+        scrollPosition.current = window.scrollX;
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage]
+  );
 
   if (LoadingRecommendFriends) {
     return <Loading />;
@@ -26,11 +42,11 @@ const FriendRecommendContent = () => {
     <div className="w-full">
       <div>
         <div className="flex overflow-x-scroll scrollbar-hide">
-          {recommendFriends.content.length? (recommendFriends.content.map((friend, index) => (
-            <ToPlusIcon key={index} cohort={friend.cohort} classNum={friend.campusSection} name={friend.name} profileImage={friend.profileImage} userId={friend.userId}/>
+          {/* {recommendFriends?.pages.length? (recommendFriends.pages.map((friend, index) => (
+            <ToPlusIcon key={index} cohort={friend.content.cohort} classNum={friend.campusSection} name={friend.name} profileImage={friend.profileImage} userId={friend.userId}/>
           ))):(
             <span className='text-xs ml-36 mt-3'>추천하는 친구가 없습니다.</span>
-          )}  
+          )}   */}
         </div>
       </div>
     </div>

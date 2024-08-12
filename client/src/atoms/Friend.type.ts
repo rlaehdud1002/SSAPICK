@@ -52,6 +52,8 @@ export interface ISearchFriend {
       cohort: number;
       campusSection: number;
       profileImage: string;
+      follow: boolean;
+      userId: number;
     },
   ];
   number?: number;
