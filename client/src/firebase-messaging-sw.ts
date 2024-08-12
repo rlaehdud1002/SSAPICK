@@ -9,7 +9,6 @@ import { registerToken } from 'api/notificationApi';
 
 export function requestPermission(messaging: any) {
   const firebaseToken = getRecoil(firebaseTokenState);
-  if (firebaseToken !== null) return;
 
   void Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
