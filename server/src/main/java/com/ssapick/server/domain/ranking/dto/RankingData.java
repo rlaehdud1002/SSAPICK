@@ -17,6 +17,7 @@ public class RankingData {
         private final List<UserCount> topMessageSenders;
         private final List<UserCount> topSpendPickcoUsers;
         private final List<UserCount> topReservePickcoUsers;
+        private final List<QuestionUserRanking> questionUserRanking;
     }
 
 
@@ -43,6 +44,20 @@ public class RankingData {
             this.profileImage = profileImage;
         }
 
+    }
+
+    @Data
+    @AllArgsConstructor
+        public static class QuestionUserRanking {
+        private Long questionId;
+        private String questionContent;
+        private Long userId;
+        private String name;
+        private String profileImage;
+        private short cohort;
+        private String campusName;
+        private short section;
+        private Long count;
     }
 
 }

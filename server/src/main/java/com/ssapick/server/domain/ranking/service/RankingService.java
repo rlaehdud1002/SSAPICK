@@ -1,5 +1,7 @@
 package com.ssapick.server.domain.ranking.service;
 
+import com.ssapick.server.core.exception.BaseException;
+import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.domain.pick.entity.Message;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.MessageRepository;
@@ -46,6 +48,7 @@ public class RankingService {
         List<RankingData.UserCount> topSpendPickcoUsers = getTopSpendPickcoUsers(pickcoLogs);
         List<RankingData.UserCount> topReservePickcoUsers = getTopReservePickcoUsers(pickcoUsers);
 
+        List<RankingData.QuestionUserRanking> questionUserRanking = getQuestionUserRanking(picks);
 
 
         return new RankingData.Response(
@@ -54,8 +57,45 @@ public class RankingService {
                 topMessageReceivers,
                 topMessageSenders,
                 topSpendPickcoUsers,
-                topReservePickcoUsers
+                topReservePickcoUsers,
+                questionUserRanking
         );
+    }
+
+    private static List<RankingData.QuestionUserRanking> getQuestionUserRanking(List<Pick> picks) {
+        Map<Long, List<Pick>> picksByQuestion = picks.stream()
+                .collect(Collectors.groupingBy(p -> p.getQuestion().getId()));
+
+        return picksByQuestion.entrySet().stream()
+                .map(entry -> {
+                    Long questionId = entry.getKey();
+                    List<Pick> questionPicks = entry.getValue();
+
+                    // Receiver별 픽 수 계산
+                    Map<User, Long> pickCountByReceiver = questionPicks.stream()
+                            .collect(Collectors.groupingBy(Pick::getReceiver, Collectors.counting()));
+
+                    // 가장 많이 픽을 받은 사용자 찾기
+                    Map.Entry<User, Long> topReceiverEntry = pickCountByReceiver.entrySet().stream()
+                            .max(Map.Entry.comparingByValue())
+                            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_PICK));
+
+                    User topReceiver = topReceiverEntry.getKey();
+                    Long pickCount = topReceiverEntry.getValue();
+
+                    return new RankingData.QuestionUserRanking(
+                            questionId,
+                            questionPicks.get(0).getQuestion().getContent(), // 질문 내용
+                            topReceiver.getId(),
+                            topReceiver.getName(),
+                            topReceiver.getProfile().getProfileImage(),
+                            topReceiver.getProfile().getCohort(),
+                            topReceiver.getProfile().getCampus().getName(),
+                            topReceiver.getProfile().getCampus().getSection(),
+                            pickCount
+                    );
+                })
+                .toList();
     }
 
     private static List<RankingData.UserCount> getTopReservePickcoUsers(List<User> pickcoUsers) {
