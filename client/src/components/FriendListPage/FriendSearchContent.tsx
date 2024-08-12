@@ -9,16 +9,13 @@ interface FriendSearchContentProps {
   classSection: number;
   name: string;
   userid?: number;
+  profileImage?: string;
 }
 
-const FriendSearchContent = ({
-  name,
-  cohort,
-  classSection,
-  userid,
-}: FriendSearchContentProps) => {
+const FriendSearchContent = ({ name, cohort, classSection,userid, profileImage }: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(true);
 
+ 
   // 친구 추가
   const addMutation = useMutation({
     mutationKey: ['addFriend'],
@@ -77,9 +74,10 @@ const FriendSearchContent = ({
         </div>
       </div>
       <Separator className="my-4 mx-4" />
-      {/* <div className="bg-white h-px w-90 mx-8 mt-5"></div> */}
     </Fragment>
   );
 };
+ 
+
 
 export default FriendSearchContent;

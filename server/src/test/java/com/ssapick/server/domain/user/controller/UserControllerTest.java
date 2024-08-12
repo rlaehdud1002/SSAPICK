@@ -9,6 +9,8 @@ import com.ssapick.server.domain.pick.dto.PickData;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Campus;
+import com.ssapick.server.domain.user.entity.PickcoLog;
+import com.ssapick.server.domain.user.entity.PickcoLogType;
 import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.service.UserService;
@@ -28,6 +30,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
@@ -293,4 +296,98 @@ class UserControllerTest extends RestDocsSupport {
                                         .build()
                         )));
     }
+
+    @Test
+    @DisplayName("로그인한 유저의 픽코 로그를 반환한다.")
+    void getPickcoLogs() throws Exception {
+        // * GIVEN: 이런게 주어졌을 때
+        User user = this.createUser("user");
+
+        List<PickcoLog> pickcoLogs = List.of(
+                createPickcoLog(user, PickcoLogType.SIGN_UP, 300, 300),
+                createPickcoLog(user, PickcoLogType.PICK, 30, 330),
+                createPickcoLog(user, PickcoLogType.HINT_OPEN, -100, 230),
+                createPickcoLog(user, PickcoLogType.MESSAGE, -20, 210)
+        );
+
+        List<UserData.PickcoLogResponse> pickcoLogResponses = pickcoLogs.stream()
+                .map(UserData.PickcoLogResponse::fromEntity)
+                .toList();
+
+        when(userService.getPickcoLogs(any(), any())).thenReturn(new PageImpl<>(pickcoLogResponses, PageRequest.of(0, 10), pickcoLogResponses.size()));
+
+        ResultActions perform = this.mockMvc.perform(get("/api/v1/user/pickco-log")
+                .param("page", "0")
+                .param("size", "10"));
+
+        perform.andExpect(status().isOk())
+                .andDo(this.restDocs.document(
+                        resource(
+                                ResourceSnippetParameters.builder()
+                                        .tag("유저")
+                                        .summary("픽코 로그 조회 API")
+                                        .description("로그인한 사용자의 픽코 로그를 조회한다.")
+                                        .queryParameters(
+                                                parameterWithName("page").description("페이지 번호").optional(),
+                                                parameterWithName("size").description("페이지 크기").optional()
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("success").description("성공 여부"),
+                                                fieldWithPath("status").description("HTTP 상태 코드"),
+                                                fieldWithPath("message").description("응답 메시지"),
+                                                fieldWithPath("data.totalElements").description("총 요소 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+                                                fieldWithPath("data.totalPages").description("총 페이지 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+                                                fieldWithPath("data.size").description("페이지당 요소 수").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.number").description("현재 페이지 번호").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.first").description("첫 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.last").description("마지막 페이지 여부").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.sort").description("정렬 정보").type(JsonFieldType.OBJECT).optional(),
+                                                fieldWithPath("data.sort.sorted").description("정렬 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.sort.unsorted").description("정렬되지 않음 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.sort.empty").description("정렬 정보 비어 있음 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.pageable.unpaged").description("비페이지 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.pageable.paged").description("페이지 여부")
+                                                        .type(JsonFieldType.BOOLEAN)
+                                                        .optional(),
+                                                fieldWithPath("data.numberOfElements").description("페이지 내 요소 수")
+                                                        .type(JsonFieldType.NUMBER)
+                                                        .optional(),
+
+                                                fieldWithPath("data.content[].id").type(JsonFieldType.NUMBER).description("픽코 로그 아이디"),
+                                                fieldWithPath("data.content[].pickcoLogType").type(JsonFieldType.STRING).description("픽코 로그 타입"),
+                                                fieldWithPath("data.content[].change").type(JsonFieldType.NUMBER).description("사용량/지급량"),
+                                                fieldWithPath("data.content[].remain").type(JsonFieldType.NUMBER).description("남은 픽코"),
+                                                fieldWithPath("data.content[].createdAt").type(JsonFieldType.STRING).description("픽코 로그 생성일"),
+                                                fieldWithPath("data.pageable.pageNumber").description("페이지번호").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.pageable.pageSize").description("페이지 사이즈").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.pageable.sort").description("정렬").type(JsonFieldType.OBJECT).optional(),
+                                                fieldWithPath("data.pageable.sort.empty").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.sort.sorted").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.sort.unsorted").description("정렬").type(JsonFieldType.BOOLEAN).optional(),
+                                                fieldWithPath("data.pageable.offset").description("오프셋").type(JsonFieldType.NUMBER).optional(),
+                                                fieldWithPath("data.empty").description("현재 페이지가 비어 있는지 여부").type(JsonFieldType.BOOLEAN).optional()
+                                        )
+                                        .build()
+                        )));
+    }
+
+    private PickcoLog createPickcoLog(User user, PickcoLogType pickcoLogType, int change, int remain) {
+        PickcoLog pickcoLog = spy(PickcoLog.createPickcoLog(user, pickcoLogType, change, remain));
+        when(pickcoLog.getId()).thenReturn(1L);
+        when(pickcoLog.getCreatedAt()).thenReturn(LocalDateTime.now());
+        return pickcoLog;
+    }
+
 }

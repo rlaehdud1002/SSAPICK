@@ -2,10 +2,12 @@ package com.ssapick.server.domain.location.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public class LocationData {
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Geo {
         private double latitude;
         private double longitude;
@@ -13,8 +15,9 @@ public class LocationData {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Request {
-        private String profileImage;
+        private String username;
         private Geo geo;
     }
 

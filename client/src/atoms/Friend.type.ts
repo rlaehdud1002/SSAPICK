@@ -1,11 +1,11 @@
 export interface IFriend {
   userId: number;
-  nickname: string;
-  gender: string;
-  campusName: string;
-  campusSection: number;
-  campusDescription: string;
+  name: string;
   profileImage: string;
+  cohort: number;
+  campusSection: number;
+  follow: boolean;
+  sameCampus: boolean;
 }
 
 export interface ISearchFriend {
@@ -18,7 +18,8 @@ export interface ISearchFriend {
       name: string;
       cohort: number;
       campusSection: number;
-    }
+      profileImage: string;
+    },
   ];
   number?: number;
   sort?: object;
@@ -27,4 +28,3 @@ export interface ISearchFriend {
   numberOfElements?: number;
   empty?: boolean;
 }
-

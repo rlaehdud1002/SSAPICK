@@ -1,20 +1,22 @@
-import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
+import { IQuestion } from 'atoms/Pick.type';
 
 interface MakeQuestionContentProps {
-  question: string;
+  question: IQuestion;
 }
 
 const MakeQuestionContent = ({ question }: MakeQuestionContentProps) => {
   return (
     <div>
-      <div className="flex items-center mt-5 justify-between mx-12">
-        <div>
-          <QuestionAlarmIcon width={50} height={50} />
-        </div>
-        <div>{question}</div>
+      <div className="flex items-center py-5 border-b-[1px] border-white">
+        <img
+          src={question.category.thumbnail}
+          alt="noImage"
+          width="60"
+          height="60"
+          className="bg-white/50 rounded-full p-2 mx-4"
+        />
+        <div>{question.content}</div>
       </div>
-      {/* <Separator className="my-4 mx-4" />  */}
-      <div className="bg-white h-px w-90 mx-2 mt-5" />
     </div>
   );
 };

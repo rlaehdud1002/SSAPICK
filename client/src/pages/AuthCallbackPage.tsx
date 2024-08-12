@@ -15,47 +15,10 @@ const useAuthCallback = () => {
   const navigate = useNavigate();
   const location = useLocation().pathname.split("/")[1];
 
-  const handleValidityCheck = async () => {
-    try {
-      const data = await validCheck();
-      setValidState(data);
-      return data;
-    } catch (error) {
-      console.error("유효성 검사 실패", error);
-      navigate("/");
-      throw error;
-    }
-  };
-
-  const handleRedirection = (data: IValid) => {
-    console.log("유효성 검사33", data.lockedUser, data.mattermostConfirmed, data.validInfo);
-    if (data.lockedUser) {
-      navigate("/");
-    } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
-      navigate("/mattermost");
-    } else if (!data.validInfo && !location.includes("infoinsert")) {
-      navigate("/infoinsert");
-    } else if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-      if (
-        location.includes("auth") ||
-        location.includes("infoinsert") ||
-        location.includes("mattermost")
-      ) {
-        navigate("/home");
-      }
-    }
-  };
-
   const initialize = async () => {
     const accessToken = searchParam.get("accessToken");
     if (accessToken) {
       setAccessToken(accessToken);
-      try {
-        const data = await handleValidityCheck();
-        handleRedirection(data);
-      } catch (error) {
-        navigate("/");
-      }
     }
   };
 

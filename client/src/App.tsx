@@ -34,20 +34,16 @@ const messaging = getMessaging(firebaseApp);
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
-  console.dir(messaging);
+
+  requestPermission(messaging);
+
   onMessage(messaging, (payload) => {
     console.log("Message received. ", payload);
   });
 
-  useEffect(() => {
-    requestPermission(messaging);
-  }, []);
-
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
   const setValidState = useSetRecoilState(validState);
-  const [refreshRequest, setRefreshRequest] = useRecoilState(refreshRequestState);
-  const setAccessToken = useSetRecoilState(accessTokenState);
   const isAuthenticated = useRecoilValue(isLoginState);
   const headerFooter = () => {
     return (
@@ -60,21 +56,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(refreshRequest);
-    if (!refreshRequest) {
-      refresh()
-        .then((response) => {
-          setAccessToken(response.accessToken);
-          setRefreshRequest(true);
-        })
-        .catch((error) => {
-          console.error(error);
-          setRefreshRequest(true);
-        });
-    }
-  }, [refreshRequest, setAccessToken, setRefreshRequest]);
-
-  useEffect(() => {
     const checkValidity = async () => {
       try {
         if (location === "splash") {
@@ -82,25 +63,29 @@ function App() {
         }
         if (isValid) return;
         const data = await validCheck();
-        console.log("유효성 검사", data.lockedUser, data.mattermostConfirmed, data.validInfo);
         setValidState(data);
         if (data.lockedUser) {
           navigate("/");
           return;
-        } else if (!data.mattermostConfirmed && !location.includes("mattermost")) {
+        } else if (!data.mattermostConfirmed) {
           navigate("/mattermost");
           return;
-        } else if (!data.validInfo && !location.includes("infoinsert")) {
+        } else if (!data.validInfo) {
           navigate("/infoinsert");
           return;
-        } else if (data.lockedUser === false && data.mattermostConfirmed && data.validInfo) {
-          if (location.includes("infoinsert") || location.includes("mattermost")) {
+        } else if (!data.lockedUser && data.mattermostConfirmed && data.validInfo) {
+          if (
+            location.includes("infoinsert") ||
+            location.includes("mattermost") ||
+            location.includes("")
+          ) {
             navigate("/home");
+            return;
           }
         }
       } catch (error) {
         console.error("유효성 검사 실패", error);
-        navigate("/"); // 유효성 검사 실패 시 로그인 페이지로 리다이렉트
+        navigate("/");
       }
     };
     checkValidity();

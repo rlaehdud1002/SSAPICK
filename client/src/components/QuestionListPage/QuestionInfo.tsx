@@ -20,16 +20,11 @@ const QuestionInfo = () => {
   return (
     <div className="ml-5">
       <QuestionInfoContent />
-      {/* <Separator className="my-4 mx-4" />  */}
-      <div className="bg-white h-px w-90 mx-1 mt-5"></div>
       <span>알림 설정한 질문</span>
       {alarmPick && (
         <div className="mt-5">
           <div className="mb-20">
-            <AlarmedQuestion
-              gender={alarmPick?.sender.gender}
-              title={alarmPick?.question.content}
-            />
+            <AlarmedQuestion pick={alarmPick} />
           </div>
         </div>
       )}

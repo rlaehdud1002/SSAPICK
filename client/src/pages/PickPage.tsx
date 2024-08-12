@@ -98,13 +98,16 @@ const Pick = () => {
     return <Loading />;
   }
 
+  console.log('pickFriends', pickFriends);
+  console.log('question', question);
+  console.log('pickInfo', pickInfo);
+
   return (
     <div className="relative">
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        question[pickInfo.index] &&
-        pickFriends && (
+        question[pickInfo.index] && (
           <div>
             <Question
               question={question[pickInfo.index]}
