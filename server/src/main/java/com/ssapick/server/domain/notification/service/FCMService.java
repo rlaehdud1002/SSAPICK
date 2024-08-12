@@ -37,8 +37,15 @@ public class FCMService {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void notification(FCMData.NotificationEvent notificationEvent) {
+        // * 만약, 받는 사람이 나를 차단했다면 알람을 전송하지 않는다.
+        if (notificationEvent.getReceiver().getBannedUser().stream()
+                .anyMatch(banUser -> banUser.getToUser().getId().equals(notificationEvent.getSender().getId()))) {
+            log.info("receiver: {} has banned sender: {}", notificationEvent.getReceiver(), notificationEvent.getSender());
+            return;
+        }
+
         Message message = Message.builder()
-                .setToken(getUserToken(notificationEvent.getUser()))
+                .setToken(getUserToken(notificationEvent.getReceiver()))
                 .setWebpushConfig(WebpushConfig.builder()
                         .putHeader("ttl", "300")
                         .setNotification(new WebpushNotification(notificationEvent.getTitle(), notificationEvent.getMessage(), notificationEvent.getThumbnail()))
@@ -46,12 +53,12 @@ public class FCMService {
                 ).build();
         try {
             String fcmId = null;
-            if (isAlarmAvailable(notificationEvent.getUser(), notificationEvent.getType())) {
+            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
                 fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
             }
 
             notificationRepository.save(Notification.createNotification(
-                    notificationEvent.getUser(),
+                    notificationEvent.getReceiver(),
                     notificationEvent.getType(),
                     notificationEvent.getNotificationId(),
                     notificationEvent.getTitle(),

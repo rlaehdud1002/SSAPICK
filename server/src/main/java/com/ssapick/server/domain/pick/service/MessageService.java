@@ -92,7 +92,6 @@ public class MessageService {
 	 * @param sender 보내는 사람
 	 * @param create {@link MessageData.Create} 메시지 생성 정보
 	 */
-	@Async("apiExecutor")
 	@Transactional
 	public void createMessage(User sender, MessageData.Create create) {
 		Pick pick = pickRepository.findByIdWithSender(create.getPickId()).orElseThrow(
@@ -108,8 +107,16 @@ public class MessageService {
 			() -> new BaseException(ErrorCode.NOT_FOUND_USER)
 		);
 
-		if (commentAnalyzer.isCommentOffensive(create.getContent())) {
-			throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+		try {
+			if (commentAnalyzer.isCommentOffensive(create.getContent())) {
+				throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+			}
+		} catch (BaseException e) {
+			if (e.getErrorCode() == ErrorCode.OFFENSIVE_CONTENT) {
+				throw e;
+			} else {
+				throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+			}
 		}
 
 		Message message = messageRepository.save(Message.createMessage(sender, receiver, pick, create.getContent()));
@@ -120,10 +127,11 @@ public class MessageService {
 
 		publisher.publishEvent(FCMData.NotificationEvent.of(
 				NotificationType.MESSAGE,
+				sender,
 				receiver,
 				message.getId(),
 			sender.getProfile().getCohort()+ "기 " + sender.getProfile().getCampus().getSection() + "반 " + sender.getName()+"님이 당신에게 쪽지를 보냈습니다.",
-				"당신의 픽 : " + pick.getQuestion().getContent() + "\n" + create.getContent(),
+				 create.getContent(),
 				null
 		));
 	}

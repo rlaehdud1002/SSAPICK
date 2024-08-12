@@ -1,20 +1,20 @@
-import React from "react";
-import Question from "components/PickPage/QuestionBox";
-import Choice from "components/PickPage/ChoiceBox";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { IPickCreate, IPickInfo, IQuestion } from "atoms/Pick.type";
-import { getQuestion } from "api/questionApi";
-import { IFriend } from "atoms/Friend.type";
-import { getFriendsList } from "api/friendApi";
-import { useCallback, useState, useEffect, useTransition } from "react";
-import { getPickInfo, postCreatePick } from "api/pickApi";
-import { useRecoilState } from "recoil";
-import { isQuestionUpdatedState, questionState } from "atoms/PickAtoms";
-import PickComplete from "components/PickPage/PickComplete";
-import { Navigate } from "react-router-dom";
-import FriendRerollModal from "components/modals/FriendRerollModal";
-import { pickFriendState } from "atoms/FriendAtoms";
-import Loading from "components/common/Loading";
+import React from 'react';
+import Question from 'components/PickPage/QuestionBox';
+import Choice from 'components/PickPage/ChoiceBox';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
+import { getQuestion } from 'api/questionApi';
+import { IFriend } from 'atoms/Friend.type';
+import { getFriendsList } from 'api/friendApi';
+import { useCallback, useState, useEffect, useTransition } from 'react';
+import { getPickInfo, postCreatePick } from 'api/pickApi';
+import { useRecoilState } from 'recoil';
+import { isQuestionUpdatedState, questionState } from 'atoms/PickAtoms';
+import PickComplete from 'components/PickPage/PickComplete';
+import { Navigate } from 'react-router-dom';
+import FriendRerollModal from 'components/modals/FriendRerollModal';
+import { pickFriendState } from 'atoms/FriendAtoms';
+import Loading from 'components/common/Loading';
 
 const Pick = () => {
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
@@ -22,7 +22,7 @@ const Pick = () => {
   const [isTouchDisabled, setIsTouchDisabled] = useState<boolean>(false);
 
   const getNewQuestion = useMutation({
-    mutationKey: ["question"],
+    mutationKey: ['question'],
     mutationFn: getQuestion,
     onSuccess: (data) => {
       setQuestion(data);
@@ -32,7 +32,7 @@ const Pick = () => {
   const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<
     IFriend[]
   >({
-    queryKey: ["friends"],
+    queryKey: ['friends'],
     queryFn: getFriendsList,
   });
 
@@ -48,18 +48,18 @@ const Pick = () => {
 
   useEffect(() => {
     if (pickFriends.length === 0) {
-      console.log("친구 셔플");
+      console.log('친구 셔플');
       handleShuffle();
     }
   }, [handleShuffle, friends]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
-    isQuestionUpdatedState
+    isQuestionUpdatedState,
   );
 
   const { data: pickInfo, isLoading: LoadingPickInfo } = useQuery<IPickInfo>({
-    queryKey: ["pickInfo"],
+    queryKey: ['pickInfo'],
     queryFn: getPickInfo,
     refetchOnMount: false,
     staleTime: Infinity,
@@ -80,11 +80,11 @@ const Pick = () => {
   const [isPending, startTransition] = useTransition();
 
   const mutation = useMutation({
-    mutationKey: ["pickInfo"],
+    mutationKey: ['pickInfo'],
     mutationFn: async (data: IPickCreate) => postCreatePick(data),
     onSuccess: (data: IPickInfo) => {
       queryClient.invalidateQueries({
-        queryKey: ["pickInfo"],
+        queryKey: ['pickInfo'],
       });
       handleShuffle();
       setFinish(data.index === null);
@@ -117,7 +117,7 @@ const Pick = () => {
       ) : (
         question[pickInfo.index] && (
           <div
-            className={`${isPending || isTouchDisabled ? "pointer-events-none" : ""}`}
+            className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
           >
             <Question
               question={question[pickInfo.index]}
@@ -155,7 +155,7 @@ const Pick = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-center items-center space-x-2">
+            <div className="flex justify-center space-x-2">
               <FriendRerollModal handleShuffle={handleShuffle} />
             </div>
           </div>

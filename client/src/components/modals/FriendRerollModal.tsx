@@ -36,7 +36,7 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
       handleShuffle();
     },
     onError: () => {
-      console.log('에러 ㅈㅈ');
+      console.log('친구 리롤 실패');
     },
   });
 
@@ -49,13 +49,12 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     return <Loading />;
   }
 
-  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <div className='flex justify-center items-center space-x-2'>
-          <ShuffleIcon className="cursor-pointer" />      
-          <h1>새로 고침</h1>
+        <div className="flex justify-center items-center space-x-2 bg-[#5F86E9]/50 rounded-full text-white px-4 py-1">
+          <ShuffleIcon className="cursor-pointer" location='pick' />
+          <h1>친구 목록 셔플</h1>
         </div>
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">

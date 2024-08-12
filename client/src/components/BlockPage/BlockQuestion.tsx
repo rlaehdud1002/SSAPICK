@@ -24,7 +24,6 @@ const BlockQuestion = () => {
             questionId={block.id}
             question={block.content}
             thumbnail={block.category.thumbnail}
-
           />
         ))
       ) : (

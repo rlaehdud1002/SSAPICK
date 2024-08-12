@@ -13,9 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "components/ui/dialog";
-import { blockUser } from "api/blockApi";
-import { useNavigate } from "react-router-dom";
+} from 'components/ui/dialog';
+import { blockUser } from 'api/blockApi';
 
 enum WarningDeleteStep {
   CHECK,
@@ -52,7 +51,7 @@ const WarningDeleteModal = ({
     onSuccess: () => {
       console.log("쪽지 차단 성공");
       queryClient.invalidateQueries({
-        queryKey: ["message", "send"],
+        queryKey: ['message', 'received'],
       });
     },
   });

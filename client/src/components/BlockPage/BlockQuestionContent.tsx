@@ -6,7 +6,7 @@ import BlockCancelModal from "components/modals/BlockCancelModal";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 
 interface BlockQuestionContentProps {
-  question: any;
+  question: string;
   questionId: number;
   thumbnail: string;
 }

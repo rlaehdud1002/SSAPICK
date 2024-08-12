@@ -130,30 +130,73 @@ public class QuestionService {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
 
-        // 욕설 모욕 검사
-        if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
-            throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+        Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
+
+        try {
+            if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
+                publisher.publishEvent(
+                    FCMData.NotificationEvent.of(
+                        NotificationType.ADD_QUESTION,
+                        user,
+                        user,
+                        saveQuestion.getId(),
+                        ErrorCode.OFFENSIVE_CONTENT.getMessage(),
+                        addQuestionEventMessage(saveQuestion.getContent()),
+                        null
+                    ));
+                throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+            }
+        } catch (BaseException e) {
+            if (e.getErrorCode() == ErrorCode.OFFENSIVE_CONTENT) {
+                throw e;
+            } else {
+                publisher.publishEvent(
+                    FCMData.NotificationEvent.of(
+                        NotificationType.ADD_QUESTION,
+                        user,
+                        user,
+                        saveQuestion.getId(),
+                        ErrorCode.API_REQUEST_ERROR.getMessage(),
+                        addQuestionEventMessage(saveQuestion.getContent()),
+                        null
+                    ));
+
+
+                throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+            }
         }
 
         // 기존 질문과 유사도 분석
         SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(create.getContent());
-        if (similarity.getValue() > 0.6) {
+        if (similarity.getValue() > 0.5) {
+
+            publisher.publishEvent(
+                FCMData.NotificationEvent.of(
+                    NotificationType.ADD_QUESTION,
+                    user,
+                    user,
+                    saveQuestion.getId(),
+                    ErrorCode.EXIST_QUESTION.getMessage(),
+                    addQuestionEventMessage(saveQuestion.getContent()),
+                    null
+                ));
+
             throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
-
-        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.QUESTION_CREATE, QUESTION_CREATE_COIN));
-        Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
 
         publisher.publishEvent(
             FCMData.NotificationEvent.of(
                 NotificationType.ADD_QUESTION,
+                user,
                 user,
                 saveQuestion.getId(),
                 "당신의 질문이 등록 됐어요!",
                 addQuestionEventMessage(saveQuestion.getContent()),
                 null
             ));
-        
+
+        publisher.publishEvent(new PickcoEvent(user, PickcoLogType.QUESTION_CREATE, QUESTION_CREATE_COIN));
+
         questionCacheRepository.add(saveQuestion);
     }
 

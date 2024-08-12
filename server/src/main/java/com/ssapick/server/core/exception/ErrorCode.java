@@ -38,7 +38,7 @@ public enum ErrorCode {
 	NOT_FOUND_QUESTION_CATEGORY(5002, HttpStatus.NOT_FOUND, "질문 카테고리를 찾을 수 없습니다."),
 	EXIST_QUESTION_BAN(5003, HttpStatus.BAD_REQUEST, "이미 질문이 차단되어 있습니다."),
 	NOT_FOUND_QUESTION(5004, HttpStatus.NOT_FOUND, "질문을 찾을 수 없습니다."),
-	EXIST_QUESTION(5005, HttpStatus.BAD_REQUEST, "이미 질문이 존재합니다."),
+	EXIST_QUESTION(5005, HttpStatus.BAD_REQUEST, "이미 비슷한 질문이 존재합니다."),
 	NOT_FOUND_QUESTION_BAN(5006, HttpStatus.NOT_FOUND, "질문 차단을 찾을 수 없습니다."),
 
 	//Pick
@@ -69,7 +69,8 @@ public enum ErrorCode {
 	ALREADY_BAN_USER(11001, HttpStatus.BAD_REQUEST, "이미 차단한 사용자입니다."),
 
 	// Notification
-	NOT_FOUND_NOTIFICATION(12000, HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다.");
+	NOT_FOUND_NOTIFICATION(12000, HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
+	API_REQUEST_ERROR(12001, HttpStatus.INTERNAL_SERVER_ERROR, "API 요청 중 오류가 발생하였습니다.");
 
 	private final int code;
 	private final HttpStatus status;
