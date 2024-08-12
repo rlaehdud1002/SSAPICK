@@ -5,9 +5,9 @@ import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
 
 interface BlockQuestionContentProps {
-  question: any;
+  question: string;
   questionId: number;
-  thumbnail: string ;
+  thumbnail: string;
 }
 
 const BlockQuestionContent = ({
@@ -31,8 +31,8 @@ const BlockQuestionContent = ({
   return (
     <div>
       <div className="flex items-center mt-5 justify-between mx-8">
-        <div className='bg-white/60 w-16 h-16 flex justify-center items-center rounded-full'>
-          <img className='w-12 h-12' src={thumbnail} alt="thumbnail" />
+        <div className="bg-white/60 w-16 h-16 flex justify-center items-center rounded-full">
+          <img className="w-12 h-12" src={thumbnail} alt="thumbnail" />
         </div>
         <div>{question}</div>
         <div
