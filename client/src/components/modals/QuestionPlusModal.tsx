@@ -85,11 +85,14 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
   };
 
   return (
-    <form>
+    <form className='flex items-center'>
       <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
         <DialogTrigger onClick={() => setOpen(true)} className="w-full">
           {location === 'pickpage' ? (
-            <PlusIcon />
+            <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
+              <PlusIcon className='mr-1'/>
+              질문 생성
+            </div>
           ) : (
             <div className="bg-ssapick rounded-lg text-center mt-4 p-4">
               질문 생성하기!
