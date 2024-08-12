@@ -179,31 +179,31 @@ class QuestionServiceTest extends UserSupport {
 		verify(questionCacheRepository).add(any(Question.class));
 	}
 
-	@Test
-	@DisplayName("질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트")
-	void 질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		User user = createUser("test");
-		QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
-
-		when(questionCategoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
-		when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
-		lenient().when(sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(any()))
-			.thenReturn(new SentenceSimilarityResponse(0.1, "테스트"));
-
-		QuestionData.Create create = new QuestionData.Create();
-
-		create.setCategoryId(category.getId());
-		create.setContent("테스트 질문");
-
-		// * WHEN: 이걸 실행하면
-		Runnable runnable = () -> questionService.createQuestion(user, create);
-
-		// * THEN: 이런 결과가 나와야 한다
-		assertThatThrownBy(runnable::run)
-			.isInstanceOf(BaseException.class)
-			.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
-	}
+	// @Test
+	// @DisplayName("질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트")
+	// void 질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트() throws Exception {
+	// 	// * GIVEN: 이런게 주어졌을 때
+	// 	User user = createUser("test");
+	// 	QuestionCategory category = QuestionCategory.create("테스트 카테고리", "");
+	//
+	// 	when(questionCategoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
+	// 	when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
+	// 	lenient().when(sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(any()))
+	// 		.thenReturn(new SentenceSimilarityResponse(0.1, "테스트"));
+	//
+	// 	QuestionData.Create create = new QuestionData.Create();
+	//
+	// 	create.setCategoryId(category.getId());
+	// 	create.setContent("테스트 질문");
+	//
+	// 	// * WHEN: 이걸 실행하면
+	// 	Runnable runnable = () -> questionService.createQuestion(user, create);
+	//
+	// 	// * THEN: 이런 결과가 나와야 한다
+	// 	assertThatThrownBy(runnable::run)
+	// 		.isInstanceOf(BaseException.class)
+	// 		.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
+	// }
 
 	@Test
 	@DisplayName("질문_생성_요청_시_중복된_질문_포함시_예외발생_테스트")

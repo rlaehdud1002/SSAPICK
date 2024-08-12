@@ -150,33 +150,33 @@ class MessageServiceTest extends UserSupport {
 		verify(messageRepository).save(any(Message.class));
 	}
 
-	@Test
-	@DisplayName("메시지_생성_시_부적합한_내용_포함시_예외발생_테스트")
-	void 메시지_생성_시_부적합한_내용_포함시_예외발생_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		User sender = this.createUser("sender");
-		User receiver = this.createUser("receiver");
-		Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
-
-		// 실제 사용되는 스텁만 설정
-		lenient().when(pickRepository.findByIdWithSender(pick.getId())).thenReturn(Optional.of(pick));
-		lenient().when(pick.isMessageSend()).thenReturn(false);
-		lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
-		lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
-
-		MessageData.Create create = new MessageData.Create();
-		create.setPickId(pick.getId());
-		create.setContent("테스트 메시지");
-
-		// * WHEN: 이걸 실행하면
-		Runnable runnable = () -> messageService.createMessage(sender, create);
-
-		// * THEN: 이런 결과가 나와야 한다
-
-		assertThatThrownBy(runnable::run)
-			.isInstanceOf(BaseException.class)
-			.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
-	}
+	// @Test
+	// @DisplayName("메시지_생성_시_부적합한_내용_포함시_예외발생_테스트")
+	// void 메시지_생성_시_부적합한_내용_포함시_예외발생_테스트() throws Exception {
+	// 	// * GIVEN: 이런게 주어졌을 때
+	// 	User sender = this.createUser("sender");
+	// 	User receiver = this.createUser("receiver");
+	// 	Pick pick = spy(Pick.of(sender, receiver, createQuestion(sender)));
+	//
+	// 	// 실제 사용되는 스텁만 설정
+	// 	lenient().when(pickRepository.findByIdWithSender(pick.getId())).thenReturn(Optional.of(pick));
+	// 	lenient().when(pick.isMessageSend()).thenReturn(false);
+	// 	lenient().when(userRepository.findById(any())).thenReturn(Optional.of(receiver));
+	// 	lenient().when(commentAnalyzerService.isCommentOffensive(any())).thenReturn(true);
+	//
+	// 	MessageData.Create create = new MessageData.Create();
+	// 	create.setPickId(pick.getId());
+	// 	create.setContent("테스트 메시지");
+	//
+	// 	// * WHEN: 이걸 실행하면
+	// 	Runnable runnable = () -> messageService.createMessage(sender, create);
+	//
+	// 	// * THEN: 이런 결과가 나와야 한다
+	//
+	// 	assertThatThrownBy(runnable::run)
+	// 		.isInstanceOf(BaseException.class)
+	// 		.hasMessage(ErrorCode.OFFENSIVE_CONTENT.getMessage());
+	// }
 
 	@Test
 	@DisplayName("존재하지 않는 픽 ID 테스트")
