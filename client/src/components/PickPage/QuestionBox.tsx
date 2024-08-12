@@ -1,11 +1,7 @@
-import { PlusCircledIcon } from '@radix-ui/react-icons';
 import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
 import QuestionPlusModal from 'components/modals/QuestionPlusModal';
 import WarningModal from 'components/modals/WarningModal';
 import { Progress } from 'components/ui/progress';
-import PassIcon from 'icons/PassIcon';
-import WarningIcon from 'icons/WarningIcon';
-import PlusIcon from 'icons/PlusIcon';
 
 interface QuestionProps {
   question: IQuestion;
