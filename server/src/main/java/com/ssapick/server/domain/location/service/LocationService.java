@@ -56,9 +56,7 @@ public class LocationService {
     }
 
     public List<LocationData.Response> findFriends(User user) {
-        log.debug("user: {}", user);
         GeoReference<Object> reference = GeoReference.fromMember(user.getUsername());
-        log.debug("reference: {}", reference);
         Distance distance = new Distance(500, METERS);
 
         RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs
@@ -67,23 +65,27 @@ public class LocationService {
                 .includeCoordinates()
                 .sortAscending()
                 .limit(10);
+        try {
+            GeoResults<RedisGeoCommands.GeoLocation<Object>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
 
-        GeoResults<RedisGeoCommands.GeoLocation<Object>> search = geoOperations.search(GEO_LOCATION_KEY, reference, distance, args);
+            assert search != null;
 
-        assert search != null;
-
-        return search.getContent().stream()
-                .filter(geo -> !geo.getContent().getName().equals(user.getUsername()))
-                .filter(geo -> valueOperations.get(GEO_PROFILE_IMAGE_KEY + geo.getContent().getName()) != null)
-                .map(geo -> {
-                    LocationData.Response response = new LocationData.Response();
-                    String username = geo.getContent().getName().toString();
-                    Point point = geo.getContent().getPoint();
-                    response.setUsername(username);
-                    response.setProfileImage(Objects.requireNonNull(valueOperations.get(GEO_PROFILE_IMAGE_KEY + username)).toString());
-                    response.setDistance(geo.getDistance().getValue());
-                    response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
-                    return response;
-                }).toList();
+            return search.getContent().stream()
+                    .filter(geo -> !geo.getContent().getName().equals(user.getUsername()))
+                    .filter(geo -> valueOperations.get(GEO_PROFILE_IMAGE_KEY + geo.getContent().getName()) != null)
+                    .map(geo -> {
+                        LocationData.Response response = new LocationData.Response();
+                        String username = geo.getContent().getName().toString();
+                        Point point = geo.getContent().getPoint();
+                        response.setUsername(username);
+                        response.setProfileImage(Objects.requireNonNull(valueOperations.get(GEO_PROFILE_IMAGE_KEY + username)).toString());
+                        response.setDistance(geo.getDistance().getValue());
+                        response.setPosition(LocationData.Position.of(point.getX(), point.getY()));
+                        return response;
+                    }).toList();
+        } catch (Exception e) {
+            log.error("error: {}", e.getMessage(), e);
+        }
+        return List.of();
     }
 }
