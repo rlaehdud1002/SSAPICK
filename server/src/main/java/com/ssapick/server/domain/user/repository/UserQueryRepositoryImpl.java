@@ -2,6 +2,7 @@ package com.ssapick.server.domain.user.repository;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssapick.server.domain.user.dto.ProfileData;
@@ -12,6 +13,7 @@ import com.ssapick.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -43,35 +45,41 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 	public Page<Friend> searchUserByKeyword(Long userId, String keyword, Pageable pageable) {
 		Short section = getSection(userId);
 
-		List<Friend> friends = queryFactory.select(Projections.constructor(
-						Friend.class, user.id, user.name, user.profile.profileImage, user.profile.cohort, user.profile.campus.section, JPAExpressions.select(follow.isNotNull())
+		List<Friend> friends =
+			queryFactory.select(Projections.constructor(
+				Friend.class,
+				user.id,
+				user.name,
+				user.profile.profileImage,
+				user.profile.cohort,
+				user.profile.campus.section,
+
+				JPAExpressions.select(follow.isNotNull())
 								.from(follow)
 								.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
-						user.profile.campus.section.eq(section)
-				)).from(user)
+
+				user.profile.campus.section.eq(section)))
+
+				.from(user)
 				.leftJoin(user.profile, profile)
 				.leftJoin(user.profile.campus, campus)
-				.leftJoin(user.followings, follow)
-				.where(user.profile.campus.in(
-						JPAExpressions.select(user.profile.campus)
-								.from(user)
-								.where(user.id.eq(userId))
-				))
-				.where(user.name.like(keyword))
-				.where(user.id.notIn(
-						JPAExpressions.select(follow.followingUser.id)
-								.from(follow)
-								.where(follow.followUser.id.eq(userId))
-				))
-				.where(user.id.notIn(
+
+				.where(
+					user.id.notIn(
 						JPAExpressions.select(userBan.toUser.id)
-								.from(userBan)
-								.where(userBan.fromUser.id.eq(userId))
-				))
-				.where(user.id.ne(userId))
+							.from(userBan)
+							.where(userBan.fromUser.id.eq(userId))
+					),
+
+					user.id.ne(userId),
+					user.profile.campus.section.eq(section),
+					user.name.like("%" + keyword + "%"))
+				.orderBy(user.name.asc())
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
 				.fetch();
 
-		return PageableExecutionUtils.getPage(friends, pageable, getLongSupplier(userId, keyword));
+		return new PageImpl<>(friends, pageable, friends.size());
 	}
 
 	private LongSupplier getLongSupplier(Long userId, String keyword) {
