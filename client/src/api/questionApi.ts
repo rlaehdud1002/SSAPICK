@@ -1,10 +1,5 @@
 import instance from 'api/clientApi';
-import {
-  ICategory,
-  ICreateQuestion,
-  IQuestion,
-  IQuestionNoCreatedAt,
-} from 'atoms/Pick.type';
+import { ICategory, ICreateQuestion, IQuestion } from 'atoms/Pick.type';
 import { BaseResponse } from 'atoms/User.type';
 
 // 로그인 된 사용자에게 맞는 질문 조회
@@ -40,11 +35,10 @@ export const postCreateQuestion = async (
 };
 
 // 내가 받은 질문 TOP3 조회
-export const getMyQuestionRank = async (): Promise<IQuestionNoCreatedAt[]> => {
+export const getMyQuestionRank = async (): Promise<IQuestion[]> => {
   const {
     data: { success, data },
-  } =
-    await instance.get<BaseResponse<IQuestionNoCreatedAt[]>>('/questions/rank');
+  } = await instance.get<BaseResponse<IQuestion[]>>('/questions/rank');
 
   if (!success) {
     throw new Error('받은 질문 조회 실패');
@@ -55,10 +49,10 @@ export const getMyQuestionRank = async (): Promise<IQuestionNoCreatedAt[]> => {
 };
 
 // 유저 아이디로 질문 조회
-export const getQuestionByUser = async (): Promise<IQuestionNoCreatedAt[]> => {
+export const getQuestionByUser = async (): Promise<IQuestion[]> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IQuestionNoCreatedAt[]>>(`/questions/me`);
+  } = await instance.get<BaseResponse<IQuestion[]>>(`/questions/me`);
 
   console.log('data', data);
 

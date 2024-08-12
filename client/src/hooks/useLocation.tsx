@@ -1,5 +1,5 @@
 import { Client } from '@stomp/stompjs';
-import { accessTokenState, isLoginState } from 'atoms/UserAtoms';
+import { accessTokenState, isLoginState, usernameState } from 'atoms/UserAtoms';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from 'recoil';
 
@@ -17,12 +17,16 @@ export const useLocation = ({refetch}: UseLocationProps) => {
         latitude: 0,
         longitude: 0
     });
+
     const [error, setError] = useState<string | undefined>()
     const [client, setClient] = useState<Client | undefined>(undefined);
     const isLogin = useRecoilValue(isLoginState);
     const accessToken = useRecoilValue(accessTokenState)
+    const username = useRecoilValue(usernameState)
+    console.log("username", username)
 
     const fetchLocation = () => {
+        
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -51,8 +55,16 @@ export const useLocation = ({refetch}: UseLocationProps) => {
             fetchLocation();
         }, 3000)
 
+        const resetLocation = setInterval(() => {
+            setCoords({
+                latitude: 0,
+                longitude: 0
+            })
+        }, 60000)
+
         return () => {
             clearInterval(parseLocation);
+            clearInterval(resetLocation);
         }
     }, []);
 
@@ -81,8 +93,11 @@ export const useLocation = ({refetch}: UseLocationProps) => {
         client.publish({
             destination: '/pub/location/update',
             body: JSON.stringify({
-                latitude: coords.latitude,
-                longitude: coords.longitude
+                username: username,
+                geo: {
+                    latitude: coords.latitude,
+                    longitude: coords.longitude
+                }
             }),
         })
     }, [coords, client, client?.connected])
@@ -97,7 +112,9 @@ export const useLocation = ({refetch}: UseLocationProps) => {
             },
             onConnect: () => {
                 client!!.subscribe('/sub/location/update', (message) => {
-                    refetch();
+                    if (message.body !== username) {
+                        refetch();
+                    }
                 })
             }
         })

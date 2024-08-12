@@ -9,8 +9,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 
-import java.security.Principal;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,10 +19,10 @@ public class LocationSocketController {
 
     @MessageMapping("/location/update")
     public void update(
-        Principal principal,
-        @Payload LocationData.Geo geo
+        @Payload LocationData.Request request
     ) {
-        locationService.saveUserLocation(principal.getName(), geo);
-        locationPublisher.publish(geo);
+        log.debug("request: {}", request);
+        locationService.saveUserLocation(request.getUsername(), request.getGeo());
+        locationPublisher.publish(request);
     }
 }
