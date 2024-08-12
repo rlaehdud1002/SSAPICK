@@ -127,6 +127,7 @@ public class MessageService {
 
 		publisher.publishEvent(FCMData.NotificationEvent.of(
 				NotificationType.MESSAGE,
+				sender,
 				receiver,
 				message.getId(),
 			sender.getProfile().getCohort()+ "기 " + sender.getProfile().getCampus().getSection() + "반 " + sender.getName()+"님이 당신에게 쪽지를 보냈습니다.",

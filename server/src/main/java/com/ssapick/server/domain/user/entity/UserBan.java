@@ -18,11 +18,11 @@ public class UserBan extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "from_user_id", referencedColumnName = "user_id", nullable = false ,foreignKey = @ForeignKey(name = "foreign_key_user_ban_from_user_id"))
+    @JoinColumn(name = "from_user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_user_ban_from_user_id"))
     private User fromUser;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "to_user_id", referencedColumnName = "user_id", nullable = false ,foreignKey = @ForeignKey(name = "foreign_key_user_ban_to_user_id"))
+    @JoinColumn(name = "to_user_id", referencedColumnName = "user_id", nullable = false, foreignKey = @ForeignKey(name = "foreign_key_user_ban_to_user_id"))
     private User toUser;
 
     public static UserBan of(User fromUser, User toUser) {

@@ -130,16 +130,14 @@ public class QuestionService {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
 
-
-
         Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
-
 
         try {
             if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
                 publisher.publishEvent(
                     FCMData.NotificationEvent.of(
                         NotificationType.ADD_QUESTION,
+                        user,
                         user,
                         saveQuestion.getId(),
                         ErrorCode.OFFENSIVE_CONTENT.getMessage(),
@@ -155,6 +153,7 @@ public class QuestionService {
                 publisher.publishEvent(
                     FCMData.NotificationEvent.of(
                         NotificationType.ADD_QUESTION,
+                        user,
                         user,
                         saveQuestion.getId(),
                         ErrorCode.API_REQUEST_ERROR.getMessage(),
@@ -175,6 +174,7 @@ public class QuestionService {
                 FCMData.NotificationEvent.of(
                     NotificationType.ADD_QUESTION,
                     user,
+                    user,
                     saveQuestion.getId(),
                     ErrorCode.EXIST_QUESTION.getMessage(),
                     addQuestionEventMessage(saveQuestion.getContent()),
@@ -187,6 +187,7 @@ public class QuestionService {
         publisher.publishEvent(
             FCMData.NotificationEvent.of(
                 NotificationType.ADD_QUESTION,
+                user,
                 user,
                 saveQuestion.getId(),
                 "당신의 질문이 등록 됐어요!",
