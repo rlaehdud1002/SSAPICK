@@ -113,16 +113,3 @@ export const getAlarmPick = async (
 
   return data;
 };
-
-
-// 알람 설정한 픽 조회
-export const getAlarmPick = async (): Promise<IPickAlarm> => {
-  const {
-    data: { success, data },
-  } = await instance.get<BaseResponse<IPickAlarm>>(`/pick/alarm`);
-
-  if (!success) {
-    throw new Error("알람 설정한 픽 조회 실패");
-  }
-  return data;
-};
