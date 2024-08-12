@@ -49,10 +49,14 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     return <Loading />;
   }
 
+  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <ShuffleIcon className="cursor-pointer" />
+        <div className='flex justify-center items-center space-x-2'>
+          <ShuffleIcon className="cursor-pointer" />      
+          <h1>새로 고침</h1>
+        </div>
       </DialogTrigger>
       <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
         <DialogHeader>
