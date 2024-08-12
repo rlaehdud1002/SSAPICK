@@ -88,7 +88,7 @@ INSERT INTO public.profile (created_at, updated_at, is_deleted, cohort, pickco, 
 VALUES (NOW(), NOW(), FALSE, 2024, 100, 'profile_image_a.png', 1, 1, 1),
        (NOW(), NOW(), FALSE, 2024, 150, 'profile_image_b.png', 2, 2, 2),
        (NOW(), NOW(), FALSE, 2024, 200, 'profile_image_c.png', 1, 3, 3),
-       (NOW(), NOW(), FALSE, 2024, 200, 'profile_image_c.png', 3, 4, 4);
+       (NOW(), NOW(), FALSE, 2024, 250, 'profile_image_c.png', 3, 4, 4);
 
 -- question
 INSERT INTO public.question (created_at, updated_at, is_deleted, ban_count, content, is_alarm_sent, skip_count, user_id,
