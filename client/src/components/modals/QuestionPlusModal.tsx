@@ -30,10 +30,13 @@ interface QuestionForm {
   newQuestion: string;
 }
 
-const QuestionPlusModal = () => {
+interface QuestionPlusModalProps {
+  location: string;
+}
+
+const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
   const [step, setStep] = useState<NewQuestionStep>(NewQuestionStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   // 질문 생성 api
   const mutation = useMutation({
@@ -49,7 +52,8 @@ const QuestionPlusModal = () => {
   useEffect(() => {
     if (step === NewQuestionStep.ALERT) {
       const timer = setTimeout(() => {
-        setIsModalVisible(false);
+        setOpen(false);
+        setStep(NewQuestionStep.INPUT);
       }, 1000);
 
       return () => clearTimeout(timer);
@@ -80,18 +84,19 @@ const QuestionPlusModal = () => {
     console.log('errors', errors);
   };
 
-  const onClose = () => {
-    setOpen(false);
-    setStep(NewQuestionStep.INPUT);
-  };
-
   return (
     <form>
-      <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-        <DialogTrigger onClick={() => setOpen(true)}>
-          <PlusIcon />
+      <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
+        <DialogTrigger onClick={() => setOpen(true)} className="w-full">
+          {location === 'pickpage' ? (
+            <PlusIcon />
+          ) : (
+            <div className="bg-ssapick rounded-lg text-center mt-4 p-4">
+              질문 생성하기!
+            </div>
+          )}
         </DialogTrigger>
-        {isModalVisible && (
+        {open && (
           <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
             <DialogHeader>
               <DialogTitle className="flex flex-start text-color-5F86E9">

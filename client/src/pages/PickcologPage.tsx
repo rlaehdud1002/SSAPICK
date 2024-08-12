@@ -1,29 +1,36 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getPickcolog } from "api/pickcologApi";
-import { IPaging } from "atoms/Pick.type";
-import { IPickcolog } from "atoms/Pickcolog.type";
-import Loading from "components/common/Loading";
-import PickcoLogList from "components/PickcologPage/PickcoLogList";
-import { useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { getPickcolog } from 'api/pickcologApi';
+import { IPaging } from 'atoms/Pick.type';
+import { IPickcolog } from 'atoms/Pickcolog.type';
+import Loading from 'components/common/Loading';
+import PickcoLogList from 'components/PickcologPage/PickcoLogList';
+import BackIcon from 'icons/BackIcon';
+import { useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Pickcolog = () => {
   const nav = useNavigate();
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<IPaging<IPickcolog[]>>({
-      queryKey: ["pickcolog"],
-      queryFn: ({ pageParam = 0 }) => getPickcolog(pageParam as number, 10),
-      getNextPageParam: (lastPage, pages) => {
-        if (!lastPage.last) {
-          return pages.length;
-        }
-        return undefined;
-      },
-      initialPageParam: 0,
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<IPaging<IPickcolog[]>>({
+    queryKey: ['pickcolog'],
+    queryFn: ({ pageParam = 0 }) => getPickcolog(pageParam as number, 10),
+    getNextPageParam: (lastPage, pages) => {
+      if (!lastPage.last) {
+        return pages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -33,7 +40,7 @@ const Pickcolog = () => {
         fetchNextPage();
       }
     },
-    [fetchNextPage, hasNextPage]
+    [fetchNextPage, hasNextPage],
   );
 
   useEffect(() => {
@@ -54,7 +61,7 @@ const Pickcolog = () => {
 
   useEffect(() => {
     if (data && !hasNextPage) {
-      console.log("조회가 완료되었습니다.");
+      console.log('조회가 완료되었습니다.');
     }
   }, [data, hasNextPage]);
 
@@ -67,9 +74,10 @@ const Pickcolog = () => {
   }
 
   return (
-    <div className="m-6">
-      <div className="flex flex-row items-center m-2 cursor-pointer" onClick={() => nav(-1)}>
-        뒤로 가기
+    <div className="m-5">
+      <div className="flex flex-row items-center mb-4" onClick={() => nav(-1)}>
+        <BackIcon />
+        <span>뒤로 가기</span>
       </div>
       <div className="m-6">
         {data?.pages.flatMap((page) => page.content).length ? (
@@ -81,7 +89,10 @@ const Pickcolog = () => {
               ))}
           </div>
         ) : (
-          <div>없음</div>
+          <div>
+            <span className="luckiest_guy">PICKCO</span>를 사용한 내역이
+            없습니다.
+          </div>
         )}
         <div ref={observerElem} />
         {isFetchingNextPage && <div>로딩 중...</div>}
