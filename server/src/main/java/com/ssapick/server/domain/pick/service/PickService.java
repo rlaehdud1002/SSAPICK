@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -248,4 +249,20 @@ public class PickService {
         return pick.map(value -> PickData.Search.fromEntity(value, true)).orElse(null);
     }
 
+	@Scheduled(fixedRate = 1000 * 60 * 60, initialDelay = 0)
+	public void sendFailNotification() {
+		log.debug("전송 실패한 알람 스케쥴링 처리");
+		pickRepository.findByAlarmSentIsFalse().forEach(pick -> {
+			log.debug("전송 실패한 알람 재전송: {}", pick.getId());
+			publisher.publishEvent(FCMData.NotificationEvent.of(
+				NotificationType.PICK,
+				pick.getSender(),
+				pick.getReceiver(),
+				pick.getId(),
+					"누군가가 당신을 선택했어요!",
+				pick.getQuestion().getContent(),
+				null
+			));
+		});
+	}
 }
