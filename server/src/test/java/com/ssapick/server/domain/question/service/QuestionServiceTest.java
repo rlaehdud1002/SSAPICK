@@ -179,6 +179,7 @@ class QuestionServiceTest extends UserSupport {
 		verify(questionCacheRepository).add(any(Question.class));
 	}
 
+	// ! 임시 주석
 	// @Test
 	// @DisplayName("질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트")
 	// void 질문_생성_요청_시_부적절한_내용_포함시_예외발생_테스트() throws Exception {
