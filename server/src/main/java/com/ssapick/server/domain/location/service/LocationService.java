@@ -12,7 +12,6 @@ import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.domain.geo.GeoReference;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,9 @@ public class LocationService {
     }
 
     public List<LocationData.Response> findFriends(User user) {
+        log.debug("user: {}", user);
         GeoReference<String> reference = GeoReference.fromMember(user.getUsername());
+        log.debug("reference: {}", reference);
         Distance distance = new Distance(500, METERS);
 
         RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs
