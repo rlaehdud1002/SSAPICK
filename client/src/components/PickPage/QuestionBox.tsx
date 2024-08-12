@@ -22,7 +22,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
         <p className="px-2 py-1 text-xs bg-white rounded-lg text-color-000855">
           {question.category.name}
         </p>
-        <QuestionPlusModal />
+        <QuestionPlusModal location="pickpage" />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <div className="flex justify-center">
@@ -49,7 +49,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
           <img
             src={question.category.thumbnail}
             alt="categoryImg"
-            className='w-[100px] h-[100px]'
+            className="w-[100px] h-[100px]"
             width={100}
             height={100}
           />

@@ -30,7 +30,10 @@ const RankedQuestion = () => {
       {rankQuestion.length !== 0 ? (
         <div className="flex flex-col">
           {rankQuestion.slice(0, 5).map((question, index) => (
-            <div className="flex flex-row justify-between mb-3 border-solid border-2 rounded-lg border-white/70">
+            <div
+              className="flex flex-row justify-between mb-3 border-solid border-2 rounded-lg border-white/70"
+              key={index}
+            >
               <div className="flex items-center flex-row my-2 mx-4">
                 <div className={`luckiest_guy text-lg ${rankColor[index]}`}>
                   {index + 1}
