@@ -1,30 +1,37 @@
-import AlarmIcon from "icons/AlarmIcon";
-import BackIcon from "icons/BackIcon";
-import AlarmContent from "components/AlarmPage/AlarmContent";
+import AlarmIcon from 'icons/AlarmIcon';
+import BackIcon from 'icons/BackIcon';
+import AlarmContent from 'components/AlarmPage/AlarmContent';
 
-import { useNavigate } from "react-router-dom";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { INotification } from "atoms/Notification.type";
-import { getNotificationList, readNotification } from "api/notificationApi";
-import { IPaging } from "atoms/Pick.type";
-import { useCallback, useEffect, useRef } from "react";
-import Loading from "components/common/Loading";
+import { useNavigate } from 'react-router-dom';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { INotification } from 'atoms/Notification.type';
+import { getNotificationList, readNotification } from 'api/notificationApi';
+import { IPaging } from 'atoms/Pick.type';
+import { useCallback, useEffect, useRef } from 'react';
+import Loading from 'components/common/Loading';
 
 const Alarm = () => {
   const nav = useNavigate();
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<IPaging<INotification[]>>({
-      queryKey: ["pick", "receive"],
-      queryFn: ({ pageParam = 0 }) => getNotificationList(pageParam as number, 10),
-      getNextPageParam: (lastPage, pages) => {
-        if (!lastPage.last) {
-          return pages.length;
-        }
-        return undefined;
-      },
-      initialPageParam: 0,
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<IPaging<INotification[]>>({
+    queryKey: ['notification'],
+    queryFn: ({ pageParam = 0 }) =>
+      getNotificationList(pageParam as number, 10),
+    getNextPageParam: (lastPage, pages) => {
+      if (!lastPage.last) {
+        return pages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -34,7 +41,7 @@ const Alarm = () => {
         fetchNextPage();
       }
     },
-    [fetchNextPage, hasNextPage]
+    [fetchNextPage, hasNextPage],
   );
 
   useEffect(() => {
@@ -52,7 +59,7 @@ const Alarm = () => {
 
   useEffect(() => {
     if (data && !hasNextPage) {
-      console.log("조회가 완료되었습니다.");
+      console.log('조회가 완료되었습니다.');
     }
   }, [data, hasNextPage]);
 
@@ -67,7 +74,7 @@ const Alarm = () => {
       await readNotification(); // 알림 읽음 처리 API 호출
       nav(-1); // 뒤로가기
     } catch (error) {
-      console.error("알림 읽음 처리 중 오류 발생:", error);
+      console.error('알림 읽음 처리 중 오류 발생:', error);
       // 필요시 사용자에게 에러 메시지 표시
     }
   };
@@ -76,18 +83,26 @@ const Alarm = () => {
 
   return (
     <div>
-      <div className="flex flex-row items-center m-2 cursor-pointer" onClick={handleBackClick}>
+      <div
+        className="flex flex-row items-center m-2 cursor-pointer"
+        onClick={handleBackClick}
+      >
         <BackIcon />
         <AlarmIcon />
       </div>
       <div className="m-6">
         {data?.pages.flatMap((page) => page.content).length ? (
           <>
-            {data.pages.flatMap((page) =>
-              page.content.map((notification) => <AlarmContent notification={notification} />)
+            {data.pages.flatMap((page, pageIndex) =>
+              page.content.map((notification, index) => (
+                <AlarmContent
+                  notification={notification}
+                  key={`${pageIndex}-${index}`}
+                />
+              )),
             )}
             <div ref={observerElem} className="observer-element">
-              {isFetchingNextPage && <div>로딩중...</div>}
+              {isFetchingNextPage && <Loading />}
             </div>
           </>
         ) : (
