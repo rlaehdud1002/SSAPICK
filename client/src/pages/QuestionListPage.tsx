@@ -1,9 +1,15 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import BackIcon from 'icons/BackIcon';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const QuestionList = () => {
   const location = useLocation().pathname.split('/')[3];
+  const navigate = useNavigate();
   return (
     <div className="m-5">
+      <div className="flex flex-row items-center mb-4" onClick={() => navigate('/profile')}>
+        <BackIcon />
+        <span>뒤로 가기</span>
+      </div>
       <div className="flex flex-row justify-center">
         <Link
           to="questioninfo"
@@ -18,11 +24,11 @@ const QuestionList = () => {
           생성한 질문
         </Link>
       </div>
-      <div className="mt-5">
+      <div>
         <Outlet />
       </div>
     </div>
   );
-}
+};
 
 export default QuestionList;

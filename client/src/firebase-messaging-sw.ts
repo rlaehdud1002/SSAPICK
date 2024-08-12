@@ -8,16 +8,17 @@ import { registerToken } from 'api/notificationApi';
 
 
 export function requestPermission(messaging: any) {
-  const accessToken = getRecoil(accessTokenState);
   const firebaseToken = getRecoil(firebaseTokenState);
-  if (!accessToken && firebaseToken) return;
 
   void Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
       getToken(messaging, { vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY })
         .then((token: string) => {
-          registerToken(token);
-          setRecoil(firebaseTokenState, token);
+          registerToken(token).then(() => {
+            setRecoil(firebaseTokenState, token);
+          }).catch((error) => {
+
+          })
         })
         .catch((err) => {
         })

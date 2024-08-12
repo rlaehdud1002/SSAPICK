@@ -41,6 +41,17 @@ public class UserController {
 		return SuccessResponse.of(userService.getPickco(user));
 	}
 
+	/**
+	 * 사용자 픽코 로그 조회 API
+	 */
+	@GetMapping(value = "/pickco-log")
+	public SuccessResponse<Page<UserData.PickcoLogResponse>> findPickcoLogs(
+			@CurrentUser User user,
+			Pageable pageable
+	) {
+		return SuccessResponse.of(userService.getPickcoLogs(user, pageable));
+	}
+
 
 
 	/**

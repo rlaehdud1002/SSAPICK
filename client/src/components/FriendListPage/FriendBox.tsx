@@ -1,41 +1,66 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postAddFriend } from 'api/friendApi';
+import { deleteFriend, postAddFriend } from 'api/friendApi';
+import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import DeleteModal from 'components/modals/DeleteModal';
 import BaseImageIcon from 'icons/BaseImageIcon';
+import { formatWithCursor } from 'prettier';
+import { useState } from 'react';
 
 interface FriendProps {
-  campus: string;
   campusSection: number;
   name: string;
-  campusDescription: string;
   userId: number;
-  userClass?: number;
   profileImage?: string;
+  follow: boolean;
+  sameCampus: boolean;
+  cohort: number;
 }
 
 const Friend = ({
-  campus,
   userId,
   name,
+  cohort,
   campusSection,
-  userClass,
   profileImage,
+  sameCampus,
+  follow,
 }: FriendProps) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationKey: ['friends', 'follow'],
+  const [isPlus, setIsPlus] = useState<boolean>(true);
+
+  const addMutation = useMutation({
+    mutationKey: ["addFriend",],
     mutationFn: postAddFriend,
+  
     onSuccess: () => {
-      console.log('친구 팔로우 성공');
+      console.log("친구 추가 성공");
       queryClient.invalidateQueries({
         queryKey: ['friends'],
-      });
+      })
+    },
+  });
+  
+  const deleteMutation = useMutation({
+    mutationKey: ["deleteFriend",],
+    mutationFn: deleteFriend,
+    onSuccess: () => {
+      console.log("친구 삭제 성공");
+      queryClient.invalidateQueries({
+        queryKey: ['friends'],
+      })
     },
   });
 
+  const onPlus = () => {
+    {isPlus ? 
+      (setIsPlus(false)) 
+      : 
+      (setIsPlus(true))}
+  }
+
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col">
       <div className="flex items-center ml-5 mr-5 justify-between">
         {profileImage ? (
           <img
@@ -46,36 +71,44 @@ const Friend = ({
         ) : (
           <BaseImageIcon width={64} height={64} className="ml-6" />
         )}
-
-        <div className="flex flex-col">
-          <span>
-            {campus}캠퍼스 {campusSection}반 {name}
+        <div className="flex flex-col justify-start w-32">
+          <span className=''>
+             {cohort}기 {campusSection}반 {name}
           </span>
-          <div className="flex flex-row">
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1 mr-2">
+          <div>
+             {sameCampus && (
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center px-1 py-1 mr-2">
               반 친구
             </span>
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center mt-1">
+            )}
+            {follow && (
+            <span className="text-xs bg-white/50 rounded-lg w-[56px] px-1 py-1 text-center ">
               찐친
             </span>
-          </div>
+              )}
+            </div>
         </div>
-        {userClass !== campusSection ? (
-          <DeleteModal title="언팔로우" userId={userId} />
-        ) : (
-          <span></span>
+        <div className='w-20'>
+        { follow ? (
+          <div onClick={
+            ()=>{
+              deleteMutation.mutate(userId);
+              onPlus();
+            }
+          }>
+            <PlusDeleteButton title="언팔로우" />
+            
+          </div>
+          ) : (
+          <div onClick={()=>{
+          addMutation.mutate(userId);
+          onPlus();
+          }}>
+          <PlusDeleteButton title="팔로우" isDelete={true} />
+          </div>
         )}
-        {/* <div>{userId}</div> */}
-        {/* <DeleteModal title="언팔로우" userId={userId} /> */}
-        <DeleteModal title="언팔로우" userId={userId} />
-        <button
-          onClick={() => {
-            mutation.mutate(userId);
-          }}
-        >
-          팔로우
-        </button>
-      </div>
+          </div>
+          </div>
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
   );

@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,7 @@ public class PickService {
 	private final QuestionRepository questionRepository;
 	private final QuestionBanRepository questionBanRepository;
 	private final EntityManager em;
+
 
 	/**
 	 * 받은 픽 조회하기
@@ -106,6 +108,9 @@ public class PickService {
 	 */
 	@Transactional
 	public PickData.PickCondition createPick(User sender, PickData.Create create) {
+		if (pickCacheRepository.lock(sender.getId())) {
+			throw new BaseException(ErrorCode.USER_PICK_LOCK);
+		}
 
 		if (pickCacheRepository.isCooltime(sender.getId())) {
 			return PickData.PickCondition.builder()
@@ -126,12 +131,13 @@ public class PickService {
 				pickCacheRepository.pick(sender.getId());
 				pickCount++;
 
-				User reference = em.getReference(User.class, create.getReceiverId());
-				Pick pick = pickRepository.save(Pick.of(sender, reference, question));
+				User receiver = em.getReference(User.class, create.getReceiverId());
+				Pick pick = pickRepository.save(Pick.of(sender, receiver, question));
 				publisher.publishEvent(
 					FCMData.NotificationEvent.of(
 							NotificationType.PICK,
-							reference,
+							sender,
+							receiver,
 							pick.getId(),
 							"누군가가 당신을 선택했어요!",
 						    pickEventMessage(question.getContent()),
@@ -167,6 +173,8 @@ public class PickService {
 			pickCacheRepository.setCooltime(sender.getId());
 			return PickData.PickCondition.cooltime();
 		}
+
+		pickCacheRepository.unlock(sender.getId());
 
 		return PickData.PickCondition.builder()
 			.index(index)
@@ -241,4 +249,20 @@ public class PickService {
         return pick.map(value -> PickData.Search.fromEntity(value, true)).orElse(null);
     }
 
+	@Scheduled(fixedRate = 1000 * 60 * 60, initialDelay = 0)
+	public void sendFailNotification() {
+		log.debug("전송 실패한 알람 스케쥴링 처리");
+		pickRepository.findByAlarmSentIsFalse().forEach(pick -> {
+			log.debug("전송 실패한 알람 재전송: {}", pick.getId());
+			publisher.publishEvent(FCMData.NotificationEvent.of(
+				NotificationType.PICK,
+				pick.getSender(),
+				pick.getReceiver(),
+				pick.getId(),
+					"누군가가 당신을 선택했어요!",
+				pick.getQuestion().getContent(),
+				null
+			));
+		});
+	}
 }

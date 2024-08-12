@@ -9,6 +9,31 @@ interface MessageContentProps {
 }
 
 const MessageContent = ({ message, status }: MessageContentProps) => {
+  const createTime = new Date(message.createdAt).getTime();
+  const currentTime = new Date().getTime();
+  const diffTime = currentTime - createTime;
+
+  const months = String(
+    Math.floor((diffTime / (1000 * 60 * 60 * 24 * 30)) % 12),
+  );
+  const days = String(Math.floor((diffTime / (1000 * 60 * 60 * 24)) % 30));
+  const hours = String(Math.floor((diffTime / (1000 * 60 * 60)) % 24));
+  const minutes = String(Math.floor((diffTime / (1000 * 60)) % 60));
+
+  let receivedTime;
+
+  if (months !== '0') {
+    receivedTime = `${months}개월 전`;
+  } else if (days !== '0') {
+    receivedTime = `${days}일 전`;
+  } else if (hours !== '0') {
+    receivedTime = `${hours}시간 전`;
+  } else if (minutes !== '0') {
+    receivedTime = `${minutes}분 전`;
+  } else {
+    receivedTime = '방금';
+  }
+
   return (
     <div className="mx-2 mt-5 mb-4 pb-3 border-b-[1px]">
       <div className="flex flex-row justify-between">
@@ -30,10 +55,8 @@ const MessageContent = ({ message, status }: MessageContentProps) => {
               : message.senderName}
           </h1>
         </div>
-        <div className='flex flex-row items-center'>
-          <span className="text-gray-500 text-xs">
-            {message.createdAt.slice(0, 10)}
-          </span>
+        <div className="flex flex-row items-center">
+          <span className="text-gray-500 text-xs">{receivedTime}</span>
           <WarningDelete message={message} />
         </div>
       </div>

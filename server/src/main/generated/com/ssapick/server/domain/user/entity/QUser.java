@@ -30,6 +30,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Short> banCount = createNumber("banCount", Short.class);
 
+    public final ListPath<UserBan, QUserBan> bannedUser = this.<UserBan, QUserBan>createList("bannedUser", UserBan.class, QUserBan.class, PathInits.DIRECT2);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

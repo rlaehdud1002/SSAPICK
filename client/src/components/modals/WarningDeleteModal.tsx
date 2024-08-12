@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteReceivedMessage, deleteSendMessage } from 'api/messageApi';
-import ResultCheckModal from 'components/modals/ResultCheckModal';
-import DeleteIcon from 'icons/DeleteIcon';
-import WarningIcon from 'icons/WarningIcon';
-import { Button } from 'components/ui/button';
+import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteReceivedMessage, deleteSendMessage } from "api/messageApi";
+import ResultCheckModal from "components/modals/ResultCheckModal";
+import DeleteIcon from "icons/DeleteIcon";
+import WarningIcon from "icons/WarningIcon";
+import { Button } from "components/ui/button";
 
 import {
   Dialog,
@@ -15,7 +15,6 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 import { blockUser } from 'api/blockApi';
-import { useNavigate } from 'react-router-dom';
 
 enum WarningDeleteStep {
   CHECK,
@@ -41,27 +40,25 @@ const WarningDeleteModal = ({
 }: WarningDeleteModalProps) => {
   const [step, setStep] = useState<WarningDeleteStep>(WarningDeleteStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
-  const nav = useNavigate();
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
-    mutationKey: ['block', 'user'],
+    mutationKey: ["block", "user"],
     mutationFn: blockUser,
 
     onSuccess: () => {
-      console.log('쪽지 신고 성공');
+      console.log("쪽지 차단 성공");
       queryClient.invalidateQueries({
-        queryKey: ['message', 'send'],
+        queryKey: ['message', 'received'],
       });
     },
   });
 
   // 쪽지 삭제 mutation
   const deleteMutation = useMutation({
-    mutationKey: ['message', 'delete'],
+    mutationKey: ["message", "delete"],
     mutationFn: ({
       messageId,
       location,
@@ -69,20 +66,20 @@ const WarningDeleteModal = ({
       messageId: number;
       location: string;
     }) => {
-      if (location === 'send') {
+      if (location === "send") {
         return deleteSendMessage(messageId); // Promise를 반환
-      } else if (location === 'received') {
-        console.log('받은 메시지 삭제 method 들어옴');
+      } else if (location === "received") {
+        console.log("받은 메시지 삭제 method 들어옴");
         return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
-        throw new Error('Invalid location');
+        throw new Error("Invalid location");
       }
     },
 
     // 쪽지 삭제 후 쪽지 목록 새로 고침
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['message', location === 'send' ? 'send' : 'received'],
+        queryKey: ["message", location === "send" ? "send" : "received"],
       });
     },
   });
@@ -91,18 +88,18 @@ const WarningDeleteModal = ({
   useEffect(() => {
     if (step === WarningDeleteStep.ALERT) {
       const timer = setTimeout(() => {
-        setIsModalVisible(false);
-      }, 500);
+        setOpen(false);
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [step]);
 
   const onClick = () => {
-    if (title === '신고') {
+    if (title === "차단") {
       blockMutatiion.mutate(senderId);
     } else {
-      console.log('메시지 삭제', location);
+      console.log("메시지 삭제", location);
       deleteMutation.mutate({ messageId, location });
     }
 
@@ -110,16 +107,11 @@ const WarningDeleteModal = ({
     setPopoverOpen(false);
   };
 
-  const onClose = () => {
-    setOpen(false);
-    setStep(WarningDeleteStep.CHECK);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         <div className="flex flex-row">
-          {title === '신고' ? (
+          {title === "차단" ? (
             <WarningIcon width={24} height={24} className="mr-3" />
           ) : (
             <DeleteIcon width={24} height={24} className="mr-3" />
@@ -127,7 +119,7 @@ const WarningDeleteModal = ({
           <span>{title}</span>
         </div>
       </DialogTrigger>
-      {isModalVisible && (
+      {open && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
@@ -138,7 +130,7 @@ const WarningDeleteModal = ({
             <div>
               <div className="flex flex-col items-center my-16 text-center">
                 <p>이 쪽지를 {title}하시겠습니까?</p>
-                {title === '신고' && (
+                {title === "차단" && (
                   <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
                     {message}
                   </p>

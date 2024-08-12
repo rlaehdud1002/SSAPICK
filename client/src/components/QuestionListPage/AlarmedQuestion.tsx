@@ -1,20 +1,42 @@
-import AlarmedIcon from "icons/AlarmedIcon";
-import { Separator } from "@radix-ui/react-select";
+import { useQueryClient } from '@tanstack/react-query';
+import { IPick } from 'atoms/Pick.type';
+import AlarmCheckModal from 'components/modals/AlarmCheckModal';
+import UserMaskIcon from 'icons/UserMaskIcon';
+import { useState } from 'react';
 
 interface AlarmedQuestionProps {
-  gender: string;
-  title: string;
+  pick: IPick;
 }
 
-const AlarmedQuestion = ({ gender, title }: AlarmedQuestionProps) => {
+const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
+  const [show, setShow] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
+  const handleAlarmUpdate = (pickId: number) => {
+    setShow(true);
+    queryClient.invalidateQueries({ queryKey: ['pick'] });
+  };
+
   return (
-    <div>
-      <div className="flex mt-5 ml-5">
-        <AlarmedIcon gender={gender} />
-        <span className="ml-10">{title}..</span>
-        {/* <Separator className="my-4 mx-4" />  */}
+    <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row">
+        <UserMaskIcon
+          pickId={pick.id}
+          alarm={pick.alarm}
+          gen={pick.sender.gender}
+          onAlarmUpdate={handleAlarmUpdate}
+        />
+        <span className="ml-4">{pick.question.content}</span>
       </div>
-      {/* <div className="bg-white h-px w-90 mx-2 mt-5"></div> */}
+      {/* <div
+        className="bg-gray-400 rounded-lg px-2 py-1 text-white"
+        onClick={() => handleAlarmUpdate(pick.id)}
+      >
+        삭제
+      </div> */}
+      {show && (
+        <AlarmCheckModal setShow={setShow} question={pick.question.content} />
+      )}
     </div>
   );
 };

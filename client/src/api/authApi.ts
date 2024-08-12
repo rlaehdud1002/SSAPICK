@@ -70,26 +70,20 @@ export const signOut = async (): Promise<void> => {
   return data;
 };
 
-// 회원 탈퇴 요청
-export const withdrawal = async (): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.delete('/auth');
-  if (!success) {
-    throw new Error(message);
-  }
-  return data;
-};
-
 // refresh token 요청
 export const refresh = async (): Promise<JwtToken> => {
-  const {
-    data: { success, data, message },
-  } = await instance.post<BaseResponse<JwtToken>>('/auth/refresh');
-  if (!success) {
-    throw new Error(message);
+  try {
+    const {
+      data: { success, data, message },
+    } = await instance.post<BaseResponse<JwtToken>>('/auth/refresh');
+    if (!success) {
+      throw new Error(message);
+    }
+    return data;
+  } catch (error) {
+    console.log('refresh token 요청 실패', error);
+    throw new Error('refresh token');
   }
-  return data;
 };
 
 // pickco 조회

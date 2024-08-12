@@ -46,6 +46,6 @@ public class CommentAnalyzerService {
 		// 공격성 여부 판단 (예: 0.7 이상이면 공격적이라고 판단)
 		double overallScore = (insultScore + profanityScore) / 2;
 
-		return overallScore > 0.7;
+		return overallScore > 0.4;
 	}
 }

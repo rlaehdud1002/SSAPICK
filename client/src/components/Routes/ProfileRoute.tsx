@@ -9,9 +9,9 @@ import Block from 'pages/BlockPage';
 import FriendList from 'pages/FriendListPage';
 import LocationAlarm from 'pages/LocationAlarmPage';
 import ModiInfoInsert from 'pages/ModiInfoInsert';
+import Pickcolog from 'pages/PickcologPage';
 import Profile from 'pages/ProfilePage';
 import QuestionList from 'pages/QuestionListPage';
-import SetAccount from 'pages/SetAccountPage';
 import SetAlarm from 'pages/SetAlarmPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -35,10 +35,8 @@ const ProfileRoute = () => {
         <Route path="questioninfo" element={<QuestionInfo />} />
         <Route path="makequestion" element={<MakeQuestion />} />
       </Route>
-      <Route path="/setaccount" element={<SetAccount />} />
       <Route path="/friendsearch" element={<FriendSearch />} />
-      {/* <Route path="/modiinfoinsert" element={<ModiInfoInsert/>}/> */}
-      {/* 잘못된 접근일 때 */}
+      <Route path="/pickcolog" element={<Pickcolog />} />
       <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
   );

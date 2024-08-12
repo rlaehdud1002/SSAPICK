@@ -123,8 +123,8 @@ class UserRepositoryTest extends TestDatabaseContainer {
         List<ProfileData.Friend> findUsers = userQueryRepository.findFollowUserByUserId(1L);
 
         // * THEN: 이런 결과가 나와야 한다
-        Assertions.assertThat(findUsers.size()).isEqualTo(3);
-        Assertions.assertThat(findUsers.stream().map(ProfileData.Friend::getUserId)).containsExactlyInAnyOrder(2L, 3L, 4L);
+        Assertions.assertThat(findUsers.size()).isEqualTo(2);
+        Assertions.assertThat(findUsers.stream().map(ProfileData.Friend::getUserId)).containsExactlyInAnyOrder(3L, 4L);
 
     }
 

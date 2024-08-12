@@ -8,3 +8,14 @@ export interface IAlarm {
 export interface IAlarmAll {
   onOff: boolean;
 }
+
+export interface IPickAlarm {
+  id: number;
+  sender: object;
+  receiver: object;
+  question: object;
+  alarm: boolean;
+  createdAt: string;
+  messageSend: boolean;
+  openedHint: Array<string>;
+}

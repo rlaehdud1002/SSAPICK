@@ -5,7 +5,7 @@ import { Button } from 'components/ui/button';
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
 
 import CoinUseModal from 'components/modals/CoinUseModal';
@@ -37,41 +37,40 @@ interface MessageForm {
 interface MessageModalProps {
   pick: IPick;
   pickco: number;
+  onMessageSent: (pickId: number) => void;
 }
 
-const MessageModal = ({ pick, pickco }: MessageModalProps) => {
+const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
   const [open, setOpen] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
   const [message, setMessage] = useState<boolean>(pick.messageSend);
 
-  const queryClient = useQueryClient();
-
   // 쪽지 전송 mutation
   const mutation = useMutation({
     mutationKey: ['message', 'send'],
     mutationFn: postMessageSend,
+
     // 쪽지 전송 성공 시
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['receivedPick'],
-      });
-      setMessage(true);
-      setStep(MessageModalStep.ALERT); // ALERT 단계로 이동
+      setStep(MessageModalStep.ALERT);
     },
   });
 
   // ALERT 단계가 실행된 후 1.5초 뒤에 모달을 닫음
   useEffect(() => {
     if (step === MessageModalStep.ALERT) {
+      console.log('alert');
       const timer = setTimeout(() => {
         setIsModalVisible(false);
+        setMessage(true);
+        onMessageSent(pick.id);
         setOpen(false); // 모달 닫기
       }, 1500);
 
       return () => clearTimeout(timer);
     }
-  }, [step]);
+  }, [step, onMessageSent, pick]);
 
   const {
     register,
@@ -90,6 +89,7 @@ const MessageModal = ({ pick, pickco }: MessageModalProps) => {
         content: data.message,
       });
       reset();
+      // setStep(MessageModalStep.ALERT);
     }
   };
 

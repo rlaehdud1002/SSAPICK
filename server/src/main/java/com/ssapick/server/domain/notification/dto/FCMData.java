@@ -10,7 +10,8 @@ public class FCMData {
     @AllArgsConstructor(staticName = "of")
     public static class NotificationEvent {
         private NotificationType type;
-        private User user;
+        private User sender;
+        private User receiver;
         private Long notificationId;
         private String title;
         private String message;

@@ -13,7 +13,7 @@ import {
 } from 'components/ui/dialog';
 
 import { useEffect, useState } from 'react';
-import { IPickCreate } from 'atoms/Pick.type';
+import { IPickCreate, IQuestion } from 'atoms/Pick.type';
 import PassIcon from 'icons/PassIcon';
 
 enum WarningStep {
@@ -23,7 +23,7 @@ enum WarningStep {
 
 interface WarningModalProps {
   title: string;
-  question: any;
+  question: IQuestion;
   blockPassCount: number;
   userPick: (data: IPickCreate) => void;
 }
@@ -36,7 +36,6 @@ const WarningModal = ({
 }: WarningModalProps) => {
   const [step, setStep] = useState<WarningStep>(WarningStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const handlePick = () => {
     userPick({
@@ -51,28 +50,30 @@ const WarningModal = ({
   useEffect(() => {
     if (step === WarningStep.ALERT) {
       const timer = setTimeout(() => {
-        setIsModalVisible(false);
+        setOpen(false);
+        setStep(WarningStep.CHECK);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [step]);
 
-  const onClose = () => {
-    setOpen(false);
-    setStep(WarningStep.CHECK);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         {title === 'block' ? (
-          <WarningIcon width={20} height={20} className="mx-1" circle />
+          <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
+            <WarningIcon width={20} height={20} className="mr-1" />
+            질문 차단
+          </div>
         ) : (
-          <PassIcon />
+          <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
+            <PassIcon className="mr-1" />
+            질문 패스
+          </div>
         )}
       </DialogTrigger>
-      {isModalVisible && (
+      {open && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
