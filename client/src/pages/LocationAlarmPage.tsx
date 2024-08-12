@@ -1,5 +1,5 @@
-import LocationCircle from 'components/LocationPage/LocationCircle';
-import BackIcon from 'icons/BackIcon';
+import LocationCircle from "components/LocationPage/LocationCircle";
+import BackIcon from "icons/BackIcon";
 
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
@@ -11,6 +11,7 @@ import { useLocation } from "hooks/useLocation";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { ILocation } from "atoms/Location.type";
 
 interface Position {
   t: number;
@@ -29,31 +30,36 @@ const LocationAlarm = () => {
     { t: 140, l: 340 },
     { t: 150, l: 50 },
     { t: 300, l: 300 },
-  ])
+  ]);
 
-  const userInfo = useRecoilValue(userInfostate)
   const nav = useNavigate();
   const [dot, setDot] = useState("");
-  const { data: searchFriends, isLoading, refetch } = useQuery({
+  const {
+    data: searchFriends,
+    isLoading,
+    refetch,
+  } = useQuery<ILocation>({
     queryKey: ["location"],
     queryFn: findFriends,
   });
+
+  console.log(searchFriends);
+
   const { coords, error } = useLocation({
     refetch: refetch,
   });
-  console.log(searchFriends?.data);
 
   // search text
   useEffect(() => {
     const interval = setInterval(() => {
-      setDot((prevDots) => (prevDots === '...' ? '' : prevDots + '.'));
+      setDot((prevDots) => (prevDots === "..." ? "" : prevDots + "."));
     }, 700);
 
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
   }, []);
 
   const { data: information } = useQuery<IUserInfo>({
-    queryKey: ['information'],
+    queryKey: ["information"],
     queryFn: async () => await getUserInfo(),
   });
 
@@ -67,9 +73,13 @@ const LocationAlarm = () => {
       </div>
       <div className="relative flex ">
         <LocationCircle />
-        <img className="absolute rounded-full w-16 h-16 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" src={information?.profileImage} alt="" />
+        <img
+          className="absolute rounded-full w-16 h-16 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          src={information?.profileImage}
+          alt=""
+        />
         {searchFriends ? (
-          [...searchFriends.data].map((friend: any, index: number) => (
+          [...searchFriends.locations].map((friend: any, index: number) => (
             <div>
               <LocationImage
                 key={index}
@@ -83,8 +93,7 @@ const LocationAlarm = () => {
           <span>
             <img src="" alt="" />
           </span>
-        )
-        }
+        )}
       </div>
       <div className="text-center mt-9">
         <div className="flex flex-col font-bold space-y-3">
