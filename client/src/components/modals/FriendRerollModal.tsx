@@ -36,7 +36,7 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
       handleShuffle();
     },
     onError: () => {
-      console.log('에러 ㅈㅈ');
+      console.log('친구 리롤 실패');
     },
   });
 
