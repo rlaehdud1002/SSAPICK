@@ -1,6 +1,5 @@
 package com.ssapick.server.domain.notification.service;
 
-import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
@@ -12,7 +11,6 @@ import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.notification.repository.NotificationRepository;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.Alarm;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -107,6 +105,7 @@ public class FCMService {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createUserToken(FCMData.FCMRegister register) {
+        log.info("event listener register: {}", register);
         register.getUser().getProfile().updateFcmToken(register.getToken());
     }
 
