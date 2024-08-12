@@ -14,7 +14,7 @@ public class LocationData {
     @Data
     @AllArgsConstructor
     public static class Request {
-        private String profileImage;
+        private String username;
         private Geo geo;
     }
 
