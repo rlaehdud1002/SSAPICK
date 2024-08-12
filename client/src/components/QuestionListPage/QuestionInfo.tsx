@@ -22,10 +22,8 @@ const QuestionInfo = () => {
       <QuestionInfoContent />
       <span>알림 설정한 질문</span>
       {alarmPick && (
-        <div className="mt-5">
-          <div className="mb-20">
-            <AlarmedQuestion pick={alarmPick} />
-          </div>
+        <div className="mt-5 mb-20">
+          <AlarmedQuestion pick={alarmPick} />
         </div>
       )}
     </div>

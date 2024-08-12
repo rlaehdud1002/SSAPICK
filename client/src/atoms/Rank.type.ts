@@ -3,6 +3,7 @@ export interface IRank {
   topPickSenders: IRankList[];
   topMessageReceivers: IRankList[];
   topMessageSenders: IRankList[];
+  topReservePickcoUsers: IRankList[];
   topSpendPickcoUsers: IRankList[];
 }
 

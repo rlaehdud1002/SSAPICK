@@ -79,7 +79,6 @@ const Alarm = () => {
       >
         <BackIcon />
         <AlarmIcon />
-        {/* <h1>알림</h1> */}
       </div>
       <div className="m-6">
         {data?.pages.flatMap((page) => page.content).length ? (
