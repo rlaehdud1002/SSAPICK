@@ -75,7 +75,7 @@ const getTypeDetails = (type: string) => {
 
 const PickcoLogList = ({ pickcolog }: IPickcologContent) => {
   const { change, pickcoLogType, remain, createdAt } = pickcolog;
-  const changeTextColor = change > 0 ? 'text-[#5F86E9]' : 'text-gray-400';
+  const changeTextColor = change > 0 ? 'text-[#5F86E9]' : 'text-[#E95F5F]';
   const { imageUrl, title } = getTypeDetails(pickcoLogType);
 
   const createTime = new Date(createdAt).getTime();
