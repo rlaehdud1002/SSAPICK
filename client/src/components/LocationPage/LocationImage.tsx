@@ -1,13 +1,14 @@
-interface LocationImageProps {
-    top?: number;
-    bottom?: number;
-    left?: number;
-    right?: number;
-    profileImage?: string;
+import LocationModal from "components/modals/LocationModal";
+import { profile } from "console";
 
+interface LocationImageProps {
+    top: number;
+    left: number;
+    profileImage: string;
+    username: string;
 }
 
-const LocationImage = ({ top, bottom, left, right, profileImage }: LocationImageProps) => {
+const LocationImage = ({ top, left, profileImage, username }: LocationImageProps) => {
     return <div
         className="absolute"
         style={{
@@ -15,7 +16,7 @@ const LocationImage = ({ top, bottom, left, right, profileImage }: LocationImage
             left: left !== undefined ? `${left}px` : 'undefined',
         }} >
         <div className="bg-blue-400 rounded-full w-14 h-14 flex items-center justify-center">
-        <img className="rounded-full h-12 w-12" src={profileImage} alt="" />
+        <LocationModal  profileImage={profileImage} username={username} />
         </div>
     </div>
 }

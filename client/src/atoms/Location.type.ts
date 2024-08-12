@@ -11,3 +11,7 @@ export interface ILocation{
         distance: number;
     }[];
 }
+
+export interface ISelectFriend{
+    username:string;
+}

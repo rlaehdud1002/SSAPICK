@@ -6,12 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from 'components/ui/dialog';
+} from "components/ui/dialog";
 
-import { Button } from 'components/ui/button';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ResultCheckModal from './ResultCheckModal';
+import { Button } from "components/ui/button";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ResultCheckModal from "./ResultCheckModal";
 
 enum BlockModalStep {
   CONFIRM,
@@ -29,7 +29,7 @@ const BlockModal = ({ title }: BlockModalProps) => {
 
   const naivgate = useNavigate();
   const navigateToFriendList = () => {
-    naivgate('/profile/friendlist');
+    naivgate("/profile/friendlist");
   };
 
   useEffect(() => {
