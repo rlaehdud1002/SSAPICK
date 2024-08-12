@@ -1,18 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
-import { getSearchFriendsList } from 'api/friendApi';
-import { ISearchFriend } from 'atoms/Friend.type';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { getRecommendFriendsList, getSearchFriendsList } from 'api/friendApi';
+import { IContent, ISearchData, ISearchFriend } from 'atoms/Friend.type';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
 import BackIcon from 'icons/BackIcon';
 import FriendIcon from 'icons/FriendIcon';
 import FriendPlusIcon from 'icons/FriendPlusIcon';
 import ShuffleIcon from 'icons/ShuffleIcon';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import FriendRecommendContent from './FriendRecommendContent';
 import FriendSearchContent from './FriendSearchContent';
-import Loading from 'components/common/Loading';
 
 interface FriendSearchForm {
   search: string;
@@ -30,8 +29,23 @@ const FriendSearch = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data: FriendSearchForm) => {
-
   }
+
+  // 추천 친구 목록 조회
+  const { data: recommendFriends, isLoading: LoadingRecommendFriends, isError, hasNextPage, fetchNextPage } =
+    useInfiniteQuery<ISearchData<IContent[]>>({
+      queryKey: ['recommendFriends'],
+      queryFn: ({ pageParam = 0 }) => getRecommendFriendsList(pageParam as number, 10),
+      getNextPageParam: (lastPage, pages) => {
+        if (!lastPage.last) {
+          return pages.length;
+        }
+        return undefined;
+      },
+      initialPageParam: 0,
+    });
+
+  console.log(recommendFriends?.pages[0].content);
 
   // 검색 친구 리스트 조회
   const { data: searchFriend, isLoading, refetch } = useQuery<ISearchFriend>({
@@ -47,6 +61,14 @@ const FriendSearch = () => {
     }
   }, [isSubmitSuccessful, reset]);
 
+  const scrollPosition = useRef(0);
+ 
+  const handleClick = () => {
+    if (hasNextPage){
+      fetchNextPage();
+    }
+  }
+
   return (
     <div className="relative flex flex-col">
       <div className=" flex ml-2">
@@ -55,12 +77,22 @@ const FriendSearch = () => {
         </div>
         <FriendPlusIcon width={20} height={20} />
         <div className="ml-2">추천친구</div>
-        <div className="flex items-center mx-1">
+        <div onClick={handleClick} className="flex items-center mx-1">
           <ShuffleIcon className="cursor-pointer" />
         </div>
       </div>
       <div className="flex flex-col">
-        <FriendRecommendContent />
+        <div className='flex'>
+        {recommendFriends?.pages.length ? (recommendFriends.pages.map((friend, index) => (
+          friend.content.map((friendcontent, index) => (
+            <div>
+              <FriendRecommendContent cohort={friendcontent.cohort} classNum={friendcontent.campusSection} name={friendcontent.name} userId={friendcontent.userId} profileImage={friendcontent.profileImage} />
+            </div>
+          ))
+        ))) : (
+          <span className='text-xs ml-36 mt-3'>추천하는 친구가 없습니다.</span>
+        )}
+        </div>
         <div className="mx-5">
           <Separator className="my-4" />
         </div>
@@ -84,7 +116,7 @@ const FriendSearch = () => {
       </div>
       {searchFriend?.content.length ? (
         searchFriend.content.map((friend, index) => (
-          <FriendSearchContent key={index} userId={friend.userId}  follow={friend.follow} profileImage={friend.profileImage} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
+          <FriendSearchContent key={index} userId={friend.userId} follow={friend.follow} profileImage={friend.profileImage} cohort={friend.cohort} classSection={friend.campusSection} name={friend.name} />
         ))
       ) : (
         <div className="flex justify-center">
