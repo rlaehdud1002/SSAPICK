@@ -64,7 +64,12 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 											.where(userBan.fromUser.id.eq(userId))
 							),
 							user.id.ne(userId),
-							user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name) .like("%" + keyword + "%")
+						user.profile.cohort.stringValue()
+							.concat("기 ")
+							.concat(user.profile.campus.section.stringValue())
+							.concat("반 ")
+							.concat(user.name)
+							.like("%" + keyword + "%")
 					))
 			)
 			.orderBy(user.profile.cohort.asc())
