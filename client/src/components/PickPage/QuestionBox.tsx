@@ -22,37 +22,37 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
         <p className="px-2 py-1 text-xs bg-white rounded-lg text-color-000855">
           {question.category.name}
         </p>
-        <QuestionPlusModal location="pickpage" />
       </div>
       <div className="m-4 flex flex-col justify-center">
         <div className="flex justify-center">
           <Progress value={pickBlockCount * 10} className="mb-4 w-4/5" />
         </div>
         <h1 className="text-center text-lg">{question.content}</h1>
-        {blockPassCount < 5 && (
-          <div className="flex flex-row justify-end mt-1">
-            <WarningModal
-              question={question}
-              userPick={userPick}
-              title="block"
-              blockPassCount={blockPassCount}
-            />
-            <WarningModal
-              question={question}
-              userPick={userPick}
-              title="pass"
-              blockPassCount={blockPassCount}
-            />
-          </div>
-        )}
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-row justify-center my-2">
           <img
             src={question.category.thumbnail}
             alt="categoryImg"
             className="w-[100px] h-[100px]"
-            width={100}
-            height={100}
           />
+        </div>
+        <div className="flex flex-row justify-around text-center mt-5">
+          {blockPassCount < 5 && (
+            <>
+              <WarningModal
+                question={question}
+                userPick={userPick}
+                title="block"
+                blockPassCount={blockPassCount}
+              />
+              <WarningModal
+                question={question}
+                userPick={userPick}
+                title="pass"
+                blockPassCount={blockPassCount}
+              />
+            </>
+          )}
+          <QuestionPlusModal location="pickpage" />
         </div>
       </div>
     </div>
