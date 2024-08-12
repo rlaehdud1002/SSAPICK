@@ -32,6 +32,8 @@ const SelectCategory = ({
     setValue(parseInt(value));
   };
 
+  console.log('setValue', typeof setValue);
+
   const { data: categorys, isLoading: categoryLoading } = useQuery({
     queryKey: ['categorys'],
     queryFn: getCategory,
