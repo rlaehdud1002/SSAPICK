@@ -10,6 +10,7 @@ import static com.ssapick.server.domain.user.entity.QUserBan.*;
 import java.util.List;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.ProfileData.Friend;
 
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
+
 	@Override
 	public Page<Friend> findRecommendFriends(Long userId, Pageable pageable) {
 		QFollow f1 = QFollow.follow;
@@ -38,8 +40,10 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 		QUser u = QUser.user;
 		Short section = getSection(userId);
 
-		// 전체 결과 수를 계산
-		long total = queryFactory.selectFrom(f1)
+		// 서브쿼리에서 GROUP BY 후 결과 수 계산
+		JPAQuery<Long> countQuery = queryFactory
+			.select(u.id.count())
+			.from(f1)
 			.join(f2).on(f1.followingUser.eq(f2.followUser))
 			.join(u).on(f2.followingUser.eq(u))
 			.where(f1.followUser.id.eq(userId),
@@ -50,10 +54,13 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 				u.id.notIn(JPAExpressions.select(userBan.toUser.id)
 					.from(userBan)
 					.where(userBan.fromUser.id.eq(userId))))
-			.fetchCount();
+			.groupBy(u.id);
+
+		long total = countQuery.fetch().size();  // 또는 countQuery.fetchCount()
 
 		// 페이징 처리된 결과
-		List<Friend> friends = queryFactory.select(Projections.constructor(
+		List<Friend> friends = queryFactory
+			.select(Projections.constructor(
 				Friend.class,
 				u.id,
 				u.name,
@@ -84,12 +91,14 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 				u.profile.campus.section
 			)
 			.orderBy(f2.followingUser.count().desc())
-			.offset(pageable.getOffset())  // 페이지 시작 위치
-			.limit(pageable.getPageSize())  // 페이지 크기
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
 			.fetch();
 
 		return new PageImpl<>(friends, pageable, total);
 	}
+
+
 
 	private Short getSection(Long userId) {
 		return queryFactory.select(user.profile.campus.section)
