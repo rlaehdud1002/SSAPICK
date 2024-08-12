@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssapick.server.domain.notification.dto.NotificationData;
 import com.ssapick.server.domain.notification.entity.Notification;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NotificationService {
 	private final NotificationRepository notificationRepository;
 
@@ -32,5 +34,10 @@ public class NotificationService {
 			.toList();
 
 		return new PageImpl<>(searchList, pageable, ids.size());
+	}
+
+	@Transactional
+	public void readAll(Long userId) {
+		notificationRepository.updateAllRead(userId);
 	}
 }
