@@ -20,7 +20,7 @@ public class RankingScheduler {
         updateRankingData();
     }
 
-    @Scheduled(cron = "0 */5 * * * *")  // TODO 5분마다 실행하도록 변경
+    @Scheduled(cron = "0 */5 * * * *")
     public void updateRankingData() {
         cachedRankingData = rankingService.getAllRanking();
     }
