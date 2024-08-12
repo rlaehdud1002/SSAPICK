@@ -43,7 +43,6 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 				user.profile.profileImage,
 				user.profile.cohort,
 				user.profile.campus.section,
-
 				JPAExpressions.select(follow.isNotNull())
 					.from(follow)
 					.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),

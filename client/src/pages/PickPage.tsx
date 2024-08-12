@@ -99,6 +99,8 @@ const Pick = () => {
   }
 
   console.log('pickFriends', pickFriends);
+  console.log('question', question);
+  console.log('pickInfo', pickInfo);
 
   return (
     <div className="relative">

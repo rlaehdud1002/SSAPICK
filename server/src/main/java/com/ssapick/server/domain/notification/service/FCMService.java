@@ -102,8 +102,7 @@ public class FCMService {
         }
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void createUserToken(FCMData.FCMRegister register) {
         log.info("event listener register: {}", register);
         register.getUser().getProfile().updateFcmToken(register.getToken());
