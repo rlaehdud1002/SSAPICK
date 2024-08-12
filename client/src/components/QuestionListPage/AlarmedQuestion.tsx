@@ -13,26 +13,27 @@ const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
   const queryClient = useQueryClient();
 
   const handleAlarmUpdate = (pickId: number) => {
-    console.log(pickId);
     setShow(true);
     queryClient.invalidateQueries({ queryKey: ['pick'] });
   };
 
   return (
-    <div>
-      <div className="flex flex-row items-center mt-5">
+    <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row">
         <UserMaskIcon
           pickId={pick.id}
           alarm={pick.alarm}
           gen={pick.sender.gender}
           onAlarmUpdate={handleAlarmUpdate}
         />
-        {/* <img src={pick.question.category.thumbnail} alt="noImage" width={50} height={50} className='bg-white/50 rounded-full p-1'/> */}
         <span className="ml-4">{pick.question.content}</span>
-        {/* <div className='bg-gray-400 rounded-lg p-1 text-white'>
-          삭제
-        </div> */}
       </div>
+      {/* <div
+        className="bg-gray-400 rounded-lg px-2 py-1 text-white"
+        onClick={() => handleAlarmUpdate(pick.id)}
+      >
+        삭제
+      </div> */}
       {show && (
         <AlarmCheckModal setShow={setShow} question={pick.question.content} />
       )}
