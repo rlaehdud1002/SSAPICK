@@ -4,15 +4,20 @@ import instance from './clientApi';
 import { IPaging } from 'atoms/Pick.type';
 
 export const registerToken = async (token: string): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.post('/notification/register', {
-    token,
-  });
-  if (!success) {
-    throw new Error(message);
+  try {
+    const {
+      data: { success, data, message },
+    } = await instance.post("/notification/register", {
+      token,
+    });
+    if (!success) {
+      throw new Error(message);
+    }
+    return data;
+  } catch (error) {
+    console.log("토큰 등록 실패", error);
+    throw new Error("토큰 등록 실패");
   }
-  return data;
 };
 
 // 알람 리스트 조회

@@ -14,8 +14,11 @@ export function requestPermission(messaging: any) {
     if (permission === 'granted') {
       getToken(messaging, { vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY })
         .then((token: string) => {
-          registerToken(token);
-          setRecoil(firebaseTokenState, token);
+          registerToken(token).then(() => {
+            setRecoil(firebaseTokenState, token);
+          }).catch((error) => {
+
+          })
         })
         .catch((err) => {
         })
