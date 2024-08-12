@@ -9,6 +9,7 @@ const rankName = [
   'topMessageSenders',
   'topPickReceivers',
   'topPickSenders',
+  'topReservePickcoUsers',
   'topSpendPickcoUsers',
 ] as const;
 

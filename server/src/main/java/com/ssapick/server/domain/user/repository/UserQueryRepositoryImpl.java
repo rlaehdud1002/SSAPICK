@@ -43,7 +43,6 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 				user.profile.profileImage,
 				user.profile.cohort,
 				user.profile.campus.section,
-
 				JPAExpressions.select(follow.isNotNull())
 					.from(follow)
 					.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
@@ -64,7 +63,12 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 											.where(userBan.fromUser.id.eq(userId))
 							),
 							user.id.ne(userId),
-							user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name).like("%" + keyword + "%")
+						user.profile.cohort.stringValue()
+							.concat("기 ")
+							.concat(user.profile.campus.section.stringValue())
+							.concat("반 ")
+							.concat(user.name)
+							.like("%" + keyword + "%")
 					))
 			)
 			.orderBy(user.profile.cohort.asc())
@@ -147,6 +151,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 						.where(user.id.eq(userId))
 				))
 				.where(user.id.ne(userId))  // 현재 사용자 ID를 제외
+			.where(user.id.notIn(
+				JPAExpressions.select(userBan.toUser.id)
+					.from(userBan)
+					.where((userBan.fromUser.id.eq(userId)))
+			))
 				.fetch();
 	}
 
@@ -163,7 +172,17 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 			.leftJoin(follow.followingUser, user)
 			.leftJoin(user.profile, profile)
 			.leftJoin(user.profile.campus, campus)
-			.where(follow.followUser.id.eq(userId))
+			.where(follow.followUser.id.eq(userId)
+				.and(
+					user.id.notIn(
+						JPAExpressions.select(userBan.toUser.id)
+							.from(userBan)
+							.where(userBan.fromUser.id.eq(userId))
+					)
+				)
+
+			)
+
 			.fetch();
 	}
 }

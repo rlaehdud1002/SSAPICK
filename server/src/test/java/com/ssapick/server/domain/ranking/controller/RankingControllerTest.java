@@ -58,6 +58,7 @@ class RankingControllerTest extends RestDocsSupport {
                 topUsers,
                 topUsers,
                 topUsers,
+                topUsers,
                 topUsers
         );
 
@@ -108,7 +109,16 @@ class RankingControllerTest extends RestDocsSupport {
                                         fieldWithPath("data.topSpendPickcoUsers[].user.campusName").type(JsonFieldType.STRING).description("캠퍼스"),
                                         fieldWithPath("data.topSpendPickcoUsers[].user.section").type(JsonFieldType.NUMBER).description("반"),
                                         fieldWithPath("data.topSpendPickcoUsers[].user.profileImage").type(JsonFieldType.STRING).description("프로필이미지"),
-                                        fieldWithPath("data.topSpendPickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 쓴 수")
+                                        fieldWithPath("data.topSpendPickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 쓴 수"),
+
+                                        fieldWithPath("data.topReservePickcoUsers[].user.name").type(JsonFieldType.STRING).description("이름"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.cohort").type(JsonFieldType.NUMBER).description("기수"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.campusName").type(JsonFieldType.STRING).description("캠퍼스"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.section").type(JsonFieldType.NUMBER).description("반"),
+                                        fieldWithPath("data.topReservePickcoUsers[].user.profileImage").type(JsonFieldType.STRING).description("프로필이미지"),
+                                        fieldWithPath("data.topReservePickcoUsers[].count").type(JsonFieldType.NUMBER).description("픽코 보유량")
+
+
 
                                 ))
                                 .build())

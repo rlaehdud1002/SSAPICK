@@ -105,8 +105,6 @@ const Pick = () => {
     return <Loading />;
   }
 
-  console.log("pickFriends", pickFriends);
-
   return (
     <div className="relative">
       {pickInfo.cooltime ? (
