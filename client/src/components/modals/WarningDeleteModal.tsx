@@ -41,10 +41,8 @@ const WarningDeleteModal = ({
 }: WarningDeleteModalProps) => {
   const [step, setStep] = useState<WarningDeleteStep>(WarningDeleteStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
-  const nav = useNavigate();
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
@@ -91,7 +89,7 @@ const WarningDeleteModal = ({
   useEffect(() => {
     if (step === WarningDeleteStep.ALERT) {
       const timer = setTimeout(() => {
-        setIsModalVisible(false);
+        setOpen(false);
       }, 500);
 
       return () => clearTimeout(timer);
@@ -110,13 +108,8 @@ const WarningDeleteModal = ({
     setPopoverOpen(false);
   };
 
-  const onClose = () => {
-    setOpen(false);
-    setStep(WarningDeleteStep.CHECK);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         <div className="flex flex-row">
           {title === '차단' ? (
@@ -127,7 +120,7 @@ const WarningDeleteModal = ({
           <span>{title}</span>
         </div>
       </DialogTrigger>
-      {isModalVisible && (
+      {open && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">

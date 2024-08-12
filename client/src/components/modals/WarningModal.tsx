@@ -36,7 +36,6 @@ const WarningModal = ({
 }: WarningModalProps) => {
   const [step, setStep] = useState<WarningStep>(WarningStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
 
   const handlePick = () => {
     userPick({
@@ -51,20 +50,16 @@ const WarningModal = ({
   useEffect(() => {
     if (step === WarningStep.ALERT) {
       const timer = setTimeout(() => {
-        setIsModalVisible(false);
+        setOpen(false);
+        setStep(WarningStep.CHECK);
       }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [step]);
 
-  const onClose = () => {
-    setOpen(false);
-    setStep(WarningStep.CHECK);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         {title === 'block' ? (
           <WarningIcon width={20} height={20} className="mx-1" circle />
@@ -72,7 +67,7 @@ const WarningModal = ({
           <PassIcon />
         )}
       </DialogTrigger>
-      {isModalVisible && (
+      {open && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
             <DialogTitle className="flex flex-start text-color-5F86E9">
