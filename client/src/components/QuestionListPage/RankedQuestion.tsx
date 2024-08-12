@@ -16,7 +16,7 @@ const RankedQuestion = () => {
 
   console.log('rankQuestion', rankQuestion);
 
-  const rankColor = ['text-[#D5A11E]', 'text-[#A3A3A3]', 'text-[#CD7F32]'];
+  const rankColor = ['text-[#FFD700]', 'text-[#D3D3D3]', 'text-[#CD7F32]'];
 
   return (
     <div className="mb-5 pe-4 pb-5 border-b-[1px]">
@@ -29,13 +29,13 @@ const RankedQuestion = () => {
       </div>
       {rankQuestion.length !== 0 ? (
         <div className="flex flex-col">
-          {rankQuestion.slice(0, 5).map((question, index) => (
+          {rankQuestion.slice(0, 10).map((question, index) => (
             <div
               className="flex flex-row justify-between mb-3 border-solid border-2 rounded-lg border-white/70"
               key={index}
             >
               <div className="flex items-center flex-row my-2 mx-4">
-                <div className={`luckiest_guy text-lg ${rankColor[index]}`}>
+                <div className={`luckiest_guy text-lg ${rankColor[index] || 'text-[#A9A9A9]'}`}>
                   {index + 1}
                 </div>
                 <div className="ms-2 break-words">{question.content}</div>

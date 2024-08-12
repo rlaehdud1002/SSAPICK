@@ -62,7 +62,7 @@ const WarningModal = ({
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         {title === 'block' ? (
-          <WarningIcon width={20} height={20} className="mx-1" circle />
+          <WarningIcon width={30} height={30} className="mx-2" circle />
         ) : (
           <PassIcon />
         )}

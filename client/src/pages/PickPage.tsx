@@ -119,7 +119,6 @@ const Pick = () => {
             />
             <div className="m-7">
               <div className="flex flex-row justify-end">
-                <FriendRerollModal handleShuffle={handleShuffle} />
               </div>
               <div className="flex flex-row justify-center">
                 <Choice
@@ -148,7 +147,11 @@ const Pick = () => {
                   questionId={question[pickInfo.index].id}
                   userPick={handleUserPick}
                 />
+                
               </div>
+            </div>
+            <div className='flex justify-center items-center space-x-2'>
+              <FriendRerollModal handleShuffle={handleShuffle} />
             </div>
           </div>
         )

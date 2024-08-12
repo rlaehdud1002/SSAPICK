@@ -1,6 +1,6 @@
-import AlarmIcon from '../../icons/AlarmIcon';
-import Logo from '../../icons/Logo';
-import { Link } from 'react-router-dom';
+import AlarmIcon from "../../icons/AlarmIcon";
+import Logo from "../../icons/Logo";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
