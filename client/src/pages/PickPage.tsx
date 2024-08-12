@@ -29,12 +29,15 @@ const Pick = () => {
     },
   });
 
-  const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<IFriend[]>({
+  const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<
+    IFriend[]
+  >({
     queryKey: ["friends"],
     queryFn: getFriendsList,
   });
 
-  const [pickFriends, setPickFriends] = useRecoilState<IFriend[]>(pickFriendState);
+  const [pickFriends, setPickFriends] =
+    useRecoilState<IFriend[]>(pickFriendState);
 
   const handleShuffle = useCallback(() => {
     if (friends.length > 0) {
@@ -51,7 +54,9 @@ const Pick = () => {
   }, [handleShuffle, friends]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isUpdated, setIsUpdated] = useRecoilState<boolean>(isQuestionUpdatedState);
+  const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
+    isQuestionUpdatedState
+  );
 
   const { data: pickInfo, isLoading: LoadingPickInfo } = useQuery<IPickInfo>({
     queryKey: ["pickInfo"],
@@ -111,15 +116,16 @@ const Pick = () => {
         <Navigate to="/cooltime" />
       ) : (
         question[pickInfo.index] && (
-          <div className={`${isPending || isTouchDisabled ? "pointer-events-none" : ""}`}>
+          <div
+            className={`${isPending || isTouchDisabled ? "pointer-events-none" : ""}`}
+          >
             <Question
               question={question[pickInfo.index]}
               userPick={handleUserPick}
               pickInfo={pickInfo}
             />
             <div className="m-7">
-              <div className="flex flex-row justify-end">
-              </div>
+              <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice
                   isTouchDisabled={isTouchDisabled}
@@ -147,10 +153,9 @@ const Pick = () => {
                   questionId={question[pickInfo.index].id}
                   userPick={handleUserPick}
                 />
-                
               </div>
             </div>
-            <div className='flex justify-center items-center space-x-2'>
+            <div className="flex justify-center items-center space-x-2">
               <FriendRerollModal handleShuffle={handleShuffle} />
             </div>
           </div>

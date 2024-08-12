@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { ILocation } from "atoms/Location.type";
+import LocationModal from "components/modals/LocationModal";
 
 interface Position {
   t: number;
@@ -71,13 +72,20 @@ const LocationAlarm = () => {
       >
         <BackIcon />
       </div>
+      <div className="flex justify-center">
+      <span className="text-[#3D6CE6] mb-5">최대 10명의 친구를 찾아보세요!</span>
+      </div>
       <div className="relative flex ">
         <LocationCircle />
-        <img
-          className="absolute rounded-full w-16 h-16 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          src={information?.profileImage}
-          alt=""
-        />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="w-16 h-16 bg-blue-400 rounded-full flex justify-center items-center">
+            <img
+              className="w-14 h-14 rounded-full"
+              src={information?.profileImage}
+              alt=""
+            />
+          </div>
+        </div>
         {searchFriends ? (
           [...searchFriends.locations].map((friend: any, index: number) => (
             <div>
@@ -86,6 +94,7 @@ const LocationAlarm = () => {
                 top={positionList[index].t}
                 left={positionList[index].l}
                 profileImage={friend.profileImage}
+                username={friend.username}
               />
             </div>
           ))
@@ -96,13 +105,15 @@ const LocationAlarm = () => {
         )}
       </div>
       <div className="text-center mt-9">
-        <div className="flex flex-col font-bold space-y-3">
-          <span className="text-[#3D6CE6] text-xl">
-            현재 위치: {coords.latitude} / {coords.longitude}
-          </span>
-          <span className="luckiest_guy text-[#3D6CE6] text-3xl">
-            SEARCHING{dot}
-          </span>
+        <div className="flex flex-col space-y-3">
+            <span className="luckiest_guy text-[#3D6CE6] text-md">
+              현재까지 {searchFriends?.count}명의 친구를 찾았습니다<br/>
+            </span>
+      
+            <span className="luckiest_guy text-[#3D6CE6] text-lg mt-10">
+              내 주변 친구 찾는 중{dot}
+            </span>
+        
         </div>
       </div>
     </div>
