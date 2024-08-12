@@ -151,6 +151,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 						.where(user.id.eq(userId))
 				))
 				.where(user.id.ne(userId))  // 현재 사용자 ID를 제외
+			.where(user.id.notIn(
+				JPAExpressions.select(userBan.toUser.id)
+					.from(userBan)
+					.where((userBan.fromUser.id.eq(userId)))
+			))
 				.fetch();
 	}
 
@@ -167,7 +172,17 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 			.leftJoin(follow.followingUser, user)
 			.leftJoin(user.profile, profile)
 			.leftJoin(user.profile.campus, campus)
-			.where(follow.followUser.id.eq(userId))
+			.where(follow.followUser.id.eq(userId)
+				.and(
+					user.id.notIn(
+						JPAExpressions.select(userBan.toUser.id)
+							.from(userBan)
+							.where(userBan.fromUser.id.eq(userId))
+					)
+				)
+
+			)
+
 			.fetch();
 	}
 }

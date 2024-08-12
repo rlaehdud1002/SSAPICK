@@ -16,6 +16,7 @@ public class RankingData {
         private final List<UserCount> topMessageReceivers;
         private final List<UserCount> topMessageSenders;
         private final List<UserCount> topSpendPickcoUsers;
+        private final List<UserCount> topReservePickcoUsers;
     }
 
 
