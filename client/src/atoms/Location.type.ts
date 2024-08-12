@@ -1,6 +1,13 @@
-export interface Ilocation {
-    top?:number;
-    bottom?:number;
-    left?:number;
-    right?:number;
+import { profile } from 'console';
+export interface ILocation{
+    count: number;
+    locations: {
+        username: string;
+        position: {
+            x: number;
+            y: number;
+        }
+        profileImage: string;
+        distance: number;
+    }[];
 }
