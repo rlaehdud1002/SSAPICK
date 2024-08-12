@@ -8,12 +8,12 @@ import com.ssapick.server.core.support.RestDocsSupport;
 import com.ssapick.server.domain.notification.dto.FCMData;
 import com.ssapick.server.domain.notification.dto.NotificationData;
 import com.ssapick.server.domain.notification.entity.NotificationType;
+import com.ssapick.server.domain.notification.service.FCMService;
 import com.ssapick.server.domain.notification.service.NotificationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
@@ -48,7 +48,7 @@ class NotificationControllerTest extends RestDocsSupport {
     private NotificationService notificationService;
 
     @MockBean
-    private ApplicationEventPublisher publisher;
+    private FCMService fcmService;
 
     @Test
     @DisplayName("FCM 토큰 저장 테스트")

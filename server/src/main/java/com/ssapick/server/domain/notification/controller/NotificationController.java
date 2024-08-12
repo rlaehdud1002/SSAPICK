@@ -10,7 +10,6 @@ import com.ssapick.server.domain.notification.service.NotificationService;
 import com.ssapick.server.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationController {
 	private final NotificationService notificationService;
 	private final FCMService fcmService;
-	private final ApplicationEventPublisher publisher;
 
 	@Authenticated
 	@PostMapping("/register")
