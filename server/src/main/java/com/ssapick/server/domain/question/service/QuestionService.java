@@ -124,15 +124,10 @@ public class QuestionService {
      *
      * @param create
      */
-    @Async("apiExecutor")
     @Transactional
     public void createQuestion(User user, QuestionData.Create create) {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
-
-
-
-        Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
 
 
         try {
@@ -141,9 +136,9 @@ public class QuestionService {
                     FCMData.NotificationEvent.of(
                         NotificationType.ADD_QUESTION,
                         user,
-                        saveQuestion.getId(),
+                        -1L,
                         ErrorCode.OFFENSIVE_CONTENT.getMessage(),
-                        addQuestionEventMessage(saveQuestion.getContent()),
+                        addQuestionEventMessage(create.getContent()),
                         null
                     ));
                 throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
@@ -156,12 +151,11 @@ public class QuestionService {
                     FCMData.NotificationEvent.of(
                         NotificationType.ADD_QUESTION,
                         user,
-                        saveQuestion.getId(),
+                        -1L,
                         ErrorCode.API_REQUEST_ERROR.getMessage(),
-                        addQuestionEventMessage(saveQuestion.getContent()),
+                        addQuestionEventMessage(create.getContent()),
                         null
                     ));
-
 
                 throw new BaseException(ErrorCode.API_REQUEST_ERROR);
             }
@@ -175,15 +169,18 @@ public class QuestionService {
                 FCMData.NotificationEvent.of(
                     NotificationType.ADD_QUESTION,
                     user,
-                    saveQuestion.getId(),
+                    -1L,
                     ErrorCode.EXIST_QUESTION.getMessage(),
-                    addQuestionEventMessage(saveQuestion.getContent()),
+                    addQuestionEventMessage(create.getContent()),
                     null
                 ));
 
             throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
+
+
+        Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
         publisher.publishEvent(
             FCMData.NotificationEvent.of(
                 NotificationType.ADD_QUESTION,
