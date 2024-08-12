@@ -50,25 +50,27 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   const mutation = useMutation({
     mutationKey: ['message', 'send'],
     mutationFn: postMessageSend,
+
     // 쪽지 전송 성공 시
     onSuccess: () => {
-      onMessageSent(pick.id);
-      setMessage(true);
-      setStep(MessageModalStep.ALERT); // ALERT 단계로 이동
+      setStep(MessageModalStep.ALERT);
     },
   });
 
   // ALERT 단계가 실행된 후 1.5초 뒤에 모달을 닫음
   useEffect(() => {
     if (step === MessageModalStep.ALERT) {
+      console.log('alert');
       const timer = setTimeout(() => {
         setIsModalVisible(false);
+        setMessage(true);
+        onMessageSent(pick.id);
         setOpen(false); // 모달 닫기
       }, 1500);
 
       return () => clearTimeout(timer);
     }
-  }, [step]);
+  }, [step, onMessageSent, pick]);
 
   const {
     register,
@@ -87,6 +89,7 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
         content: data.message,
       });
       reset();
+      // setStep(MessageModalStep.ALERT);
     }
   };
 
