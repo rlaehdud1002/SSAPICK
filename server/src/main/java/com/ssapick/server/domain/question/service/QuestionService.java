@@ -206,7 +206,7 @@ public class QuestionService {
      */
     public List<QuestionData.Search> searchQuestionsRank(Long userId) {
         return questionRepository.findQRankingByUserId(userId)
-                .stream().limit(3)
+                .stream().limit(10)
                 .map(QuestionData.Search::fromEntity)
                 .toList();
     }
