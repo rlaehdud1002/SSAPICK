@@ -29,7 +29,6 @@ const WarningIcon = ({
           fillOpacity="0.5"
         />
       )}
-
       <path
         d="M14.2619 13.762L5.59521 13.762"
         stroke="#FF0000"
@@ -81,7 +80,6 @@ const WarningIcon = ({
         strokeLinecap="round"
         strokeLinejoin="round"
         transform="scale(1.5)"
-
       />
     </svg>
   );

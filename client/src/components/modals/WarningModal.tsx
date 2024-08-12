@@ -62,9 +62,15 @@ const WarningModal = ({
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         {title === 'block' ? (
-          <WarningIcon width={30} height={30} className="mx-2" circle />
+          <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
+            <WarningIcon width={20} height={20} className="mr-1" />
+            질문 차단
+          </div>
         ) : (
-          <PassIcon />
+          <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
+            <PassIcon className="mr-1" />
+            질문 패스
+          </div>
         )}
       </DialogTrigger>
       {open && (
