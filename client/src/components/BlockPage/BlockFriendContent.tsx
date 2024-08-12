@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { blockCancel } from 'api/blockApi';
 import PlusDeleteButton from 'buttons/PlusDeleteButton';
+import WarningDelete from 'components/common/WarningDelete';
+import BlockCancelModal from 'components/modals/BlockCancelModal';
 import BaseImageIcon from 'icons/BaseImageIcon';
 
 interface BlockFriendContentProps {
@@ -20,18 +22,7 @@ const BlockFriendContent = ({
   profileImage,
   cohort,
 }: BlockFriendContentProps) => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationKey: ['deleteBlock'],
-    mutationFn: blockCancel,
-
-    onSuccess: () => {
-      console.log('차단 해제 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['blocks'],
-      });
-    },
-  });
+  
 
   return (
     <div>
@@ -50,13 +41,7 @@ const BlockFriendContent = ({
         <div>
           {cohort}기 {campusSection}반 {name}
         </div>
-        <div
-          onClick={() => {
-            mutation.mutate(userId);
-          }}
-        >
-          <PlusDeleteButton title="삭제" />
-        </div>
+          <BlockCancelModal Id={userId} category='user'/>
       </div>
       {/* <Separator className="my-4 mx-4" />  */}
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
