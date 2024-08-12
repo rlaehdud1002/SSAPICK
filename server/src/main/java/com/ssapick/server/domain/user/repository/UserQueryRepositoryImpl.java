@@ -44,9 +44,9 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 	@Override
 	public Page<Friend> searchUserByKeyword(Long userId, String keyword, Pageable pageable) {
 		Short section = getSection(userId);
+		List<Long> searchUserIds = searchUserIds(userId, keyword);
 
-		List<Friend> friends =
-			queryFactory.select(Projections.constructor(
+		List<Friend> result = queryFactory.select(Projections.constructor(
 				Friend.class,
 				user.id,
 				user.name,
@@ -55,58 +55,74 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 				user.profile.campus.section,
 
 				JPAExpressions.select(follow.isNotNull())
-								.from(follow)
-								.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
+					.from(follow)
+					.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
 
 				user.profile.campus.section.eq(section)))
 
-				.from(user)
-				.leftJoin(user.profile, profile)
-				.leftJoin(user.profile.campus, campus)
+			.from(user)
+			.leftJoin(user.profile, profile)
+			.leftJoin(user.profile.campus, campus)
+			.where(user.id.in(searchUserIds))
+			.orderBy(user.profile.cohort.asc())
+			.orderBy(user.profile.campus.section.asc())
+			.orderBy(user.name.asc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
 
-				.where(
-					user.id.notIn(
-						JPAExpressions.select(userBan.toUser.id)
-							.from(userBan)
-							.where(userBan.fromUser.id.eq(userId))
-					),
+		return new PageImpl<>(result, pageable, searchUserIds.size());
 
-					user.id.ne(userId),
-					user.profile.campus.section.eq(section),
-					user.name.like("%" + keyword + "%"))
-				.orderBy(user.name.asc())
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.fetch();
-
-		return new PageImpl<>(friends, pageable, friends.size());
 	}
 
-	private LongSupplier getLongSupplier(Long userId, String keyword) {
-		return () -> queryFactory
-				.select(user.count())
-				.from(user)
-				.leftJoin(user.profile, profile)
-				.leftJoin(user.profile.campus, campus)
-				.where(user.profile.campus.in(
-						JPAExpressions.select(user.profile.campus)
-								.from(user)
-								.where(user.id.eq(userId))
-				))
-				.where(user.name.like(keyword))
-				.where(user.id.notIn(
-						JPAExpressions.select(follow.followingUser.id)
-								.from(follow)
-								.where(follow.followUser.id.eq(userId))
-				))
-				.where(user.id.notIn(
-						JPAExpressions.select(userBan.toUser.id)
-								.from(userBan)
-								.where(userBan.fromUser.id.eq(userId))
-				))
-				.where(user.id.ne(userId))
-				.fetchOne();
+	private List<Long> searchUserIds(Long userId, String keyword){
+		Short section = getSection(userId);
+
+		return queryFactory.select(user.id)
+			.from(user)
+			.leftJoin(user.profile, profile)
+			.leftJoin(user.profile.campus, campus)
+			.where(
+				user.id.notIn(
+					JPAExpressions.select(userBan.toUser.id)
+						.from(userBan)
+						.where(userBan.fromUser.id.eq(userId))
+				),
+				user.id.ne(userId),
+				user.profile.campus.section.eq(section),
+				user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name) .like("%" + keyword + "%")
+			).fetch();
 	}
+
+
+	//
+	// private LongSupplier getLongSupplier(Long userId, String keyword) {
+	// 	return () -> queryFactory
+	// 		.select(user.count())
+	// 		.from(user)
+	// 		.leftJoin(user.profile, profile)
+	// 		.leftJoin(user.profile.campus, campus)
+	// 		.where(user.profile.campus.in(
+	// 			JPAExpressions.select(user.profile.campus)
+	// 				.from(user)
+	// 				.where(user.id.eq(userId))
+	// 		))
+	// 		.where(
+	// 			user.name.like(keyword),
+	// 		)
+	// 		.where(user.id.notIn(
+	// 			JPAExpressions.select(follow.followingUser.id)
+	// 				.from(follow)
+	// 				.where(follow.followUser.id.eq(userId))
+	// 		))
+	// 		.where(user.id.notIn(
+	// 			JPAExpressions.select(userBan.toUser.id)
+	// 				.from(userBan)
+	// 				.where(userBan.fromUser.id.eq(userId))
+	// 		))
+	// 		.where(user.id.ne(userId))
+	// 		.fetchOne();
+	// }
 
 
 	private Short getSection(Long userId) {

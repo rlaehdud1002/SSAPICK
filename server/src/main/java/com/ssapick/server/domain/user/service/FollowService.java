@@ -67,9 +67,7 @@ public class FollowService {
      */
     public Page<ProfileData.Friend> recommendFollow(User user, Pageable pageable) {
         // 불변 리스트를 방지하기 위해 ArrayList로 변환합니다.
-        log.debug("=====================================================");
         List<ProfileData.Friend> recommends = followRepository.findRecommendFriends(user.getId(), pageable);
-        log.debug("=====================================================");
 
         // 차단된 사용자를 목록에서 제거합니다.
         List<Long> bannedUserIds = userBanRepository.findBanUsersByFromUser(user).stream()
