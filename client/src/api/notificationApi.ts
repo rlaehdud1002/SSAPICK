@@ -31,3 +31,13 @@ export const getNotificationList = async (
   console.log("data : ", data);
   return data;
 };
+
+// 알람 읽음 처리
+export const readNotification = async (): Promise<void> => {
+  const {
+    data: { success, message },
+  } = await instance.post("/notification");
+  if (!success) {
+    throw new Error(message);
+  }
+};

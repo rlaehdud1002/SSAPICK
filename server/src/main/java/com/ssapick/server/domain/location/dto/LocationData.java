@@ -40,7 +40,7 @@ public class LocationData {
     @Data
     @AllArgsConstructor
     public static class Response {
-        private Long count;
+        private int count;
         private List<GeoLocation> locations;
     }
 
