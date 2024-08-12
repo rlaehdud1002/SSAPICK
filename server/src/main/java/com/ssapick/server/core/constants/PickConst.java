@@ -18,4 +18,5 @@ public abstract class PickConst {
     public static final int USER_REROLL_COIN = -10;
     // 쪽지
     public static final int MESSAGE_COIN = -20;
+    public static final int PICK_USER_LOCATION_COIN = 10;
 }

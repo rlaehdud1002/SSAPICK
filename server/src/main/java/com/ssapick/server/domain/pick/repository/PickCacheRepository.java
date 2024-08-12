@@ -1,24 +1,25 @@
 package com.ssapick.server.domain.pick.repository;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
-import javax.annotation.Resource;
-
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.stereotype.Repository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PickCacheRepository {
     public static final int PASS_BLOCK_LIMIT = 5;
-
 	public static final int COOL_TIME = 1;
 
+	public static final Long LOCK_TIMEOUT = 300L;
+	public static final String PICK_LOCK = "pick:lock:";
     public static final String PICK_CACHE = "pick:";
 	public static final String INDEX_KEY = "index";
 	public static final String PICK_COUNT_KEY = "pickCount";
@@ -31,6 +32,9 @@ public class PickCacheRepository {
 	@Resource(name = "redisTemplate")
 	private HashOperations<String, String, String> hashOperations;
 
+	@Resource(name = "redisTemplate")
+	private ValueOperations<String, String> valueOperations;
+
 
     public void init(Long userId) {
 		String key = PICK_CACHE + userId;
@@ -41,6 +45,16 @@ public class PickCacheRepository {
 		hashOperations.put(key, BLOCK_COUNT_KEY, "0");
 		hashOperations.put(key, COOL_TIME_KEY, LocalDateTime.now().toString());
 		hashOperations.getOperations().expire(key, Duration.ofDays(1));
+	}
+
+	@Transactional
+	public boolean lock(Long userId) {
+		return Boolean.TRUE.equals(valueOperations.setIfAbsent(PICK_LOCK + userId, "use", Duration.ofMillis(LOCK_TIMEOUT)));
+	}
+
+	@Transactional
+	public void unlock(Long userId) {
+		valueOperations.getOperations().delete(PICK_LOCK + userId);
 	}
 
 	public void increaseIndex(Long userId) {

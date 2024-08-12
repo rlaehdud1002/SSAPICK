@@ -45,6 +45,7 @@ public class PickService {
 	private final QuestionBanRepository questionBanRepository;
 	private final EntityManager em;
 
+
 	/**
 	 * 받은 픽 조회하기
 	 *
@@ -106,6 +107,9 @@ public class PickService {
 	 */
 	@Transactional
 	public PickData.PickCondition createPick(User sender, PickData.Create create) {
+		if (!pickCacheRepository.lock(sender.getId())) {
+			throw new BaseException(ErrorCode.USER_PICK_LOCK);
+		}
 
 		if (pickCacheRepository.isCooltime(sender.getId())) {
 			return PickData.PickCondition.builder()
@@ -167,6 +171,8 @@ public class PickService {
 			pickCacheRepository.setCooltime(sender.getId());
 			return PickData.PickCondition.cooltime();
 		}
+
+		pickCacheRepository.unlock(sender.getId());
 
 		return PickData.PickCondition.builder()
 			.index(index)
