@@ -5,13 +5,13 @@ import { accessTokenState } from "atoms/UserAtoms";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
 import ProfileContent from "components/ProfilePage/ProfileContent";
 import Loading from "components/common/Loading";
+import SignoutModal from "components/modals/SignoutModal";
 import AccountIcon from "icons/AccountIcon";
 import AttendanceIcon from "icons/AttendanceIcon";
 import BlockIcon from "icons/BlockIcon";
 import CoinIcon from "icons/CoinIcon";
 import FriendAlarmIcon from "icons/FriendAlarmIcon";
 import LocationAlarmIcon from "icons/LocationAlarmIcon";
-import PointIcon from "icons/PointIcon";
 import QuestionAlarmIcon from "icons/QuestionAlarmIcon";
 import SetAlarmIcon from "icons/SetAlarmIcon";
 import UserInfoIcon from "icons/UserInfoIcon";
@@ -91,11 +91,11 @@ const Profile = () => {
             <CoinIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
-        <div onClick={onLogout}>
-          <ProfileAlarm title="로그아웃">
-            <AccountIcon width={50} height={50} />
-          </ProfileAlarm>
-        </div>
+
+        {/* 로그아웃 버튼 */}
+        <SignoutModal />
+        
+
       </div>
     </div>
   );
