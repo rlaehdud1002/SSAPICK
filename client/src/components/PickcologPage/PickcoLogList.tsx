@@ -65,6 +65,12 @@ const getTypeDetails = (type: string) => {
           'https://d2yu3js5fxqm1g.cloudfront.net/category/%EC%B9%9C%EA%B5%AC2.png',
         title: '주변 사용자 클릭',
       };
+    case 'PICK_USER_LOCATION':
+      return {
+        imageUrl:
+          'https://d2yu3js5fxqm1g.cloudfront.net/category/%EC%9C%84%EC%B9%98.png',
+        title: '내 주위 사람 찾기',
+      };
     default:
       return {
         imageUrl: '',
