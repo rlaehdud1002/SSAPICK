@@ -33,26 +33,23 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 
 	@Query("""
 		SELECT p FROM Pick p 
+		JOIN FETCH p.sender
 		JOIN FETCH p.receiver 
+		JOIN FETCH p.receiver.alarm
+		JOIN FETCH p.sender.alarm
 		JOIN FETCH p.question 
 		JOIN FETCH p.question.questionCategory 
 		LEFT JOIN FETCH p.hintOpens ho 
 		WHERE p.id IN :ids
 		ORDER BY p.id DESC 
 		""")
-	List<Pick> findAllByIdsWithDetails(@Param("ids") List<Long> ids);
+	List<Pick> findAllByIdsWithDetails(@Param("ids") List<Long> ids, Pageable pageable);
 
-	@Query("SELECT p.id FROM Pick p WHERE p.receiver.id = :userId ORDER BY p.id DESC")
-	Page<Long> findPickIdsByReceiverId(@Param("userId") Long userId, Pageable pageable);
-
-	/**
-	 * 보낸 Pick 조회
-	 *
-	 * @param userId
-	 * @return {@link List<Pick>} Pick 리스트 반환 (존재하지 않으면, 빈 리스트 반환)
-	 */
-	@Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.question JOIN FETCH p.question.questionCategory WHERE p.sender.id = :userId")
-	List<Pick> findSenderByUserId(@Param("userId") Long userId);
+	@Query("""
+		SELECT p.id  
+		FROM Pick p 
+		WHERE p.receiver.id = :userId""")
+	List<Long> findPickIdsByReceiverId(@Param("userId") Long userId);
 
 	/**
 	 * 메시지를 보냈을 때 픽의 메시지 전송 여부 true로 변경하기

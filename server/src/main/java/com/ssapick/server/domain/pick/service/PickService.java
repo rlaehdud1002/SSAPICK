@@ -48,18 +48,6 @@ public class PickService {
 	private final EntityManager em;
 
 
-	/**
-	 * 받은 픽 조회하기
-	 *
-	 * @param user 로그인한 유저
-	 * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 받은 픽 리스트
-	 */
-	public List<PickData.Search> searchReceivePick(User user) {
-		return pickRepository.findReceiverByUserId(user.getId()).stream()
-			.map((Pick pick) -> PickData.Search.fromEntity(pick, true))
-			.toList();
-	}
-
 	/***
 	 * 받은 픽 조회하기
 	 * @param user
@@ -67,40 +55,21 @@ public class PickService {
 	 * @return
 	 */
 	public Page<PickData.Search> searchReceivePick(User user,Pageable pageable) {
-
-		// pageable.
-
-		// Step 1: Fetch paged IDs with sorting
-		Page<Long> pickIdsPage = pickRepository.findPickIdsByReceiverId(user.getId(), pageable);
-		List<Long> pickIds = pickIdsPage.getContent();
+		List<Long> pickIds = pickRepository.findPickIdsByReceiverId(user.getId());
 
 		if (pickIds.isEmpty()) {
 			return Page.empty();
 		}
 
-		// Step 2: Fetch Picks with details using the sorted IDs
-		List<Pick> picks = pickRepository.findAllByIdsWithDetails(pickIds);
+		List<Pick> picks = pickRepository.findAllByIdsWithDetails(pickIds, pageable);
 
-		// Convert Pick entities to PickData.Search DTOs
 		List<PickData.Search> pickSearchList = picks.stream()
 			.map(pick -> PickData.Search.fromEntity(pick, true))
 			.collect(Collectors.toList());
 
-		// Return a Page object with the DTOs
-		return new PageImpl<>(pickSearchList, pageable, pickIdsPage.getTotalElements());
+		return new PageImpl<>(pickSearchList, pageable, pickIds.size());
 	}
 
-	/**
-	 * 보낸 픽 조회하기
-	 *
-	 * @param user 로그인한 유저
-	 * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 보낸 픽 리스트
-	 */
-	public List<PickData.Search> searchSendPick(User user) {
-		return pickRepository.findSenderByUserId(user.getId()).stream()
-			.map((Pick pick) -> PickData.Search.fromEntity(pick, false))
-			.toList();
-	}
 
 	/**
 	 * 픽 생성하기
@@ -253,9 +222,7 @@ public class PickService {
 	@Profile("prod")
 	@Scheduled(fixedRate = 1000 * 60 * 60, initialDelay = 0)
 	public void sendFailNotification() {
-		log.debug("전송 실패한 알람 스케쥴링 처리");
 		pickRepository.findByAlarmSentIsFalse().forEach(pick -> {
-			log.debug("전송 실패한 알람 재전송: {}", pick.getId());
 			publisher.publishEvent(FCMData.NotificationEvent.of(
 				NotificationType.PICK,
 				pick.getSender(),
