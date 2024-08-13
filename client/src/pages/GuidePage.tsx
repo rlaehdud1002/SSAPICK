@@ -2,7 +2,7 @@ import RankingGuide from "components/GuidePage/RankingGuide";
 import PickGuide from "components/GuidePage/PickGuide";
 import HomeGuide from "components/GuidePage/HomeGuide";
 import MessageGuide from "components/GuidePage/MessageGuide";
-
+import LocationGuide from "components/GuidePage/LocationGuide";
 //  순서는 footer에 있는 메뉴 순서대로
 const Guide = () => {
   return (
@@ -14,8 +14,9 @@ const Guide = () => {
       {/* 픽 */}
       <PickGuide />
       {/* 메세지 */}
-      <MessageGuide/>
+      <MessageGuide />
       {/* 위치 */}
+      <LocationGuide />
       {/* 로그인 페이지 이동 버튼 */}
     </div>
   );
