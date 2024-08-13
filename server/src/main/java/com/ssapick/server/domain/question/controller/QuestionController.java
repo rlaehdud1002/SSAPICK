@@ -51,6 +51,22 @@ public class QuestionController {
         return SuccessResponse.of(questionService.getQuestionsByUser(user));
     }
 
+
+    /**
+     * 내가 생성한 질문 삭제 AP
+     * 내가 생성한 질문을 삭제한다.
+     */
+    @DeleteMapping("/{questionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public SuccessResponse<Void> deleteQuestionsByUser(
+            @CurrentUser User user,
+            @PathVariable("questionId") Long questionId
+    ){
+        questionService.deleteQuestionByUser(user, questionId);
+        return SuccessResponse.empty();
+    }
+
+
     /**
      * 질문 ID로 질문 조회 API
      * 입력한 질문 ID에 해당하는 질문을 조회한다.
