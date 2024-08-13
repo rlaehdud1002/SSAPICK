@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IPickCreate, IQuestion } from 'atoms/Pick.type';
 import PassIcon from 'icons/PassIcon';
 
@@ -44,19 +44,11 @@ const WarningModal = ({
     });
 
     setStep(WarningStep.ALERT);
+    setTimeout(() => {
+      setOpen(false);
+      setStep(WarningStep.CHECK);
+    }, 1500);
   };
-
-  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
-  useEffect(() => {
-    if (step === WarningStep.ALERT) {
-      const timer = setTimeout(() => {
-        setOpen(false);
-        setStep(WarningStep.CHECK);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step]);
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>

@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserQueryRepo
     @Query("SELECT u.isMattermostConfirmed FROM User u WHERE u.id = :userId")
     boolean isUserAuthenticated(@Param("userId") Long userId);
 
-    @Query("SELECT u FROM User u JOIN FETCH u.profile p ORDER BY p.pickco DESC LIMIT 3")
+    @Query("SELECT u FROM User u JOIN FETCH u.profile p JOIN FETCH u.alarm ORDER BY p.pickco DESC LIMIT 3")
     List<User> findTopPickcoUsers();
 
 }

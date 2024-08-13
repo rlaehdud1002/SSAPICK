@@ -32,7 +32,6 @@ public class NotificationController {
 	@Authenticated
 	@PostMapping("/register")
 	public SuccessResponse<Void> saveToken(@CurrentUser User user, @RequestBody FCMData.Register register) {
-		log.debug("user: {}, register: {}", user, register);
 		fcmService.createUserToken(FCMData.FCMRegister.of(user, register.getToken()));
 		return SuccessResponse.empty();
 	}

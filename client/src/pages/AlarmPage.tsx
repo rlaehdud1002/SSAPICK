@@ -106,7 +106,7 @@ const Alarm = () => {
             </div>
           </>
         ) : (
-          <div>알림이 없습니다.</div>
+          <div className='text-center '>받은 알림이 없습니다.</div>
         )}
       </div>
     </div>

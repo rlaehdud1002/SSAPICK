@@ -5,8 +5,6 @@ import PickIcon from '../../icons/PickIcon';
 import ProfileIcon from '../../icons/ProfileIcon';
 
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import { requestPermission } from 'firebase-messaging-sw';
 
 const Footer = () => {
   const location = useLocation().pathname.split('/')[1];

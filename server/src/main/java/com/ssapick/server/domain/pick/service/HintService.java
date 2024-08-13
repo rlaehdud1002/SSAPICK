@@ -35,25 +35,24 @@ public class HintService {
 
 	@Transactional
 	public String getRandomHintByPickId(Long pickId) {
+
 		Pick pick = pickRepository.findPickWithHintsById(pickId).orElseThrow(
 			() -> new IllegalArgumentException("Pick이 존재하지 않습니다.")
 		);
+
 
 		if (pick.getHintOpens().size() >= 2) {
 			throw new IllegalArgumentException("힌트는 2개까지만 열 수 있습니다.");
 		}
 
-		log.info("유저 아이디: {}", pick.getSender());
-
 		List<Hint> hints = hintRepository.findAllByUserId(pick.getSender().getId());
+
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.GENDER));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_NAME));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.CAMPUS_SECTION));
 		hints.removeIf(hint -> hint.getHintType().equals(HintType.COHORT));
 
 		List<Long> availableHints = getAvailableHintIds(pick, hints);
-
-		log.info("힌트 아이디: {}", availableHints);
 
 		Long openHintId = selectRandomHintId(availableHints);
 

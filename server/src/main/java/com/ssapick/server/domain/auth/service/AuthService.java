@@ -108,8 +108,6 @@ public class AuthService {
 
 	private ProfileData.InitialProfileInfo extractProfileInfo(String nickName) {
 		Matcher matcher = getNicknameMatcher(nickName);
-
-		log.debug("nickName: {}", nickName);
 		if (!matcher.find()) {
 			throw new BaseException(ErrorCode.INVALID_INPUT_VALUE);
 		}

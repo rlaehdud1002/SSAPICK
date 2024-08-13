@@ -1,16 +1,16 @@
-import SendingIcon from "icons/SendingIcon";
-import CoinIcon from "icons/CoinIcon";
+import SendingIcon from 'icons/SendingIcon';
+import CoinIcon from 'icons/CoinIcon';
 
-import { Button } from "components/ui/button";
+import { Button } from 'components/ui/button';
 
-import { useState, useEffect, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { postMessageSend } from "api/messageApi";
+import { useState, useEffect, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { postMessageSend } from 'api/messageApi';
 
-import CoinUseModal from "components/modals/CoinUseModal";
-import InputModal from "components/modals/InputModal";
-import ResultCheckModal from "components/modals/ResultCheckModal";
+import CoinUseModal from 'components/modals/CoinUseModal';
+import InputModal from 'components/modals/InputModal';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
 
 import {
   Dialog,
@@ -19,10 +19,10 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "components/ui/dialog";
+} from 'components/ui/dialog';
 
-import { IPick } from "atoms/Pick.type";
-import { MESSAGE_COIN } from "coins/coins";
+import { IPick } from 'atoms/Pick.type';
+import { MESSAGE_COIN } from 'coins/coins';
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -50,7 +50,7 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
 
   // 쪽지 전송 mutation
   const mutation = useMutation({
-    mutationKey: ["message", "send"],
+    mutationKey: ['message', 'send'],
     mutationFn: postMessageSend,
 
     onMutate: () => {
@@ -60,25 +60,17 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
     // 쪽지 전송 성공 시
     onSuccess: () => {
       setStep(MessageModalStep.ALERT);
+      setTimeout(() => {
+        setIsModalVisible(false);
+        setMessage(true);
+        onMessageSent(pick.id);
+        setOpen(false); // 모달 닫기
+      }, 1500);
     },
     onError: (error) => {
       setStep(MessageModalStep.FAIL);
     },
   });
-
-  useEffect(() => {
-    if (step === MessageModalStep.ALERT) {
-      console.log("alert");
-      const timer = setTimeout(() => {
-        setIsModalVisible(false);
-        setMessage(true);
-        onMessageSent(pick.id);
-        setOpen(false); // 모달 닫기
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step, onMessageSent, pick]);
 
   const {
     register,
@@ -88,7 +80,7 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   } = useForm<MessageForm>();
 
   const onSubmit = (data: MessageForm) => {
-    console.log("ok", data);
+    console.log('ok', data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
     } else if (step === MessageModalStep.CONFIRM) {
@@ -97,7 +89,6 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
         content: data.message,
       });
       reset();
-      // setStep(MessageModalStep.ALERT);
     }
   };
 
@@ -107,27 +98,31 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   };
 
   const onInvalid = (errors: any) => {
-    console.log("errors", errors);
+    console.log('errors', errors);
   };
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogTrigger onClick={() => setOpen(true)}>{!message && <SendingIcon />}</DialogTrigger>
+      <DialogTrigger onClick={() => setOpen(true)}>
+        {!message && <SendingIcon />}
+      </DialogTrigger>
       {isModalVisible && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>
-            <DialogTitle className="flex flex-start text-color-5F86E9">쪽지 보내기</DialogTitle>
+            <DialogTitle className="flex flex-start text-color-5F86E9">
+              쪽지 보내기
+            </DialogTitle>
           </DialogHeader>
           {step === MessageModalStep.INPUT && (
             <div>
               <div className="my-3">{pick.question.content}</div>
               <InputModal
                 name="message"
-                register={register("message", {
-                  required: "쪽지 내용을 입력해주세요.",
+                register={register('message', {
+                  required: '쪽지 내용을 입력해주세요.',
                   maxLength: {
                     value: 255,
-                    message: "255글자 이하로 입력해주세요.",
+                    message: '255글자 이하로 입력해주세요.',
                   },
                 })}
                 errors={errors}
@@ -135,7 +130,7 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
               <DialogFooter className="flex flex-row justify-end mt-3 relative">
                 <Button
                   type="submit"
-                  variant={pickco >= MESSAGE_COIN ? "ssapick" : "fault"}
+                  variant={pickco >= MESSAGE_COIN ? 'ssapick' : 'fault'}
                   size="messageButton"
                   className="flex flex-row items-center"
                   onClick={() => {
@@ -145,7 +140,9 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
                   }}
                 >
                   <CoinIcon width={25} height={25} />
-                  <h3 className="luckiest_guy ms-2 me-4 pt-1">{MESSAGE_COIN}</h3>
+                  <h3 className="luckiest_guy ms-2 me-4 pt-1">
+                    {MESSAGE_COIN}
+                  </h3>
                   전송
                 </Button>
                 {pickco < MESSAGE_COIN && (
@@ -173,7 +170,9 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
               </DialogFooter>
             </div>
           )}
-          {step === MessageModalStep.ALERT && <ResultCheckModal content="전송이 완료되었습니다." />}
+          {step === MessageModalStep.ALERT && (
+            <ResultCheckModal content="전송이 완료되었습니다." />
+          )}
           {step === MessageModalStep.FAIL && (
             <ResultCheckModal
               content="전송에 실패했습니다."
@@ -181,7 +180,10 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
             />
           )}
           {step === MessageModalStep.POSTING && (
-            <ResultCheckModal content="전송 중입니다." detail="AI가 문장을 판단 중 입니다." />
+            <ResultCheckModal
+              content="전송 중입니다."
+              detail="AI가 문장을 판단 중 입니다."
+            />
           )}
         </DialogContent>
       )}

@@ -1,5 +1,5 @@
 import instance from 'api/clientApi';
-import { ICategory, ICreateQuestion, IQuestion } from 'atoms/Pick.type';
+import { ICategory, ICreateQuestion, IMadeQuestion, IQuestion } from 'atoms/Pick.type';
 import { BaseResponse } from 'atoms/User.type';
 
 // 로그인 된 사용자에게 맞는 질문 조회
@@ -49,10 +49,10 @@ export const getMyQuestionRank = async (): Promise<IQuestion[]> => {
 };
 
 // 유저 아이디로 질문 조회
-export const getQuestionByUser = async (): Promise<IQuestion[]> => {
+export const getQuestionByUser = async (): Promise<IMadeQuestion[]> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IQuestion[]>>(`/questions/me`);
+  } = await instance.get<BaseResponse<IMadeQuestion[]>>(`/questions/me`);
 
   console.log('data', data);
 
@@ -77,3 +77,14 @@ export const getCategory = async (): Promise<ICategory[]> => {
 
   return data;
 };
+
+// 생성한 질문 삭제
+export const deleteQuetion = async (questionId: number): Promise<void> => {
+  const {
+    data: { success, message },
+  } = await instance.delete<BaseResponse<null>>(`/questions/${questionId}`);
+
+  if (!success) {
+    throw new Error(message);
+  }
+}

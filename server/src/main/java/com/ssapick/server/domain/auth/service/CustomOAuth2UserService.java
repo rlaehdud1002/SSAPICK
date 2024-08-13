@@ -33,10 +33,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oauth2User = super.loadUser(userRequest);
-		log.debug("oauth2User: {}", oauth2User.getAttributes());
 
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
-		log.debug("registrationId: {}", registrationId);
 		ProviderType providerType = ProviderType.valueOf(registrationId.toUpperCase());
 		OAuth2Response oauth2Response = CustomOAuthUserFactory.parseOAuth2Response(providerType,
 			oauth2User.getAttributes());
@@ -56,7 +54,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		});
 
 		if (isNew.get()) {
-			log.debug("New user has been created: {}", user);
 			publisher.publishEvent(new PickcoEvent(user, PickcoLogType.SIGN_UP, REGISTER_COIN));
 		}
 		return new CustomOAuth2User(user);

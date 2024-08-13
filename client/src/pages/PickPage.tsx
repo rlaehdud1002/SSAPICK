@@ -49,14 +49,14 @@ const Pick = () => {
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
-  }, [friends]);
+  }, [friends, setPickFriends]);
 
   useEffect(() => {
-    if (pickFriends.length === 0) {
+    if (friends.length >= 4 && pickFriends.length === 0) {
       console.log('친구 셔플');
       handleShuffle();
     }
-  }, [handleShuffle, friends]);
+  }, [friends, handleShuffle, pickFriends]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
@@ -107,11 +107,11 @@ const Pick = () => {
     }, 150);
   };
 
+  console.log('pickFriends', pickFriends);
+
   if (finish) {
     return <PickComplete setQuestion={setQuestion} />;
-  }
-
-  if (friends.length < 4) {
+  } else if (!LoadingFriendLists && friends.length < 4) {
     return <NoFourFriends />;
   }
 
@@ -124,7 +124,7 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        friends.length >= 4 &&
+        pickFriends &&
         question[pickInfo.index] && (
           <div
             className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
@@ -135,7 +135,6 @@ const Pick = () => {
               pickInfo={pickInfo}
             />
             <div className="m-6">
-              <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice
                   isTouchDisabled={isTouchDisabled}

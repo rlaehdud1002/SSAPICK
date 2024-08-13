@@ -1,12 +1,15 @@
+
+
 interface PickIconProps {
   isHighlighted: boolean;
 }
 
+
 const PickIcon = ({ isHighlighted }: PickIconProps) => {
   return (
-    <svg
-      width="47"
-      height="46"
+     <svg
+      width="30"
+      height="30"
       viewBox="0 0 47 46"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -24,6 +27,7 @@ const PickIcon = ({ isHighlighted }: PickIconProps) => {
         strokeLinecap="round"
       />
     </svg>
+   
   );
 };
 
