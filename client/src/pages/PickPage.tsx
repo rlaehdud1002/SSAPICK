@@ -55,6 +55,7 @@ const Pick = () => {
     if (pickFriends.length === 0) {
       console.log('친구 셔플');
       handleShuffle();
+      console.log('pickFriends', pickFriends)
     }
   }, [handleShuffle, friends]);
 
@@ -107,11 +108,11 @@ const Pick = () => {
     }, 150);
   };
 
+  console.log('pickFriends', pickFriends);
+
   if (finish) {
     return <PickComplete setQuestion={setQuestion} />;
-  }
-
-  if (friends.length < 4) {
+  } else if (!LoadingFriendLists && friends.length < 4) {
     return <NoFourFriends />;
   }
 
@@ -124,7 +125,7 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        friends.length >= 4 &&
+        pickFriends &&
         question[pickInfo.index] && (
           <div
             className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
@@ -135,7 +136,6 @@ const Pick = () => {
               pickInfo={pickInfo}
             />
             <div className="m-6">
-              <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice
                   isTouchDisabled={isTouchDisabled}
