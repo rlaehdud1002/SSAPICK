@@ -15,3 +15,5 @@ export const HINT_OPEN_COIN = 100;
 export const USER_REROLL_COIN = 10;
 // 쪽지
 export const MESSAGE_COIN = 20;
+// 위치
+export const LOCATION_COIN = 10;
