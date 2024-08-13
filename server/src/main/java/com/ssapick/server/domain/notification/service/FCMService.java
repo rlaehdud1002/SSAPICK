@@ -24,7 +24,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.util.Objects;
 
 import static com.ssapick.server.core.exception.ErrorCode.FCM_TOKEN_NOT_FOUND;
-import static com.ssapick.server.core.exception.ErrorCode.NOTIFICATION_SEND_FAIL;
 
 @Slf4j
 @Service
@@ -53,9 +52,12 @@ public class FCMService {
                 ).build();
         try {
             String fcmId = null;
-            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
-                fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
-            }
+            fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
+//            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
+//                log.debug("firebase token: {}", message);
+//                fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
+//            }
+//            fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
 
             notificationRepository.save(Notification.createNotification(
                     notificationEvent.getReceiver(),
@@ -68,7 +70,7 @@ public class FCMService {
 
             updateSendState(notificationEvent.getType(), notificationEvent.getNotificationId());
         } catch (Exception e) {
-            throw new BaseException(NOTIFICATION_SEND_FAIL, e);
+//            throw new BaseException(NOTIFICATION_SEND_FAIL, e);
         }
     }
 

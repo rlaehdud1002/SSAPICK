@@ -117,3 +117,7 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.splash {
+  background-image: linear-gradient(45deg, #A1C4FD 0%, #000855 100%);
+}

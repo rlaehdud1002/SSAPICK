@@ -13,29 +13,44 @@ import { initializeApp } from "firebase/app";
 import NotFoundPage from "pages/NotFoundPage";
 import { useEffect } from "react";
 import { validCheck } from "api/validApi";
-import { accessTokenState, isLoginState, refreshRequestState } from "atoms/UserAtoms";
+import {
+  accessTokenState,
+  firebaseTokenState,
+  isLoginState,
+  refreshRequestState,
+} from "atoms/UserAtoms";
 import { refresh } from "api/authApi";
-import { getMessaging, onMessage } from "firebase/messaging";
-import { requestPermission } from "firebase-messaging-sw";
-
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
-};
-
-const firebaseApp = initializeApp(firebaseConfig);
-const messaging = getMessaging(firebaseApp);
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { messaging } from "firebase-messaging-sw";
+import { registerToken } from "api/notificationApi";
+import { setRecoil } from "recoil-nexus";
 
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
 
-  requestPermission(messaging);
+  const setFirebaseToken = useSetRecoilState(firebaseTokenState);
+
+  useEffect(() => {
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("run this method");
+        getToken(messaging, { vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY })
+          .then((token: string) => {
+            registerToken(token)
+              .then(() => {
+                setFirebaseToken(token);
+              })
+              .catch((error) => {});
+          })
+          .catch((err) => {});
+        onMessage(messaging, (payload) => {
+          console.log(payload);
+        });
+      } else if (permission === "denied") {
+      }
+    });
+  }, []);
 
   onMessage(messaging, (payload) => {
     console.log("Message received. ", payload);
@@ -52,6 +67,7 @@ function App() {
       location !== "mattermost" && // mm 인증 페이지
       location !== "404" && // 404 페이지
       location !== "infoinsert" && // 추가 정보 입력 페이지
+      location !== "install" && // 설치 가이드 페이지
       location !== "guide" // 가이드 페이지
     );
   };
@@ -59,7 +75,7 @@ function App() {
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash" || location === "guide") {
+        if (location === "splash" || location === "guide" || location === "install") {
           return;
         }
         if (isValid) return;
@@ -97,7 +113,7 @@ function App() {
       <ReactQueryDevtools buttonPosition="top-left" initialIsOpen={false} />
       <div className="flex flex-col relative min-h-screen">
         {headerFooter() && <Header />}
-        <main className="flex-grow mb-[70px]">
+        <main className="flex-grow mb-[70px] relative">
           <Routes>
             <Route path="/*" element={<CommonRoute />} />
             <Route path="/profile/*" element={<ProfileRoute />} />

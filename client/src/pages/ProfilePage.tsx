@@ -91,7 +91,6 @@ const Profile = () => {
             <CoinIcon width={50} height={50} />
           </ProfileAlarm>
         </Link>
-
         {/* 로그아웃 버튼 */}
         <SignoutModal />
       </div>

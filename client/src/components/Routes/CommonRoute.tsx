@@ -5,6 +5,7 @@ import AuthCallback from "pages/AuthCallbackPage";
 import CoolTime from "pages/CoolTimePage";
 import Home from "pages/HomePage";
 import InfoInsert from "pages/InfoInsert";
+import InstallGuidePage from "pages/InstallGuidePage";
 import Login from "pages/LoginPage";
 import Mattermost from "pages/MattermostPage";
 import Message from "pages/MessagePage";
@@ -12,7 +13,6 @@ import ModiInfoInsert from "pages/ModiInfoInsert";
 import Pick from "pages/PickPage";
 import Ranking from "pages/RankingPage";
 import Splash from "pages/SplashPage";
-import Guide from "pages/GuidePage";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 const CommonRoute = () => {
@@ -21,6 +21,7 @@ const CommonRoute = () => {
       <Route path="/" element={<Login />} />
       <Route path="/guide" element={<Guide />} />
       <Route path="/splash" element={<Splash />} />
+      <Route path="/install" element={<InstallGuidePage />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />
       <Route path="/ranking" element={<Ranking />} />

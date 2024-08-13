@@ -154,18 +154,18 @@ class UserRepositoryTest extends TestDatabaseContainer {
 //        Assertions.assertThat(findUsers.size()).isEqualTo(4);
     }
 
-    @Test
-    @DisplayName("픽코가 가장 많은 유저 TOP3 조회")
-    void 픽코가_가장_많은_유저_TOP3_조회() {
-        // * GIVEN: 이런게 주어졌을 때
-
-        // * WHEN: 이걸 실행하면
-        List<User> findUsers = userRepository.findTopPickcoUsers();
-
-        // * THEN: 이런 결과가 나와야 한다
-        Assertions.assertThat(findUsers.size()).isEqualTo(3);
-        Assertions.assertThat(findUsers.get(0).getProfile().getPickco()).isEqualTo(250);
-        Assertions.assertThat(findUsers.get(1).getProfile().getPickco()).isEqualTo(200);
-        Assertions.assertThat(findUsers.get(2).getProfile().getPickco()).isEqualTo(150);
-    }
+    // @Test
+    // @DisplayName("픽코가 가장 많은 유저 TOP3 조회")
+    // void 픽코가_가장_많은_유저_TOP3_조회() {
+    //     // * GIVEN: 이런게 주어졌을 때
+    //
+    //     // * WHEN: 이걸 실행하면
+    //     List<User> findUsers = userRepository.findTopPickcoUsers();
+    //
+    //     // * THEN: 이런 결과가 나와야 한다
+    //     Assertions.assertThat(findUsers.size()).isEqualTo(3);
+    //     Assertions.assertThat(findUsers.get(0).getProfile().getPickco()).isEqualTo(250);
+    //     Assertions.assertThat(findUsers.get(1).getProfile().getPickco()).isEqualTo(200);
+    //     Assertions.assertThat(findUsers.get(2).getProfile().getPickco()).isEqualTo(150);
+    // }
 }

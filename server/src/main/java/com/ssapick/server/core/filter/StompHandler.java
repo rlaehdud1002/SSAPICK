@@ -35,7 +35,6 @@ public class StompHandler implements ChannelInterceptor {
             if (authentication == null) {
                 throw new BaseException(ErrorCode.INVALID_ACCESS_TOKEN);
             }
-            log.debug("authentication: {}", authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             accessor.setUser(authentication);
         }

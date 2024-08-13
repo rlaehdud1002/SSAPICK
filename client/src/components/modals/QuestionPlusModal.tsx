@@ -50,18 +50,6 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
     },
   });
 
-  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
-  useEffect(() => {
-    if (step === NewQuestionStep.ALERT) {
-      const timer = setTimeout(() => {
-        setOpen(false);
-        setStep(NewQuestionStep.INPUT);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [step]);
-
   const {
     register,
     formState: { errors },
@@ -79,6 +67,10 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
     mutation.mutate(createData);
 
     setStep(NewQuestionStep.ALERT);
+    setTimeout(() => {
+      setOpen(false);
+      setStep(NewQuestionStep.INPUT);
+    }, 1000);
     reset();
   };
 
@@ -87,12 +79,12 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
   };
 
   return (
-    <form className='flex items-center'>
+    <form className="flex items-center">
       <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
         <DialogTrigger onClick={() => setOpen(true)} className="w-full">
           {location === 'pickpage' ? (
             <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
-              <PlusIcon className='mr-1'/>
+              <PlusIcon className="mr-1" />
               질문 생성
             </div>
           ) : (

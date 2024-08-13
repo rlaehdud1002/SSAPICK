@@ -89,13 +89,13 @@ class QuestionControllerTest extends RestDocsSupport {
 	void 내가_생성한_질문_조회_테스트() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
 		List<QuestionData.MyQuestion> searches = Stream.of("질문 1", "질문 2", "질문 3")
-				.map((content) -> {
-					Question question = spy(createQuestion(content));
-					when(question.getId()).thenReturn(1L);
-					return question;
-				})
-				.map(question -> QuestionData.MyQuestion.fromEntity(question, false))
-				.toList();
+			.map((content) -> {
+				Question question = spy(createQuestion(content));
+				when(question.getId()).thenReturn(1L);
+				return question;
+			})
+			.map(question -> QuestionData.MyQuestion.fromEntity(question))
+			.toList();
 
 		when(questionService.getQuestionsByUser(any())).thenReturn(searches);
 
@@ -104,22 +104,21 @@ class QuestionControllerTest extends RestDocsSupport {
 
 		// * THEN: 이런 결과가 나와야 한다
 		perform.andExpect(status().isOk())
-				.andDo(restDocs.document(resource(
-						ResourceSnippetParameters.builder()
-								.tag("질문")
-								.summary("내가 생성한 질문 조회 API")
-								.description("내가 생성한 질문을 조회한다.")
-								.responseFields(response(
-										fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 ID"),
-										fieldWithPath("data[].category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
-										fieldWithPath("data[].category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
-										fieldWithPath("data[].category.thumbnail").type(JsonFieldType.STRING)
-												.description("질문 카테고리 썸네일"),
-										fieldWithPath("data[].content").type(JsonFieldType.STRING).description("질문 내용"),
-										fieldWithPath("data[].deletable").type(JsonFieldType.BOOLEAN).description("삭제 가능 여부")
-								))
-								.build())
-				));
+			.andDo(restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("질문")
+					.summary("내가 생성한 질문 조회 API")
+					.description("내가 생성한 질문을 조회한다.")
+					.responseFields(response(
+						fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 ID"),
+						fieldWithPath("data[].category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
+						fieldWithPath("data[].category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
+						fieldWithPath("data[].category.thumbnail").type(JsonFieldType.STRING)
+							.description("질문 카테고리 썸네일"),
+						fieldWithPath("data[].content").type(JsonFieldType.STRING).description("질문 내용")
+					))
+					.build())
+			));
 
 		verify(questionService).getQuestionsByUser(any());
 	}
@@ -131,19 +130,19 @@ class QuestionControllerTest extends RestDocsSupport {
 
 		// * WHEN: 이걸 실행하면
 		ResultActions perform = this.mockMvc.perform(
-				delete("/api/v1/questions/{questionId}", 1L)
+			delete("/api/v1/questions/{questionId}", 1L)
 		);
 
 		// * THEN: 이런 결과가 나와야 한다
 		perform.andExpect(status().isNoContent())
-				.andDo(restDocs.document(resource(
-						ResourceSnippetParameters.builder()
-								.tag("질문")
-								.summary("질문 삭제 API")
-								.description("내가 생서한 질문 중 픽이 없는 질문을 삭제한다.")
-								.responseFields(empty())
-								.build()
-				)));
+			.andDo(restDocs.document(resource(
+				ResourceSnippetParameters.builder()
+					.tag("질문")
+					.summary("질문 삭제 API")
+					.description("내가 생서한 질문 중 픽이 없는 질문을 삭제한다.")
+					.responseFields(empty())
+					.build()
+			)));
 	}
 
 

@@ -25,6 +25,7 @@ const Response = ({ picks }: ResponseProps) => {
   const [updatedPicks, setUpdatedPicks] = useState<IPick[]>([]);
   const [show, setShow] = useState<boolean>(false);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedAlarm, setSelectedAlarm] = useState<boolean | null>(null);
 
   const { data: pickco, isLoading: isLoadingPickco } = useQuery<IPickco>({
     queryKey: ['pickco'],
@@ -51,6 +52,7 @@ const Response = ({ picks }: ResponseProps) => {
     const selectedPick = updatedPicks.find((pick) => pick.id === pickId);
     if (selectedPick) {
       setSelectedQuestion(selectedPick.question.content);
+      setSelectedAlarm(selectedPick.alarm);
     }
 
     setShow(true);
@@ -137,10 +139,17 @@ const Response = ({ picks }: ResponseProps) => {
           </Accordion>
         </div>
       ))}
-      {show && selectedQuestion && (
-        <AlarmCheckModal setShow={setShow} question={selectedQuestion} />
+      {show && selectedQuestion && selectedAlarm !== null && (
+        <AlarmCheckModal
+          setShow={setShow}
+          question={selectedQuestion}
+          alarm={selectedAlarm}
+        />
       )}
-      <div className="h-24" />
+      <div className="text-gray-600 text-center my-10">
+        받은 <span className="luckiest_guy mr-1">PICK</span>조회가
+        완료되었습니다.
+      </div>
     </div>
   );
 };

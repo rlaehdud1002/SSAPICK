@@ -56,7 +56,6 @@ const SignoutModal = () => {
               <Button onClick={() => {
                 mutation.mutate();
                 setStep(SignoutStep.ALERT);
-
               }} variant="ssapick" size="sm">
                 로그아웃
               </Button>
