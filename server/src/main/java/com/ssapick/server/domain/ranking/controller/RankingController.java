@@ -21,9 +21,6 @@ public class RankingController {
 
     @GetMapping("/all")
     public SuccessResponse<RankingData.Response> getAllRanking() {
-
-        rankingService.getAllRanking();
-
         RankingData.Response response = rankingScheduler.getCachedRankingData();
         return SuccessResponse.of(response);
     }
