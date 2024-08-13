@@ -12,7 +12,7 @@ import {
 
 import CoinIcon from "icons/CoinIcon";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface LocationModalProps {
   profileImage: string;
