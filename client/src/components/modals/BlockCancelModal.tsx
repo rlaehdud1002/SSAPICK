@@ -14,6 +14,7 @@ import { useState } from "react";
 interface BlockCancelModalProps {
   Id: number;
   category?: string;
+  
 }
 
 enum BlockCancelStep {
@@ -102,8 +103,7 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
             </DialogFooter>
           </div>
         )}
-
-
+        
         {step === BlockCancelStep.ALERT && (
           <div>
             <div className="flex justify-center my-5">
