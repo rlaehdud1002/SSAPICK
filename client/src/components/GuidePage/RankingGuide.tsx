@@ -1,6 +1,6 @@
 const RankingGuide = () => {
   return (
-    <div>
+    <div className="flex">
       <h1>Ranking 가이드</h1>
       <div></div>
     </div>
