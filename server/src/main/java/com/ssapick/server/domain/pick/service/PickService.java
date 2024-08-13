@@ -19,6 +19,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -249,6 +250,7 @@ public class PickService {
         return pick.map(value -> PickData.Search.fromEntity(value, true)).orElse(null);
     }
 
+	@Profile("prod")
 	@Scheduled(fixedRate = 1000 * 60 * 60, initialDelay = 0)
 	public void sendFailNotification() {
 		log.debug("전송 실패한 알람 스케쥴링 처리");
