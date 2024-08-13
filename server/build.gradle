@@ -117,6 +117,7 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:1.19.0"
     testImplementation "org.testcontainers:junit-jupiter:1.19.0"
     testImplementation "org.testcontainers:postgresql:1.17.6"
+    runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 //    testImplementation 'org.testcontainers:jdbc:1.16.0'
 
     // AWS
