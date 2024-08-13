@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "components/ui/carousel";
 import PickGuideIcon from "icons/PickGuideIcon";
+import PickGuideIcon2 from "icons/PickGuideIcon2";
 
 const PickGuide = () => {
   return (
@@ -25,7 +26,9 @@ const PickGuide = () => {
           <CarouselItem className="flex justify-center">
             <PickGuideIcon width={200} height={500} />
           </CarouselItem>
-          <CarouselItem>second</CarouselItem>\
+          <CarouselItem className="flex justify-center">
+            <PickGuideIcon2 width={200} height={500} />
+          </CarouselItem>
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
