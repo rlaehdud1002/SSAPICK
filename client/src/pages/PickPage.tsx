@@ -49,15 +49,14 @@ const Pick = () => {
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
-  }, [friends]);
+  }, [friends, setPickFriends]);
 
   useEffect(() => {
-    if (pickFriends.length === 0) {
+    if (friends.length >= 4 && pickFriends.length === 0) {
       console.log('친구 셔플');
       handleShuffle();
-      console.log('pickFriends', pickFriends)
     }
-  }, [handleShuffle, friends]);
+  }, [friends, handleShuffle, pickFriends]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
