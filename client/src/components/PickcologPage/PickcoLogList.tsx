@@ -59,6 +59,12 @@ const getTypeDetails = (type: string) => {
           'https://d2yu3js5fxqm1g.cloudfront.net/category/%EC%A7%88%EB%AC%B8+%EC%83%9D%EC%84%B1.png',
         title: '질문 생성 보상',
       };
+    case 'RE_ROLL':
+      return {
+        imageUrl:
+          'https://d2yu3js5fxqm1g.cloudfront.net/category/%EC%B9%9C%EA%B5%AC2.png',
+        title: '사용자 리롤',
+      };
     case 'PICK_USER_LOCATION':
       return {
         imageUrl:
