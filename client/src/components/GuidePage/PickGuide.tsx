@@ -19,7 +19,7 @@ const PickGuide = () => {
         <p className="whitespace-normal">Pick 당한 사람은 당신이 누군지 모릅니다</p>
         <p className="whitespace-normal">평소 친해지고 싶었던 사람과 친해질 수 있는 기회!</p>
       </div>
-      <Carousel>
+      <Carousel className="my-5">
         <CarouselContent>
           <CarouselItem className="flex justify-center">
             <img width={200} src="icons/guide/Pick.png" alt="Pick" />
@@ -40,10 +40,10 @@ const PickGuide = () => {
       </div>
 
       <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center">
-        <p className="text-xl font-bold text-[#5f86e9] whitespace-normal">셔플</p>
+        <p className="text-xl font-bold  text-[#5f86e9] whitespace-normal">셔플</p>
         <p className="whitespace-normal">Pick하고 싶은 친구가 없다면 셔플을 할 수 있습니다!</p>
       </div>
-      <Carousel>
+      <Carousel className="my-5">
         <CarouselContent>
           <CarouselItem className="flex justify-center">
             <img width={200} src="icons/guide/Pick.png" alt="Pick" />
@@ -65,7 +65,7 @@ const PickGuide = () => {
         <p className="whitespace-normal">적절하지않은 질문은 신고해주요!</p>
         <p className="whitespace-normal">패스와 차단은 총 5회 가능</p>
       </div>
-      <Carousel>
+      <Carousel className="my-5">
         <CarouselContent>
           <CarouselItem className="flex justify-center">
             <img width={200} src="icons/guide/PickPass.png" alt="Pick" />

@@ -12,6 +12,7 @@ import ProfileGuide from "components/GuidePage/ProfileGuide";
 const Guide = () => {
   return (
     <div className="flex flex-col items-center">
+      <span className="text-3xl mt-10 luckiest_guy text-blue-400">ssapick guide</span>
       {/* 홈 */}
       <HomeGuide />
       {/* 랭킹 */}
