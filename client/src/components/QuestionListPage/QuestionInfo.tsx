@@ -18,14 +18,18 @@ const QuestionInfo = () => {
   }
 
   return (
-    <div className="ml-5">
-      <QuestionInfoContent />
-      <span>알림 설정한 질문</span>
+    <div className='mt-3'>
+      <div className='my-5'>
+      <span className='flex justify-center'>알림 설정한 질문</span>
       {alarmPick && (
-        <div className="mt-5 mb-20">
+        <div className="mt-5">
           <AlarmedQuestion pick={alarmPick} />
         </div>
       )}
+      </div>
+      <div className='ml-5'>
+      <QuestionInfoContent />
+      </div>
     </div>
   );
 };

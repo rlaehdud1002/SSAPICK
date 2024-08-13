@@ -18,15 +18,19 @@ const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
   };
 
   return (
-    <div className="flex flex-row justify-between items-center">
-      <div className="flex flex-row">
+    <div>
+      <div 
+      style={{ backgroundColor: "#000855", opacity: "70%" }}
+      className="flex flex-col items-center justify-center rounded-lg h-16 ">
+        <div className='flex'>
         <UserMaskIcon
           pickId={pick.id}
           alarm={pick.alarm}
           gen={pick.sender.gender}
           onAlarmUpdate={handleAlarmUpdate}
         />
-        <span className="ml-4">{pick.question.content}</span>
+        <span className="ml-2 text-white">{pick.question.content}</span>
+      </div>
       </div>
       {/* <div
         className="bg-gray-400 rounded-lg px-2 py-1 text-white"
