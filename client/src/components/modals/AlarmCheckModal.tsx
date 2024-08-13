@@ -10,18 +10,15 @@ import { useEffect, useState } from 'react';
 interface AlarmCheckModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   question: string;
+  alarm: boolean;
 }
 
-const AlarmCheckModal = ({ setShow, question }: AlarmCheckModalProps) => {
+const AlarmCheckModal = ({
+  setShow,
+  question,
+  alarm,
+}: AlarmCheckModalProps) => {
   const [open, setOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(false);
-      setShow(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  });
 
   const handleOpenChange = (openState: boolean) => {
     setOpen(openState);
@@ -42,7 +39,13 @@ const AlarmCheckModal = ({ setShow, question }: AlarmCheckModalProps) => {
               <div className="bg-[#92AEF4]/30 text-[#4D5BDC] rounded-lg py-1 px-5 mb-4">
                 {question}
               </div>
-              <span>사용자가 주위에 다가오면 알림을 보내줍니다!</span>
+              {!alarm ? (
+                <span>사용자가 주위에 다가오면 알림을 보내줍니다!</span>
+              ) : (
+                <div>
+                  <span className="luckiest_guy mr-1">PICK</span>알림을 해제합니다
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
