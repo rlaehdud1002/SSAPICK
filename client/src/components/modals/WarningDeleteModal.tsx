@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteReceivedMessage, deleteSendMessage } from "api/messageApi";
-import ResultCheckModal from "components/modals/ResultCheckModal";
-import DeleteIcon from "icons/DeleteIcon";
-import WarningIcon from "icons/WarningIcon";
-import { Button } from "components/ui/button";
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteReceivedMessage, deleteSendMessage } from 'api/messageApi';
+import ResultCheckModal from 'components/modals/ResultCheckModal';
+import DeleteIcon from 'icons/DeleteIcon';
+import WarningIcon from 'icons/WarningIcon';
+import { Button } from 'components/ui/button';
 
 import {
   Dialog,
@@ -45,20 +45,24 @@ const WarningDeleteModal = ({
 
   // 유저 차단 api
   const blockMutatiion = useMutation({
-    mutationKey: ["block", "user"],
+    mutationKey: ['block', 'user'],
     mutationFn: blockUser,
 
     onSuccess: () => {
-      console.log("쪽지 차단 성공");
       queryClient.invalidateQueries({
         queryKey: ['message', 'received'],
       });
+
+      setTimeout(() => {
+        setOpen(false);
+        setPopoverOpen(false);
+      }, 1500);
     },
   });
 
   // 쪽지 삭제 mutation
   const deleteMutation = useMutation({
-    mutationKey: ["message", "delete"],
+    mutationKey: ['message', 'delete'],
     mutationFn: ({
       messageId,
       location,
@@ -66,52 +70,56 @@ const WarningDeleteModal = ({
       messageId: number;
       location: string;
     }) => {
-      if (location === "send") {
+      if (location === 'send') {
         return deleteSendMessage(messageId); // Promise를 반환
-      } else if (location === "received") {
-        console.log("받은 메시지 삭제 method 들어옴");
+      } else if (location === 'received') {
+        console.log('받은 메시지 삭제 method 들어옴');
         return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
-        throw new Error("Invalid location");
+        throw new Error('Invalid location');
       }
     },
 
     // 쪽지 삭제 후 쪽지 목록 새로 고침
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["message", location === "send" ? "send" : "received"],
+        queryKey: ['message', location === 'send' ? 'send' : 'received'],
       });
+      setTimeout(() => {
+        setOpen(false);
+        setPopoverOpen(false);
+      }, 1500);
     },
   });
 
-  // 마지막 모달이 실행된 후 1초 뒤 자동으로 닫힘
-  useEffect(() => {
-    if (step === WarningDeleteStep.ALERT) {
-      const timer = setTimeout(() => {
-        setOpen(false);
-      }, 1000);
+  // 마지막 모달이 실행된 후 1.5초 뒤 자동으로 닫힘
+  // useEffect(() => {
+  //   if (step === WarningDeleteStep.ALERT) {
+  //     const timer = setTimeout(() => {
+  //       setOpen(false);
+  //       setPopoverOpen(false);
+  //     }, 1500);
 
-      return () => clearTimeout(timer);
-    }
-  }, [step]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [step]);
 
   const onClick = () => {
-    if (title === "차단") {
+    if (title === '차단') {
       blockMutatiion.mutate(senderId);
     } else {
-      console.log("메시지 삭제", location);
+      console.log('메시지 삭제', location);
       deleteMutation.mutate({ messageId, location });
     }
 
     setStep(WarningDeleteStep.ALERT);
-    setPopoverOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
         <div className="flex flex-row">
-          {title === "차단" ? (
+          {title === '차단' ? (
             <WarningIcon width={24} height={24} className="mr-3" />
           ) : (
             <DeleteIcon width={24} height={24} className="mr-3" />
@@ -130,7 +138,7 @@ const WarningDeleteModal = ({
             <div>
               <div className="flex flex-col items-center my-16 text-center">
                 <p>이 쪽지를 {title}하시겠습니까?</p>
-                {title === "차단" && (
+                {title === '차단' && (
                   <p className="bg-[#92AEF4]/30 rounded-lg text-[#4D5BDC] w-4/5 p-1 mt-3">
                     {message}
                   </p>
@@ -148,7 +156,7 @@ const WarningDeleteModal = ({
             </div>
           )}
           {step === WarningDeleteStep.ALERT && (
-            <ResultCheckModal content={`쪽지 ${title}가 완료되었습니다.`} />
+            <ResultCheckModal content={title === '차단' ? "쪽지 차단이 완료되었습니다." : "쪽지 삭제가 완료되었습니다."} />
           )}
         </DialogContent>
       )}
