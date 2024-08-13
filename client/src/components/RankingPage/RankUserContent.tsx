@@ -9,8 +9,8 @@ const RankUserContent = ({ rank }: RankUserContentProps) => {
   return (
     <div className="border border-white   rounded-lg m-3 p-2 text-center flex flex-col py-4">
       <span className="">{rank.questionContent}</span>
-      <div className="my-2">
-        <span className="luckiest_guy text-xl text-[#5F86E9]">
+      <div className="my-2 flex flex-row items-center justify-center">
+        <span className="luckiest_guy text-xl text-[#5F86E9] mr-1">
           {rank.count}{' '}
         </span>
         <span className="luckiest_guy text-sm text-[#5F86E9]">PICK!</span>
