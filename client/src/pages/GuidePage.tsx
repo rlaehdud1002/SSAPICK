@@ -5,6 +5,9 @@ import MessageGuide from "components/GuidePage/MessageGuide";
 import LocationGuide from "components/GuidePage/LocationGuide";
 import FriendGuide from "components/GuidePage/FriendGuide";
 import AttendenceGuide from "components/GuidePage/AttendenceGuide";
+import AlarmGuide from "components/GuidePage/AlarmGuide";
+import ProfileGuide from "components/GuidePage/ProfileGuide";
+
 //  순서는 footer에 있는 메뉴 순서대로
 const Guide = () => {
   return (
@@ -23,6 +26,8 @@ const Guide = () => {
       <FriendGuide />
       {/* 출석 */}
       <AttendenceGuide />
+      <AlarmGuide/>
+      <ProfileGuide/>
       {/* 로그인 페이지 이동 버튼 */}
     </div>
   );
