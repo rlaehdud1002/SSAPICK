@@ -1,18 +1,17 @@
-import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getRecommendFriendsList, getSearchFriendsList } from "api/friendApi";
-import { IContent, ISearchData, ISearchFriend } from "atoms/Friend.type";
+import { IContent } from "atoms/Friend.type";
 import { Input } from "components/ui/input";
 import { Separator } from "components/ui/separator";
 import BackIcon from "icons/BackIcon";
 import FriendIcon from "icons/FriendIcon";
 import FriendPlusIcon from "icons/FriendPlusIcon";
 import ShuffleIcon from "icons/ShuffleIcon";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import FriendRecommendContent from "./FriendRecommendContent";
 import FriendSearchContent from "./FriendSearchContent";
-import { BaseResponse } from "atoms/User.type";
 import { IPaging } from "atoms/Pick.type";
 import Loading from "components/common/Loading";
 
@@ -20,8 +19,13 @@ interface FriendSearchForm {
   search: string;
 }
 
+const MIN_WAIT_TIME = 500;
+
 const FriendSearch = () => {
   const queryClient = useQueryClient();
+
+  const [isPending, startTransition] = useTransition();
+  const [showLoading, setShowLoading] = useState(false);
 
   const {
     register,
@@ -64,16 +68,6 @@ const FriendSearch = () => {
       setRecommendFriendstate(latestPage.content);
     }
   }, [recommendFriends]);
-
-  // 검색 친구 리스트 조회
-  // const {
-  //   data: searchFriend,
-  //   isLoading,
-  //   refetch: refetchSearch,
-  // } = useQuery<ISearchFriend>({
-  //   queryKey: ["searchFriends", watch("search")],
-  //   queryFn: () => getSearchFriendsList(watch("search")),
-  // });
 
   const search = watch("search");
 
@@ -134,14 +128,19 @@ const FriendSearch = () => {
   }, [handleObserver]);
 
   const handleClick = () => {
-    console.log("click", recommendFriendstate);
-    if (hasNextPage) {
-      fetchNextPage();
-    } else {
-      queryClient.removeQueries({ queryKey: ["recommendFriends"] });
-      queryClient.invalidateQueries({ queryKey: ["recommendFriends"] });
-      refetch();
-    }
+    startTransition(() => {
+      setShowLoading(true);
+      setTimeout(() => {
+        if (hasNextPage) {
+          fetchNextPage();
+        } else {
+          queryClient.removeQueries({ queryKey: ["recommendFriends"] });
+          queryClient.invalidateQueries({ queryKey: ["recommendFriends"] });
+          refetch();
+        }
+        setShowLoading(false);
+      }, MIN_WAIT_TIME);
+    });
   };
 
   useEffect(() => {
@@ -150,9 +149,16 @@ const FriendSearch = () => {
     }
   }, [searchFriend, hasNextPageSearch]);
 
+  const shouldShowLoading =
+    showLoading &&
+    recommendFriends?.pages.length &&
+    recommendFriends.pages.flatMap((page) => page.content).length > 0;
+
   return (
-    <div className="relative flex flex-col">
-      <div className=" flex ml-2">
+    <div
+      className={`relative flex flex-col ${isPending || showLoading ? "pointer-events-none" : ""}`}
+    >
+      <div className="flex ml-2">
         <div onClick={() => navigate(-1)} className="mr-2">
           <BackIcon />
         </div>
@@ -162,8 +168,8 @@ const FriendSearch = () => {
           <ShuffleIcon className="cursor-pointer" />
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="flex">
+      <div className="flex flex-col relative">
+        <div className={`flex ${isPending || showLoading ? "relative dimmed" : ""}`}>
           {recommendFriendstate?.length ? (
             recommendFriendstate.flatMap((recommendFriend) => (
               <FriendRecommendContent
@@ -218,8 +224,19 @@ const FriendSearch = () => {
           <span className="text-xs mt-3"> 검색한 친구가 없습니다</span>
         </div>
       )}
+      {shouldShowLoading && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="text-white py-2 px-4 rounded shadow-lg">
+            <Loading />
+            <div className="mt-2">아주 복잡한 알고리즘으로 추천친구를 불러오는 중...</div>
+          </div>
+        </div>
+      )}
       <div ref={observerElem} />
       {isFetchingNextPageSearch && <Loading />}
+      {searchFriend && !hasNextPageSearch && (
+        <span className="flex justify-center text-sm my-10">조회가 완료되었습니다.</span>
+      )}
     </div>
   );
 };
