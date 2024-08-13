@@ -124,24 +124,31 @@ public class QuestionService {
      *
      * @param create
      */
-    @Async("apiExecutor")
+    // @Async("apiExecutor")
     @Transactional
     public void createQuestion(User user, QuestionData.Create create) {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
+            .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_CATEGORY));
 
-        Question saveQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user));
+        Question newQuestion = questionRepository.save(Question.createQuestion(category, create.getContent(), user, true));
+
+        checkQuestion(user, newQuestion);
+    }
+
+    @Async("apiExecutor")
+    // @Transactional
+    public void checkQuestion(User user, Question newQuestion) {
 
         try {
-            if (commentAnalyzerService.isCommentOffensive(create.getContent())) {
+            if (commentAnalyzerService.isCommentOffensive(newQuestion.getContent())) {
                 publisher.publishEvent(
                     FCMData.NotificationEvent.of(
                         NotificationType.ADD_QUESTION,
                         user,
                         user,
-                        saveQuestion.getId(),
+                        newQuestion.getId(),
                         ErrorCode.OFFENSIVE_CONTENT.getMessage(),
-                        addQuestionEventMessage(saveQuestion.getContent()),
+                        addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
                 throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
@@ -155,9 +162,9 @@ public class QuestionService {
                         NotificationType.ADD_QUESTION,
                         user,
                         user,
-                        saveQuestion.getId(),
+                        newQuestion.getId(),
                         ErrorCode.API_REQUEST_ERROR.getMessage(),
-                        addQuestionEventMessage(saveQuestion.getContent()),
+                        addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
 
@@ -167,7 +174,7 @@ public class QuestionService {
         }
 
         // 기존 질문과 유사도 분석
-        SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(create.getContent());
+        SentenceSimilarityResponse similarity = sentenceSimilarityAnalyzerService.analyzeSentenceSimilarity(newQuestion.getContent());
         if (similarity.getValue() > 0.5) {
 
             publisher.publishEvent(
@@ -175,9 +182,9 @@ public class QuestionService {
                     NotificationType.ADD_QUESTION,
                     user,
                     user,
-                    saveQuestion.getId(),
+                    newQuestion.getId(),
                     ErrorCode.EXIST_QUESTION.getMessage(),
-                    addQuestionEventMessage(saveQuestion.getContent()),
+                    addQuestionEventMessage(newQuestion.getContent()),
                     null
                 ));
 
@@ -189,16 +196,18 @@ public class QuestionService {
                 NotificationType.ADD_QUESTION,
                 user,
                 user,
-                saveQuestion.getId(),
+                newQuestion.getId(),
                 "당신의 질문이 등록 됐어요!",
-                addQuestionEventMessage(saveQuestion.getContent()),
+                addQuestionEventMessage(newQuestion.getContent()),
                 null
             ));
 
         publisher.publishEvent(new PickcoEvent(user, PickcoLogType.QUESTION_CREATE, QUESTION_CREATE_COIN));
-
-        questionCacheRepository.add(saveQuestion);
+        newQuestion.restore();
+        questionRepository.save(newQuestion);
+        questionCacheRepository.add(newQuestion);
     }
+
 
     private String addQuestionEventMessage(String message) {
         return message;
