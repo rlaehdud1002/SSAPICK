@@ -85,4 +85,6 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 
 	@Query("SELECT p FROM Pick p JOIN FETCH p.sender JOIN FETCH p.receiver JOIN FETCH p.question WHERE p.id = :pickId")
 	Optional<Pick> findByIdWithSender(Long pickId);
+
+	boolean existsByQuestionId(Long id);
 }
