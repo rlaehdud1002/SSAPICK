@@ -1,18 +1,15 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { blockCancel, blockQuestionCancel } from "api/blockApi";
+import { Button } from "components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter, DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "components/ui/dialog";
-import { Label } from "@radix-ui/react-label";
-import { Button } from "components/ui/button";
-import { DialogFooter, DialogHeader } from "components/ui/dialog";
-import { Input } from "components/ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { blockCancel, blockQuestionCancel } from "api/blockApi";
-import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
+import { useState } from "react";
 
 interface BlockCancelModalProps {
   Id: number;
@@ -24,7 +21,7 @@ enum BlockCancelStep {
   ALERT,
 }
 
-const BlockCancelModal = ({Id, category}:BlockCancelModalProps) => {
+const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
   const [step, setStep] = useState<BlockCancelStep>(BlockCancelStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
@@ -33,19 +30,18 @@ const BlockCancelModal = ({Id, category}:BlockCancelModalProps) => {
   const UserBlockCancel = useMutation({
     mutationKey: ['userBlockCancel'],
     mutationFn: blockCancel,
-    
+
     onSuccess: () => {
-      console.log('차단 해제 성공');
+      console.log('유저 차단 해제 성공');
 
       if (step === BlockCancelStep.ALERT) {
-        const timer = setTimeout(() => {
+        setTimeout(() => {
           queryClient.invalidateQueries({
-            queryKey: ['userBlockCancel'],
+            queryKey: ['blocks'],
           });
           setOpen(false);
         }, 1000);
-  
-        
+
       }
 
 
@@ -58,27 +54,30 @@ const BlockCancelModal = ({Id, category}:BlockCancelModalProps) => {
     mutationFn: blockQuestionCancel,
 
     onSuccess: () => {
-      console.log('차단 해제 성공');
+      console.log('질문 차단 해제 성공');
       if (step === BlockCancelStep.ALERT) {
-            const timer = setTimeout(() => {
-              queryClient.invalidateQueries({
-                queryKey: ['deleteBlock'],
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: ['blockQuestion'],
           });
-              setOpen(false);
-            }, 1000);
-      
-            return () => clearTimeout(timer);
-          }
+          setOpen(false);
+        }, 1000);
+
+
+      }
 
     },
   });
 
-  
+
   return (
-    <Dialog>
-      <DialogTrigger 
-      onClick={()=>{setStep(BlockCancelStep.CHECK)}}
-      className="text-xs text-white bg-blue-300 px-1 py-1 rounded-lg">
+    <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
+      <DialogTrigger
+        onClick={() => { 
+          setStep(BlockCancelStep.CHECK)
+          setOpen(true);
+        }}
+        className="text-xs text-white bg-blue-300 px-1 py-1 rounded-lg">
         차단 해제
       </DialogTrigger>
       <DialogContent className="mx-2 w-4/5 rounded-lg">
@@ -88,29 +87,30 @@ const BlockCancelModal = ({Id, category}:BlockCancelModalProps) => {
 
         {step === BlockCancelStep.CHECK && (
           <div>
-        <div className="flex justify-center">
-          <DialogDescription>차단을 해제 하시겠습니까?</DialogDescription>
-        </div>
-        <DialogFooter className="flex items-end mt-5">
-          <Button onClick={()=>{
-            if(category === 'user') UserBlockCancel.mutate(Id);
-            else QuestionBlockCancel.mutate(Id);
-            setStep(BlockCancelStep.ALERT);
-            
-          }} variant="ssapick" size="sm">
-            해제
-          </Button>
-        </DialogFooter>
-        </div>
-      )}
+            <div className="flex justify-center mt-5">
+              <DialogDescription>차단을 해제 하시겠습니까?</DialogDescription>
+            </div>
+            <DialogFooter className="flex items-end mt-5">
+              <Button onClick={() => {
+                if (category === 'user') UserBlockCancel.mutate(Id);
+                else QuestionBlockCancel.mutate(Id);
+                setStep(BlockCancelStep.ALERT);
 
-      {step === BlockCancelStep.ALERT && (
-        <div>
-          <div className="flex justify-center">
-            <DialogDescription>차단이 해제되었습니다.</DialogDescription>
+              }} variant="ssapick" size="sm">
+                해제
+              </Button>
+            </DialogFooter>
           </div>
-        </div>
-      )}
+        )}
+
+
+        {step === BlockCancelStep.ALERT && (
+          <div>
+            <div className="flex justify-center my-5">
+              <DialogDescription>차단이 해제되었습니다.</DialogDescription>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
