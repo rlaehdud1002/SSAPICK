@@ -318,4 +318,20 @@ public class QuestionService {
             .map(QuestionData.Category::fromEntity)
             .toList();
     }
+
+    @Transactional
+    public void deleteQuestionByUser(User user, Long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION));
+
+        if (!question.getAuthor().getId().equals(user.getId())) {
+            throw new BaseException(ErrorCode.ACCESS_DENIED);
+        }
+
+        if (pickRepository.existsByQuestionId(questionId)) {
+            throw new BaseException(ErrorCode.PICK_ALREADY_EXIST);
+        }
+
+        question.delete();
+    }
 }
