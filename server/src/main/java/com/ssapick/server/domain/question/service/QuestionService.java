@@ -154,7 +154,7 @@ public class QuestionService {
                         addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
-                throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
+                // throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
             }
         } catch (BaseException e) {
             if (e.getErrorCode() == ErrorCode.OFFENSIVE_CONTENT) {
@@ -170,9 +170,7 @@ public class QuestionService {
                         addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
-
-
-                throw new BaseException(ErrorCode.API_REQUEST_ERROR);
+                // throw new BaseException(ErrorCode.API_REQUEST_ERROR);
             }
         }
 
@@ -190,8 +188,6 @@ public class QuestionService {
                     addQuestionEventMessage(newQuestion.getContent()),
                     null
                 ));
-
-            throw new BaseException(ErrorCode.EXIST_QUESTION, "이미 존재하는 질문 입니다. \n 기존의 질문 : " + similarity.getDescription());
         }
 
         publisher.publishEvent(
