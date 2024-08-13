@@ -3,6 +3,7 @@ import { getRankList } from 'api/rankApi';
 import { useQuery } from '@tanstack/react-query';
 import { IRank, IRankList } from 'atoms/Rank.type';
 import Loading from 'components/common/Loading';
+import RankUser from 'components/RankingPage/RankUser';
 
 const rankName = [
   'topMessageReceivers',
@@ -21,17 +22,17 @@ const Ranking = () => {
 
   console.log('rankList', rankList, isLoading);
 
-  if (isLoading) {
+  if (isLoading || !rankList) {
     return <Loading />;
   }
 
   return (
     <div className="m-6">
-      {rankList &&
-        rankName.map((key) => {
-          const rankItem: IRankList[] = rankList[key];
-          return <RankContent key={key} title={key} rankInfo={rankItem} />;
-        })}
+      <RankUser rankInfo={rankList['questionUserRanking']}/>
+      {rankName.map((key) => {
+        const rankItem: IRankList[] = rankList[key];
+        return <RankContent key={key} title={key} rankInfo={rankItem} />;
+      })}
     </div>
   );
 };

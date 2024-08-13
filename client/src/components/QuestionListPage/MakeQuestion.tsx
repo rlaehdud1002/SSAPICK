@@ -25,7 +25,7 @@ const MakeQuestion = () => {
           <MakeQuestionContent key={index} question={question} />
         ))
       ) : (
-        <div className="text-sm flex justify-center">
+        <div className="flex justify-center my-7">
           생성한 질문이 없습니다.
         </div>
       )}
