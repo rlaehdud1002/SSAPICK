@@ -75,11 +75,7 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.MyQuestion> getQuestionsByUser(User user) {
-        return questionRepository.findByAuthor(user)
-                .stream()
-                .filter(question -> !question.isDeleted())
-                .map(question -> QuestionData.MyQuestion.fromEntity(question, !pickRepository.existsByQuestionId(question.getId())))
-                .toList();
+        return questionRepository.findByAuthor(user).stream().map(QuestionData.MyQuestion::fromEntity).toList();
     }
 
     /**
@@ -127,7 +123,6 @@ public class QuestionService {
      *
      * @param create
      */
-    // @Async("apiExecutor")
     @Transactional
     public void createQuestion(User user, QuestionData.Create create) {
         QuestionCategory category = questionCategoryRepository.findById(create.getCategoryId())
@@ -235,6 +230,10 @@ public class QuestionService {
 
         question.increaseBanCount();
 
+        if (question.getBanCount() >= 10) {
+            questionCacheRepository.remove(question.getId());
+        }
+
         questionBanRepository.save(QuestionBan.of(user, question));
     }
 
@@ -301,10 +300,6 @@ public class QuestionService {
             .orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_QUESTION_BAN));
 
         question.decreaseBanCount();
-
-        if (question.getBanCount() >= 10) {
-            questionCacheRepository.remove(question.getId());
-        }
 
         questionBanRepository.delete(questionBan);
     }

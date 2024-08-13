@@ -47,19 +47,6 @@ public class PickController {
 	}
 
 	/**
-	 * 보낸 픽 조회하는 API
-	 *
-	 * @param user 로그인한 유저
-	 * @return {@link com.ssapick.server.domain.pick.dto.PickData.Search} 보낸 픽 리스트
-	 */
-	@Authenticated
-	@GetMapping("/send")
-	@ResponseStatus(value = HttpStatus.OK)
-	public SuccessResponse<List<PickData.Search>> getSendPick(@CurrentUser User user) {
-		return SuccessResponse.of(pickService.searchSendPick(user));
-	}
-
-	/**
 	 * 픽 생성하는 API
 	 *
 	 * @param user   로그인한 유저

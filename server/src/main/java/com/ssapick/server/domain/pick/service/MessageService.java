@@ -51,17 +51,10 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
-		Page<Message> messagesPage = messageRepository.findSentMessageByUserId(user.getId(), pageable);
+		return messageRepository.findSentMessageByUserId(user.getId(), pageable)
+			.map(message -> MessageData.Search.fromEntity(message, false));
 
-		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
 
-		List<MessageData.Search> messages = messagesPage.stream()
-			.filter(message -> banUsers.stream()
-				.noneMatch(banUser -> banUser.getId().equals(message.getReceiver().getId())))
-			.map(message -> MessageData.Search.fromEntity(message, false))
-			.toList();
-
-		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
 	}
 
 	/**
@@ -72,17 +65,8 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 받은 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchReceiveMessage(User user, Pageable pageable) {
-		Page<Message> messagesPage = messageRepository.findReceivedMessageByUserId(user.getId(), pageable);
-
-		List<User> banUsers = userBanRepository.findBanUsersByFromUser(user);
-
-		List<MessageData.Search> messages = messagesPage.stream()
-			.filter(
-				message -> banUsers.stream().noneMatch(banUser -> banUser.getId().equals(message.getSender().getId())))
-			.map(message -> MessageData.Search.fromEntity(message, true))
-			.toList();
-
-		return new PageImpl<>(messages, pageable, messagesPage.getTotalElements());
+		return  messageRepository.findReceivedMessageByUserId(user.getId(), pageable)
+			.map(message -> MessageData.Search.fromEntity(message, true));
 	}
 
 	/**

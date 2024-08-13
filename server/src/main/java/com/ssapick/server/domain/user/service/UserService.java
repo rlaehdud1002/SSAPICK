@@ -133,6 +133,7 @@ public class UserService {
 
 	public Page<UserData.PickcoLogResponse> getPickcoLogs(User user, Pageable pageable) {
 		Page<PickcoLog> pickcoLogsPage = pickcoLogRepository.findAllByUserId(user.getId(), pageable);
+
 		List<PickcoLog> pickcoLogs =pickcoLogsPage.getContent();
 
 		List<UserData.PickcoLogResponse> pickcoLogResponse = pickcoLogs.stream()

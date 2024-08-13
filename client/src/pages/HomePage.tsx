@@ -1,27 +1,38 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getReceivePick } from "api/pickApi";
-import { IPaging, IPick } from "atoms/Pick.type";
-import Response from "components/MainPage/Response";
-import Initial from "components/MainPage/Initial";
-import AttendanceModal from "components/modals/AttendanceModal";
-import { getAttendance, postAttendance } from "api/attendanceApi";
-import Loading from "components/common/Loading";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { getReceivePick } from 'api/pickApi';
+import { IPaging, IPick } from 'atoms/Pick.type';
+import Response from 'components/MainPage/Response';
+import Initial from 'components/MainPage/Initial';
+import AttendanceModal from 'components/modals/AttendanceModal';
+import { getAttendance, postAttendance } from 'api/attendanceApi';
+import Loading from 'components/common/Loading';
 
 const Home = () => {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery<IPaging<IPick[]>>({
-      queryKey: ["pick", "receive"],
-      queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number, 10),
-      getNextPageParam: (lastPage, pages) => {
-        if (!lastPage.last) {
-          return pages.length;
-        }
-        return undefined;
-      },
-      initialPageParam: 0,
-      refetchInterval: 5000, // 5초마다 새로고침
-    });
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<IPaging<IPick[]>>({
+    queryKey: ['pick', 'receive'],
+    queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number, 10),
+    getNextPageParam: (lastPage, pages) => {
+      if (!lastPage.last) {
+        return pages.length;
+      }
+      return undefined;
+    },
+    initialPageParam: 0,
+    refetchInterval: 5000, // 5초마다 새로고침
+  });
 
   const [modalOpen, setModalOpen] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -30,32 +41,33 @@ const Home = () => {
   const [hasCheckedAttendance, setHasCheckedAttendance] = useState(false);
 
   const { data: attendance, isLoading: isLoadingAttendance } = useQuery({
-    queryKey: ["attendance"],
+    queryKey: ['attendance'],
     queryFn: getAttendance,
-    enabled: !hasCheckedAttendance, // 이미 출석 체크를 했으면 쿼리 실행 안함
+    // enabled: !hasCheckedAttendance, // 이미 출석 체크를 했으면 쿼리 실행 안함
   });
 
   const queryClient = useQueryClient();
 
   const postMutation = useMutation({
-    mutationKey: ["postAttendance"],
+    mutationKey: ['postAttendance'],
     mutationFn: postAttendance,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["attendance"] });
+      queryClient.invalidateQueries({ queryKey: ['attendance'] });
       setModalOpen(true);
-      setHasCheckedAttendance(true); // 출석 체크 완료 상태로 변경
+      setStreak(data.streak);
+      // setHasCheckedAttendance(true); // 출석 체크 완료 상태로 변경
     },
 
     onError: (error) => {
-      console.log("이미 출석체크 완료");
+      console.log('이미 출석체크 완료');
     },
   });
 
   useEffect(() => {
-    if (attendance && !attendance.todayChecked && !hasCheckedAttendance) {
+    if (!isLoadingAttendance && attendance && !attendance.todayChecked) {
       postMutation.mutate();
     }
-  }, [attendance, hasCheckedAttendance, postMutation]);
+  }, [attendance, isLoadingAttendance]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -65,7 +77,7 @@ const Home = () => {
         fetchNextPage();
       }
     },
-    [fetchNextPage, hasNextPage]
+    [fetchNextPage, hasNextPage],
   );
 
   useEffect(() => {
@@ -80,7 +92,7 @@ const Home = () => {
 
   useEffect(() => {
     if (data && !hasNextPage) {
-      console.log("조회가 완료되었습니다.");
+      console.log('조회가 완료되었습니다.');
     }
   }, [data, hasNextPage]);
 
@@ -105,7 +117,9 @@ const Home = () => {
       )}
       <div ref={observerElem} />
       {isFetchingNextPage && <Loading />}
-      {modalOpen && <AttendanceModal date={streak} onClose={() => setModalOpen(false)} />}
+      {modalOpen && (
+        <AttendanceModal date={streak} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 };

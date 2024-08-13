@@ -9,6 +9,8 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
 import com.ssapick.server.domain.user.repository.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static com.ssapick.server.core.constants.PickConst.*;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -46,6 +49,7 @@ public class AttendanceService {
         boolean todayChecked = attendanceRepository.existsByUserAndCreatedAtDate(user, today);
 
         List<Attendance> attendances = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
+
         int streak = getStreak(today, attendances);
         return AttendanceData.CreateStatus(streak, todayChecked);
     }
