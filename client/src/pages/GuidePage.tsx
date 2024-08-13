@@ -6,11 +6,11 @@ import HomeGuide from "components/GuidePage/HomeGuide";
 const Guide = () => {
   return (
     <div className="flex flex-col items-center">
-      <HomeGuide/>
+      <HomeGuide />
       {/* 랭킹 */}
-      {/* <RankingGuide /> */}
+      <RankingGuide />
       {/* 픽 */}
-      {/* <PickGuide /> */}
+      <PickGuide />
       {/* 메세지 */}
       {/* 위치 */}
       {/* 로그인 페이지 이동 버튼 */}
