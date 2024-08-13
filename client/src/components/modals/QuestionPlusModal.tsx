@@ -16,7 +16,7 @@ import {
 import SelectCategory from 'components/PickPage/SelectCategory';
 import InputModal from 'components/modals/InputModal';
 import ResultCheckModal from 'components/modals/ResultCheckModal';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postCreateQuestion } from 'api/questionApi';
 import { ICreateQuestion } from 'atoms/Pick.type';
 
@@ -39,11 +39,13 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   // 질문 생성 api
+  const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ['question', 'create'],
+    mutationKey: ['create'],
     mutationFn: postCreateQuestion,
 
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['questions'] });
       console.log('질문 생성 성공');
     },
   });
