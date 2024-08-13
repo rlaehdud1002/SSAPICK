@@ -1,3 +1,4 @@
+import React from 'react';
 import Question from 'components/PickPage/QuestionBox';
 import Choice from 'components/PickPage/ChoiceBox';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -5,7 +6,7 @@ import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
 import { getQuestion } from 'api/questionApi';
 import { IFriend } from 'atoms/Friend.type';
 import { getFriendsList } from 'api/friendApi';
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useTransition } from 'react';
 import { getPickInfo, postCreatePick } from 'api/pickApi';
 import { useRecoilState } from 'recoil';
 import { isQuestionUpdatedState, questionState } from 'atoms/PickAtoms';
@@ -14,11 +15,12 @@ import { Navigate } from 'react-router-dom';
 import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
 import Loading from 'components/common/Loading';
+import NoFourFriends from 'components/PickPage/NoFourFriends';
 
 const Pick = () => {
-  // ========================================== 질문 조회 ==============================================================
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
   const [finish, setFinish] = useState<boolean>(false);
+  const [isTouchDisabled, setIsTouchDisabled] = useState<boolean>(false);
 
   const getNewQuestion = useMutation({
     mutationKey: ['question'],
@@ -28,7 +30,6 @@ const Pick = () => {
     },
   });
 
-  // ========================================== 친구 조회 ==============================================================
   const { data: friends = [], isLoading: LoadingFriendLists } = useQuery<
     IFriend[]
   >({
@@ -36,11 +37,15 @@ const Pick = () => {
     queryFn: getFriendsList,
   });
 
+  if (friends.length !== 0) {
+    console.log('friends', friends);
+  }
+
   const [pickFriends, setPickFriends] =
     useRecoilState<IFriend[]>(pickFriendState);
 
   const handleShuffle = useCallback(() => {
-    if (friends.length > 0) {
+    if (friends.length >= 4) {
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
@@ -53,7 +58,6 @@ const Pick = () => {
     }
   }, [handleShuffle, friends]);
 
-  // ============================================== 픽 생성 =========================================================
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
     isQuestionUpdatedState,
@@ -78,6 +82,8 @@ const Pick = () => {
     }
   }, [pickInfo, question, isUpdated, getNewQuestion, setIsUpdated]);
 
+  const [isPending, startTransition] = useTransition();
+
   const mutation = useMutation({
     mutationKey: ['pickInfo'],
     mutationFn: async (data: IPickCreate) => postCreatePick(data),
@@ -90,8 +96,23 @@ const Pick = () => {
     },
   });
 
+  const handleUserPick = (data: IPickCreate) => {
+    setIsTouchDisabled(true);
+    startTransition(() => {
+      mutation.mutate(data);
+    });
+
+    setTimeout(() => {
+      setIsTouchDisabled(false);
+    }, 150);
+  };
+
   if (finish) {
     return <PickComplete setQuestion={setQuestion} />;
+  }
+
+  if (friends.length < 4) {
+    return <NoFourFriends />;
   }
 
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
@@ -103,42 +124,49 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
-        question[pickInfo.index] &&
-        pickFriends && (
-          <div>
+        friends.length >= 4 &&
+        question[pickInfo.index] && (
+          <div
+            className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
+          >
             <Question
               question={question[pickInfo.index]}
-              userPick={mutation.mutate}
+              userPick={handleUserPick}
               pickInfo={pickInfo}
             />
-            <div className="m-7">
-              <div className="flex flex-row justify-end">
-                <FriendRerollModal handleShuffle={handleShuffle} />
-              </div>
+            <div className="m-6">
+              <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice
+                  isTouchDisabled={isTouchDisabled}
                   friend={pickFriends[0]}
                   questionId={question[pickInfo.index].id}
-                  userPick={mutation.mutate}
+                  userPick={handleUserPick}
                 />
                 <Choice
+                  isTouchDisabled={isTouchDisabled}
                   friend={pickFriends[1]}
                   questionId={question[pickInfo.index].id}
-                  userPick={mutation.mutate}
+                  userPick={handleUserPick}
                 />
               </div>
               <div className="flex flex-row justify-center">
                 <Choice
+                  isTouchDisabled={isTouchDisabled}
                   friend={pickFriends[2]}
                   questionId={question[pickInfo.index].id}
-                  userPick={mutation.mutate}
+                  userPick={handleUserPick}
                 />
                 <Choice
+                  isTouchDisabled={isTouchDisabled}
                   friend={pickFriends[3]}
                   questionId={question[pickInfo.index].id}
-                  userPick={mutation.mutate}
+                  userPick={handleUserPick}
                 />
               </div>
+            </div>
+            <div className="flex justify-center space-x-2">
+              <FriendRerollModal handleShuffle={handleShuffle} />
             </div>
           </div>
         )

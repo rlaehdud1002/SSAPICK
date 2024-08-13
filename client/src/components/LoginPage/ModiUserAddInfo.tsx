@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { UserSend, getUserInfo } from 'api/authApi';
+import { pickFriendState } from 'atoms/FriendAtoms';
 import { IUserInfo } from 'atoms/User.type';
 import { profileImageState, sendUserInfoState } from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
@@ -22,6 +23,7 @@ interface AddUserForm {
 const ModiUserAddInfo = () => {
   const navigate = useNavigate();
   const [SendUserInfo, setSendUserInfo] = useRecoilState(sendUserInfoState);
+  const [pickFriends, setPickFriends] = useRecoilState(pickFriendState);
   const profileImage = useRecoilValue(profileImageState);
 
   // 유저 정보 조회
@@ -36,7 +38,18 @@ const ModiUserAddInfo = () => {
 
     onSuccess: () => {
       navigate(-1);
+      setSendUserInfo((prev) => {
+        return {
+          ...prev,
+          mbti: undefined,
+          major: undefined,
+          birth: undefined,
+          interest: undefined,
+          residentialArea: undefined,
+        };
+      });
       console.log('성공');
+      setPickFriends([]);
     },
   });
 
@@ -68,7 +81,6 @@ const ModiUserAddInfo = () => {
   };
 
   useEffect(() => {
-    console.log('123123123');
     if (SendUserInfo.mbti) {
       const form = new FormData();
       if (profileImage) {

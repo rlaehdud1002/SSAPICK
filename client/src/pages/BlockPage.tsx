@@ -1,9 +1,14 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import BackIcon from 'icons/BackIcon';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const Block = () => {
   const location = useLocation().pathname.split('/')[3];
+  const navigate = useNavigate();
   return ( 
     <div className="m-5">
+      <div onClick={() => navigate(-1)} className="mr-2">
+            <BackIcon />
+          </div>
       <div className="flex flex-row justify-center">
         <Link
           to="blockfriend"

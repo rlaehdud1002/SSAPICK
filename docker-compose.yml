@@ -38,6 +38,26 @@ services:
     ports:
       - "2252:2252"
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "$UID:$GID"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ssapick-grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 volumes:
   ssapick-db:
    name: ssapick-db
+  ssapick-grafana:

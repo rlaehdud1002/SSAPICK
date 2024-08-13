@@ -1,6 +1,5 @@
 package com.ssapick.server.domain.notification.service;
 
-import com.google.api.core.ApiFuture;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.WebpushConfig;
@@ -12,7 +11,6 @@ import com.ssapick.server.domain.notification.entity.NotificationType;
 import com.ssapick.server.domain.notification.repository.NotificationRepository;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.question.entity.Question;
-import com.ssapick.server.domain.user.entity.Alarm;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +37,15 @@ public class FCMService {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void notification(FCMData.NotificationEvent notificationEvent) {
+        // * 만약, 받는 사람이 나를 차단했다면 알람을 전송하지 않는다.
+        if (notificationEvent.getReceiver().getBannedUser().stream()
+                .anyMatch(banUser -> banUser.getToUser().getId().equals(notificationEvent.getSender().getId()))) {
+            log.info("receiver: {} has banned sender: {}", notificationEvent.getReceiver(), notificationEvent.getSender());
+            return;
+        }
+
         Message message = Message.builder()
-                .setToken(getUserToken(notificationEvent.getUser()))
+                .setToken(getUserToken(notificationEvent.getReceiver()))
                 .setWebpushConfig(WebpushConfig.builder()
                         .putHeader("ttl", "300")
                         .setNotification(new WebpushNotification(notificationEvent.getTitle(), notificationEvent.getMessage(), notificationEvent.getThumbnail()))
@@ -48,12 +53,12 @@ public class FCMService {
                 ).build();
         try {
             String fcmId = null;
-            if (isAlarmAvailable(notificationEvent.getUser(), notificationEvent.getType())) {
+            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
                 fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
             }
 
             notificationRepository.save(Notification.createNotification(
-                    notificationEvent.getUser(),
+                    notificationEvent.getReceiver(),
                     notificationEvent.getType(),
                     notificationEvent.getNotificationId(),
                     notificationEvent.getTitle(),
@@ -104,9 +109,9 @@ public class FCMService {
         }
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void createUserToken(FCMData.FCMRegister register) {
+        log.info("event listener register: {}", register);
         register.getUser().getProfile().updateFcmToken(register.getToken());
     }
 

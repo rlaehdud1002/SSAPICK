@@ -1,3 +1,5 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { selectFriends } from "api/locationApi";
 import {
   Dialog,
   DialogTrigger,
@@ -6,26 +8,48 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from 'components/ui/dialog';
+} from "components/ui/dialog";
 
-import CoinIcon from 'icons/CoinIcon';
+import CoinIcon from "icons/CoinIcon";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const LocationModal = () => {
+interface LocationModalProps {
+  profileImage: string;
+  username: string;
+}
+
+const LocationModal = ({ profileImage, username }: LocationModalProps) => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ["select"],
+    mutationFn: selectFriends,
+    onSuccess: () => {
+      console.log("내 주변 유저 클릭 성공");
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["location"],
+        });
+        setOpen(false);
+      }, 1000);
+    },
+  });
   const [open, setOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-      <DialogTrigger onClick={() => setOpen(true)}>modalButton</DialogTrigger>
+      <DialogTrigger
+        onClick={() => {
+          mutation.mutate({ username });
+          setOpen(true);
+        }}
+      >
+        <img
+          className="w-12 h-12 rounded-full"
+          src={profileImage}
+          alt="profileImage"
+        />
+      </DialogTrigger>
       {open && (
         <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">
           <DialogHeader>

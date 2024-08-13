@@ -1,21 +1,5 @@
 package com.ssapick.server.domain.pick.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-import java.util.stream.Stream;
-
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
-
 import com.ssapick.server.core.exception.BaseException;
 import com.ssapick.server.core.exception.ErrorCode;
 import com.ssapick.server.core.support.UserSupport;
@@ -30,8 +14,22 @@ import com.ssapick.server.domain.question.repository.QuestionRepository;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.event.PickcoEvent;
-
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.*;
 
 @DisplayName("싸픽 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
@@ -139,6 +137,7 @@ class PickServiceTest extends UserSupport {
 		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 		// * WHEN: 이걸 실행하면
 		PickData.PickCondition pickCondition = pickService.createPick(sender, create);
@@ -183,6 +182,7 @@ class PickServiceTest extends UserSupport {
 		when(pickCacheRepository.getPickCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getBlockCount(sender.getId())).thenReturn(1);
 		when(pickCacheRepository.getPassCount(sender.getId())).thenReturn(1);
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 
 		// * WHEN: 이걸 실행하면
@@ -217,7 +217,7 @@ class PickServiceTest extends UserSupport {
 
 		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.of(question));
-
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 		// * WHEN: 이걸 실행하면
 		pickService.createPick(sender, create);
 
@@ -275,6 +275,7 @@ class PickServiceTest extends UserSupport {
 
 		when(pickCacheRepository.getIndex(sender.getId())).thenReturn(1);
 		when(questionRepository.findById(question.getId())).thenReturn(java.util.Optional.empty());
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(false);
 
 		// * WHEN: 이걸 실행하면
 		Runnable runnable = () -> pickService.createPick(sender, create);
@@ -353,6 +354,32 @@ class PickServiceTest extends UserSupport {
 		assertThat(pick.isAlarm()).isTrue();
 		verify(findPick, times(2)).updateAlarm();
 		assertThat(findPick.isAlarm()).isFalse();
+	}
+
+	@Test
+	@DisplayName("동시에_픽을_선택한_경우_테스트")
+	void 동시에_픽을_선택한_경우_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+		User sender = this.createUser("보낸 사람");
+		User receiver = this.createUser("받는 사람");
+		Question question = spy(this.createQuestion());
+		when(question.getId()).thenReturn(1L);
+
+		PickData.Create create = new PickData.Create();
+		create.setReceiverId(receiver.getId());
+		create.setQuestionId(question.getId());
+		create.setStatus(PickData.PickStatus.PICKED);
+		create.setIndex(1);
+
+		when(pickCacheRepository.lock(sender.getId())).thenReturn(true);
+
+		// * WHEN: 이걸 실행하면
+		Runnable runnable = () -> pickService.createPick(sender, create);
+
+		// * THEN: 이런 결과가 나와야 한다
+		Assertions.assertThatThrownBy(runnable::run)
+				.isInstanceOf(BaseException.class)
+				.hasMessage("이미 들어온 요청입니다. 다시 요청해주세요.");
 	}
 
 

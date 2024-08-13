@@ -5,13 +5,17 @@ import static com.ssapick.server.domain.user.entity.QCampus.*;
 import static com.ssapick.server.domain.user.entity.QFollow.follow;
 import static com.ssapick.server.domain.user.entity.QProfile.*;
 import static com.ssapick.server.domain.user.entity.QUser.user;
+import static com.ssapick.server.domain.user.entity.QUserBan.*;
 
 import java.util.List;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.ssapick.server.domain.user.dto.ProfileData;
 import com.ssapick.server.domain.user.dto.ProfileData.Friend;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -28,27 +32,57 @@ import lombok.RequiredArgsConstructor;
 public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
+
 	@Override
-	public List<Friend> findRecommendFriends(Long userId, Pageable pageable) {
+	public Page<Friend> findRecommendFriends(Long userId, Pageable pageable) {
 		QFollow f1 = QFollow.follow;
 		QFollow f2 = new QFollow("f2");
 		QUser u = QUser.user;
 		Short section = getSection(userId);
-		return queryFactory.select(Projections.constructor(
-					Friend.class, u.id, u.name, u.profile.profileImage, u.profile.cohort, u.profile.campus.section, JPAExpressions.select(follow.isNotNull())
-							.from(follow)
-							.where(follow.followUser.id.eq(userId), follow.followingUser.id.eq(user.id)),
-					u.profile.campus.section.eq(section)
+
+		// 서브쿼리에서 GROUP BY 후 결과 수 계산
+		JPAQuery<Long> countQuery = queryFactory
+			.select(u.id.count())
+			.from(f1)
+			.join(f2).on(f1.followingUser.eq(f2.followUser))
+			.join(u).on(f2.followingUser.eq(u))
+			.where(f1.followUser.id.eq(userId),
+				f2.followingUser.id.ne(userId),
+				u.notIn(JPAExpressions.select(f1.followingUser)
+					.from(f1)
+					.where(f1.followUser.id.eq(userId))),
+				u.id.notIn(JPAExpressions.select(userBan.toUser.id)
+					.from(userBan)
+					.where(userBan.fromUser.id.eq(userId))))
+			.groupBy(u.id);
+
+		long total = countQuery.fetch().size();  // 또는 countQuery.fetchCount()
+
+		// 페이징 처리된 결과
+		List<Friend> friends = queryFactory
+			.select(Projections.constructor(
+				Friend.class,
+				u.id,
+				u.name,
+				u.profile.profileImage,
+				u.profile.cohort,
+				u.profile.campus.section,
+				JPAExpressions.select(f1.isNotNull())
+					.from(f1)
+					.where(f1.followUser.id.eq(userId), f1.followingUser.id.eq(u.id)),
+				u.profile.campus.section.eq(section)
 			))
 			.from(f1)
 			.join(f2).on(f1.followingUser.eq(f2.followUser))
 			.join(u).on(f2.followingUser.eq(u))
 			.where(f1.followUser.id.eq(userId),
 				f2.followingUser.id.ne(userId),
-				u.notIn(JPAExpressions.select(follow.followingUser)
-				.from(follow)
-				.where(follow.followUser.id.eq(userId)))
-			)
+				u.notIn(JPAExpressions.select(f1.followingUser)
+					.from(f1)
+					.where(f1.followUser.id.eq(userId))),
+				u.id.notIn(JPAExpressions.select(userBan.toUser.id)
+					.from(userBan)
+					.where(userBan.fromUser.id.eq(userId))))
 			.groupBy(
 				u.id,
 				u.name,
@@ -60,7 +94,11 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
+
+		return new PageImpl<>(friends, pageable, total);
 	}
+
+
 
 	private Short getSection(Long userId) {
 		return queryFactory.select(user.profile.campus.section)

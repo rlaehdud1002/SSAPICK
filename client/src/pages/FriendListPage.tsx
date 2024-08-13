@@ -17,7 +17,7 @@ const FriendList = () => {
     queryFn: getFriendsList,
   });
 
-  console.log(friends);
+  // console.log(friends);
   const navigate = useNavigate();
 
   if (isLoading) {

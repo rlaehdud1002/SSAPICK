@@ -15,6 +15,7 @@ import com.ssapick.server.domain.user.event.S3UploadEvent;
 import com.ssapick.server.domain.user.repository.CampusRepository;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.PickcoLogRepository;
+import com.ssapick.server.domain.user.repository.UserQueryRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +119,10 @@ public class UserService {
 	}
 
 	public Page<ProfileData.Friend> getUserByKeyword(User user, String keyword, Pageable pageable) {
+		log.debug("=====================================================");
+		userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
+		log.debug("=====================================================");
+
 		return userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
 	}
 

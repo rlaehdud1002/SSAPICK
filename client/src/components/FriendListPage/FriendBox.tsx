@@ -27,18 +27,6 @@ const Friend = ({
 }: FriendProps) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationKey: ['friends', 'follow'],
-    mutationFn: postAddFriend,
-    onSuccess: () => {
-      console.log('친구 팔로우 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['friends'],
-      });
-    },
-  });
-
-  // let isPlus = true;
   const [isPlus, setIsPlus] = useState<boolean>(true);
 
   const addMutation = useMutation({
@@ -73,20 +61,6 @@ const Friend = ({
 
   return (
     <div className="flex flex-col">
-      {/* <div className="flex flex-row justify-end">
-          <div>
-            {sameCampus && (
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] text-center px-1 py-1 mr-2">
-              반 친구
-            </span>
-            )}
-            {follow && (
-            <span className="text-xs bg-white/50 rounded-lg w-[56px] px-1 py-1 text-center ">
-              찐친
-            </span>
-              )}
-              </div>
-          </div> */}
       <div className="flex items-center ml-5 mr-5 justify-between">
         {profileImage ? (
           <img
@@ -97,7 +71,6 @@ const Friend = ({
         ) : (
           <BaseImageIcon width={64} height={64} className="ml-6" />
         )}
-
         <div className="flex flex-col justify-start w-32">
           <span className=''>
              {cohort}기 {campusSection}반 {name}
@@ -136,7 +109,6 @@ const Friend = ({
         )}
           </div>
           </div>
-      
       <div className="bg-white h-px w-90 mx-8 mt-5"></div>
     </div>
   );

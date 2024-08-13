@@ -87,4 +87,7 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	Optional<Pick> findByIdWithSender(Long pickId);
 
 	boolean existsByQuestionId(Long id);
+
+	@Query("SELECT p FROM Pick p LEFT JOIN FETCH p.question LEFT JOIN FETCH p.sender LEFT JOIN FETCH p.receiver WHERE p.isAlarmSent = false")
+	List<Pick> findByAlarmSentIsFalse();
 }
