@@ -15,6 +15,7 @@ import { Navigate } from 'react-router-dom';
 import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
 import Loading from 'components/common/Loading';
+import NoFourFriends from 'components/PickPage/NoFourFriends';
 
 const Pick = () => {
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
@@ -35,6 +36,10 @@ const Pick = () => {
     queryKey: ['friends'],
     queryFn: getFriendsList,
   });
+
+  if (friends.length !== 0) {
+    console.log(friends);
+  }
 
   const [pickFriends, setPickFriends] =
     useRecoilState<IFriend[]>(pickFriendState);
@@ -110,6 +115,10 @@ const Pick = () => {
     return <Loading />;
   }
 
+  if (pickFriends.length < 4) {
+    return <NoFourFriends />;
+  }
+
   return (
     <div className="relative">
       {pickInfo.cooltime ? (
@@ -124,7 +133,7 @@ const Pick = () => {
               userPick={handleUserPick}
               pickInfo={pickInfo}
             />
-            <div className="m-7">
+            <div className="m-6">
               <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice
