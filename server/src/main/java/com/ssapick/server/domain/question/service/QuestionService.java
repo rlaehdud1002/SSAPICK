@@ -7,6 +7,7 @@ import com.ssapick.server.core.service.SentenceSimilarityAnalyzerService;
 import com.ssapick.server.core.service.SentenceSimilarityResponse;
 import com.ssapick.server.domain.notification.dto.FCMData;
 import com.ssapick.server.domain.notification.entity.NotificationType;
+import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.dto.QuestionData;
 import com.ssapick.server.domain.question.entity.Question;
 import com.ssapick.server.domain.question.entity.QuestionBan;
@@ -44,6 +45,7 @@ public class QuestionService {
     private final CommentAnalyzerService commentAnalyzerService;
     private final QuestionCacheRepository questionCacheRepository;
     private final ApplicationEventPublisher publisher;
+    private final PickRepository pickRepository;
 
     @PostConstruct
     public void init() {
@@ -72,10 +74,11 @@ public class QuestionService {
      * @param user
      * @return
      */
-    public List<QuestionData.Search> getQuestionsByUser(User user) {
+    public List<QuestionData.MyQuestion> getQuestionsByUser(User user) {
         return questionRepository.findByAuthor(user)
                 .stream()
-                .map(QuestionData.Search::fromEntity)
+                .filter(question -> !question.isDeleted())
+                .map(question -> QuestionData.MyQuestion.fromEntity(question, !pickRepository.existsByQuestionId(question.getId())))
                 .toList();
     }
 
@@ -256,6 +259,7 @@ public class QuestionService {
 
     /**
      * 사용자에게 뿌려줄 질문 리스트 (사용자가 차단하지 않은)
+     *
      * @param user
      * @return
      */
