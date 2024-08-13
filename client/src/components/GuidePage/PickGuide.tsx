@@ -10,7 +10,7 @@ import {
 
 const PickGuide = () => {
   return (
-    <div className="flex flex-col items-center my-10 p-6 bg-gray-100/50 rounded-lg shadow-lg max-w-full px-4">
+    <div className="flex flex-col items-center my-10 p-6 bg-gray-100/50 rounded-lg shadow-lg max-w-full min-w-full px-4">
       <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">Pick 가이드</h1>
       <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center">
         <p className="whitespace-normal">랜덤한 질문이 나오고</p>
