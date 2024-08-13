@@ -154,6 +154,7 @@ public class QuestionService {
                         addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
+                return;
                 // throw new BaseException(ErrorCode.OFFENSIVE_CONTENT);
             }
         } catch (BaseException e) {
@@ -170,6 +171,7 @@ public class QuestionService {
                         addQuestionEventMessage(newQuestion.getContent()),
                         null
                     ));
+                return;
                 // throw new BaseException(ErrorCode.API_REQUEST_ERROR);
             }
         }
