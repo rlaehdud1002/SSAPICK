@@ -14,11 +14,11 @@ const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
   };
 
   return (
-    <div>
-      <div 
-      style={{ backgroundColor: "#000855", opacity: "70%" }}
-      className="flex flex-col items-center justify-center rounded-lg h-16 ">
-        <div className='flex'>
+    <div
+      style={{ backgroundColor: '#000855', opacity: '70%' }}
+      className="flex flex-col items-center justify-center rounded-lg h-16 "
+    >
+      <div className="flex">
         <UserMaskIcon
           pickId={pick.id}
           alarm={pick.alarm}
@@ -26,7 +26,6 @@ const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
           onAlarmUpdate={handleAlarmUpdate}
         />
         <span className="ml-2 text-white">{pick.question.content}</span>
-      </div>
       </div>
     </div>
   );

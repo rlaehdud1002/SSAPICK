@@ -92,18 +92,6 @@ const WarningDeleteModal = ({
     },
   });
 
-  // 마지막 모달이 실행된 후 1.5초 뒤 자동으로 닫힘
-  // useEffect(() => {
-  //   if (step === WarningDeleteStep.ALERT) {
-  //     const timer = setTimeout(() => {
-  //       setOpen(false);
-  //       setPopoverOpen(false);
-  //     }, 1500);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [step]);
-
   const onClick = () => {
     if (title === '차단') {
       blockMutatiion.mutate(senderId);
@@ -120,7 +108,7 @@ const WarningDeleteModal = ({
       <DialogTrigger onClick={() => setOpen(true)}>
         <div className="flex flex-row">
           {title === '차단' ? (
-            <WarningIcon width={24} height={24} className="mr-3" />
+            <WarningIcon width={24} height={24} className="mr-3 mb-3" />
           ) : (
             <DeleteIcon width={24} height={24} className="mr-3" />
           )}

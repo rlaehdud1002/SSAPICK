@@ -1,5 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { selectFriends } from "api/locationApi";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { selectFriends } from 'api/locationApi';
+import { LOCATION_COIN } from 'coins/coins';
 import {
   Dialog,
   DialogTrigger,
@@ -8,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "components/ui/dialog";
+} from 'components/ui/dialog';
 
-import CoinIcon from "icons/CoinIcon";
+import CoinIcon from 'icons/CoinIcon';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 interface LocationModalProps {
   profileImage: string;
@@ -22,13 +23,13 @@ interface LocationModalProps {
 const LocationModal = ({ profileImage, username }: LocationModalProps) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationKey: ["select"],
+    mutationKey: ['select'],
     mutationFn: selectFriends,
     onSuccess: () => {
-      console.log("내 주변 유저 클릭 성공");
+      console.log('내 주변 유저 클릭 성공');
       setTimeout(() => {
         queryClient.invalidateQueries({
-          queryKey: ["location"],
+          queryKey: ['location'],
         });
         setOpen(false);
       }, 1000);
@@ -57,8 +58,8 @@ const LocationModal = ({ profileImage, username }: LocationModalProps) => {
             <DialogDescription className="flex justify-center my-10 items-center text-color-000855">
               <h3 className="flex flex-row my-10">
                 <CoinIcon width={25} height={25} />
-                <h3 className="luckiest_guy ml-1 mr-2 pt-1">1</h3>을
-                획득하셨습니다!
+                <h3 className="luckiest_guy ml-1 mr-2 pt-1">{LOCATION_COIN}</h3>
+                을 획득하셨습니다!
               </h3>
             </DialogDescription>
           </DialogHeader>
