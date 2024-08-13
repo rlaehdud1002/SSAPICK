@@ -20,9 +20,7 @@ public class LocationSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String publishMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
-        log.debug("Received message: {}", publishMessage);
         LocationData.Request request = new Gson().fromJson(publishMessage, LocationData.Request.class);
-        log.debug("Deserialized request: {}", request);
         if (request.getGeo().getLatitude() != 0 && request.getGeo().getLongitude() != 0) {
             messagingTemplate.convertAndSend("/sub/location/update", request.getUsername());
         }

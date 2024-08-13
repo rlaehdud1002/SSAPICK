@@ -21,7 +21,9 @@ import com.ssapick.server.domain.question.service.QuestionService;
 import com.ssapick.server.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/questions")
@@ -48,6 +50,7 @@ public class QuestionController {
      */
     @GetMapping("/me")
     public SuccessResponse<List<QuestionData.MyQuestion>> searchQuestionsByUser(@CurrentUser User user) {
+
         return SuccessResponse.of(questionService.getQuestionsByUser(user));
     }
 
@@ -56,6 +59,8 @@ public class QuestionController {
      * 내가 생성한 질문 삭제 AP
      * 내가 생성한 질문을 삭제한다.
      */
+    //! Deprecated
+    @Deprecated
     @DeleteMapping("/{questionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public SuccessResponse<Void> deleteQuestionsByUser(
@@ -74,6 +79,8 @@ public class QuestionController {
      * @param questionId 질문 ID
      * @return {@link QuestionData.Search} 질문 ID로 질문 조회
      */
+    //! Deprecated
+    @Deprecated
     @GetMapping("/{questionId}")
     public SuccessResponse<QuestionData.Search> searchQuestionById(@PathVariable("questionId") Long questionId) {
         return SuccessResponse.of(questionService.searchQuestionByQuestionId(questionId));

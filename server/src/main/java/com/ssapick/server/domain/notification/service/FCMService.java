@@ -24,7 +24,6 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import java.util.Objects;
 
 import static com.ssapick.server.core.exception.ErrorCode.FCM_TOKEN_NOT_FOUND;
-import static com.ssapick.server.core.exception.ErrorCode.NOTIFICATION_SEND_FAIL;
 
 @Slf4j
 @Service
@@ -68,7 +67,7 @@ public class FCMService {
 
             updateSendState(notificationEvent.getType(), notificationEvent.getNotificationId());
         } catch (Exception e) {
-            throw new BaseException(NOTIFICATION_SEND_FAIL, e);
+//            throw new BaseException(NOTIFICATION_SEND_FAIL, e);
         }
     }
 

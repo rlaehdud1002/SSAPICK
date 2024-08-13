@@ -2,6 +2,7 @@ package com.ssapick.server.domain.question.repository;
 
 import static com.ssapick.server.domain.pick.entity.QPick.*;
 import static com.ssapick.server.domain.question.entity.QQuestion.*;
+import static com.ssapick.server.domain.question.entity.QQuestionCategory.*;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
 		return queryFactory
 			.selectFrom(question)
 			.join(question.picks, pick)
+			.leftJoin(question.questionCategory, questionCategory)
 			.where(pick.receiver.id.eq(userId), question.isDeleted.eq(false))
 			.groupBy(question.id)
 			.orderBy(pick.count().desc())
