@@ -5,11 +5,15 @@ import MessageGuide from "components/GuidePage/MessageGuide";
 import LocationGuide from "components/GuidePage/LocationGuide";
 import FriendGuide from "components/GuidePage/FriendGuide";
 import AttendenceGuide from "components/GuidePage/AttendenceGuide";
+import AlarmGuide from "components/GuidePage/AlarmGuide";
+import ProfileGuide from "components/GuidePage/ProfileGuide";
+
 import MoveLoginPage from "components/GuidePage/MoveLoginPage";
 //  순서는 footer에 있는 메뉴 순서대로
 const Guide = () => {
   return (
     <div className="flex flex-col items-center">
+      <span className="text-3xl mt-10 luckiest_guy text-blue-400">ssapick guide</span>
       {/* 홈 */}
       <HomeGuide />
       {/* 랭킹 */}
@@ -24,6 +28,8 @@ const Guide = () => {
       <FriendGuide />
       {/* 출석 */}
       <AttendenceGuide />
+      <AlarmGuide />
+      <ProfileGuide />
       {/* 로그인 페이지 이동 버튼 */}
       <MoveLoginPage />
     </div>
