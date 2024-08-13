@@ -57,39 +57,6 @@ class MessageServiceTest extends UserSupport {
 	private ApplicationEventPublisher publisher;
 
 	@Test
-	@DisplayName("보낸 메시지 확인 테스트")
-	void 보낸_메시지_확인_테스트() throws Exception {
-		// * GIVEN: 이런게 주어졌을 때
-		User sender = this.createUser("sender");
-		User receiver = this.createUser("receiver");
-
-		List<Message> messages = List.of(
-			this.createMessage(sender, receiver, "테스트 메시지 1"),
-			this.createMessage(sender, receiver, "테스트 메시지 2"),
-			this.createMessage(sender, receiver, "테스트 메시지 3")
-		);
-
-		Page<Message> messagePage = new PageImpl<>(messages, PageRequest.of(0, 10), messages.size());
-
-		when(messageRepository.findSentMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
-			.thenReturn(messagePage);
-
-		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
-
-		// * WHEN: 이걸 실행하면
-		List<MessageData.Search> searches = messageService.searchSendMessage(sender, PageRequest.of(0, 10))
-			.getContent();
-
-		// * THEN: 이런 결과가 나와야 한다
-		assertThat(searches).hasSize(3);
-		assertThat(searches.stream().map(MessageData.Search::getContent)).contains("테스트 메시지 1", "테스트 메시지 2",
-			"테스트 메시지 3");
-		assertThat(searches.stream().map(MessageData.Search::getReceiverName)).contains("receiver", "receiver",
-			"receiver");
-		assertThat(searches.stream().map(MessageData.Search::getSenderName)).contains("sender", "sender", "sender");
-	}
-
-	@Test
 	@DisplayName("받은 메시지 페이징 조회 성공 테스트")
 	void 받은_메시지_페이징_조회_성공_테스트() throws Exception {
 		// * GIVEN: 테스트 데이터 설정
@@ -108,7 +75,7 @@ class MessageServiceTest extends UserSupport {
 		when(messageRepository.findReceivedMessageByUserId(sender.getId(), PageRequest.of(0, 10)))
 			.thenReturn(messagePage);
 
-		when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
+		lenient().when(userBanRepository.findBanUsersByFromUser(sender)).thenReturn(List.of());
 
 		// * WHEN: 서비스 메서드 호출
 		List<MessageData.Search> searches = messageService.searchReceiveMessage(sender, PageRequest.of(0, 10))

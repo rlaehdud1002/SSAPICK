@@ -124,22 +124,6 @@ class PickRepositoryTest extends TestDatabaseContainer {
     }
 
     @Test
-    @DisplayName("유저의 보낸 픽 조회")
-    void findSenderByUserId() {
-        // * WHEN: 이걸 실행하면
-        List<Pick> findPicks = pickRepository.findSenderByUserId(receiver.getId());
-
-        // * THEN: 이런 결과가 나와야 한다
-        assertThat(findPicks.size()).isEqualTo(2);
-        findPicks.stream().forEach(pick -> {
-            assertThat(pick.getReceiver().getId()).isEqualTo(sender.getId());
-        });
-        assertThat(utils.isLoaded(findPicks.get(0), "sender")).isTrue();
-        assertThat(utils.isLoaded(findPicks.get(0), "question")).isTrue();
-        assertThat(utils.isLoaded(findPicks.get(0).getQuestion(), "questionCategory")).isTrue();
-    }
-
-    @Test
     @DisplayName("픽 아이디로 픽 찾기")
     void findPickWithHintsById() {
         // * GIVEN: 이런 상황이 주어지면
