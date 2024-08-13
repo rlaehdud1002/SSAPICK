@@ -9,7 +9,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { isValidateState, validState } from 'atoms/ValidAtoms';
 
-<<<<<<< Updated upstream
 import { initializeApp } from "firebase/app";
 import NotFoundPage from "pages/NotFoundPage";
 import { useEffect } from "react";
@@ -20,20 +19,6 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { messaging } from "firebase-messaging-sw";
 import { registerToken } from "api/notificationApi";
 import { setRecoil } from "recoil-nexus";
-=======
-import { initializeApp } from 'firebase/app';
-import NotFoundPage from 'pages/NotFoundPage';
-import { useEffect } from 'react';
-import { validCheck } from 'api/validApi';
-import {
-  accessTokenState,
-  isLoginState,
-  refreshRequestState,
-} from 'atoms/UserAtoms';
-import { refresh } from 'api/authApi';
-import { getMessaging, onMessage } from 'firebase/messaging';
-import { requestPermission } from 'firebase-messaging-sw';
->>>>>>> Stashed changes
 
 
 
@@ -67,12 +52,9 @@ function App() {
     
   }, [])
 
-<<<<<<< Updated upstream
-=======
   onMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
   });
->>>>>>> Stashed changes
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
@@ -148,3 +130,4 @@ function App() {
 }
 
 export default App;
+  
