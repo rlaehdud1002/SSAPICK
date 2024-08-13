@@ -13,6 +13,8 @@ import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.PickcoLogRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -39,15 +42,12 @@ public class RankingService {
         List<PickcoLog> pickcoLogs = pickcoLogRepository.findAllSpendWithUser();
         List<User> pickcoUsers = userRepository.findTopPickcoUsers();
 
-
         List<RankingData.UserCount> topPickReceivers = getTopUsers(picks, Pick::getReceiver);
         List<RankingData.UserCount> topPickSenders = getTopUsers(picks, Pick::getSender);
         List<RankingData.UserCount> topMessageReceivers = getTopUsers(messages, Message::getReceiver);
         List<RankingData.UserCount> topMessageSenders = getTopUsers(messages, Message::getSender);
-
         List<RankingData.UserCount> topSpendPickcoUsers = getTopSpendPickcoUsers(pickcoLogs);
         List<RankingData.UserCount> topReservePickcoUsers = getTopReservePickcoUsers(pickcoUsers);
-
         List<RankingData.QuestionUserRanking> questionUserRanking = getQuestionUserRanking(picks);
 
 

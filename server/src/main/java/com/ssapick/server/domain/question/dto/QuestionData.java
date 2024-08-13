@@ -48,14 +48,12 @@ public class QuestionData {
         private Long id;
         private Category category;
         private String content;
-        private boolean deletable;
 
-        public static MyQuestion fromEntity(Question question, boolean deletable) {
+        public static MyQuestion fromEntity(Question question) {
             MyQuestion myQuestion = new MyQuestion();
             myQuestion.id = question.getId();
             myQuestion.category = Category.fromEntity(question.getQuestionCategory());
             myQuestion.content = question.getContent();
-            myQuestion.deletable = deletable;
             return myQuestion;
         }
     }

@@ -23,10 +23,14 @@ import java.util.List;
 public class FollowController {
     private final FollowService followService;
 
+    /**
+     * 팔로워 목록 조회 API
+     * @param user
+     * @return
+     */
     @Authenticated
     @GetMapping(value = "")
     public SuccessResponse<List<ProfileData.Friend>> findFollow(@CurrentUser User user) {
-        log.debug("user: {}", user);
         return SuccessResponse.of(followService.findFollowUsers(user));
     }
 
