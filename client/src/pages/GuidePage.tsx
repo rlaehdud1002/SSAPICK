@@ -1,9 +1,12 @@
+import RankingGuide from "components/GuidePage/RankingGuide";
+
 //  순서는 footer에 있는 메뉴 순서대로
 const Guide = () => {
   return (
-    <div>
+    <div className="flex justify-center">
       {/* 홈 */}
       {/* 랭킹 */}
+      <RankingGuide />
       {/* 픽 */}
       {/* 메세지 */}
       {/* 위치 */}
