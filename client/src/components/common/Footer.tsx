@@ -13,7 +13,7 @@ const Footer = () => {
 
   return (
     <div className="fixed bottom-0 bg-white h-[70px]">
-      <div className="flex flex-row justify-around h-14 p-4 items-center w-screen">
+      <div className="flex flex-row justify-around h-20 p-4 items-center w-screen">
         <Link to="/home">
           <HomeIcon isHighlighted={location === 'home'} />
         </Link>

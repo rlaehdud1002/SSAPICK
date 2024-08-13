@@ -6,6 +6,13 @@ export interface IQuestion {
   category: ICategory;
   createdAt?: string;
 }
+// 내가 생성한 질문
+export interface IMadeQuestion {
+  id: number;
+  category: ICategory;
+  content: string;
+  deletable: boolean;
+}
 
 export interface ICategory {
   id: number;
