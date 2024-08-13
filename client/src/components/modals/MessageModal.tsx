@@ -60,22 +60,16 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
     // 쪽지 전송 성공 시
     onSuccess: () => {
       setStep(MessageModalStep.ALERT);
-    },
-    onError: (error) => {
-      setStep(MessageModalStep.FAIL);
-    },
-  });
-
-  useEffect(() => {
-    if (step === MessageModalStep.ALERT) {
-      console.log('alert');
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setIsModalVisible(false);
         setMessage(true);
         onMessageSent(pick.id);
         setOpen(false); // 모달 닫기
       }, 1500);
-    }
+    },
+    onError: (error) => {
+      setStep(MessageModalStep.FAIL);
+    },
   });
 
   const {
@@ -95,7 +89,6 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
         content: data.message,
       });
       reset();
-      // setStep(MessageModalStep.ALERT);
     }
   };
 
