@@ -3,6 +3,7 @@ import Send from "components/MessagePage/Send";
 import Alarm from "pages/AlarmPage";
 import AuthCallback from "pages/AuthCallbackPage";
 import CoolTime from "pages/CoolTimePage";
+import Guide from "pages/GuidePage";
 import Home from "pages/HomePage";
 import InfoInsert from "pages/InfoInsert";
 import InstallGuidePage from "pages/InstallGuidePage";
