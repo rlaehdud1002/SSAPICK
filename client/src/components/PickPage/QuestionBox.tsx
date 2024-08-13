@@ -15,7 +15,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
 
   return (
     <div
-      className="text-white mx-4 rounded-lg p-3 pb-1"
+      className="text-white mx-4 rounded-lg p-2 pb-1"
       style={{ backgroundColor: '#000855', opacity: '80%' }}
     >
       <div className="flex flex-row justify-between items-center">
@@ -32,7 +32,7 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
           <img
             src={question.category.thumbnail}
             alt="categoryImg"
-            className="w-[100px] h-[100px]"
+            className="w-[80px] h-[80px]"
           />
         </div>
         <div className="flex flex-row justify-around text-center mt-5">
@@ -52,7 +52,6 @@ const Question = ({ question, pickInfo, userPick }: QuestionProps) => {
               />
             </>
           )}
-          <QuestionPlusModal location="pickpage" />
         </div>
       </div>
     </div>

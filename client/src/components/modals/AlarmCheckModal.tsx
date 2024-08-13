@@ -19,7 +19,7 @@ const AlarmCheckModal = ({ setShow, question }: AlarmCheckModalProps) => {
     const timer = setTimeout(() => {
       setOpen(false);
       setShow(false);
-    }, 1000);
+    }, 1500);
     return () => clearTimeout(timer);
   });
 

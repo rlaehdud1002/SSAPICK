@@ -28,12 +28,6 @@ const AlarmedQuestion = ({ pick }: AlarmedQuestionProps) => {
         />
         <span className="ml-4">{pick.question.content}</span>
       </div>
-      {/* <div
-        className="bg-gray-400 rounded-lg px-2 py-1 text-white"
-        onClick={() => handleAlarmUpdate(pick.id)}
-      >
-        삭제
-      </div> */}
       {show && (
         <AlarmCheckModal setShow={setShow} question={pick.question.content} />
       )}
