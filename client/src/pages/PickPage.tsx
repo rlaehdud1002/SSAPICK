@@ -15,6 +15,7 @@ import { Navigate } from 'react-router-dom';
 import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
 import Loading from 'components/common/Loading';
+import NoFourFriends from 'components/PickPage/NoFourFriends';
 
 const Pick = () => {
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
@@ -36,11 +37,15 @@ const Pick = () => {
     queryFn: getFriendsList,
   });
 
+  if (friends.length !== 0) {
+    console.log('friends', friends);
+  }
+
   const [pickFriends, setPickFriends] =
     useRecoilState<IFriend[]>(pickFriendState);
 
   const handleShuffle = useCallback(() => {
-    if (friends.length > 0) {
+    if (friends.length >= 4) {
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
@@ -106,6 +111,10 @@ const Pick = () => {
     return <PickComplete setQuestion={setQuestion} />;
   }
 
+  if (friends.length < 4) {
+    return <NoFourFriends />;
+  }
+
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
     return <Loading />;
   }
@@ -115,6 +124,7 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
+        friends.length >= 4 &&
         question[pickInfo.index] && (
           <div
             className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
@@ -124,7 +134,7 @@ const Pick = () => {
               userPick={handleUserPick}
               pickInfo={pickInfo}
             />
-            <div className="m-7">
+            <div className="m-6">
               <div className="flex flex-row justify-end"></div>
               <div className="flex flex-row justify-center">
                 <Choice

@@ -13,7 +13,7 @@ import {
 } from 'components/ui/dialog';
 
 import { useEffect, useState } from 'react';
-import { IPickCreate } from 'atoms/Pick.type';
+import { IPickCreate, IQuestion } from 'atoms/Pick.type';
 import PassIcon from 'icons/PassIcon';
 
 enum WarningStep {
@@ -23,7 +23,7 @@ enum WarningStep {
 
 interface WarningModalProps {
   title: string;
-  question: any;
+  question: IQuestion;
   blockPassCount: number;
   userPick: (data: IPickCreate) => void;
 }

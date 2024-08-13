@@ -1,11 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 
-import SearchIcon from 'icons/SearchIcon';
-import { cn } from 'lib/utils';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import SearchIcon from "icons/SearchIcon";
+import { cn } from "lib/utils";
+import { UseFormRegisterReturn } from "react-hook-form";
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   register: UseFormRegisterReturn;
   search?: boolean;
 }
@@ -23,8 +22,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           autoComplete="off"
           className={cn(
-            'text-color-000855 flex rounded-lg border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 pr-10 ',
-            className,
+            "text-color-000855 flex rounded-lg border border-input bg-transparent px-3 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 pr-10 ",
+            className
           )}
           {...register}
           {...props}
@@ -32,8 +31,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
       </div>
     );
-  },
+  }
 );
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export { Input };

@@ -126,6 +126,7 @@ public class LocationService {
         } catch (Exception e) {
             log.error("error: {}", e.getMessage(), e);
         }
-        return new LocationData.Response(size, List.of());
+        return new LocationData.Response(size
+                , List.of());
     }
 }
