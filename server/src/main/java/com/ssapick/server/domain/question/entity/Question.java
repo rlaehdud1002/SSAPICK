@@ -58,6 +58,16 @@ public class Question extends BaseEntity {
 	@OneToMany(mappedBy = "question")
 	List<Pick> picks = new ArrayList<>();
 
+	public static Question createQuestion(QuestionCategory category, String content, User author, boolean isDeleted) {
+		Question question = new Question();
+		question.questionCategory = category;
+		question.content = content;
+		question.author = author;
+		question.isDeleted = isDeleted;
+		return question;
+	}
+
+
 	public static Question createQuestion(QuestionCategory category, String content, User author) {
 		Question question = new Question();
 		question.questionCategory = category;
@@ -66,8 +76,13 @@ public class Question extends BaseEntity {
 		return question;
 	}
 
+
 	public void delete() {
 		isDeleted = true;
+	}
+
+	public void restore() {
+		isDeleted = false;
 	}
 
 	public void increaseBanCount() {

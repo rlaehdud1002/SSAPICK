@@ -1,6 +1,6 @@
-import { IFriend } from "atoms/Friend.type";
-import { IPickCreate } from "atoms/Pick.type";
-import BaseImageIcon from "icons/BaseImageIcon";
+import { IFriend } from 'atoms/Friend.type';
+import { IPickCreate } from 'atoms/Pick.type';
+import BaseImageIcon from 'icons/BaseImageIcon';
 
 interface ChoiceProps {
   isTouchDisabled: boolean;
@@ -9,13 +9,18 @@ interface ChoiceProps {
   userPick: (data: IPickCreate) => void;
 }
 
-const Choice = ({ isTouchDisabled, friend, questionId, userPick }: ChoiceProps) => {
+const Choice = ({
+  isTouchDisabled,
+  friend,
+  questionId,
+  userPick,
+}: ChoiceProps) => {
   const handlePick = () => {
     if (!isTouchDisabled) {
       userPick({
         receiverId: friend.userId,
         questionId: questionId,
-        status: "PICKED",
+        status: 'PICKED',
       });
     }
   };
@@ -23,7 +28,7 @@ const Choice = ({ isTouchDisabled, friend, questionId, userPick }: ChoiceProps) 
   return (
     <div
       className={`w-32 h-32 rounded-3xl flex flex-col items-center justify-center m-2 transition-colors duration-300 ${
-        isTouchDisabled ? "bg-gray-300/50" : "bg-white/50"
+        isTouchDisabled ? 'bg-gray-300/50' : 'bg-white/50'
       }`}
       onClick={handlePick}
     >
@@ -32,14 +37,14 @@ const Choice = ({ isTouchDisabled, friend, questionId, userPick }: ChoiceProps) 
           src={friend.profileImage}
           alt="profileImage"
           className={`w-[75px] h-[75px] rounded-full transition-filter duration-300 ${
-            isTouchDisabled ? "filter brightness-50" : ""
+            isTouchDisabled ? 'filter brightness-50' : ''
           }`}
         />
       ) : (
         <BaseImageIcon
           width={75}
           height={75}
-          className={isTouchDisabled ? "filter brightness-50" : ""}
+          className={isTouchDisabled ? 'filter brightness-50' : ''}
         />
       )}
 
