@@ -1,20 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { blockCancel, blockQuestionCancel } from "api/blockApi";
-import { Button } from "components/ui/button";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { blockCancel, blockQuestionCancel } from 'api/blockApi';
+import { Button } from 'components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter, DialogHeader,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "components/ui/dialog";
-import { useState } from "react";
+} from 'components/ui/dialog';
+import { useState } from 'react';
 
 interface BlockCancelModalProps {
   Id: number;
   category?: string;
-  
 }
 
 enum BlockCancelStep {
@@ -42,10 +42,7 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
           });
           setOpen(false);
         }, 1000);
-
       }
-
-
     },
   });
 
@@ -63,47 +60,47 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
           });
           setOpen(false);
         }, 1000);
-
-
       }
-
     },
   });
-
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger
-        onClick={() => { 
-          setStep(BlockCancelStep.CHECK)
+        onClick={() => {
+          setStep(BlockCancelStep.CHECK);
           setOpen(true);
         }}
-        className="text-xs text-white bg-blue-300 px-1 py-1 rounded-lg">
+        className="text-xs text-white bg-blue-300 px-1 py-1 rounded-lg"
+      >
         차단 해제
       </DialogTrigger>
       <DialogContent className="mx-2 w-4/5 rounded-lg">
-        <DialogHeader className="flex items-start text-[#4D5BDC]">
+        <DialogHeader className="flex items-start text-[#5F86E9]">
           <DialogTitle>차단 해제</DialogTitle>
         </DialogHeader>
 
         {step === BlockCancelStep.CHECK && (
           <div>
-            <div className="flex justify-center mt-5">
-              <DialogDescription>차단을 해제 하시겠습니까?</DialogDescription>
+            <div className="flex justify-center my-12">
+              <DialogDescription className='text-color-000855 text-[16px]'>차단을 해제하시겠습니까?</DialogDescription>
             </div>
-            <DialogFooter className="flex items-end mt-5">
-              <Button onClick={() => {
-                if (category === 'user') UserBlockCancel.mutate(Id);
-                else QuestionBlockCancel.mutate(Id);
-                setStep(BlockCancelStep.ALERT);
-
-              }} variant="ssapick" size="sm">
+            <DialogFooter className="flex items-end">
+              <Button
+                onClick={() => {
+                  if (category === 'user') UserBlockCancel.mutate(Id);
+                  else QuestionBlockCancel.mutate(Id);
+                  setStep(BlockCancelStep.ALERT);
+                }}
+                variant="ssapick"
+                size="sm"
+              >
                 해제
               </Button>
             </DialogFooter>
           </div>
         )}
-        
+
         {step === BlockCancelStep.ALERT && (
           <div>
             <div className="flex justify-center my-5">
