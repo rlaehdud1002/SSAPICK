@@ -1,5 +1,5 @@
 const MessageGuide = () => {
-  return <div></div>;
+  return <div>Message Guide</div>;
 };
 
 export default MessageGuide;
