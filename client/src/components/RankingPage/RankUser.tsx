@@ -18,7 +18,7 @@ const RankUser = ({ rankInfo }: RankUserProps) => {
 
   return (
     <div className="mb-10">
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center">
         <TrophyIcon width={25} height={25} />
         <span className="mx-2">
           질문별 <span className="luckiest_guy">SSAPICK</span> 1위!
