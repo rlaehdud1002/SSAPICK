@@ -217,6 +217,7 @@ const FriendSearch = () => {
               name={content.name}
               userId={content.userId}
               profileImage={content.profileImage}
+              follow={content.follow}
             />
           ))
       ) : (

@@ -35,7 +35,9 @@ const RankedQuestion = () => {
               key={index}
             >
               <div className="flex items-center flex-row my-2 mx-4">
-                <div className={`luckiest_guy text-lg ${rankColor[index%3] || 'text-[#A9A9A9]'}`}>
+                <div
+                  className={`luckiest_guy text-xl ${index < 3 ? rankColor[index] : 'text-color-000855'} w-5 text-center`}
+                >
                   {index + 1}
                 </div>
                 <div className="ms-2 break-words">{question.content}</div>
