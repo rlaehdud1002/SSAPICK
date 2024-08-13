@@ -28,5 +28,4 @@ public class HintController {
 	public SuccessResponse<String> getRandomHintByPickId(@PathVariable("pickId") Long pickId) {
 		return SuccessResponse.of(hintService.getRandomHintByPickId(pickId));
 	}
-
 }

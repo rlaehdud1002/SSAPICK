@@ -146,7 +146,7 @@ public class QuestionService {
             if (commentAnalyzerService.isCommentOffensive(newQuestion.getContent())) {
                 publisher.publishEvent(
                     FCMData.NotificationEvent.of(
-                        NotificationType.ADD_QUESTION,
+                        NotificationType.REJECT_ADD_QUESTION,
                         user,
                         user,
                         newQuestion.getId(),
@@ -163,7 +163,7 @@ public class QuestionService {
             } else {
                 publisher.publishEvent(
                     FCMData.NotificationEvent.of(
-                        NotificationType.ADD_QUESTION,
+                        NotificationType.REJECT_ADD_QUESTION,
                         user,
                         user,
                         newQuestion.getId(),
@@ -182,7 +182,7 @@ public class QuestionService {
 
             publisher.publishEvent(
                 FCMData.NotificationEvent.of(
-                    NotificationType.ADD_QUESTION,
+                    NotificationType.REJECT_ADD_QUESTION,
                     user,
                     user,
                     newQuestion.getId(),
