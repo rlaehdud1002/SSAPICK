@@ -44,6 +44,23 @@ public class QuestionData {
     }
 
     @Data
+    public static class MyQuestion {
+        private Long id;
+        private Category category;
+        private String content;
+        private boolean deletable;
+
+        public static MyQuestion fromEntity(Question question, boolean deletable) {
+            MyQuestion myQuestion = new MyQuestion();
+            myQuestion.id = question.getId();
+            myQuestion.category = Category.fromEntity(question.getQuestionCategory());
+            myQuestion.content = question.getContent();
+            myQuestion.deletable = deletable;
+            return myQuestion;
+        }
+    }
+
+    @Data
     public static class Create {
         @NotNull(message = "카테고리 ID는 필수입니다.")
         private Long categoryId;

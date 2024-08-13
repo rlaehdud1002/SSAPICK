@@ -88,13 +88,13 @@ class QuestionControllerTest extends RestDocsSupport {
 	@DisplayName("내가 생성한 질문 조회 테스트")
 	void 내가_생성한_질문_조회_테스트() throws Exception {
 		// * GIVEN: 이런게 주어졌을 때
-		List<QuestionData.Search> searches = Stream.of("질문 1", "질문 2", "질문 3")
+		List<QuestionData.MyQuestion> searches = Stream.of("질문 1", "질문 2", "질문 3")
 				.map((content) -> {
 					Question question = spy(createQuestion(content));
 					when(question.getId()).thenReturn(1L);
 					return question;
 				})
-				.map(QuestionData.Search::fromEntity)
+				.map(question -> QuestionData.MyQuestion.fromEntity(question, false))
 				.toList();
 
 		when(questionService.getQuestionsByUser(any())).thenReturn(searches);
@@ -111,13 +111,12 @@ class QuestionControllerTest extends RestDocsSupport {
 								.description("내가 생성한 질문을 조회한다.")
 								.responseFields(response(
 										fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("질문 ID"),
-										fieldWithPath("data[].banCount").description("질문을 차단한 횟수"),
-										fieldWithPath("data[].skipCount").type(JsonFieldType.NUMBER).description("질문을 스킵한 횟수"),
 										fieldWithPath("data[].category.id").type(JsonFieldType.NUMBER).description("질문 카테고리 ID"),
 										fieldWithPath("data[].category.name").type(JsonFieldType.STRING).description("질문 카테고리명"),
 										fieldWithPath("data[].category.thumbnail").type(JsonFieldType.STRING)
 												.description("질문 카테고리 썸네일"),
-										fieldWithPath("data[].content").type(JsonFieldType.STRING).description("질문 내용")
+										fieldWithPath("data[].content").type(JsonFieldType.STRING).description("질문 내용"),
+										fieldWithPath("data[].deletable").type(JsonFieldType.BOOLEAN).description("삭제 가능 여부")
 								))
 								.build())
 				));

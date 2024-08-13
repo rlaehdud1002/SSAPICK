@@ -47,7 +47,7 @@ public class QuestionController {
      * @param user 로그인한 사용자
      */
     @GetMapping("/me")
-    public SuccessResponse<List<QuestionData.Search>> searchQuestionsByUser(@CurrentUser User user) {
+    public SuccessResponse<List<QuestionData.MyQuestion>> searchQuestionsByUser(@CurrentUser User user) {
         return SuccessResponse.of(questionService.getQuestionsByUser(user));
     }
 
