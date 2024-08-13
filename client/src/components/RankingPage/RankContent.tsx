@@ -1,4 +1,7 @@
 import { IRankList } from "atoms/Rank.type";
+import CoinIcon from "icons/CoinIcon";
+import RankingMessageIcon from "icons/RankingMessage";
+import RankingPickIcon from "icons/RankingPick";
 import TrophyIcon from "icons/TrophyIcon";
 
 interface RankContentProps {
@@ -23,12 +26,22 @@ const formatNum = (num: number): string => {
   return num.toLocaleString();
 };
 
+const renderRankingIcon = (title: string) => {
+  if (title == "topMessageReceivers" || title == "topMessageSenders") {
+    return <RankingMessageIcon width={25} height={25} />
+  } else if(title == "topPickReceivers" || title == "topPickSenders") {
+    return <RankingPickIcon width={25} height={25} />
+  } else if(title == "topReservePickcoUsers" || title == "topSpendPickcoUsers") {
+    return <CoinIcon width={25} height={25} />
+  }
+}
+
 const RankContent = ({ title, rankInfo }: RankContentProps) => {
   const rankColor = ["text-[#D5A11E]", "text-[#A3A3A3]", "text-[#CD7F32]"];
   return (
     <div className="mb-10">
       <div className="flex flex-row">
-        <TrophyIcon width={25} height={25} />
+        {renderRankingIcon(title)}
         <h1 className="ms-2">{rankName[title]}</h1>
       </div>
       {rankInfo.length >= 3 ? (
