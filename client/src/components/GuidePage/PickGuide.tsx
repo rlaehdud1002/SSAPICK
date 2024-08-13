@@ -7,8 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "components/ui/carousel";
-import PickGuideIcon from "icons/PickGuideIcon";
-import PickGuideIcon2 from "icons/PickGuideIcon2";
 
 const PickGuide = () => {
   return (
@@ -24,26 +22,57 @@ const PickGuide = () => {
       <Carousel>
         <CarouselContent>
           <CarouselItem className="flex justify-center">
-            <PickGuideIcon width={200} height={500} />
+            <img width={200} src="icons/guide/Pick.png" alt="Pick" />
           </CarouselItem>
           <CarouselItem className="flex justify-center">
-            <PickGuideIcon2 width={200} height={500} />
+            <img width={200} src="icons/guide/PickDone.png" alt="Pick" />
+          </CarouselItem>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/PickCoolTime.png" alt="Pick" />
           </CarouselItem>
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
       <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center">
+        <p className="whitespace-normal">10개의 픽을 완료하면 픽코를 드립니다!</p>
+        <p className="whitespace-normal">다음 픽을 하기위해서는 15분이 필요합니다!</p>
+      </div>
+
+      <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center">
+        <p className="text-xl font-bold text-[#5f86e9] whitespace-normal">셔플</p>
+        <p className="whitespace-normal">Pick하고 싶은 친구가 없다면 셔플을 할 수 있습니다!</p>
+      </div>
+      <Carousel>
+        <CarouselContent>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/Pick.png" alt="Pick" />
+          </CarouselItem>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/PickFriendsShuffle.png" alt="Pick" />
+          </CarouselItem>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/PickFriendsShuffled.png" alt="Pick" />
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+
+      <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center">
+        <p className="text-xl font-bold text-[#5f86e9] whitespace-normal">신고 / 패스</p>
         <p className="whitespace-normal">대답하고 싶지않은 질문은 패스 가능</p>
         <p className="whitespace-normal">적절하지않은 질문은 신고해주요!</p>
         <p className="whitespace-normal">패스와 차단은 총 5회 가능</p>
-        <p className="whitespace-normal">Pick하고 싶은 친구가 없다면 셔플을 할 수 있습니다</p>
       </div>
-      <Carousel className="bg-white">
+      <Carousel>
         <CarouselContent>
-          <CarouselItem>first</CarouselItem>
-          <CarouselItem>second</CarouselItem>
-          <CarouselItem>third</CarouselItem>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/PickPass.png" alt="Pick" />
+          </CarouselItem>
+          <CarouselItem className="flex justify-center">
+            <img width={200} src="icons/guide/Picks.png" alt="Pick" />
+          </CarouselItem>
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
