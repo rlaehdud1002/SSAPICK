@@ -11,7 +11,7 @@ const formatDate = (dateString: string): string => {
   const hours = date.getHours() % 12 || 12;
   const minutes = date.getMinutes().toString().padStart(2, '0');
 
-  return `${date.getMonth() + 1}월 ${date.getDate()}일 ${ampm} ${hours}시 ${minutes}분`;
+  return `${date.getMonth() + 1}월 ${date.getDate()}일 ${ampm} ${hours}:${minutes}`;
 };
 
 const formatChange = (change: number): string => {
@@ -78,41 +78,18 @@ const PickcoLogList = ({ pickcolog }: IPickcologContent) => {
   const changeTextColor = change > 0 ? 'text-[#5F86E9]' : 'text-[#E95F5F]';
   const { imageUrl, title } = getTypeDetails(pickcoLogType);
 
-  const createTime = new Date(createdAt).getTime();
-  const currentTime = new Date().getTime();
-  const diffTime = currentTime - createTime;
-
-  const months = String(
-    Math.floor((diffTime / (1000 * 60 * 60 * 24 * 30)) % 12),
-  );
-  const days = String(Math.floor((diffTime / (1000 * 60 * 60 * 24)) % 30));
-  const hours = String(Math.floor((diffTime / (1000 * 60 * 60)) % 24));
-  const minutes = String(Math.floor((diffTime / (1000 * 60)) % 60));
-
-  let receivedTime;
-
-  if (months !== '0') {
-    receivedTime = `${months}개월 전`;
-  } else if (days !== '0') {
-    receivedTime = `${days}일 전`;
-  } else if (hours !== '0') {
-    receivedTime = `${hours}시간 전`;
-  } else if (minutes !== '0') {
-    receivedTime = `${minutes}분 전`;
-  } else {
-    receivedTime = '방금';
-  }
-
   return (
     <div className="bg-white/50 my-2 p-4 rounded-lg flex items-start space-x-4">
       <img
         src={imageUrl}
         alt={title}
-        className="w-12 h-12 object-cover bg-white/50 rounded-full p-1"
+        className="w-12 h-12 object-cover bg-white/50 rounded-full p-1.5"
       />
       <div className="flex flex-col justify-center flex-1">
         <span className="text-sapick font-semibold">{title}</span>
-        <span className="text-gray-500 text-xs pt-2">{receivedTime}</span>
+        <span className="text-gray-500 text-xs pt-2">
+          {formatDate(createdAt)}
+        </span>
       </div>
       <div className="flex flex-col space-y-1">
         <span className={`font-semibold text-right ${changeTextColor}`}>
