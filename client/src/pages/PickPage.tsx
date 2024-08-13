@@ -38,14 +38,14 @@ const Pick = () => {
   });
 
   if (friends.length !== 0) {
-    console.log(friends);
+    console.log('friends', friends);
   }
 
   const [pickFriends, setPickFriends] =
     useRecoilState<IFriend[]>(pickFriendState);
 
   const handleShuffle = useCallback(() => {
-    if (friends.length > 0) {
+    if (friends.length >= 4) {
       const shuffledFriends = friends.sort(() => Math.random() - 0.5);
       setPickFriends(shuffledFriends.slice(0, 4));
     }
@@ -111,12 +111,12 @@ const Pick = () => {
     return <PickComplete setQuestion={setQuestion} />;
   }
 
-  if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
-    return <Loading />;
+  if (friends.length < 4) {
+    return <NoFourFriends />;
   }
 
-  if (pickFriends.length < 4) {
-    return <NoFourFriends />;
+  if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
+    return <Loading />;
   }
 
   return (
@@ -124,6 +124,7 @@ const Pick = () => {
       {pickInfo.cooltime ? (
         <Navigate to="/cooltime" />
       ) : (
+        friends.length >= 4 &&
         question[pickInfo.index] && (
           <div
             className={`${isPending || isTouchDisabled ? 'pointer-events-none' : ''}`}
