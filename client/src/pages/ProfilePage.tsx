@@ -94,8 +94,6 @@ const Profile = () => {
 
         {/* 로그아웃 버튼 */}
         <SignoutModal />
-        
-
       </div>
     </div>
   );

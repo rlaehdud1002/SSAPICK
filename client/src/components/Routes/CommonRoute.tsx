@@ -18,8 +18,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 const CommonRoute = () => {
   return (
     <Routes>
-      {/* <Route path="/" element={<Login />} /> */}
-      <Route path="/" element={<Guide />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/guide" element={<Guide />} />
       <Route path="/splash" element={<Splash />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />

@@ -51,14 +51,15 @@ function App() {
       location !== "splash" && // 스플래시 페이지
       location !== "mattermost" && // mm 인증 페이지
       location !== "404" && // 404 페이지
-      location !== "infoinsert" // 추가 정보 입력 페이지
+      location !== "infoinsert" && // 추가 정보 입력 페이지
+      location !== "guide" // 가이드 페이지
     );
   };
 
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash") {
+        if (location === "splash" || location === "guide") {
           return;
         }
         if (isValid) return;
