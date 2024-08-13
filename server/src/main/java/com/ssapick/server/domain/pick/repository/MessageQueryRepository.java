@@ -8,7 +8,8 @@ import com.ssapick.server.domain.pick.entity.Message;
 
 public interface MessageQueryRepository {
 
+	Page<Message> findSentMessageByUserId(Long userId, Pageable pageable);
+
 	Page<Message> findReceivedMessageByUserId(Long userId, Pageable pageable);
 
-	Page<Message> findSentMessageByUserId(Long userId, Pageable pageable);
 }
