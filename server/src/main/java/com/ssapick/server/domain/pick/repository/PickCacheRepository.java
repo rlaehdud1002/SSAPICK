@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -47,13 +48,15 @@ public class PickCacheRepository {
 		hashOperations.getOperations().expire(key, Duration.ofDays(1));
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean lock(Long userId) {
+		log.debug("run lock code");
 		return Boolean.TRUE.equals(valueOperations.setIfAbsent(PICK_LOCK + userId, "use", Duration.ofMillis(LOCK_TIMEOUT)));
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void unlock(Long userId) {
+		log.debug("run unlock code");
 		valueOperations.getOperations().delete(PICK_LOCK + userId);
 	}
 

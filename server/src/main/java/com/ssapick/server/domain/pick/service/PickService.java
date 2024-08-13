@@ -134,16 +134,16 @@ public class PickService {
 
 				User receiver = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, receiver, question));
-				publisher.publishEvent(
-					FCMData.NotificationEvent.of(
-							NotificationType.PICK,
-							sender,
-							receiver,
-							pick.getId(),
-							"누군가가 당신을 선택했어요!",
-						    pickEventMessage(question.getContent()),
-							null
-                ));
+//				publisher.publishEvent(
+//					FCMData.NotificationEvent.of(
+//							NotificationType.PICK,
+//							sender,
+//							receiver,
+//							pick.getId(),
+//							"누군가가 당신을 선택했어요!",
+//						    pickEventMessage(question.getContent()),
+//							null
+//                ));
 				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
@@ -216,9 +216,7 @@ public class PickService {
 
 	@Transactional
 	public void updatePickAlarm(User user, Long pickId) {
-		Pick pick = pickRepository.findById(pickId).orElseThrow(() -> {
-			throw new BaseException(ErrorCode.NOT_FOUND_PICK);
-		});
+		Pick pick = pickRepository.findById(pickId).orElseThrow(() -> new BaseException(ErrorCode.NOT_FOUND_PICK));
 
 		if (!pick.getReceiver().getId().equals(user.getId())) {
 			throw new BaseException(ErrorCode.ACCESS_DENIED);
