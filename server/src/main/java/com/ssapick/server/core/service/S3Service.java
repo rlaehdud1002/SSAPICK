@@ -134,7 +134,7 @@ public class S3Service {
 		try {
 			URL url = new URL(imageAddress);
 			String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
-			return decodingKey.substring(16);
+			return decodingKey.substring(1);
 		} catch (MalformedURLException e) {
 			throw new BaseException(ErrorCode.FAIL_TO_DELETE_FILE);
 		}
