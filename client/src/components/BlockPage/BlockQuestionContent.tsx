@@ -16,7 +16,6 @@ const BlockQuestionContent = ({
   questionId,
   thumbnail,
 }: BlockQuestionContentProps) => {
-  const queryClient = useQueryClient();
 
   return (
     <div>

@@ -19,12 +19,12 @@ const RankedQuestion = () => {
   const rankColor = ['text-[#FFD700]', 'text-[#D3D3D3]', 'text-[#CD7F32]'];
 
   return (
-    <div className="mb-5 pe-4 pb-5 border-b-[1px]">
-      <div className="flex flex-row my-5">
+    <div className="mb-5 pe-4 pb-5 border-b-[1px] ">
+      <div className="flex flex-row mb-5 mt-7">
         <TrophyIcon width={25} height={25} />
         <h1 className="ms-2">
           내가 지목된 질문{' '}
-          <span className="luckiest_guy text-orange-400 text-lg">top 3</span>
+          <span className="luckiest_guy text-orange-400 text-lg">top 10</span>
         </h1>
       </div>
       {rankQuestion.length !== 0 ? (
@@ -35,7 +35,7 @@ const RankedQuestion = () => {
               key={index}
             >
               <div className="flex items-center flex-row my-2 mx-4">
-                <div className={`luckiest_guy text-lg ${rankColor[index] || 'text-[#A9A9A9]'}`}>
+                <div className={`luckiest_guy text-lg ${rankColor[index%3] || 'text-[#A9A9A9]'}`}>
                   {index + 1}
                 </div>
                 <div className="ms-2 break-words">{question.content}</div>
