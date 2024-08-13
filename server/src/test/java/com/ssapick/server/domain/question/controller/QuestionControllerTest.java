@@ -124,6 +124,27 @@ class QuestionControllerTest extends RestDocsSupport {
 		verify(questionService).getQuestionsByUser(any());
 	}
 
+	@Test
+	@DisplayName("생성한 질문 삭제 성공 테스트")
+	void 생성한_질문_삭제_성공_테스트() throws Exception {
+		// * GIVEN: 이런게 주어졌을 때
+
+		// * WHEN: 이걸 실행하면
+		ResultActions perform = this.mockMvc.perform(
+				delete("/api/v1/questions/{questionId}", 1L)
+		);
+
+		// * THEN: 이런 결과가 나와야 한다
+		perform.andExpect(status().isNoContent())
+				.andDo(restDocs.document(resource(
+						ResourceSnippetParameters.builder()
+								.tag("질문")
+								.summary("질문 삭제 API")
+								.description("내가 생서한 질문 중 픽이 없는 질문을 삭제한다.")
+								.responseFields(empty())
+								.build()
+				)));
+	}
 
 
 	@Test
