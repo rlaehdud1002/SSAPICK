@@ -101,37 +101,6 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 			).fetchOne();
 	}
 
-
-	//
-	// private LongSupplier getLongSupplier(Long userId, String keyword) {
-	// 	return () -> queryFactory
-	// 		.select(user.count())
-	// 		.from(user)
-	// 		.leftJoin(user.profile, profile)
-	// 		.leftJoin(user.profile.campus, campus)
-	// 		.where(user.profile.campus.in(
-	// 			JPAExpressions.select(user.profile.campus)
-	// 				.from(user)
-	// 				.where(user.id.eq(userId))
-	// 		))
-	// 		.where(
-	// 			user.name.like(keyword),
-	// 		)
-	// 		.where(user.id.notIn(
-	// 			JPAExpressions.select(follow.followingUser.id)
-	// 				.from(follow)
-	// 				.where(follow.followUser.id.eq(userId))
-	// 		))
-	// 		.where(user.id.notIn(
-	// 			JPAExpressions.select(userBan.toUser.id)
-	// 				.from(userBan)
-	// 				.where(userBan.fromUser.id.eq(userId))
-	// 		))
-	// 		.where(user.id.ne(userId))
-	// 		.fetchOne();
-	// }
-
-
 	private Short getSection(Long userId) {
 		return queryFactory.select(user.profile.campus.section)
 			.from(user)
@@ -154,7 +123,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 						.from(user)
 						.where(user.id.eq(userId))
 				))
-				.where(user.id.ne(userId))  // 현재 사용자 ID를 제외
+				.where(user.id.ne(userId))
 			.where(user.id.notIn(
 				JPAExpressions.select(userBan.toUser.id)
 					.from(userBan)

@@ -33,6 +33,11 @@ public class FollowService {
     private final ProfileRepository profileRepository;
     // private final FollowQueryRepository followQueryRepository;
 
+    /**
+     * 팔로워 목록 조회
+     * @param user
+     * @return
+     */
     public List<ProfileData.Friend> findFollowUsers(User user) {
         return userRepository.findFollowUserByUserId(user.getId());
     }
@@ -67,14 +72,6 @@ public class FollowService {
      * @return List<ProfileData.Search>
      */
     public Page<ProfileData.Friend> recommendFollow(User user, Pageable pageable) {
-        // 불변 리스트를 방지하기 위해 ArrayList로 변환합니다.
        return followRepository.findRecommendFriends(user.getId(), pageable);
-
-        // // 차단된 사용자를 목록에서 제거합니다.
-        // List<Long> bannedUserIds = userBanRepository.findBanUsersByFromUser(user).stream()
-        //     .map(User::getId).toList();
-        //
-        // recommends.removeIf(recommend -> bannedUserIds.contains(recommend.getUserId()));
-
     }
 }

@@ -51,7 +51,6 @@ public class MessageService {
 	 * @return {@link MessageData.Search} 보낸 메시지 리스트
 	 */
 	public Page<MessageData.Search> searchSendMessage(User user, Pageable pageable) {
-
 		return messageRepository.findSentMessageByUserId(user.getId(), pageable)
 			.map(message -> MessageData.Search.fromEntity(message, false));
 

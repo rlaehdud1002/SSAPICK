@@ -16,8 +16,14 @@ public class RankingController {
 
     private final RankingScheduler rankingScheduler;
 
+    // 임시
+    private final RankingService rankingService;
+
     @GetMapping("/all")
     public SuccessResponse<RankingData.Response> getAllRanking() {
+
+        rankingService.getAllRanking();
+
         RankingData.Response response = rankingScheduler.getCachedRankingData();
         return SuccessResponse.of(response);
     }

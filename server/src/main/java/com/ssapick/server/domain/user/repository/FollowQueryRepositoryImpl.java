@@ -40,7 +40,6 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 		QUser u = QUser.user;
 		Short section = getSection(userId);
 
-		// 서브쿼리에서 GROUP BY 후 결과 수 계산
 		JPAQuery<Long> countQuery = queryFactory
 			.select(u.id.count())
 			.from(f1)
@@ -56,9 +55,8 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
 					.where(userBan.fromUser.id.eq(userId))))
 			.groupBy(u.id);
 
-		long total = countQuery.fetch().size();  // 또는 countQuery.fetchCount()
+		long total = countQuery.fetch().size();
 
-		// 페이징 처리된 결과
 		List<Friend> friends = queryFactory
 			.select(Projections.constructor(
 				Friend.class,
