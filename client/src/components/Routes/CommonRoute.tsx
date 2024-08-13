@@ -5,6 +5,7 @@ import AuthCallback from 'pages/AuthCallbackPage';
 import CoolTime from 'pages/CoolTimePage';
 import Home from 'pages/HomePage';
 import InfoInsert from 'pages/InfoInsert';
+import InstallGuidePage from 'pages/InstallGuidePage';
 import Login from 'pages/LoginPage';
 import Mattermost from 'pages/MattermostPage';
 import Message from 'pages/MessagePage';
@@ -19,6 +20,7 @@ const CommonRoute = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/splash" element={<Splash />} />
+      <Route path="/install" element={<InstallGuidePage />} />
       <Route path="/alarm" element={<Alarm />} />
       <Route path="/home" element={<Home />} />
       <Route path="/ranking" element={<Ranking />} />
@@ -33,7 +35,7 @@ const CommonRoute = () => {
       <Route path="/auth/callback" element={<AuthCallback />} />
       {/* 추가 정보 입력 */}
       <Route path="/infoinsert" element={<InfoInsert />} />
-      <Route path="/modiinfoinsert" element={<ModiInfoInsert/>}/>
+      <Route path="/modiinfoinsert" element={<ModiInfoInsert />} />
       {/* 잘못된 접근일 때 */}
       <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
