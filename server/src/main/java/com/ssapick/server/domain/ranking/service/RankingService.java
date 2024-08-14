@@ -100,6 +100,7 @@ public class RankingService {
 
     private static List<RankingData.UserCount> getTopReservePickcoUsers(List<User> pickcoUsers) {
         return pickcoUsers.stream()
+                .filter(user -> user.getProfile() != null)
                 .map(user -> new RankingData.UserCount(
                         new RankingData.UserRankingProfile(
                                 user.getName(),
