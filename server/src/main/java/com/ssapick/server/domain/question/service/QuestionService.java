@@ -180,6 +180,7 @@ public class QuestionService {
                     addQuestionEventMessage(newQuestion.getContent()),
                     null
                 ));
+            return;
         }
 
         publisher.publishEvent(
