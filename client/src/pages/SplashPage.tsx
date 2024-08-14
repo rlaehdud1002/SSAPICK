@@ -4,8 +4,8 @@ const Splash = () => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-row h-screen items-center justify-center splash absolute w-screen">
-      <div className="bg-white/50 rounded-xl w-80 h-100 mr-24">
-        <img src="" alt="이미지" />
+      <div className="rounded-xl w-80 h-100 mr-24">
+        <img src="/images/splash/SSAPICK.gif" alt="이미지" width={230}/>
       </div>
       <div className="flex flex-col items-center justify-center">
         <div className="text-white text-4xl my-8">
@@ -14,7 +14,7 @@ const Splash = () => {
         <span className="luckiest_guy text-8xl text-color-5F86E9">SSAPICK</span>
         <div>
           <img
-            src="images\splash\qrcode_www.ssapick.kro.kr.png"
+            src="images/splash/qrcode_www.ssapick.kro.kr.png"
             alt="없어!"
             width={150}
             height={150}

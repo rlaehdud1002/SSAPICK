@@ -1,13 +1,20 @@
 const LocationGuide = () => {
   return (
     <div className="flex flex-col items-center justify-center mb-24">
-      <span className="luckiest_guy text-color-000855 text-6xl my-16">
-        LOCATION SETTING GUIDE
-      </span>
+      <div className="my-16 flex flex-col">
+        <span className="luckiest_guy text-6xl">
+          LOCATION SETTING GUIDE - IOS
+        </span>
+        <span className="text-center">
+          <span className="luckiest_guy">Android</span>는 따로 설정하지 않아도
+          됩니다.
+        </span>
+      </div>
+
       <div className="flex flex-row items-center">
         <div className="flex flex-col">
           <img
-            src="images\splash\guide6.png"
+            src="images/splash/guide6.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -18,7 +25,7 @@ const LocationGuide = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide7.png"
+            src="images/splash/guide7.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -27,7 +34,7 @@ const LocationGuide = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide8.png"
+            src="images/splash/guide8.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -38,7 +45,7 @@ const LocationGuide = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide9.png"
+            src="images/splash/guide9.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
