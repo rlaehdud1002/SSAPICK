@@ -26,7 +26,7 @@ const Ranking = () => {
 
   return (
     <div className="m-6">
-      <RankUser rankInfo={rankList['questionUserRanking']}/>
+      <RankUser rankInfo={rankList['questionUserRanking']} />
       {rankName.map((key) => {
         const rankItem: IRankList[] = rankList[key];
         return <RankContent key={key} title={key} rankInfo={rankItem} />;
