@@ -146,7 +146,10 @@ const Response = ({ picks }: ResponseProps) => {
           alarm={selectedAlarm}
         />
       )}
-      <div className="h-24" />
+      <div className="text-gray-600 text-center my-10">
+        받은 <span className="luckiest_guy mr-1">PICK</span>조회가
+        완료되었습니다.
+      </div>
     </div>
   );
 };

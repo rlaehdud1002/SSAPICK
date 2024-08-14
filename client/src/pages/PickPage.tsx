@@ -109,14 +109,14 @@ const Pick = () => {
 
   console.log('pickFriends', pickFriends);
 
+  if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
+    return <Loading />;
+  }
+
   if (finish) {
     return <PickComplete setQuestion={setQuestion} />;
   } else if (!LoadingFriendLists && friends.length < 4) {
     return <NoFourFriends />;
-  }
-
-  if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
-    return <Loading />;
   }
 
   return (
