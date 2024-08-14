@@ -12,7 +12,7 @@ import java.util.List;
 public interface PickcoLogRepository extends JpaRepository<PickcoLog, Long> {
     List<PickcoLog> findByUser(User user);
 
-    @Query("SELECT p FROM PickcoLog p JOIN FETCH p.user JOIN FETCH p.user.alarm JOIN FETCH p.user.profile JOIN FETCH p.user.profile.campus WHERE p.change < 0")
+    @Query("SELECT p FROM PickcoLog p LEFT JOIN FETCH p.user LEFT JOIN FETCH p.user.alarm LEFT JOIN FETCH p.user.profile LEFT JOIN FETCH p.user.profile.campus WHERE p.change < 0")
     List<PickcoLog> findAllSpendWithUser();
 
     @Query("SELECT p FROM PickcoLog p WHERE p.user.id = :id ORDER BY p.createdAt DESC")

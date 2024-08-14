@@ -4,10 +4,13 @@ import com.ssapick.server.core.support.UserSupport;
 import com.ssapick.server.domain.pick.entity.Pick;
 import com.ssapick.server.domain.pick.repository.PickRepository;
 import com.ssapick.server.domain.question.entity.Question;
+import com.ssapick.server.domain.user.dto.UserData;
 import com.ssapick.server.domain.user.entity.Follow;
 import com.ssapick.server.domain.user.entity.User;
 import com.ssapick.server.domain.user.repository.FollowRepository;
 import com.ssapick.server.domain.user.repository.UserRepository;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,12 +67,12 @@ class UserServiceTest extends UserSupport {
         lenient().when(followRepository.findByFollowingUser(me)).thenReturn(followings);
 
         // When
-//        UserData.UserInfo userInfo = userService.getUserInfo(me);
+       UserData.UserInfo userInfo = userService.getUserInfo(me);
 
 //         Then
-//        assertThat(userInfo.getName()).isEqualTo(me.getName());
-//        assertThat(userInfo.getPickCount()).isEqualTo(picks.size());
-//        assertThat(userInfo.getFollowingCount()).isEqualTo(followings.size());
+       Assertions.assertThat(userInfo.getName()).isEqualTo(me.getName());
+        Assertions.assertThat(userInfo.getPickCount()).isEqualTo(picks.size());
+        Assertions.assertThat(userInfo.getFollowingCount()).isEqualTo(followings.size());
 
     }
 

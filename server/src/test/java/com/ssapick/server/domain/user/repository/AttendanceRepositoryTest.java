@@ -95,10 +95,10 @@ class AttendanceRepositoryTest extends TestDatabaseContainer {
         List<Attendance> allByUserOrderByCreatedAtDesc = attendanceRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         // * THEN: 이런 결과가 나와야 한다
-        // assertThat(allByUserOrderByCreatedAtDesc).hasSize(3);
-        // assertThat(allByUserOrderByCreatedAtDesc.get(0)).isEqualTo(attendance3);
-        // assertThat(allByUserOrderByCreatedAtDesc.get(1)).isEqualTo(attendance2);
-        // assertThat(allByUserOrderByCreatedAtDesc.get(2)).isEqualTo(attendance1);
+        assertThat(allByUserOrderByCreatedAtDesc).hasSize(3);
+        assertThat(allByUserOrderByCreatedAtDesc.get(0)).isEqualTo(attendance3);
+        assertThat(allByUserOrderByCreatedAtDesc.get(1)).isEqualTo(attendance2);
+        assertThat(allByUserOrderByCreatedAtDesc.get(2)).isEqualTo(attendance1);
 
     }
 

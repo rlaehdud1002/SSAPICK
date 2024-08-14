@@ -3,6 +3,7 @@ package com.ssapick.server.domain.user.repository;
 import com.ssapick.server.core.config.JpaTestConfig;
 import com.ssapick.server.core.container.TestDatabaseContainer;
 import com.ssapick.server.domain.user.dto.ProfileData;
+import com.ssapick.server.domain.user.entity.ProviderType;
 import com.ssapick.server.domain.user.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
@@ -10,16 +11,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
 @DisplayName("유저 레포지토리 테스트")
@@ -35,6 +41,8 @@ class UserRepositoryTest extends TestDatabaseContainer {
     @Autowired
     private EntityManager em;
     private PersistenceUnitUtil utils;
+	@Autowired
+	private FollowRepository followRepository;
 
     @BeforeEach
     void init() {
@@ -132,40 +140,41 @@ class UserRepositoryTest extends TestDatabaseContainer {
     @DisplayName("키워드로 유저를 검색하면 키워드가 포함된 유저 조회")
     void 키워드로_유저_조회() {
         // * GIVEN: 이런게 주어졌을 때
-        Pageable pageable = mock(Pageable.class);
 
-        // * WHEN: 이걸 실행하면
-//        List<User> findUsers = userRepository.findUserByKeyword(user.getId(), "Use", pageable).getContent();
-//
-//        // * THEN: 이런 결과가 나와야 한다
-//        Assertions.assertThat(findUsers.size()).isEqualTo(4);
+        Page<ProfileData.Friend> user = userRepository.searchUserByKeyword(1L, "User", PageRequest.of(0, 10));
+
+        List<ProfileData.Friend> content = user.getContent();
+
+
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(content.size()).isEqualTo(2);
     }
-
     @Test
     @DisplayName("빈_키워드로 유저를 검색하면 전체 조회")
     void 빈_키워드로_유저_조회() {
         // * GIVEN: 이런게 주어졌을 때
-        Pageable pageable = mock(Pageable.class);
 
-        // * WHEN: 이걸 실행하면
-//        List<User> findUsers = userRepository.findUserByKeyword(user.getId(), "", pageable).getContent();
-//
-//        // * THEN: 이런 결과가 나와야 한다
-//        Assertions.assertThat(findUsers.size()).isEqualTo(4);
+        Page<ProfileData.Friend> user = userRepository.searchUserByKeyword(1L, "", PageRequest.of(0, 10));
+
+        List<ProfileData.Friend> content = user.getContent();
+
+
+        Assertions.assertThat(user).isNotNull();
+        Assertions.assertThat(content.size()).isEqualTo(2);
     }
 
-    // @Test
-    // @DisplayName("픽코가 가장 많은 유저 TOP3 조회")
-    // void 픽코가_가장_많은_유저_TOP3_조회() {
-    //     // * GIVEN: 이런게 주어졌을 때
-    //
-    //     // * WHEN: 이걸 실행하면
-    //     List<User> findUsers = userRepository.findTopPickcoUsers();
-    //
-    //     // * THEN: 이런 결과가 나와야 한다
-    //     Assertions.assertThat(findUsers.size()).isEqualTo(3);
-    //     Assertions.assertThat(findUsers.get(0).getProfile().getPickco()).isEqualTo(250);
-    //     Assertions.assertThat(findUsers.get(1).getProfile().getPickco()).isEqualTo(200);
-    //     Assertions.assertThat(findUsers.get(2).getProfile().getPickco()).isEqualTo(150);
-    // }
+    @Test
+    @DisplayName("픽코가 가장 많은 유저 TOP3 조회")
+    void 픽코가_가장_많은_유저_TOP3_조회() {
+        // * GIVEN: 이런게 주어졌을 때
+
+        // * WHEN: 이걸 실행하면
+        List<User> findUsers = userRepository.findTopPickcoUsers();
+
+        // * THEN: 이런 결과가 나와야 한다
+        Assertions.assertThat(findUsers.size()).isEqualTo(3);
+        Assertions.assertThat(findUsers.get(0).getProfile().getPickco()).isEqualTo(250);
+        Assertions.assertThat(findUsers.get(1).getProfile().getPickco()).isEqualTo(200);
+        Assertions.assertThat(findUsers.get(2).getProfile().getPickco()).isEqualTo(150);
+    }
 }

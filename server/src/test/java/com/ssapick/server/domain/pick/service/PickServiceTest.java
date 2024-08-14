@@ -24,10 +24,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -61,32 +63,37 @@ class PickServiceTest extends UserSupport {
 	@Test
 	@DisplayName("로그인한 사용자가 받은 픽 조회 테스트")
 	void 로그인한_사용자가_받은_픽_조회_테스트() throws Exception {
-		// // * GIVEN: 이런게 주어졌을 때
-		// User receiver = this.createUser("받는 사람");
-		// User sender = this.createUser("보낸 사람");
-		// Question question = spy(this.createQuestion());
-		// when(question.getId()).thenReturn(1L);
-		// List<Pick> picks = Stream.of(1, 2, 3).map(i -> {
-		// 	Pick pick = spy(this.createPick(sender, receiver, question));
-		// 	when(pick.getQuestion()).thenReturn(question);
-		// 	when(pick.getId()).thenReturn(Long.valueOf(i));
-		// 	return pick;
-		// }).toList();
-		// when(pickRepository.findReceiverByUserId(receiver.getId())).thenReturn(picks);
-		//
-		//
-		// // * WHEN: 이걸 실행하면
-		// Pageable pageable = PageRequest.of(0, 10); // 예시로 페이지 크기를 10으로 설정하고 첫 페이지를 요청
-		//
-		// Page<PickData.Search> searches = pickService.searchReceivePick(receiver, pageable);
-		//
-		// // * THEN: 이런 결과가 나와야 한다
-		// assertThat(searches).hasSize(3);
-		// assertThat(searches.stream().map(PickData.Search::getId)).contains(1L, 2L, 3L);
-		// assertThat(searches.stream().map(PickData.Search::getSender)).map(ProfileData.Search::getNickname)
-		// 	.containsExactly(null, null, null);
-		// assertThat(searches.stream().map(PickData.Search::getSender)).map(ProfileData.Search::getProfileImage)
-		// 	.containsExactly(null, null, null);
+		// * GIVEN: 이런게 주어졌을 때
+		User receiver = this.createUser("받는 사람");
+		User sender = this.createUser("보낸 사람");
+		Question question = spy(this.createQuestion());
+		when(question.getId()).thenReturn(1L);
+
+		List<Long> pickIds = List.of(1L, 2L, 3L);
+
+		List<Pick> picks = Stream.of(1, 2, 3).map(i -> {
+			Pick pick = spy(this.createPick(sender, receiver, question));
+			when(pick.getQuestion()).thenReturn(question);
+			when(pick.getId()).thenReturn(Long.valueOf(i));
+			return pick;
+		}).toList();
+
+		Pageable pageable = PageRequest.of(0, 10);
+
+		// 이 부분에서 receiver.getId()로 수정합니다.
+		when(pickRepository.findPickIdsByReceiverId(receiver.getId())).thenReturn(pickIds);
+
+		when(pickRepository.findAllByIdsWithDetails(pickIds, pageable)).thenReturn(picks);
+
+		// * WHEN: 이걸 실행하면
+		Page<PickData.Search> searches = pickService.searchReceivePick(receiver, pageable);
+
+		// * THEN: 이런 결과가 나와야 한다
+		Assertions.assertThat(searches).hasSize(3);
+		Assertions.assertThat(searches.getContent().get(0).getId()).isEqualTo(1L);
+		Assertions.assertThat(searches.getContent().get(1).getId()).isEqualTo(2L);
+		Assertions.assertThat(searches.getContent().get(2).getId()).isEqualTo(3L);
+
 	}
 
 	@Test
@@ -206,34 +213,6 @@ class PickServiceTest extends UserSupport {
 			return true;
 		}));
 	}
-
-	// @Test
-	// @DisplayName("픽 인덱스 존재 X 테스트")
-	// void 픽_인덱스_존재_X_테스트() throws Exception {
-	// 	// * GIVEN: 이런게 주어졌을 때
-	// 	int correctId = 1;
-	// 	int incorrectId = 2;
-	// 	User sender = this.createUser("보낸 사람");
-	// 	User receiver = this.createUser("받는 사람");
-	// 	Question question = spy(this.createQuestion());
-	// 	when(question.getId()).thenReturn(1L);
-	//
-	// 	PickData.Create create = new PickData.Create();
-	// 	create.setReceiverId(receiver.getId());
-	// 	create.setQuestionId(question.getId());
-	// 	create.setStatus(PickData.PickStatus.PICKED);
-	// 	create.setIndex(correctId);
-	//
-	// 	when(pickCacheRepository.getIndex(sender.getId())).thenReturn(incorrectId);
-	//
-	// 	// * WHEN: 이걸 실행하면
-	// 	Runnable runnable = () -> pickService.createPick(sender, create);
-	//
-	// 	// * THEN: 이런 결과가 나와야 한다
-	// 	assertThatThrownBy(runnable::run)
-	// 		.isInstanceOf(BaseException.class)
-	// 		.hasMessage(ErrorCode.INVALID_PICK_INDEX.getMessage());
-	// }
 
 	@Test
 	@DisplayName("질문이 없는 경우 테스트")
