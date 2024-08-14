@@ -28,7 +28,7 @@ export interface IUserInfo {
   hints: Array<IHint>;
 }
 
-export interface IEmpty{
+export interface IEmpty {
   success: boolean;
   status: number;
   message: string;
@@ -78,16 +78,7 @@ export interface IPickco {
   pickco: number;
 }
 
-export interface IUserFriend {
-  friend: number;
-}
-
-export interface IUserPick {
-  pick: number;
-}
-
 export interface IUserAttendance {
   streak: number;
   todayChecked: boolean;
 }
-

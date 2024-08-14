@@ -33,8 +33,6 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
     mutationFn: blockCancel,
 
     onSuccess: () => {
-      console.log('유저 차단 해제 성공');
-
       if (step === BlockCancelStep.ALERT) {
         setTimeout(() => {
           queryClient.invalidateQueries({
@@ -52,7 +50,6 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
     mutationFn: blockQuestionCancel,
 
     onSuccess: () => {
-      console.log('질문 차단 해제 성공');
       if (step === BlockCancelStep.ALERT) {
         setTimeout(() => {
           queryClient.invalidateQueries({
@@ -83,7 +80,9 @@ const BlockCancelModal = ({ Id, category }: BlockCancelModalProps) => {
         {step === BlockCancelStep.CHECK && (
           <div>
             <div className="flex justify-center my-12">
-              <DialogDescription className='text-color-000855 text-[16px]'>차단을 해제하시겠습니까?</DialogDescription>
+              <DialogDescription className="text-color-000855 text-[16px]">
+                차단을 해제하시겠습니까?
+              </DialogDescription>
             </div>
             <DialogFooter className="flex items-end">
               <Button

@@ -33,15 +33,11 @@ const DeleteModal = ({ title, userId }: DeleteModalProps) => {
     mutationFn: deleteFriend,
     // 친구 삭제 후 친구 목록 새로 고침
     onSuccess: () => {
-      console.log('친구 삭제 성공');
       queryClient.invalidateQueries({
         queryKey: ['friends'],
       });
     },
-    onError: (error) => {
-      console.log('친구 삭제 실패: ', error
-      );
-    }
+    onError: (error) => {},
   });
 
   const [open, setOpen] = useState<boolean>(false);
@@ -63,13 +59,11 @@ const DeleteModal = ({ title, userId }: DeleteModalProps) => {
       }, 1000);
       return () => clearTimeout(timer);
     }
-
   });
 
   const onUnfollow = () => {
     setStep(DeletelStep.ALERT);
     // 삭제할 userId 넣어주기
-    console.log("삭제: " + userId);
     mutation.mutate(userId);
   };
 
@@ -81,10 +75,8 @@ const DeleteModal = ({ title, userId }: DeleteModalProps) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-        <div className='bg-blue-300 rounded-lg px-2 py-0.5 text-sm text-white'>
-          <DialogTrigger onClick={() => setOpen(true)}>
-            {title}
-          </DialogTrigger>
+        <div className="bg-blue-300 rounded-lg px-2 py-0.5 text-sm text-white">
+          <DialogTrigger onClick={() => setOpen(true)}>{title}</DialogTrigger>
         </div>
         {isModalVisible && (
           <DialogContent className="border rounded-lg bg-[#E9F2FD] mx-2 w-4/5">

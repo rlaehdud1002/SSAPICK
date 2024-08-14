@@ -1,13 +1,12 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import "./firebase-messaging-sw";
 import { RecoilRoot } from "recoil";
 import RecoilNexus from "recoil-nexus";
+import App from "./App";
+import "./firebase-messaging-sw";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(

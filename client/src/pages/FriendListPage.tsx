@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getUserInfo } from 'api/authApi';
 import { getFriendsList } from 'api/friendApi';
 import { IFriend } from 'atoms/Friend.type';
-import { IUserInfo } from 'atoms/User.type';
 import Friend from 'components/FriendListPage/FriendBox';
 import Loading from 'components/common/Loading';
 import BackIcon from 'icons/BackIcon';
@@ -17,7 +15,6 @@ const FriendList = () => {
     queryFn: getFriendsList,
   });
 
-  // console.log(friends);
   const navigate = useNavigate();
 
   if (isLoading) {

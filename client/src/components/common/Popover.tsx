@@ -1,8 +1,4 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
-import { deleteFriend } from 'api/friendApi';
-import BlockModal from 'components/modals/BlockModal';
 import DeleteModal from 'components/modals/DeleteModal';
-import DeleteIcon from 'icons/DeleteIcon';
 import FriendBlockIcon from 'icons/FriendBlockIcon';
 import PointIcon from 'icons/PointIcon';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';

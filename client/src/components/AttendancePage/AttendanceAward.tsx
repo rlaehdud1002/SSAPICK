@@ -1,4 +1,8 @@
-import { DAILY_ATTENDANCE_COIN, TWO_WEEK_ATTENDANCE_COIN, WEEK_ATTENDANCE_COIN } from 'coins/coins';
+import {
+  DAILY_ATTENDANCE_COIN,
+  TWO_WEEK_ATTENDANCE_COIN,
+  WEEK_ATTENDANCE_COIN,
+} from 'coins/coins';
 import AttendanceIcon from 'icons/AttendanceIcon';
 import TrophyIcon from 'icons/TrophyIcon';
 
@@ -13,7 +17,8 @@ const AttendanceAward = () => {
       <div className="flex flex-row">
         <TrophyIcon width={30} height={30} />
         <p className="mx-2">
-          매일 <b className="luckiest_guy">PICKCO {DAILY_ATTENDANCE_COIN}</b>개 지급
+          매일 <b className="luckiest_guy">PICKCO {DAILY_ATTENDANCE_COIN}</b>개
+          지급
         </p>
       </div>
       <div className="flex flex-row">
@@ -27,7 +32,8 @@ const AttendanceAward = () => {
         <TrophyIcon width={30} height={30} />
         <p className="mx-2">
           <b className="luckiest_guy">14</b>일 연속 출석 시{' '}
-          <b className="luckiest_guy">PICKCO {TWO_WEEK_ATTENDANCE_COIN}</b>개 지급
+          <b className="luckiest_guy">PICKCO {TWO_WEEK_ATTENDANCE_COIN}</b>개
+          지급
         </p>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { mmAuthSend } from "api/authApi";
 import DoneButton from "buttons/DoneButton";
+import MMfailModal from "components/modals/MMfailModal";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import AuthInput from "../components/MattermostPage/AuthInput";
 import MattermostIcon from "../icons/MattermostIcon";
-import MMfailModal from "components/modals/MMfailModal";
 
 interface AuthFormm {
   id: string;
@@ -24,7 +24,6 @@ const Mattermost = () => {
       navigate("/infoinsert");
     },
     onError: (error) => {
-      console.log(error);
       setIsModalOpen(true); // 에러 발생 시 모달 열기
     },
   });

@@ -2,7 +2,6 @@ import Received from "components/MessagePage/Received";
 import Send from "components/MessagePage/Send";
 import Alarm from "pages/AlarmPage";
 import AuthCallback from "pages/AuthCallbackPage";
-import CoolTime from "pages/CoolTimePage";
 import DisableDevicePage from "pages/DisableDevicePage";
 import Guide from "pages/GuidePage";
 import Home from "pages/HomePage";

@@ -1,7 +1,7 @@
 import { ISendUser, IUserInfo } from 'atoms/User.type';
 import { atom, selector } from 'recoil';
 import { persistAtom } from './RecoilPersist';
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode';
 
 // 유저 입력 정보
 export const sendUserInfoState = atom<ISendUser>({
@@ -31,13 +31,13 @@ export const accessTokenState = atom<string | undefined>({
 
 export const usernameState = selector<string | undefined>({
   key: 'usernameState',
-  get: ({get}) => {
-    const accessToken = get(accessTokenState)
+  get: ({ get }) => {
+    const accessToken = get(accessTokenState);
     if (accessToken) {
-      return jwtDecode(accessToken).sub
+      return jwtDecode(accessToken).sub;
     }
-  }
-})
+  },
+});
 
 export const firebaseTokenState = atom<string>({
   key: 'firebaseTokenState',

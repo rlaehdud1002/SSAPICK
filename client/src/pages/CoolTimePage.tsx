@@ -1,6 +1,6 @@
+import { useQueryClient } from '@tanstack/react-query';
 import CoolTimeIcon from 'icons/CoolTimeIcon';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface CoolTimeProps {
   endTime: string;
@@ -9,7 +9,6 @@ interface CoolTimeProps {
 const CoolTime = ({ endTime }: CoolTimeProps) => {
   const coolTime = new Date(endTime).getTime();
   const [timeLeft, setTimeLeft] = useState<number>(coolTime);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const updateTimeLeft = () => {
@@ -27,8 +26,12 @@ const CoolTime = ({ endTime }: CoolTimeProps) => {
   const minutes = String(Math.floor((timeLeft / (1000 * 60)) % 60));
   const seconds = String(Math.floor((timeLeft / 1000) % 60));
 
+  const queryClient = useQueryClient();
+
   if (timeLeft <= 0) {
-    navigate('/pick');
+    queryClient.invalidateQueries({
+      queryKey: ['pickInfo'],
+    });
   }
 
   return (
@@ -44,10 +47,10 @@ const CoolTime = ({ endTime }: CoolTimeProps) => {
       <p className="text-[20px] my-2">새로운 질문 준비중</p>
       <div className="flex flex-row items-center text-[12px]">
         {Number(minutes) > 0 && (
-          <p className="luckiest_guy pt-1">{minutes} 분 </p>
+          <p className="luckiest_guy">{minutes}분 </p>
         )}
-        <p className="luckiest_guy ms-1 pt-1">{seconds}</p>초 후에{' '}
-        <p className="luckiest_guy ms-1 pt-1">ssapick</p> 할 수 있어요!
+        <p className="luckiest_guy ms-1">{seconds}</p>초 후에{' '}
+        <p className="luckiest_guy ms-1">ssapick</p> 할 수 있어요!
       </div>
     </div>
   );

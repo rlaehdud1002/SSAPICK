@@ -46,7 +46,6 @@ instance.interceptors.response.use(
       response: { status },
     } = error;
     const originalRequest = config;
-    const isLogin = getRecoil(isLoginState);
 
     // 인증 에러가 아닌 경우 바로 에러 처리
     if (status !== 401) {

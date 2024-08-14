@@ -73,7 +73,6 @@ const WarningDeleteModal = ({
       if (location === 'send') {
         return deleteSendMessage(messageId); // Promise를 반환
       } else if (location === 'received') {
-        console.log('받은 메시지 삭제 method 들어옴');
         return deleteReceivedMessage(messageId); // Promise를 반환
       } else {
         throw new Error('Invalid location');
@@ -96,7 +95,6 @@ const WarningDeleteModal = ({
     if (title === '차단') {
       blockMutatiion.mutate(senderId);
     } else {
-      console.log('메시지 삭제', location);
       deleteMutation.mutate({ messageId, location });
     }
 

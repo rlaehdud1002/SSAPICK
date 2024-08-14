@@ -42,7 +42,7 @@ const AttendanceModal = ({ date, onClose }: AttendanceModalProps) => {
             <span className="bg-[#5F86E9]/70 rounded-lg text-white px-12 py-1 mb-6">
               <b className="luckiest_guy">{date}</b>일 연속 출석 완료!
             </span>
-            <div className='flex flex-row'>
+            <div className="flex flex-row">
               <CoinIcon width={25} height={25} />
               <h3 className="luckiest_guy ml-1 mr-1 pt-1">
                 {date === 7

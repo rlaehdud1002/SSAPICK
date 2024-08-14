@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface AlarmCheckModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,7 +43,8 @@ const AlarmCheckModal = ({
                 <span>사용자가 주위에 다가오면 알림을 보내줍니다!</span>
               ) : (
                 <div>
-                  <span className="luckiest_guy mr-1">PICK</span>알림을 해제합니다
+                  <span className="luckiest_guy mr-1">PICK</span>알림을
+                  해제합니다
                 </div>
               )}
             </DialogDescription>
