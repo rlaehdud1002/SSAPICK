@@ -4,7 +4,6 @@ import PlusDeleteButton from 'buttons/PlusDeleteButton';
 import { Separator } from 'components/ui/separator';
 import BaseImageIcon from 'icons/BaseImageIcon';
 import { Fragment, useEffect, useState } from 'react';
-import { set } from 'react-hook-form';
 
 interface FriendSearchContentProps {
   cohort: number;
@@ -15,7 +14,14 @@ interface FriendSearchContentProps {
   follow?: boolean;
 }
 
-const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profileImage }: FriendSearchContentProps) => {
+const FriendSearchContent = ({
+  name,
+  follow,
+  cohort,
+  classSection,
+  userId,
+  profileImage,
+}: FriendSearchContentProps) => {
   const [isPlus, setIsPlus] = useState<boolean>(!follow);
   const queryClient = useQueryClient();
 
@@ -25,7 +31,6 @@ const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profi
     mutationFn: postAddFriend,
 
     onSuccess: () => {
-      console.log('친구 추가 성공');
       queryClient.invalidateQueries({
         queryKey: ['friends'],
       });
@@ -41,7 +46,6 @@ const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profi
       queryClient.invalidateQueries({
         queryKey: ['friends'],
       });
-      console.log('친구 삭제 성공');
       setIsPlus(true);
     },
   });
@@ -51,14 +55,8 @@ const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profi
   }, [follow]);
 
   const onPlus = () => {
-    {
-      isPlus ?
-        (setIsPlus(false))
-        :
-        (setIsPlus(true))
-    }
-  }
-
+    isPlus ? setIsPlus(false) : setIsPlus(true);
+  };
 
   return (
     <Fragment>
@@ -78,27 +76,25 @@ const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profi
         <div className="flex justify-start w-32">
           {cohort}기 {classSection}반 {name}
         </div>
-        <div className='w-20'>
-
+        <div className="w-20">
           {isPlus ? (
-            <div onClick={() => {
-              onPlus();
-              addMutation.mutate(userId);
-            }}>
+            <div
+              onClick={() => {
+                onPlus();
+                addMutation.mutate(userId);
+              }}
+            >
               <PlusDeleteButton title="팔로우" isDelete={true} />
             </div>
           ) : (
-            <div onClick={
-              () => {
+            <div
+              onClick={() => {
                 onPlus();
                 deleteMutation.mutate(userId);
-              }
-            }>
+              }}
+            >
               <PlusDeleteButton title="언팔로우" />
-
             </div>
-
-            
           )}
         </div>
       </div>
@@ -106,7 +102,5 @@ const FriendSearchContent = ({ name, follow, cohort, classSection, userId, profi
     </Fragment>
   );
 };
-
-
 
 export default FriendSearchContent;

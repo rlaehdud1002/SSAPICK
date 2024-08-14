@@ -3,7 +3,7 @@ import CoinIcon from 'icons/CoinIcon';
 
 import { Button } from 'components/ui/button';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { postMessageSend } from 'api/messageApi';
@@ -80,7 +80,6 @@ const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   } = useForm<MessageForm>();
 
   const onSubmit = (data: MessageForm) => {
-    console.log('ok', data);
     if (step === MessageModalStep.INPUT) {
       setStep(MessageModalStep.CONFIRM);
     } else if (step === MessageModalStep.CONFIRM) {

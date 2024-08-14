@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "components/ui/dialog";
+} from 'components/ui/dialog';
 
 interface MMfailModalProps {
   open: boolean;
@@ -18,9 +18,13 @@ const MMfailModal = ({ open, setOpen }: MMfailModalProps) => {
       {open && (
         <DialogContent className="border rounded-lg bg-white/95 mx-2 w-4/5">
           <DialogHeader>
-            <DialogTitle className="flex justify-start text-red-600">인증 실패</DialogTitle>
+            <DialogTitle className="flex justify-start text-red-600">
+              인증 실패
+            </DialogTitle>
             <DialogDescription className="flex justify-center my-10 items-center text-color-000855">
-              <h3 className="text-center">mm인증에 실패하였습니다. 다시 시도해 주세요.</h3>
+              <h3 className="text-center">
+                mm인증에 실패하였습니다. 다시 시도해 주세요.
+              </h3>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row justify-end">

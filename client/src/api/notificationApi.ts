@@ -7,7 +7,7 @@ export const registerToken = async (token: string): Promise<void> => {
   try {
     const {
       data: { success, data, message },
-    } = await instance.post("/notification/register", {
+    } = await instance.post('/notification/register', {
       token,
     });
     if (!success) {
@@ -15,8 +15,7 @@ export const registerToken = async (token: string): Promise<void> => {
     }
     return data;
   } catch (error) {
-    console.log("토큰 등록 실패", error);
-    throw new Error("토큰 등록 실패");
+    throw new Error('토큰 등록 실패');
   }
 };
 

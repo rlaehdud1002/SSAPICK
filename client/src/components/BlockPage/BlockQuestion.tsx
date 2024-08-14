@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import BlockQuestionContent from './BlockQuestionContent';
-import { IBlock, IBlockQuestion } from 'atoms/Block.type';
+import { IBlockQuestion } from 'atoms/Block.type';
 import { getBlockedQuestionList } from 'api/blockApi';
 import Loading from 'components/common/Loading';
-import { getCategory } from 'api/questionApi';
 
 const BlockQuestion = () => {
   const { data: blockQuestion, isLoading } = useQuery<IBlockQuestion[]>({
     queryKey: ['blockQuestion'],
     queryFn: getBlockedQuestionList,
   });
-  
+
   if (isLoading) {
     return <Loading />;
   }

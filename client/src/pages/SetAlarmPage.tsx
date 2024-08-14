@@ -1,19 +1,19 @@
 import BackIcon from 'icons/BackIcon';
-import SetAlarmIcon from 'icons/SetAlarmIcon';
 import LocationAlarmIcon from 'icons/LocationAlarmIcon';
 import MessageAlarmIcon from 'icons/MessageAlarmIcon';
-import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
 import PickAlarmIcon from 'icons/PickAlarmIcon';
+import QuestionAlarmIcon from 'icons/QuestionAlarmIcon';
+import SetAlarmIcon from 'icons/SetAlarmIcon';
 
 import SetAlarmContent from 'components/SetAlarmPage/SetAlarmContent';
 
-import { Switch } from 'components/ui/switch';
-import { useNavigate } from 'react-router-dom';
-import { IAlarm, IAlarmAll } from 'atoms/Alarm.type';
-import { getAlarm, postAlarm, postAlarmAll } from 'api/alarmApi';
-import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { getAlarm, postAlarm, postAlarmAll } from 'api/alarmApi';
+import { IAlarm, IAlarmAll } from 'atoms/Alarm.type';
 import Loading from 'components/common/Loading';
+import { Switch } from 'components/ui/switch';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SetAlarm = () => {
   const {
@@ -25,7 +25,6 @@ const SetAlarm = () => {
     queryFn: getAlarm,
   });
 
-  console.log('alarmSettings 1 : ', alarmSettings);
 
   const [nearbyAlarm, setNearbyAlarm] = useState(alarmSettings?.nearbyAlarm);
   const [messageAlarm, setMessageAlarm] = useState(alarmSettings?.messageAlarm);
@@ -87,7 +86,6 @@ const SetAlarm = () => {
   };
 
   const handleSwitchAllChange = (value: boolean) => {
-    console.log('Alarm All set value', value);
     setNearbyAlarm(value);
     setMessageAlarm(value);
     setAddQuestionAlarm(value);

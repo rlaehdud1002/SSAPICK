@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMyQuestionRank } from 'api/questionApi';
-import { IPick, IQuestion } from 'atoms/Pick.type';
+import { IQuestion } from 'atoms/Pick.type';
 import Loading from 'components/common/Loading';
 import TrophyIcon from 'icons/TrophyIcon';
 
@@ -13,8 +13,6 @@ const RankedQuestion = () => {
   if (isLoading || !rankQuestion) {
     return <Loading />;
   }
-
-  console.log('rankQuestion', rankQuestion);
 
   const rankColor = ['text-[#FFD700]', 'text-[#D3D3D3]', 'text-[#CD7F32]'];
 

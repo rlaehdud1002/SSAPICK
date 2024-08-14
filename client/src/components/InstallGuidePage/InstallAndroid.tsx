@@ -22,7 +22,9 @@ const InstallAndroid = () => {
             width={200}
             className="rounded-2xl mx-5"
           />
-          <span className="text-center my-3 text-white">홈 화면에 추가 버튼 클릭!</span>
+          <span className="text-center my-3 text-white">
+            홈 화면에 추가 버튼 클릭!
+          </span>
         </div>
         <div className="flex flex-col">
           <img

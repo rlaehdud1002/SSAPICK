@@ -1,10 +1,9 @@
-import RankContent from 'components/RankingPage/RankContent';
-import { getRankList } from 'api/rankApi';
 import { useQuery } from '@tanstack/react-query';
+import { getRankList } from 'api/rankApi';
 import { IRank, IRankList } from 'atoms/Rank.type';
-import Loading from 'components/common/Loading';
+import RankContent from 'components/RankingPage/RankContent';
 import RankUser from 'components/RankingPage/RankUser';
-import TrophyIcon from 'icons/TrophyIcon';
+import Loading from 'components/common/Loading';
 
 const rankName = [
   'topMessageReceivers',
@@ -20,8 +19,6 @@ const Ranking = () => {
     queryKey: ['rank'],
     queryFn: async () => await getRankList(),
   });
-
-  console.log('rankList', rankList, isLoading);
 
   if (isLoading || !rankList) {
     return <Loading />;

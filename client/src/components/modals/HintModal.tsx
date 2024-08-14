@@ -32,7 +32,6 @@ const HintModal = ({ title, pickId, pickco }: HintModalProps) => {
 
     // 힌트 조회 성공 시
     onSuccess: (data) => {
-      console.log('hint', data);
       setHint(data);
     },
   });

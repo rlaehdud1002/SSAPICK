@@ -1,6 +1,6 @@
-import LocationGuide from 'components/InstallGuidePage/LocationGuide';
-import InstallIOS from 'components/InstallGuidePage/InstallIOS';
 import InstallAndroid from 'components/InstallGuidePage/InstallAndroid';
+import InstallIOS from 'components/InstallGuidePage/InstallIOS';
+import LocationGuide from 'components/InstallGuidePage/LocationGuide';
 
 const InstallGuidePage = () => {
   return (

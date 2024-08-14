@@ -29,10 +29,9 @@ const SignoutModal = () => {
   const nav = useNavigate();
 
   const mutation = useMutation({
-    mutationKey: ["signout"],
+    mutationKey: ['signout'],
     mutationFn: signOut,
     onSuccess: () => {
-      console.log("123123")
       if (step === SignoutStep.ALERT) {
         setTimeout(() => {
           setOpen(false);

@@ -2,7 +2,7 @@ interface UserPickIconProps {
   gen?: string;
   width: number;
   height: number;
-  className? : string;
+  className?: string;
 }
 
 const UserPickIcon = ({ gen, width, height, className }: UserPickIconProps) => {
