@@ -48,6 +48,12 @@ public class PickCacheRepository {
 		hashOperations.getOperations().expire(key, Duration.ofDays(1));
 	}
 
+	public LocalDateTime getEndTime(Long userId) {
+		String key = PICK_CACHE + userId;
+
+		return LocalDateTime.parse(hashOperations.get(key, COOL_TIME_KEY));
+	}
+
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean lock(Long userId) {
 		log.debug("run lock code");
