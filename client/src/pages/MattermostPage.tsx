@@ -53,7 +53,7 @@ const Mattermost = () => {
             사항입니다.{" "}
           </span>
           <AuthInput
-            title="매터모스트 아이디"
+            title=" 아이디"
             type="text"
             placeholder="아이디를 입력해주세요."
             register={register("id", {
@@ -61,7 +61,7 @@ const Mattermost = () => {
             })}
           />
           <AuthInput
-            title="매터모스트 비밀번호"
+            title=" 비밀번호"
             type="password"
             placeholder="비밀번호를 입력해주세요."
             register={register("password", {
