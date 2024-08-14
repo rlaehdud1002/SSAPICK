@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
-import AlarmIcon from '../../icons/AlarmIcon';
-import Logo from '../../icons/Logo';
+import { Link } from "react-router-dom";
+import AlarmIcon from "../../icons/AlarmIcon";
+import Logo from "../../icons/Logo";
+import MoveGuide from "components/GuidePage/MoveGuide";
 
 const Header = () => {
   return (
@@ -8,9 +9,16 @@ const Header = () => {
       <Link to="/home">
         <Logo />
       </Link>
-      <Link to="/alarm">
-        <AlarmIcon />
-      </Link>
+      <div className="flex">
+        <div>
+          <MoveGuide />
+        </div>
+        <div className="mx-4">
+          <Link to="/alarm">
+            <AlarmIcon />
+          </Link>
+        </div>
+      </div>
     </header>
   );
 };
