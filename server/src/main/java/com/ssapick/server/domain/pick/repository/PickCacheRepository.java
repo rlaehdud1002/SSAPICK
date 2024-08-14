@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PickCacheRepository {
     public static final int PASS_BLOCK_LIMIT = 5;
-	public static final int COOL_TIME = 1;
+	public static final int COOL_TIME = 15;
 
 	public static final Long LOCK_TIMEOUT = 300L;
 	public static final String PICK_LOCK = "pick:lock:";
