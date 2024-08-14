@@ -101,7 +101,7 @@ const Response = ({ picks }: ResponseProps) => {
                         onAlarmUpdate={handleAlarmUpdate}
                       />
                     </div>
-                    <h3 className="mx-3 text-color-000855">
+                    <h3 className="mx-3 text-color-000855 noto-sans">
                       11기 {pick.sender.campusSection}반
                     </h3>
                   </div>

@@ -16,6 +16,7 @@ import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
 import Loading from 'components/common/Loading';
 import NoFourFriends from 'components/PickPage/NoFourFriends';
+import CoolTime from 'pages/CoolTimePage';
 
 const Pick = () => {
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
@@ -122,7 +123,7 @@ const Pick = () => {
   return (
     <div className="relative">
       {pickInfo.cooltime ? (
-        <Navigate to="/cooltime" />
+        <CoolTime endTime={pickInfo.endTime} />
       ) : (
         pickFriends &&
         question[pickInfo.index] && (
