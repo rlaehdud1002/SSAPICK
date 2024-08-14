@@ -8,7 +8,7 @@ const FriendGuide = () => {
           <p className="text-balance">(같은 반은 기본적으로 친구 관계입니다!)</p>
         </div>
         <div className="flex justify-center my-5">
-          <img width={200} src="icons/guide/FriendsList.png" alt="Pick" />
+          <img width={200} height={400} src="icons/guide/FriendsList.png" alt="Pick" />
         </div>
       </div>
 
@@ -19,7 +19,7 @@ const FriendGuide = () => {
       </div>
 
       <div className="flex justify-center mb-5">
-        <img width={200} src="icons/guide/SearchFriends.png" alt="Pick" />
+        <img width={200} height={400} src="icons/guide/SearchFriends.png" alt="Pick" />
       </div>
     </div>
   );

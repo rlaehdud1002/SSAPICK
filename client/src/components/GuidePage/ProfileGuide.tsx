@@ -11,7 +11,7 @@ const ProfileGuide = () => {
           <p className="whitespace-normal mt-5">하단의 메뉴를 통해</p>
           <p className="whitespace-normal">다양한 페이지로 이동해보세요!</p>
         </div>
-        <img width={200} src="icons/guide/Profile.png" alt="" />
+        <img width={200} height={400} src="icons/guide/Profile.png" alt="" />
       </div>
     </div>
   );
