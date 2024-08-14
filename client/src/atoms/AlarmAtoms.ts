@@ -12,3 +12,8 @@ export const newAlarmState = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom]
 });
+
+export const isMessageModalOpenState = atom<boolean>({
+  key: "isMessageModalOpenState",
+  default: false,
+});

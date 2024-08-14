@@ -23,6 +23,8 @@ import {
 
 import { IPick } from 'atoms/Pick.type';
 import { MESSAGE_COIN } from 'coins/coins';
+import { useRecoilState } from 'recoil';
+import { isMessageModalOpenState } from 'atoms/AlarmAtoms';
 
 enum MessageModalStep {
   INPUT, // 쪽지 입력
@@ -44,7 +46,7 @@ interface MessageModalProps {
 
 const MessageModal = ({ pick, pickco, onMessageSent }: MessageModalProps) => {
   const [step, setStep] = useState<MessageModalStep>(MessageModalStep.INPUT);
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useRecoilState<boolean>(isMessageModalOpenState);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(true);
   const [message, setMessage] = useState<boolean>(pick.messageSend);
 

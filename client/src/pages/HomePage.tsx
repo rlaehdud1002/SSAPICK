@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { getAttendance, postAttendance } from 'api/attendanceApi';
 import { getReceivePick } from 'api/pickApi';
+import { isMessageModalOpenState } from 'atoms/AlarmAtoms';
 import { IPaging, IPick } from 'atoms/Pick.type';
 import { newPickRefreshState } from 'atoms/PickAtoms';
 import Initial from 'components/MainPage/Initial';
@@ -13,7 +14,7 @@ import Response from 'components/MainPage/Response';
 import Loading from 'components/common/Loading';
 import AttendanceModal from 'components/modals/AttendanceModal';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Home = () => {
   const {
@@ -41,7 +42,7 @@ const Home = () => {
   const [streak, setStreak] = useState(0);
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
-  const [hasCheckedAttendance, setHasCheckedAttendance] = useState(false);
+  const isMessageModal = useRecoilValue(isMessageModalOpenState);
 
   const { data: attendance, isLoading: isLoadingAttendance } = useQuery({
     queryKey: ['attendance'],
@@ -51,10 +52,12 @@ const Home = () => {
 
   useEffect(() => {
     if (newPickRefresh) {
-      refetch();
-      setNewPickRefresh(false);
+      if (!isMessageModal) {
+        refetch();
+        setNewPickRefresh(false);
+      }
     }
-  }, [newPickRefresh, setNewPickRefresh, refetch])
+  }, [isMessageModal, newPickRefresh, setNewPickRefresh, refetch])
 
   const queryClient = useQueryClient();
 
