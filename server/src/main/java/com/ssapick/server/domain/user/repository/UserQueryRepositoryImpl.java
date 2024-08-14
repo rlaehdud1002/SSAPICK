@@ -66,12 +66,15 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 											.from(userBan)
 											.where(userBan.fromUser.id.eq(userId))
 							),
-							user.id.ne(userId),
 						user.id.ne(userId),
-						user.profile.campus.eq(
-							JPAExpressions.select(user.profile.campus)
+						user.profile.campus.name.eq(
+							JPAExpressions.select(user.profile.campus.name)
 								.from(user)
-								.where(user.id.eq(userId))),
+								.leftJoin(user.profile, profile)
+								.leftJoin(user.profile.campus, campus)
+								.where(user.id.eq(userId))
+						),
+
 						user.profile.cohort.stringValue()
 							.concat("기 ")
 							.concat(user.profile.campus.section.stringValue())
@@ -102,9 +105,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 						.where(userBan.fromUser.id.eq(userId))
 				),
 				user.id.ne(userId),
-				user.profile.campus.eq(
-					JPAExpressions.select(user.profile.campus)
+				user.profile.campus.name.eq(
+					JPAExpressions.select(user.profile.campus.name)
 						.from(user)
+						.leftJoin(user.profile, profile)
+						.leftJoin(user.profile.campus, campus)
 						.where(user.id.eq(userId))
 				),
 				user.profile.cohort.stringValue().concat("기 " + user.profile.campus.section.stringValue() + "반 ").concat(user.name) .like("%" + keyword + "%")
