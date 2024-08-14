@@ -1,13 +1,13 @@
-const Install = () => {
+const InstallIOS = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <span className="luckiest_guy text-color-5F86E9 text-6xl my-16">
-        INSTALL GUIDE
+        INSTALL GUIDE - IOS
       </span>
       <div className="flex flex-row items-center">
         <div className="flex flex-col">
           <img
-            src="images\splash\guide1.png"
+            src="images/splash/guide1.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -16,7 +16,7 @@ const Install = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide2.png"
+            src="images/splash/guide2.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -27,7 +27,7 @@ const Install = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide3.png"
+            src="images/splash/guide3.png"
             alt="noimage"
             width={200}
             className="rounded-2xl mx-5"
@@ -36,7 +36,7 @@ const Install = () => {
         </div>
         <div className="flex flex-col">
           <img
-            src="images\splash\guide4.png"
+            src="images/splash/guide4.png"
             alt="noimage"
             width={150}
             className="rounded-2xl mx-5"
@@ -48,4 +48,4 @@ const Install = () => {
   );
 };
 
-export default Install;
+export default InstallIOS;
