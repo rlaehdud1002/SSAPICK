@@ -26,9 +26,13 @@ const Login = () => {
     <div className="flex flex-col  items-center mt-36">
       <LoginIcon />
       <span className="luckiest_guy text-color-5F86E9 text-4xl mt-10 mb-20">SSAPICK</span>
-      <MoveGuide />
-      <KakaoButton />
-      <GoogleButton />
+      <div className="mt-10">
+        <MoveGuide />
+      </div>
+      <div className="mt-5">
+        <KakaoButton />
+      </div>
+      {/* <GoogleButton /> */}
     </div>
   );
 };
