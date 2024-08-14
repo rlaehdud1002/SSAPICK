@@ -37,7 +37,7 @@ const ModiUserAddInfo = () => {
     mutationFn: UserSend,
 
     onSuccess: () => {
-      navigate(-1);
+      navigate('/profile');
       setSendUserInfo((prev) => {
         return {
           ...prev,
@@ -117,10 +117,8 @@ const ModiUserAddInfo = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-      <div className="flex items-center ml-4">
-        <div onClick={goToBack}>
-          <BackIcon />
-        </div>
+      <div className="flex items-center ml-4 cursor-pointer" onClick={goToBack}>
+        <BackIcon />
         <span className="ml-2">추가 정보 수정</span>
       </div>
       <div className="flex flex-col my-5">
