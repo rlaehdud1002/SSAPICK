@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteReceivedMessage, deleteSendMessage } from 'api/messageApi';
 import ResultCheckModal from 'components/modals/ResultCheckModal';
-import DeleteIcon from 'icons/DeleteIcon';
-import WarningIcon from 'icons/WarningIcon';
 import { Button } from 'components/ui/button';
 
 import {
@@ -15,6 +13,8 @@ import {
   DialogFooter,
 } from 'components/ui/dialog';
 import { blockUser } from 'api/blockApi';
+import WarningIcon from 'icons/WarningIcon';
+import DeleteIcon from 'icons/DeleteIcon';
 
 enum WarningDeleteStep {
   CHECK,
@@ -106,11 +106,11 @@ const WarningDeleteModal = ({
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
       <DialogTrigger onClick={() => setOpen(true)}>
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center">
           {title === '차단' ? (
-            <WarningIcon width={24} height={24} className="mr-3 mb-3" />
+            <WarningIcon className="mr-3" />
           ) : (
-            <DeleteIcon width={24} height={24} className="mr-3" />
+            <DeleteIcon className="mr-3" />
           )}
           <span>{title}</span>
         </div>
@@ -144,7 +144,13 @@ const WarningDeleteModal = ({
             </div>
           )}
           {step === WarningDeleteStep.ALERT && (
-            <ResultCheckModal content={title === '차단' ? "쪽지 차단이 완료되었습니다." : "쪽지 삭제가 완료되었습니다."} />
+            <ResultCheckModal
+              content={
+                title === '차단'
+                  ? '쪽지 차단이 완료되었습니다.'
+                  : '쪽지 삭제가 완료되었습니다.'
+              }
+            />
           )}
         </DialogContent>
       )}
