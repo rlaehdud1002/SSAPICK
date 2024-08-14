@@ -147,7 +147,7 @@ class UserRepositoryTest extends TestDatabaseContainer {
 
 
         Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(content.size()).isEqualTo(2);
+        Assertions.assertThat(content.size()).isEqualTo(1);
     }
     @Test
     @DisplayName("빈_키워드로 유저를 검색하면 전체 조회")
@@ -160,7 +160,7 @@ class UserRepositoryTest extends TestDatabaseContainer {
 
 
         Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(content.size()).isEqualTo(2);
+        Assertions.assertThat(content.size()).isEqualTo(1);
     }
 
     @Test

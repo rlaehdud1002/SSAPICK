@@ -67,6 +67,11 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 											.where(userBan.fromUser.id.eq(userId))
 							),
 							user.id.ne(userId),
+						user.id.ne(userId),
+						user.profile.campus.eq(
+							JPAExpressions.select(user.profile.campus)
+								.from(user)
+								.where(user.id.eq(userId))),
 						user.profile.cohort.stringValue()
 							.concat("기 ")
 							.concat(user.profile.campus.section.stringValue())
