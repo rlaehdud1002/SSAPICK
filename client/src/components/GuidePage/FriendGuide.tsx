@@ -1,25 +1,32 @@
+import { Carousel, CarouselContent, CarouselItem } from "components/ui/carousel";
+
 const FriendGuide = () => {
   return (
-    <div className="flex flex-col items-center my-10 p-6 bg-gray-100/50 rounded-lg shadow-lg max-w-full min-w-full px-4">
-      <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">팔로우</h1>
+    <div className="flex flex-col items-center my-10 max-w-full min-w-full px-4">
       <div className="flex">
-        <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center mt-24">
-          <p className="text-balance">내 친구 목록을 볼수있습니다! </p>
-          <p className="text-balance">(같은 반은 기본적으로 친구 관계입니다!)</p>
-        </div>
-        <div className="flex justify-center my-5">
-          <img width={200} height={400} src="icons/guide/FriendsList.png" alt="Pick" />
-        </div>
-      </div>
+        <div className="flex min-w-[140px] flex-col justify-center items-center space-y-1 text-gray-700 text-center">
+          <p className="text-pretty text-xs">나의 친구들을</p>
+          <p className="text-pretty text-xs pb-4">확인해보세요.</p>
 
-      <div className="flex flex-col items-center mt-10 my-5 space-y-2 text-gray-700 text-center">
-        <p className="whitespace-normal text-xl my-5 font-bold text-[#5f86e9]">
-          추천 친구 / 친구 검색
-        </p>
-      </div>
+          <p className="text-pretty text-xs">같은 반 학우들은</p>
+          <p className="text-pretty text-xs pb-4">반 친구로 추가됩니다.</p>
 
-      <div className="flex justify-center mb-5">
-        <img width={200} height={400} src="icons/guide/SearchFriends.png" alt="Pick" />
+          <p className="text-pretty text-xs">내가 알만한 친구 추천과</p>
+          <p className="text-pretty text-xs">키워드를 검색하여</p>
+          <p className="text-pretty text-xs pb-4">친구를 추가하세요!</p>
+        </div>
+        <Carousel>
+          <CarouselContent>
+            <CarouselItem className="flex justify-center">
+            <img width={200} height={400} src="icons/guide/FriendsList.png" alt="Pick" />
+            </CarouselItem>
+            <CarouselItem className="flex justify-center">
+            <img width={200} height={400} src="icons/guide/SearchFriends.png" alt="Pick" />
+            </CarouselItem>
+          </CarouselContent>
+          {/* <CarouselPrevious />
+        <CarouselNext /> */}
+        </Carousel>
       </div>
     </div>
   );

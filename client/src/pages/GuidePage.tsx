@@ -27,8 +27,8 @@ const Guide = () => {
       {/* 친구 찾기 */}
       <FriendGuide />
       {/* 출석 */}
-      <AttendenceGuide />
       <AlarmGuide />
+      <AttendenceGuide />
       <ProfileGuide />
       {/* 로그인 페이지 이동 버튼 */}
       <MoveLoginPage />

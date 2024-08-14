@@ -1,19 +1,20 @@
 const ProfileGuide = () => {
   return (
-    <div className="flex flex-col items-center my-10 p-6 min-w-full bg-gray-100/50 rounded-lg shadow-lg max-w-full px-4">
-      <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">마이페이지</h1>
+    <div className="flex flex-col items-center min-w-full max-w-full px-4">
       <div className="flex">
-        <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center mt-20">
-          <p className="whitespace-normal">내가 입력한 정보를 확인하고,</p>
-          <p className="whitespace-normal mb-5">
-            보유한 픽코의 개수, 지목받은 수, 팔로우 수까지 확인!
-          </p>
-          <p className="whitespace-normal mt-5">하단의 메뉴를 통해</p>
-          <p className="whitespace-normal">다양한 페이지로 이동해보세요!</p>
+      <img width={200} height={400} src="icons/guide/Profile.png" alt="" />
+        <div className="flex flex-col items-center space-y-1 text-gray-700 text-center justify-center mx-2">
+          <p className="text-pretty text-xs">내 개인 정보 수정과</p>
+          <p className="text-pretty text-xs">여러 싸픽 내 정보 확인</p>
+          <p className="text-pretty text-xs pb-4">다양한 설정 관리까지!</p>
+
+          <p className="text-pretty text-xs">마이 페이지에서</p>
+          <p className="text-pretty text-xs">한번에 처리하세요!</p>
         </div>
-        <img width={200} height={400} src="icons/guide/Profile.png" alt="" />
+        
       </div>
     </div>
   );
 };
 export default ProfileGuide;
+

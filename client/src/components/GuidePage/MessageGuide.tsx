@@ -8,14 +8,17 @@ import {
 
 const MessageGuide = () => {
   return (
-    <div className="flex flex-col items-center my-10 p-6 bg-gray-100/50 rounded-lg shadow-lg max-w-full min-w-full px-4">
-      <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">쪽지</h1>
+    <div className="flex flex-col items-center my-10 max-w-full min-w-full px-4">
       <div className="flex">
-        <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center mx-7 mt-24">
-          <p className="whitespace-normal">메세지를 보낼 수 있고 받을 수 있습니다!</p>
-          <p className="whitespace-normal">(메세지에는 답장이 불가 합니다 ㅠㅠ)</p>
+        <div className="flex min-w-[140px] flex-col justify-center items-center space-y-1 text-gray-700 text-center mx-2">
+          <p className="text-pretty text-xs">힌트이외에도</p>
+          <p className="text-pretty text-xs">쪽지를 보내면서</p>
+          <p className="text-pretty text-xs pb-10">알아갈 수 있습니다.</p>
+
+          <p className="text-pretty text-xs">쪽지에 답장은</p>
+          <p className="text-pretty text-xs">할 수 없습니다.</p>
         </div>
-        <Carousel className="my-5">
+        <Carousel>
           <CarouselContent>
             <CarouselItem className="flex justify-center">
               <img width={200} height={400} src="icons/guide/Message.png" alt="Pick" />

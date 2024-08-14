@@ -8,15 +8,15 @@ import {
 
 const AlarmGuide = () => {
   return (
-    <div className="flex flex-col items-center my-10 p-6 min-w-full bg-gray-100/50 rounded-lg shadow-lg max-w-full px-4">
-      <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">알림</h1>
+    <div className="flex flex-col items-center min-w-full max-w-full px-4">
       <div className="flex">
-        <div className="my-5">
+        <div>
           <img width={200} height={400} src="icons/guide/Alarm.png" alt="" />
         </div>
-        <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center mt-24">
-          <p className="whitespace-normal">상단의 종모양 아이콘을 클릭하면,</p>
-          <p className="whitespace-normal">나에게 오는 모든 알림을 확인 할 수 있어요</p>
+        <div className="flex min-w-[140px] flex-col items-center space-y-1 text-gray-700 text-center justify-center mx-2">
+          <p className="text-pretty text-xs">헤더의 종을 누르면 </p>
+          <p className="text-pretty text-xs">지금까지 나에게 온</p>
+          <p className="text-pretty text-xs">알람을 확인할 수 있어요!</p>
         </div>
       </div>
     </div>
