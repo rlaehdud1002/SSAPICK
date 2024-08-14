@@ -52,11 +52,6 @@ public class S3Service {
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void upload(S3UploadEvent event) {
-		String profileImage = event.getProfile().getProfileImage();
-		if (Objects.nonNull(profileImage)) {
-			this.deleteImageFromS3(profileImage);
-		}
-
 		if (event.getFile().isEmpty() || Objects.isNull(event.getFile().getOriginalFilename())) {
 			throw new BaseException(ErrorCode.EMPTY_FILE);
 		}
@@ -64,6 +59,11 @@ public class S3Service {
 		CompletableFuture<String> future = CompletableFuture.completedFuture(this.uploadImage(event.getFile()));
 		event.getProfile().updateProfileImage(future.join());
 		profileRepository.save(event.getProfile());
+
+		String profileImage = event.getProfile().getProfileImage();
+		if (Objects.nonNull(profileImage)) {
+			this.deleteImageFromS3(profileImage);
+		}
 	}
 
 	public void deleteImageFromS3(String imageAddress) {
