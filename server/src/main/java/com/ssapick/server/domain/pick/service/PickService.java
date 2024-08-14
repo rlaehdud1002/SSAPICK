@@ -103,16 +103,16 @@ public class PickService {
 
 				User receiver = em.getReference(User.class, create.getReceiverId());
 				Pick pick = pickRepository.save(Pick.of(sender, receiver, question));
-//				publisher.publishEvent(
-//					FCMData.NotificationEvent.of(
-//							NotificationType.PICK,
-//							sender,
-//							receiver,
-//							pick.getId(),
-//							"누군가가 당신을 선택했어요!",
-//						    pickEventMessage(question.getContent()),
-//							null
-//                ));
+				publisher.publishEvent(
+					FCMData.NotificationEvent.of(
+							NotificationType.PICK,
+							sender,
+							receiver,
+							pick.getId(),
+							"누군가가 당신을 선택했어요!",
+						    pickEventMessage(question.getContent()),
+							null
+               ));
 				publisher.publishEvent(new PickcoEvent(sender, PickcoLogType.PICK, PICK_COIN));
 			}
 			case PASS -> {
