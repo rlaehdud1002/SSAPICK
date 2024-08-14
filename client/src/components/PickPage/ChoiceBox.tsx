@@ -4,7 +4,7 @@ import BaseImageIcon from 'icons/BaseImageIcon';
 
 interface ChoiceProps {
   isTouchDisabled: boolean;
-  friend: IFriend;
+  friend: IFriend | undefined;
   questionId: number;
   userPick: (data: IPickCreate) => void;
 }
@@ -16,7 +16,7 @@ const Choice = ({
   userPick,
 }: ChoiceProps) => {
   const handlePick = () => {
-    if (!isTouchDisabled) {
+    if (!isTouchDisabled && friend) {
       userPick({
         receiverId: friend.userId,
         questionId: questionId,
@@ -32,7 +32,7 @@ const Choice = ({
       }`}
       onClick={handlePick}
     >
-      {friend.profileImage ? (
+      {friend?.profileImage ? (
         <img
           src={friend.profileImage}
           alt="profileImage"
@@ -48,7 +48,7 @@ const Choice = ({
         />
       )}
 
-      <p className="pt-2 text-sm">{friend.name}</p>
+      <p className="pt-2 text-sm">{friend?.name}</p>
     </div>
   );
 };
