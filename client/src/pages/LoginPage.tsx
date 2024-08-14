@@ -1,13 +1,13 @@
-import GoogleButton from 'buttons/GoogleButton';
-import KakaoButton from 'buttons/KakaoButton';
-import { useCookies } from 'react-cookie';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import LoginIcon from '../icons/LoginIcon';
-import { useEffect } from 'react';
-import { refresh } from 'api/authApi';
-import { useSetRecoilState } from 'recoil';
-import { accessTokenState } from 'atoms/UserAtoms';
-import MoveGuide from 'components/GuidePage/MoveGuide';
+import GoogleButton from "buttons/GoogleButton";
+import KakaoButton from "buttons/KakaoButton";
+import { useCookies } from "react-cookie";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import LoginIcon from "../icons/LoginIcon";
+import { useEffect } from "react";
+import { refresh } from "api/authApi";
+import { useSetRecoilState } from "recoil";
+import { accessTokenState } from "atoms/UserAtoms";
+import MoveGuide from "components/GuidePage/MoveGuide";
 
 const Login = () => {
   const setAccessToken = useSetRecoilState(accessTokenState);
@@ -25,12 +25,10 @@ const Login = () => {
   return (
     <div className="flex flex-col  items-center mt-36">
       <LoginIcon />
-      <span className="luckiest_guy text-color-5F86E9 text-4xl mt-10 mb-20">
-        SSAPICK
-      </span>
+      <span className="luckiest_guy text-color-5F86E9 text-4xl mt-10 mb-20">SSAPICK</span>
       <MoveGuide />
       <KakaoButton />
-      <GoogleButton />
+      {/* <GoogleButton /> */}
     </div>
   );
 };
