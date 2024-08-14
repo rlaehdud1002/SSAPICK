@@ -52,12 +52,10 @@ public class FCMService {
                 ).build();
         try {
             String fcmId = null;
-            fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
-//            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
-//                log.debug("firebase token: {}", message);
-//                fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
-//            }
-//            fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
+            if (isAlarmAvailable(notificationEvent.getReceiver(), notificationEvent.getType())) {
+                log.debug("firebase token: {}", message);
+                fcmId = FirebaseMessaging.getInstance().sendAsync(message).get();
+            }
 
             notificationRepository.save(Notification.createNotification(
                     notificationEvent.getReceiver(),
