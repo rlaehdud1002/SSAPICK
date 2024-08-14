@@ -60,11 +60,6 @@ public class QuestionService {
      * @return
      */
     public List<QuestionData.Search> searchQuestions() {
-        // List<Question> all = questionRepository.findQuestions();
-        // return all.stream()
-        //         .map(QuestionData.Search::fromEntity)
-        //         .toList();
-
         return questionCacheRepository.findAll();
     }
 

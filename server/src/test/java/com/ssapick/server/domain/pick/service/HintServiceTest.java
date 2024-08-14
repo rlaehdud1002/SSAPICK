@@ -75,8 +75,9 @@ class HintServiceTest extends HintServiceTestSupport {
 	// 	// then
 	// 	// 첫글자가 X로 시작하는지 확인
 	// 	assertThat(findHint.charAt(0)).isEqualTo('X');
-	//
 	// }
+
+
 	//
 	// @Test
 	// @WithMockUser
