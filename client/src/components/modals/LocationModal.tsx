@@ -26,7 +26,6 @@ const LocationModal = ({ profileImage, username }: LocationModalProps) => {
     mutationKey: ['select'],
     mutationFn: selectFriends,
     onSuccess: () => {
-      console.log('내 주변 유저 클릭 성공');
       setTimeout(() => {
         queryClient.invalidateQueries({
           queryKey: ['location'],

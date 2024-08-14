@@ -20,7 +20,7 @@ public class RankingScheduler {
         updateRankingData();
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void updateRankingData() {
         cachedRankingData = rankingService.getAllRanking();
     }

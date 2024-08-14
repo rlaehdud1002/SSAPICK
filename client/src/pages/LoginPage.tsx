@@ -1,13 +1,10 @@
-import GoogleButton from "buttons/GoogleButton";
-import KakaoButton from "buttons/KakaoButton";
-import { useCookies } from "react-cookie";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import LoginIcon from "../icons/LoginIcon";
-import { useEffect } from "react";
 import { refresh } from "api/authApi";
-import { useSetRecoilState } from "recoil";
 import { accessTokenState } from "atoms/UserAtoms";
+import KakaoButton from "buttons/KakaoButton";
 import MoveGuide from "components/GuidePage/MoveGuide";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
+import LoginIcon from "../icons/LoginIcon";
 
 const Login = () => {
   const setAccessToken = useSetRecoilState(accessTokenState);

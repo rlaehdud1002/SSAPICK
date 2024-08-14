@@ -69,7 +69,6 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
 
-    //Jackson에 LocalDateTime을 직렬화/역직렬화할 수 있는 모듈을 추가
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
@@ -115,9 +114,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'com.google.code.gson:gson:2.11.0'
     testImplementation 'org.projectlombok:lombok'
-
-    // Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
 
     // Feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'

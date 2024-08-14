@@ -1,5 +1,3 @@
-// import { KAKAO_AUTH_URL } from "api/clientApi";
-
 import { KAKAO_AUTH_URL } from 'api/clientApi';
 
 const KakaoButton = () => {

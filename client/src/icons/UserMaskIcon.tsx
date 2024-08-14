@@ -36,9 +36,8 @@ const UserMaskIcon = ({
   const handleClick = async () => {
     try {
       patchPickPutation.mutate(pickId);
-      console.log('픽 ID의 알람이 업데이트되었습니다:', pickId);
     } catch (error) {
-      console.error('픽 ID의 알람을 업데이트하지 못했습니다:', pickId, error);
+      console.error('픽 ID의 알람을 업데이트하지 못했습니다:');
     }
   };
 

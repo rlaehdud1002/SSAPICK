@@ -25,6 +25,9 @@ import { messaging } from "firebase-messaging-sw";
 import { registerToken } from "api/notificationApi";
 import { setRecoil } from "recoil-nexus";
 
+import { isBrowser, isMobile } from "react-device-detect";
+import DisableDevicePage from "pages/DisableDevicePage";
+
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
@@ -68,14 +71,15 @@ function App() {
       location !== "404" && // 404 페이지
       location !== "infoinsert" && // 추가 정보 입력 페이지
       location !== "install" && // 설치 가이드 페이지
-      location !== "guide" // 가이드 페이지
+      location !== "guide" && // 가이드 페이지
+      location !== "disabledevice" // 비활성화된 디바이스 페이지
     );
   };
 
   useEffect(() => {
     const checkValidity = async () => {
       try {
-        if (location === "splash" || location === "guide" || location === "install") {
+        if (isBrowser || location === "splash" || location === "guide" || location === "install") {
           return;
         }
         if (isValid) return;
@@ -107,6 +111,20 @@ function App() {
     };
     checkValidity();
   }, [isAuthenticated, isValid, location, navigate, setValidState]);
+
+  useEffect(() => {
+    if (isBrowser && location !== "splash" && location !== "install") {
+      navigate("/splash");
+    }
+    if (isMobile) {
+      if (window.innerWidth > 430) {
+        navigate("/disabledevice");
+      }
+      if (location === "splash" || location === "install") {
+        navigate("/home");
+      }
+    }
+  }, [location, navigate]);
 
   return (
     <QueryClientProvider client={queryClient}>

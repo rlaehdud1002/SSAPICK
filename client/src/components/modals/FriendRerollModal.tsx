@@ -53,7 +53,7 @@ const FriendRerollModal = ({ handleShuffle }: FriendRerollModalProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <div className="flex justify-center items-center space-x-2 bg-[#5F86E9]/50 rounded-full text-white px-4 py-1">
-          <ShuffleIcon className="cursor-pointer" location='pick' />
+          <ShuffleIcon className="cursor-pointer" location="pick" />
           <h1>친구 목록 셔플</h1>
         </div>
       </DialogTrigger>

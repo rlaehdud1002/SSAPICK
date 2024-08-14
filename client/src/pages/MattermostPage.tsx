@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { mmAuthSend } from "api/authApi";
 import DoneButton from "buttons/DoneButton";
+import MMfailModal from "components/modals/MMfailModal";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import AuthInput from "../components/MattermostPage/AuthInput";
 import MattermostIcon from "../icons/MattermostIcon";
-import MMfailModal from "components/modals/MMfailModal";
 
 interface AuthFormm {
   id: string;
@@ -24,7 +24,6 @@ const Mattermost = () => {
       navigate("/infoinsert");
     },
     onError: (error) => {
-      console.log(error);
       setIsModalOpen(true); // 에러 발생 시 모달 열기
     },
   });
@@ -53,7 +52,7 @@ const Mattermost = () => {
             사항입니다.{" "}
           </span>
           <AuthInput
-            title="매터모스트 아이디"
+            title=" 아이디"
             type="text"
             placeholder="아이디를 입력해주세요."
             register={register("id", {
@@ -61,7 +60,7 @@ const Mattermost = () => {
             })}
           />
           <AuthInput
-            title="매터모스트 비밀번호"
+            title=" 비밀번호"
             type="password"
             placeholder="비밀번호를 입력해주세요."
             register={register("password", {

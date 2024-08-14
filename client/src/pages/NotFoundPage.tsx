@@ -5,7 +5,6 @@ const NotFoundPage = () => {
     <div className="relative h-screen">
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center flex flex-col items-center">
         <div>
-          {/* <span className="luckiest_guy text-6xl">404 NOT FOUND</span> */}
           <span className="text-2xl">존재하지 않는 페이지입니다</span>
         </div>
         <Link to="/">

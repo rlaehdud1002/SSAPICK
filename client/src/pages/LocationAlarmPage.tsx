@@ -4,15 +4,12 @@ import BackIcon from "icons/BackIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "api/authApi";
 import { findFriends } from "api/locationApi";
+import { ILocation } from "atoms/Location.type";
 import { IUserInfo } from "atoms/User.type";
-import { userInfostate } from "atoms/UserAtoms";
 import LocationImage from "components/LocationPage/LocationImage";
 import { useLocation } from "hooks/useLocation";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { ILocation } from "atoms/Location.type";
-import LocationModal from "components/modals/LocationModal";
 
 interface Position {
   t: number;

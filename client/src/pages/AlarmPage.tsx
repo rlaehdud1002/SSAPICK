@@ -13,25 +13,19 @@ import Loading from 'components/common/Loading';
 const Alarm = () => {
   const nav = useNavigate();
 
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery<IPaging<INotification[]>>({
-    queryKey: ['notification'],
-    queryFn: ({ pageParam = 0 }) =>
-      getNotificationList(pageParam as number, 10),
-    getNextPageParam: (lastPage, pages) => {
-      if (!lastPage.last) {
-        return pages.length;
-      }
-      return undefined;
-    },
-    initialPageParam: 0,
-  });
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<IPaging<INotification[]>>({
+      queryKey: ['notification'],
+      queryFn: ({ pageParam = 0 }) =>
+        getNotificationList(pageParam as number, 10),
+      getNextPageParam: (lastPage, pages) => {
+        if (!lastPage.last) {
+          return pages.length;
+        }
+        return undefined;
+      },
+      initialPageParam: 0,
+    });
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -56,12 +50,6 @@ const Alarm = () => {
 
   const observerElem = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef(0);
-
-  useEffect(() => {
-    if (data && !hasNextPage) {
-      console.log('조회가 완료되었습니다.');
-    }
-  }, [data, hasNextPage]);
 
   useEffect(() => {
     if (!isFetchingNextPage) {
@@ -106,7 +94,7 @@ const Alarm = () => {
             </div>
           </>
         ) : (
-          <div className='text-center '>받은 알림이 없습니다.</div>
+          <div className="text-center ">받은 알림이 없습니다.</div>
         )}
       </div>
     </div>

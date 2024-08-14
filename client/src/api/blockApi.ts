@@ -1,6 +1,6 @@
-import { IBlock, IBlockQuestion } from "atoms/Block.type";
-import { BaseResponse } from "atoms/User.type";
-import instance from "./clientApi";
+import { IBlock, IBlockQuestion } from 'atoms/Block.type';
+import { BaseResponse } from 'atoms/User.type';
+import instance from './clientApi';
 
 // 차단 유저 목록 조회
 export const getBlockedList = async (): Promise<IBlock[]> => {
@@ -11,8 +11,6 @@ export const getBlockedList = async (): Promise<IBlock[]> => {
   if (!success) {
     throw new Error('차단 유저 목록 조회 실패');
   }
-
-  console.log('getBlockedList');
 
   return data;
 };
@@ -36,10 +34,12 @@ export const getBlockedQuestionList = async (): Promise<IBlockQuestion[]> => {
     throw new Error('차단 질문 목록 조회 실패');
   }
   return data;
-}
+};
 
 // 질문 차단 해제
-export const blockQuestionCancel = async (questionId: number): Promise<void> => {
+export const blockQuestionCancel = async (
+  questionId: number,
+): Promise<void> => {
   const response = await instance.delete(`/questions/${questionId}/ban`);
 
   if (response.status !== 204) {
@@ -52,8 +52,6 @@ export const blockUser = async (userId: number): Promise<void> => {
   const {
     data: { success, data, message },
   } = await instance.post(`/user-ban/${userId}`);
-
-  console.log('쪽지 신고', success, data, message)
 
   if (!success) {
     throw new Error(message);

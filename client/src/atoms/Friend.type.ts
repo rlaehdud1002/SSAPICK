@@ -1,5 +1,3 @@
-import { off } from "process";
-
 export interface IFriend {
   userId: number;
   name: string;
@@ -9,7 +7,7 @@ export interface IFriend {
   follow: boolean;
   sameCampus: boolean;
 }
-export interface ISearchData<T>{
+export interface ISearchData<T> {
   totalPages: number;
   totalElements: number;
   content: T;
@@ -27,11 +25,12 @@ export interface ISearchData<T>{
       empty: boolean;
       sorted: boolean;
       unsorted: boolean;
-    };}
+    };
+  };
   size: number;
 }
 
-export interface IContent{
+export interface IContent {
   userId: number;
   name: string;
   profileImage: string;

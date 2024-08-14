@@ -1,9 +1,9 @@
-import RankContent from 'components/RankingPage/RankContent';
-import { getRankList } from 'api/rankApi';
 import { useQuery } from '@tanstack/react-query';
+import { getRankList } from 'api/rankApi';
 import { IRank, IRankList } from 'atoms/Rank.type';
-import Loading from 'components/common/Loading';
+import RankContent from 'components/RankingPage/RankContent';
 import RankUser from 'components/RankingPage/RankUser';
+import Loading from 'components/common/Loading';
 
 const rankName = [
   'topMessageReceivers',
@@ -20,15 +20,13 @@ const Ranking = () => {
     queryFn: async () => await getRankList(),
   });
 
-  console.log('rankList', rankList, isLoading);
-
   if (isLoading || !rankList) {
     return <Loading />;
   }
 
   return (
     <div className="m-6">
-      <RankUser rankInfo={rankList['questionUserRanking']}/>
+      <RankUser rankInfo={rankList['questionUserRanking']} />
       {rankName.map((key) => {
         const rankItem: IRankList[] = rankList[key];
         return <RankContent key={key} title={key} rankInfo={rankItem} />;

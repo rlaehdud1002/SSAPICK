@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 import { IQuestion } from './Pick.type';
 import { persistAtom } from 'atoms/RecoilPersist';
 

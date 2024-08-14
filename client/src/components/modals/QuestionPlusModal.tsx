@@ -1,7 +1,7 @@
 import PlusIcon from 'icons/PlusIcon';
 import { Button } from 'components/ui/button';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -46,7 +46,6 @@ const QuestionPlusModal = ({ location }: QuestionPlusModalProps) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['questions'] });
-      console.log('질문 생성 성공');
     },
   });
 
