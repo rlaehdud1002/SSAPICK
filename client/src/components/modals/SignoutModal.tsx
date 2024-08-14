@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "components/ui/dialog";
 import { useMutation } from "@tanstack/react-query";
 import { signOut } from "api/authApi";
 import ProfileAlarm from "components/ProfilePage/ProfileAlarm";
@@ -6,6 +12,7 @@ import { Button } from "components/ui/button";
 import { DialogFooter, DialogHeader } from "components/ui/dialog";
 import AccountIcon from "icons/AccountIcon";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 enum SignoutStep {
   CHECK,
@@ -15,6 +22,8 @@ enum SignoutStep {
 const SignoutModal = () => {
   const [step, setStep] = useState<SignoutStep>(SignoutStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
+
+  const nav = useNavigate();
 
   const mutation = useMutation({
     mutationKey: ["signout"],
@@ -26,6 +35,7 @@ const SignoutModal = () => {
           setOpen(false);
         }, 1000);
       }
+      nav("/");
     },
   });
 
@@ -34,9 +44,10 @@ const SignoutModal = () => {
       <DialogTrigger
         className="w-full"
         onClick={() => {
-          setStep(SignoutStep.CHECK)
+          setStep(SignoutStep.CHECK);
           setOpen(true);
-        }}>
+        }}
+      >
         <ProfileAlarm title="로그아웃">
           <AccountIcon width={50} height={50} />
         </ProfileAlarm>
@@ -53,10 +64,14 @@ const SignoutModal = () => {
               <DialogDescription>로그아웃을 하시겠습니까?</DialogDescription>
             </div>
             <DialogFooter className="flex items-end mt-5">
-              <Button onClick={() => {
-                mutation.mutate();
-                setStep(SignoutStep.ALERT);
-              }} variant="ssapick" size="sm">
+              <Button
+                onClick={() => {
+                  mutation.mutate();
+                  setStep(SignoutStep.ALERT);
+                }}
+                variant="ssapick"
+                size="sm"
+              >
                 로그아웃
               </Button>
             </DialogFooter>
@@ -72,7 +87,7 @@ const SignoutModal = () => {
         )}
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default SignoutModal
+export default SignoutModal;

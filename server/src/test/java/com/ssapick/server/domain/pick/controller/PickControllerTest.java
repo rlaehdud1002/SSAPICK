@@ -317,7 +317,9 @@ class PickControllerTest extends RestDocsSupport {
 						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
 						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
 						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부"),
+						fieldWithPath("data.endTime").type(JsonFieldType.NULL).description("쿨타임 종료 시간")
+
 					))
 					.build()
 			)));
@@ -373,7 +375,8 @@ class PickControllerTest extends RestDocsSupport {
 						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
 						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
 						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부"),
+						fieldWithPath("data.endTime").type(JsonFieldType.NULL).description("쿨타임 종료 시간")
 					))
 					.build()
 			)));
@@ -431,7 +434,8 @@ class PickControllerTest extends RestDocsSupport {
 						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
 						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
 						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부"),
+						fieldWithPath("data.endTime").type(JsonFieldType.NULL).description("쿨타임 종료 시간")
 					))
 					.build()
 			)));
@@ -472,10 +476,13 @@ class PickControllerTest extends RestDocsSupport {
 						fieldWithPath("data.pickCount").type(JsonFieldType.NUMBER).description("픽한 횟수"),
 						fieldWithPath("data.blockCount").type(JsonFieldType.NUMBER).description("차단한 횟수"),
 						fieldWithPath("data.passCount").type(JsonFieldType.NUMBER).description("패스한 횟수"),
-						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부")
+						fieldWithPath("data.cooltime").type(JsonFieldType.BOOLEAN).description("쿨타임 여부"),
+						fieldWithPath("data.endTime").type(JsonFieldType.OBJECT).optional().description("쿨타임 종료 시간")
+
 					)
 					.build()
 			)));
+
 	}
 
 	@Test

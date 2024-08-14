@@ -1,8 +1,7 @@
-import { IRankList } from "atoms/Rank.type";
-import CoinIcon from "icons/CoinIcon";
-import RankingMessageIcon from "icons/RankingMessage";
-import RankingPickIcon from "icons/RankingPick";
-import TrophyIcon from "icons/TrophyIcon";
+import { IRankList } from 'atoms/Rank.type';
+import CoinIcon from 'icons/CoinIcon';
+import RankingMessageIcon from 'icons/RankingMessage';
+import RankingPickIcon from 'icons/RankingPick';
 
 interface RankContentProps {
   title: string;
@@ -27,14 +26,17 @@ const formatNum = (num: number): string => {
 };
 
 const renderRankingIcon = (title: string) => {
-  if (title == "topMessageReceivers" || title == "topMessageSenders") {
-    return <RankingMessageIcon width={25} height={25} />
-  } else if(title == "topPickReceivers" || title == "topPickSenders") {
-    return <RankingPickIcon width={25} height={25} />
-  } else if(title == "topReservePickcoUsers" || title == "topSpendPickcoUsers") {
-    return <CoinIcon width={25} height={25} />
+  if (title === 'topMessageReceivers' || title === 'topMessageSenders') {
+    return <RankingMessageIcon width={25} height={25} />;
+  } else if (title === 'topPickReceivers' || title === 'topPickSenders') {
+    return <RankingPickIcon width={25} height={25} />;
+  } else if (
+    title === 'topReservePickcoUsers' ||
+    title === 'topSpendPickcoUsers'
+  ) {
+    return <CoinIcon width={25} height={25} />;
   }
-}
+};
 
 const RankContent = ({ title, rankInfo }: RankContentProps) => {
   const rankColor = ['text-[#D5A11E]', 'text-[#A3A3A3]', 'text-[#CD7F32]'];
@@ -51,19 +53,19 @@ const RankContent = ({ title, rankInfo }: RankContentProps) => {
               key={index}
               className="flex flex-row items-center justify-between border border-white rounded-lg m-3 p-2"
             >
-              <div className='flex flex-row items-center'>
+              <div className="flex flex-row items-center">
                 <span
-                  className={`luckiest_guy ${rankColor[index]} mx-2 text-2xl`}
+                  className={`luckiest_guy ${rankColor[index]} mx-2 text-2xl pt-1`}
                 >
                   {++index}
                 </span>
                 <span className="ms-2">{rank.user.name} </span>
-                <span className="text-xs text-[#5f86e9] ml-1">
+                <span className="text-xs text-[#5f86e9] ml-2.5">
                   {rank.user.campusName} {rank.user.cohort}기{' '}
                   {rank.user.section}반
                 </span>
               </div>
-              <span className="luckiest_guy mr-4 text-[#5f86e9] text-xl">
+              <span className="luckiest_guy mr-4 text-[#5f86e9] text-xl pt-1">
                 {formatNum(rank.count)}
               </span>
             </div>

@@ -28,7 +28,7 @@ const Login = () => {
       <span className="luckiest_guy text-color-5F86E9 text-4xl mt-10 mb-20">SSAPICK</span>
       <MoveGuide />
       <KakaoButton />
-      <GoogleButton />
+      {/* <GoogleButton /> */}
     </div>
   );
 };

@@ -8,6 +8,7 @@ interface InfoInputProps {
   errors: object;
   value?: string;
   disabled?: boolean;
+  placeholder?: string;
 }
 
 const InfoInput = ({
@@ -17,6 +18,7 @@ const InfoInput = ({
   errors,
   value,
   disabled,
+  placeholder,
 }: InfoInputProps) => {
   return (
     <div className="flex flex-col">
@@ -33,6 +35,7 @@ const InfoInput = ({
             className="bg-transparent outline-none"
             {...register}
             disabled={disabled}
+            placeholder={placeholder}
           />
         </div>
         <div className="my-1 ml-2">

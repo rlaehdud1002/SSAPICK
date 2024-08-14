@@ -1,11 +1,13 @@
-import { endCoolTimeState } from 'atoms/PickAtoms';
 import CoolTimeIcon from 'icons/CoolTimeIcon';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 
-const CoolTime = () => {
-  const coolTime = useRecoilValue<number>(endCoolTimeState);
+interface CoolTimeProps {
+  endTime: string;
+}
+
+const CoolTime = ({ endTime }: CoolTimeProps) => {
+  const coolTime = new Date(endTime).getTime();
   const [timeLeft, setTimeLeft] = useState<number>(coolTime);
   const navigate = useNavigate();
 

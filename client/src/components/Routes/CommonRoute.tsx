@@ -1,20 +1,20 @@
-import Received from "components/MessagePage/Received";
-import Send from "components/MessagePage/Send";
-import Alarm from "pages/AlarmPage";
-import AuthCallback from "pages/AuthCallbackPage";
-import CoolTime from "pages/CoolTimePage";
-import Guide from "pages/GuidePage";
-import Home from "pages/HomePage";
-import InfoInsert from "pages/InfoInsert";
-import InstallGuidePage from "pages/InstallGuidePage";
-import Login from "pages/LoginPage";
-import Mattermost from "pages/MattermostPage";
-import Message from "pages/MessagePage";
-import ModiInfoInsert from "pages/ModiInfoInsert";
-import Pick from "pages/PickPage";
-import Ranking from "pages/RankingPage";
-import Splash from "pages/SplashPage";
-import { Navigate, Route, Routes } from "react-router-dom";
+import Received from 'components/MessagePage/Received';
+import Send from 'components/MessagePage/Send';
+import Alarm from 'pages/AlarmPage';
+import AuthCallback from 'pages/AuthCallbackPage';
+import CoolTime from 'pages/CoolTimePage';
+import Guide from 'pages/GuidePage';
+import Home from 'pages/HomePage';
+import InfoInsert from 'pages/InfoInsert';
+import InstallGuidePage from 'pages/InstallGuidePage';
+import Login from 'pages/LoginPage';
+import Mattermost from 'pages/MattermostPage';
+import Message from 'pages/MessagePage';
+import ModiInfoInsert from 'pages/ModiInfoInsert';
+import Pick from 'pages/PickPage';
+import Ranking from 'pages/RankingPage';
+import Splash from 'pages/SplashPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const CommonRoute = () => {
   return (
@@ -27,7 +27,6 @@ const CommonRoute = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/ranking" element={<Ranking />} />
       <Route path="/pick" element={<Pick />} />
-      <Route path="/cooltime" element={<CoolTime />} />
       <Route path="/message" element={<Message />}>
         <Route index element={<Received />} />
         <Route path="received" element={<Received />} />
