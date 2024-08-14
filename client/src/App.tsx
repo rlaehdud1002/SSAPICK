@@ -21,11 +21,13 @@ import {
 } from "atoms/UserAtoms";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { registerToken } from "api/notificationApi";
-import { setRecoil } from "recoil-nexus";
+import { getRecoil, setRecoil } from "recoil-nexus";
 
 import { isBrowser, isMobile } from "react-device-detect";
 import DisableDevicePage from "pages/DisableDevicePage";
 import { requestPermission } from "firebase-messaging-sw";
+import { newAlarmState } from "atoms/AlarmAtoms";
+import { newPickRefreshState } from "atoms/PickAtoms";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -40,21 +42,22 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
 
-
-
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
   const [accessToken, _] = useRecoilState(accessTokenState);
-
-  const setFirebaseToken = useSetRecoilState(firebaseTokenState);
+  const setNewAlarm = useSetRecoilState(newAlarmState);
+  const setNewPickRefresh = useSetRecoilState(newPickRefreshState);
 
   requestPermission(messaging);
-  
-  onMessage(messaging, (payload) => {
-    console.log("Message received. ", payload);
-  });
+  // onForegroundMessage(messaging);
 
+  onMessage(messaging, (payload) => {
+    setNewAlarm(true);
+    if (payload.notification?.title && payload.notification.title.includes("누군가가 당신을 선택했어요!")) {
+      setNewPickRefresh(true);
+    }
+  });
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);

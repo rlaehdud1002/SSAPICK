@@ -9,9 +9,16 @@ import { getNotificationList, readNotification } from 'api/notificationApi';
 import { IPaging } from 'atoms/Pick.type';
 import { useCallback, useEffect, useRef } from 'react';
 import Loading from 'components/common/Loading';
+import { newAlarmState } from 'atoms/AlarmAtoms';
+import { useSetRecoilState } from 'recoil';
 
 const Alarm = () => {
   const nav = useNavigate();
+  const setNewAlarm = useSetRecoilState(newAlarmState);
+
+  useEffect(() => {
+    setNewAlarm(false);
+  }, [setNewAlarm])
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery<IPaging<INotification[]>>({
@@ -25,7 +32,7 @@ const Alarm = () => {
         return undefined;
       },
       initialPageParam: 0,
-    });
+  });
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {

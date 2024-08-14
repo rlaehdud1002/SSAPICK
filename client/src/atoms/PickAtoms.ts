@@ -15,3 +15,8 @@ export const isQuestionUpdatedState = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const newPickRefreshState = atom<boolean>({
+  key: 'newPickRefreshState',
+  default: false,
+});

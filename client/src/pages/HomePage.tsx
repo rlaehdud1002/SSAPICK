@@ -7,11 +7,13 @@ import {
 import { getAttendance, postAttendance } from 'api/attendanceApi';
 import { getReceivePick } from 'api/pickApi';
 import { IPaging, IPick } from 'atoms/Pick.type';
+import { newPickRefreshState } from 'atoms/PickAtoms';
 import Initial from 'components/MainPage/Initial';
 import Response from 'components/MainPage/Response';
 import Loading from 'components/common/Loading';
 import AttendanceModal from 'components/modals/AttendanceModal';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 const Home = () => {
   const {
@@ -21,6 +23,7 @@ const Home = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch
   } = useInfiniteQuery<IPaging<IPick[]>>({
     queryKey: ['pick', 'receive'],
     queryFn: ({ pageParam = 0 }) => getReceivePick(pageParam as number, 10),
@@ -30,10 +33,10 @@ const Home = () => {
       }
       return undefined;
     },
-    initialPageParam: 0,
-    refetchInterval: 5000, // 5초마다 새로고침
+    initialPageParam: 0
   });
 
+  const [newPickRefresh, setNewPickRefresh] = useRecoilState(newPickRefreshState);
   const [modalOpen, setModalOpen] = useState(false);
   const [streak, setStreak] = useState(0);
   const observerElem = useRef<HTMLDivElement>(null);
@@ -45,6 +48,13 @@ const Home = () => {
     queryFn: getAttendance,
     // enabled: !hasCheckedAttendance, // 이미 출석 체크를 했으면 쿼리 실행 안함
   });
+
+  useEffect(() => {
+    if (newPickRefresh) {
+      refetch();
+      setNewPickRefresh(false);
+    }
+  }, [newPickRefresh, setNewPickRefresh, refetch])
 
   const queryClient = useQueryClient();
 

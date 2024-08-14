@@ -1,7 +1,9 @@
+import { newAlarmState } from 'atoms/AlarmAtoms';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 const AlarmIcon = () => {
-  const [isOpen] = useState(false);
+  const isOpen = useRecoilValue(newAlarmState);
 
   return (
     <svg
