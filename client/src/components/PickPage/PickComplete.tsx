@@ -4,23 +4,18 @@ import CoinIcon from 'icons/CoinIcon';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { endCoolTimeState, isQuestionUpdatedState } from 'atoms/PickAtoms';
+import { isQuestionUpdatedState } from 'atoms/PickAtoms';
 
 interface PickCompleteProps {
   setQuestion: React.Dispatch<React.SetStateAction<IQuestion[]>>;
 }
 
 const PickComplete = ({ setQuestion }: PickCompleteProps) => {
-  const [coolTime, setCoolTime] = useRecoilState<number>(endCoolTimeState);
   const [isUpdated, setIsUpdated] = useRecoilState<boolean>(
     isQuestionUpdatedState,
   );
 
   useEffect(() => {
-    // 현재 시간으로부터 1분 뒤의 시간 설정
-    const now = new Date().getTime();
-    const newCoolTime = now + 60 * 15 * 1000; // 현재 시간 + 1분
-    setCoolTime(newCoolTime);
     setIsUpdated(false);
   }, []);
 
