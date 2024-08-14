@@ -49,7 +49,7 @@ public class StompHandler implements ChannelInterceptor {
                 try {
                     return jwtService.parseAuthentication(accessToken);
                 } catch (Exception e) {
-                    log.error("error ", e);
+                    log.error("error token in {}", accessToken);
                 }
             }
         }

@@ -31,13 +31,13 @@ import DisableDevicePage from "pages/DisableDevicePage";
 function App() {
   const location = useLocation().pathname.split("/")[1];
   const queryClient = new QueryClient();
+  const [accessToken, _] = useRecoilState(accessTokenState);
 
   const setFirebaseToken = useSetRecoilState(firebaseTokenState);
 
   useEffect(() => {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
-        console.log("run this method");
         getToken(messaging, { vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY })
           .then((token: string) => {
             registerToken(token)
@@ -53,11 +53,7 @@ function App() {
       } else if (permission === "denied") {
       }
     });
-  }, []);
-
-  onMessage(messaging, (payload) => {
-    console.log("Message received. ", payload);
-  });
+  }, [setFirebaseToken]);
 
   const navigate = useNavigate();
   const isValid = useRecoilValue(isValidateState);
@@ -83,6 +79,10 @@ function App() {
           return;
         }
         if (isValid) return;
+        if (accessToken === "") {
+          navigate("/");
+          return;
+        }
         const data = await validCheck();
         setValidState(data);
         if (data.lockedUser) {
