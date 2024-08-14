@@ -28,14 +28,17 @@ const WarningDelete = ({ message }: WarningDeleteProps) => {
       </PopoverTrigger>
       <PopoverContent className="mr-4 w-[102px] rounded-lg bg-[#E9F2FD] flex flex-col justify-center">
         {!(location === 'send') && (
-          <WarningDeleteModal
-            senderId={message.senderId}
-            messageId={message.id}
-            title="차단"
-            message={message.content}
-            location={location}
-            setPopoverOpen={setOpen}
-          />
+          <div>
+            <WarningDeleteModal
+              senderId={message.senderId}
+              messageId={message.id}
+              title="차단"
+              message={message.content}
+              location={location}
+              setPopoverOpen={setOpen}
+            />
+            <div className="mb-4" />
+          </div>
         )}
         <WarningDeleteModal
           senderId={message.senderId}
