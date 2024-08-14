@@ -55,8 +55,8 @@ const WarningModal = ({
       <DialogTrigger onClick={() => setOpen(true)}>
         {title === 'block' ? (
           <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
-            <WarningIcon width={20} height={20} className="mr-1" />
-            질문 차단
+            <WarningIcon className="mr-1" />
+            질문 신고
           </div>
         ) : (
           <div className="bg-[#5F86E9]/50 rounded-full px-2 py-1 flex flex-row items-center text-sm">
