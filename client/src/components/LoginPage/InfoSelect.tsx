@@ -17,9 +17,10 @@ interface InfoSelectProps {
   name: string;
   setValue: (value: any) => void;
   defaultValue?: any;
+  disabled?: boolean; 
 }
 
-const InfoSelect = ({ title, register, setValue, errors, name, defaultValue }: InfoSelectProps) => {
+const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, disabled }: InfoSelectProps) => {
   const handleChange = (value: string) => {
     setValue(value);
   };
@@ -28,8 +29,8 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue }: I
   return (
     <div>
       <div>
-        <Select defaultValue={String(defaultValue)} {...register} onValueChange={handleChange}>
-          <SelectTrigger className="w-72 h-10 px-8 text-sm border-black">
+        <Select defaultValue={String(defaultValue)} {...register} onValueChange={handleChange} disabled={disabled} >
+          <SelectTrigger className="w-72 h-10 px-8 text-sm border-black" disabled={disabled}>
             <Label className="w-16 text-start" htmlFor={title}>
               {title}
             </Label>
@@ -68,6 +69,23 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue }: I
                   <SelectItem value="6">6반</SelectItem>
                   <SelectItem value="7">7반</SelectItem>
                   <SelectItem value="8">8반</SelectItem>
+                  <SelectItem value="9">9반</SelectItem>
+                  <SelectItem value="10">10반</SelectItem>
+                  <SelectItem value="11">11반</SelectItem>
+                  <SelectItem value="12">12반</SelectItem>
+                  <SelectItem value="13">13반</SelectItem>
+                  <SelectItem value="14">14반</SelectItem>
+                  <SelectItem value="15">15반</SelectItem>
+                  <SelectItem value="16">16반</SelectItem>
+                  <SelectItem value="17">17반</SelectItem>
+                  <SelectItem value="18">18반</SelectItem>
+                  <SelectItem value="19">19반</SelectItem>
+                  <SelectItem value="20">20반</SelectItem>
+                  <SelectItem value="21">21반</SelectItem>
+                  <SelectItem value="22">22반</SelectItem>
+                  <SelectItem value="23">23반</SelectItem>
+                  <SelectItem value="24">24반</SelectItem>
+                  
                 </>
               )}
             </SelectGroup>

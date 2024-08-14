@@ -117,6 +117,7 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
           })}
           value={information?.name}
           errors={errors}
+          disabled={true}
         />
 
         <InfoSelect
@@ -128,6 +129,7 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
           setValue={(value: string) => setValue('gender', value)}
           defaultValue={information?.gender}
           errors={errors}
+          disabled={true}
         />
         <InfoSelect
           name="class"
@@ -149,6 +151,7 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
           setValue={(value: number) => setValue('th', value)}
           defaultValue={information?.cohort}
           errors={errors}
+          disabled={true}
         />
 
         <InfoSelect
@@ -160,6 +163,7 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
           setValue={(value: string) => setValue('campus', value)}
           defaultValue={information?.campusName}
           errors={errors}
+          disabled={true}
         />
         <div>
           <DoneButton title="다음" />
