@@ -95,10 +95,8 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-      <div className="flex items-center ml-4">
-        <div onClick={goToBack}>
-          <BackIcon />
-        </div>
+      <div className="flex items-center ml-4 cursor-pointer" onClick={goToBack}>
+        <BackIcon />
         <span className="ml-2">정보 수정</span>
       </div>
       <div className="flex w-full flex-col justify-center items-center mt-10 space-y-2">
