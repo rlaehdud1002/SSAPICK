@@ -46,31 +46,32 @@ class PickcoLogRepositoryTest extends TestDatabaseContainer {
         utils = em.getEntityManagerFactory().getPersistenceUnitUtil();
     }
 
-    // @Test
-    // @DisplayName("유저의 모든 픽코 소비 로그 조회 테스트")
-    // void findAllSpendWithUser() {
-    //     // given
-    //     User user = User.createUser("testUser", "테스트 유저", 'M', ProviderType.KAKAO, "123");
-    //     userRepository.save(user);
-    //
-    //     List<PickcoLog> pickcoLog = List.of(
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.SIGN_UP, 100, 100),
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.ATTENDANCE, 10, 110),
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 109),
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 108),
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 107),
-    //             PickcoLog.createPickcoLog(user, PickcoLogType.PICK, 10, 118)
-    //     );
-    //
-    //     pickcoLogRepository.saveAll(pickcoLog);
-    //
-    //     // when
-    //     List<PickcoLog> findSpendPickLogs = pickcoLogRepository.findAllSpendWithUser();
-    //
-    //     // then
-    //     assertThat(findSpendPickLogs.size()).isEqualTo(3);
-    //     assertThat(findSpendPickLogs.get(0).getPickcoLogType()).isEqualTo(PickcoLogType.HINT_OPEN);
-    //     assertThat(findSpendPickLogs.get(0).getChange()).isEqualTo(-1);
-    //     assertThat(utils.isLoaded(findSpendPickLogs.get(0).getUser())).isTrue();
-    // }
+    @Test
+    @DisplayName("유저의 모든 픽코 소비 로그 조회 테스트")
+    void findAllSpendWithUser() {
+        // given
+        User user = User.createUser("testUser", "테스트 유저", 'M', ProviderType.KAKAO, "123");
+        userRepository.save(user);
+
+        List<PickcoLog> pickcoLog = List.of(
+                PickcoLog.createPickcoLog(user, PickcoLogType.SIGN_UP, 100, 100),
+                PickcoLog.createPickcoLog(user, PickcoLogType.ATTENDANCE, 10, 110),
+                PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 109),
+                PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 108),
+                PickcoLog.createPickcoLog(user, PickcoLogType.HINT_OPEN, -1, 107),
+                PickcoLog.createPickcoLog(user, PickcoLogType.PICK, 10, 118)
+        );
+
+        pickcoLogRepository.saveAll(pickcoLog);
+
+        // when
+        List<PickcoLog> findSpendPickLogs = pickcoLogRepository.findAllSpendWithUser();
+
+
+        // then
+        assertThat(findSpendPickLogs.size()).isEqualTo(3);
+        assertThat(findSpendPickLogs.get(0).getPickcoLogType()).isEqualTo(PickcoLogType.HINT_OPEN);
+        assertThat(findSpendPickLogs.get(0).getChange()).isEqualTo(-1);
+        assertThat(utils.isLoaded(findSpendPickLogs.get(0).getUser())).isTrue();
+    }
 }

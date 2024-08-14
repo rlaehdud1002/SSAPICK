@@ -19,7 +19,7 @@ const PickComplete = ({ setQuestion }: PickCompleteProps) => {
   useEffect(() => {
     // 현재 시간으로부터 1분 뒤의 시간 설정
     const now = new Date().getTime();
-    const newCoolTime = now + 60 * 1000; // 현재 시간 + 1분
+    const newCoolTime = now + 60 * 15 * 1000; // 현재 시간 + 1분
     setCoolTime(newCoolTime);
     setIsUpdated(false);
   }, []);

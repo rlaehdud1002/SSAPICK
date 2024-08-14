@@ -19,13 +19,13 @@ const HomeGuide = () => {
         <Carousel>
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/HomeHintOpenOne.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/HomeHintOpenOne.png" alt="Home" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/HomeHintOpenModal.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/HomeHintOpenModal.png" alt="Home" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/Home.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/Home.png" alt="Home" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />
@@ -33,20 +33,20 @@ const HomeGuide = () => {
         </Carousel>
       </div>
 
-      <p className="text-xl font-bold text-[#5f86e9] mt-5">쪽지 전송</p>
+      <p className="text-xl font-bold text-[#5f86e9] m-8">쪽지 전송</p>
       <div className="flex">
         <Carousel>
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/MakeMessage.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/MakeMessage.png" alt="Home" />
             </CarouselItem>
 
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/SendMessage.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/SendMessage.png" alt="Home" />
             </CarouselItem>
 
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/JudgeMessage.png" alt="Home" />
+              <img width={200} height={400} src="icons/guide/JudgeMessage.png" alt="Home" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />

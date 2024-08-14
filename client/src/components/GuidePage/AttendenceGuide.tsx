@@ -8,7 +8,7 @@ const AttendenceGuide = () => {
           <p className="whitespace-normal">연속 출석시 더 많은 보상이 있습니다!</p>
         </div>
         <div className="flex justify-center my-5">
-          <img width={200} src="icons/guide/Attendence.png" alt="Pick" />
+          <img width={200} height={400} src="icons/guide/Attendence.png" alt="Pick" />
         </div>
       </div>
     </div>
