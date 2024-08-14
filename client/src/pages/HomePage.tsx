@@ -1,17 +1,17 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { getAttendance, postAttendance } from 'api/attendanceApi';
 import { getReceivePick } from 'api/pickApi';
 import { IPaging, IPick } from 'atoms/Pick.type';
-import Response from 'components/MainPage/Response';
 import Initial from 'components/MainPage/Initial';
-import AttendanceModal from 'components/modals/AttendanceModal';
-import { getAttendance, postAttendance } from 'api/attendanceApi';
+import Response from 'components/MainPage/Response';
 import Loading from 'components/common/Loading';
+import AttendanceModal from 'components/modals/AttendanceModal';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const Home = () => {
   const {

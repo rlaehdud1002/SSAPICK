@@ -48,7 +48,6 @@ const ModiUserAddInfo = () => {
           residentialArea: undefined,
         };
       });
-      console.log('성공');
       setPickFriends([]);
     },
   });
@@ -59,8 +58,6 @@ const ModiUserAddInfo = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<AddUserForm>();
-
-  console.log(SendUserInfo, profileImage);
 
   const onSubmit = (data: AddUserForm) => {
     // 유저 정보 저장

@@ -2,11 +2,11 @@ const Loading = () => {
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "60vh",
-        width: "100%",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '60vh',
+        width: '100%',
       }}
     >
       <svg
@@ -16,9 +16,9 @@ const Loading = () => {
         width="70"
         height="70"
         style={{
-          shapeRendering: "auto",
-          display: "block",
-          background: "transparent",
+          shapeRendering: 'auto',
+          display: 'block',
+          background: 'transparent',
         }}
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >

@@ -1,5 +1,5 @@
-import { ErrorMessage } from "@hookform/error-message";
-import { Label } from "components/ui/label";
+import { ErrorMessage } from '@hookform/error-message';
+import { Label } from 'components/ui/label';
 import {
   Select,
   SelectContent,
@@ -7,8 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "components/ui/select";
-import { UseFormRegisterReturn } from "react-hook-form";
+} from 'components/ui/select';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface InfoSelectProps {
   title: string;
@@ -17,20 +17,35 @@ interface InfoSelectProps {
   name: string;
   setValue: (value: any) => void;
   defaultValue?: any;
-  disabled?: boolean; 
+  disabled?: boolean;
 }
 
-const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, disabled }: InfoSelectProps) => {
+const InfoSelect = ({
+  title,
+  register,
+  setValue,
+  errors,
+  name,
+  defaultValue,
+  disabled,
+}: InfoSelectProps) => {
   const handleChange = (value: string) => {
     setValue(value);
   };
-  console.log(defaultValue);
 
   return (
     <div>
       <div>
-        <Select defaultValue={String(defaultValue)} {...register} onValueChange={handleChange} disabled={disabled} >
-          <SelectTrigger className="w-72 h-10 px-8 text-sm border-black" disabled={disabled}>
+        <Select
+          defaultValue={String(defaultValue)}
+          {...register}
+          onValueChange={handleChange}
+          disabled={disabled}
+        >
+          <SelectTrigger
+            className="w-72 h-10 px-8 text-sm border-black"
+            disabled={disabled}
+          >
             <Label className="w-16 text-start" htmlFor={title}>
               {title}
             </Label>
@@ -38,19 +53,19 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, dis
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {title === "성별" && (
+              {title === '성별' && (
                 <>
                   <SelectItem value="M">남자</SelectItem>
                   <SelectItem value="F">여자</SelectItem>
                 </>
               )}
-              {title === "기수" && (
+              {title === '기수' && (
                 <>
                   <SelectItem value="11">11기</SelectItem>
                   <SelectItem value="12">12기</SelectItem>
                 </>
               )}
-              {title === "캠퍼스" && (
+              {title === '캠퍼스' && (
                 <>
                   <SelectItem value="서울">서울</SelectItem>
                   <SelectItem value="대전">대전</SelectItem>
@@ -59,7 +74,7 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, dis
                   <SelectItem value="구미">구미</SelectItem>
                 </>
               )}
-              {title === "반" && (
+              {title === '반' && (
                 <>
                   <SelectItem value="1">1반</SelectItem>
                   <SelectItem value="2">2반</SelectItem>
@@ -83,9 +98,6 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, dis
                   <SelectItem value="20">20반</SelectItem>
                   <SelectItem value="21">21반</SelectItem>
                   <SelectItem value="22">22반</SelectItem>
-                  <SelectItem value="23">23반</SelectItem>
-                  <SelectItem value="24">24반</SelectItem>
-                  
                 </>
               )}
             </SelectGroup>
@@ -96,7 +108,9 @@ const InfoSelect = ({ title, register, setValue, errors, name, defaultValue, dis
         <ErrorMessage
           errors={errors}
           name={name}
-          render={({ message }) => <h6 className="text-red-400 text-xs ">{message}</h6>}
+          render={({ message }) => (
+            <h6 className="text-red-400 text-xs ">{message}</h6>
+          )}
         />
       </div>
     </div>

@@ -1,22 +1,20 @@
-import React from 'react';
-import Question from 'components/PickPage/QuestionBox';
-import Choice from 'components/PickPage/ChoiceBox';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
+import { getFriendsList } from 'api/friendApi';
+import { getPickInfo, postCreatePick } from 'api/pickApi';
 import { getQuestion } from 'api/questionApi';
 import { IFriend } from 'atoms/Friend.type';
-import { getFriendsList } from 'api/friendApi';
-import { useCallback, useState, useEffect, useTransition } from 'react';
-import { getPickInfo, postCreatePick } from 'api/pickApi';
-import { useRecoilState } from 'recoil';
-import { isQuestionUpdatedState, questionState } from 'atoms/PickAtoms';
-import PickComplete from 'components/PickPage/PickComplete';
-import { Navigate } from 'react-router-dom';
-import FriendRerollModal from 'components/modals/FriendRerollModal';
 import { pickFriendState } from 'atoms/FriendAtoms';
-import Loading from 'components/common/Loading';
+import { IPickCreate, IPickInfo, IQuestion } from 'atoms/Pick.type';
+import { isQuestionUpdatedState, questionState } from 'atoms/PickAtoms';
+import Choice from 'components/PickPage/ChoiceBox';
 import NoFourFriends from 'components/PickPage/NoFourFriends';
+import PickComplete from 'components/PickPage/PickComplete';
+import Question from 'components/PickPage/QuestionBox';
+import Loading from 'components/common/Loading';
+import FriendRerollModal from 'components/modals/FriendRerollModal';
 import CoolTime from 'pages/CoolTimePage';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useRecoilState } from 'recoil';
 
 const Pick = () => {
   const [question, setQuestion] = useRecoilState<IQuestion[]>(questionState);
@@ -38,10 +36,6 @@ const Pick = () => {
     queryFn: getFriendsList,
   });
 
-  if (friends.length !== 0) {
-    console.log('friends', friends);
-  }
-
   const [pickFriends, setPickFriends] =
     useRecoilState<IFriend[]>(pickFriendState);
 
@@ -54,7 +48,6 @@ const Pick = () => {
 
   useEffect(() => {
     if (friends.length >= 4 && pickFriends.length === 0) {
-      console.log('친구 셔플');
       handleShuffle();
     }
   }, [friends, handleShuffle, pickFriends]);
@@ -107,8 +100,6 @@ const Pick = () => {
       setIsTouchDisabled(false);
     }, 150);
   };
-
-  console.log('pickFriends', pickFriends);
 
   if (LoadingFriendLists || LoadingPickInfo || !isLoaded || !pickInfo) {
     return <Loading />;

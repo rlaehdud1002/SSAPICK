@@ -5,15 +5,13 @@ import instance from './clientApi';
 // 유저 정보 조회
 export const getUserInfo = async (): Promise<IUserInfo> => {
   const {
-    data: { success, data, message },
+    data: { success, data },
   } = await instance.get<BaseResponse<IUserInfo>>('/user/me');
 
   if (!success) {
-    console.log(message);
     throw new Error('유저 정보 조회 실패');
   }
 
-  console.log('유저 정보 조회 성공');
   return data;
 };
 
@@ -29,18 +27,14 @@ export const UserSend = async (userdata: FormData): Promise<void> => {
   if (!success) {
     throw new Error('유저 정보 전송 실패');
   }
-
-  console.log('유저 정보 입력 성공');
 };
 
 // mm 인증 요청
 export const mmAuthSend = async (authData: IAuth): Promise<void> => {
   const {
-    data: { success, data, message, status },
+    data: { success, data },
   } = await instance.post('/auth/mattermost-confirm', authData);
-  console.log(status);
   if (!success) {
-    console.log(message);
     throw new Error('실패');
   }
   return data;
@@ -81,7 +75,6 @@ export const refresh = async (): Promise<JwtToken> => {
     }
     return data;
   } catch (error) {
-    console.log('refresh token 요청 실패', error);
     throw new Error('refresh token');
   }
 };

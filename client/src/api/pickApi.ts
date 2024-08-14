@@ -23,8 +23,6 @@ export const getReceivePick = async (
 export const postCreatePick = async (
   pickData: IPickCreate,
 ): Promise<IPickInfo> => {
-  console.log('pickData', pickData);
-
   const {
     data: { success, data },
   } = await instance.post<BaseResponse<IPickInfo>>('/pick', pickData);
@@ -32,8 +30,6 @@ export const postCreatePick = async (
   if (!success) {
     throw new Error('pick 생성 실패');
   }
-
-  console.log('postCreatePick');
 
   return data;
 };
@@ -44,13 +40,9 @@ export const getPickInfo = async (): Promise<IPickInfo> => {
     data: { success, data },
   } = await instance.get<BaseResponse<IPickInfo>>(`/pick`);
 
-  console.log(data);
-
   if (!success) {
     throw new Error('pick 조회 실패');
   }
-
-  console.log('getPickInfo');
 
   return data;
 };
@@ -78,8 +70,6 @@ export const patchPickAlarm = async (pickId: number): Promise<void> => {
     throw new Error('pick 알림 설정 실패');
   }
 
-  console.log('patchPickAlarm');
-
   return data;
 };
 
@@ -93,19 +83,13 @@ export const patchPickUserReRoll = async (): Promise<void> => {
     throw new Error('사용자 리롤 실패');
   }
 
-  console.log('patchPickUserReRoll');
-
   return data;
 };
 
-
-export const getAlarmPick = async (
-): Promise<IPick> => {
+export const getAlarmPick = async (): Promise<IPick> => {
   const {
     data: { success, data },
-  } = await instance.get<BaseResponse<IPick>>(
-    `/pick/alarm`,
-  );
+  } = await instance.get<BaseResponse<IPick>>(`/pick/alarm`);
 
   if (!success) {
     throw new Error('받은 알람 조회');

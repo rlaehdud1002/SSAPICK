@@ -12,7 +12,5 @@ export const getRankList = async (): Promise<IRank> => {
     throw new Error('랭킹 조회 실패');
   }
 
-  console.log('getRankList');
-
   return data;
 };

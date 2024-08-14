@@ -45,8 +45,6 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
   const [uploadImage, setUploadImage] = useState<File | undefined>(undefined);
 
   const onSubmit = (data: UserForm) => {
-    const form = new FormData();
-    console.log(uploadImage);
     setSendUserInfo((prev) => {
       return {
         ...prev,
@@ -76,7 +74,6 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
 
   useEffect(() => {
     if (!isLoading && information) {
-      console.log(information);
       reset({
         th: information.cohort || '',
         name: information.name || '',
@@ -86,8 +83,6 @@ const ModiUserInfo = ({ next }: UserInfoProps) => {
       });
     }
   }, [information, isLoading, reset]);
-
-  console.log(information);
 
   if (isLoading) {
     return <Loading />;

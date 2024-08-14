@@ -1,19 +1,19 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { getRecommendFriendsList, getSearchFriendsList } from "api/friendApi";
-import { IContent } from "atoms/Friend.type";
-import { Input } from "components/ui/input";
-import { Separator } from "components/ui/separator";
-import BackIcon from "icons/BackIcon";
-import FriendIcon from "icons/FriendIcon";
-import FriendPlusIcon from "icons/FriendPlusIcon";
-import ShuffleIcon from "icons/ShuffleIcon";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import FriendRecommendContent from "./FriendRecommendContent";
-import FriendSearchContent from "./FriendSearchContent";
-import { IPaging } from "atoms/Pick.type";
-import Loading from "components/common/Loading";
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { getRecommendFriendsList, getSearchFriendsList } from 'api/friendApi';
+import { IContent } from 'atoms/Friend.type';
+import { Input } from 'components/ui/input';
+import { Separator } from 'components/ui/separator';
+import BackIcon from 'icons/BackIcon';
+import FriendIcon from 'icons/FriendIcon';
+import FriendPlusIcon from 'icons/FriendPlusIcon';
+import ShuffleIcon from 'icons/ShuffleIcon';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import FriendRecommendContent from './FriendRecommendContent';
+import FriendSearchContent from './FriendSearchContent';
+import { IPaging } from 'atoms/Pick.type';
+import Loading from 'components/common/Loading';
 
 interface FriendSearchForm {
   search: string;
@@ -39,20 +39,20 @@ const FriendSearch = () => {
 
   const onSubmit = (data: FriendSearchForm) => {};
 
-  const [recommendFriendstate, setRecommendFriendstate] = useState<IContent[] | null>(null);
+  const [recommendFriendstate, setRecommendFriendstate] = useState<
+    IContent[] | null
+  >(null);
 
   // 추천 친구 목록 조회
   const {
     data: recommendFriends,
-    isLoading: LoadingRecommendFriends,
-    isError,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     refetch,
   } = useInfiniteQuery<IPaging<IContent[]>>({
-    queryKey: ["recommendFriends"],
-    queryFn: ({ pageParam = 0 }) => getRecommendFriendsList(pageParam as number, 4),
+    queryKey: ['recommendFriends'],
+    queryFn: ({ pageParam = 0 }) =>
+      getRecommendFriendsList(pageParam as number, 4),
     getNextPageParam: (lastPage, pages) => {
       if (!lastPage.last) {
         return pages.length;
@@ -64,24 +64,23 @@ const FriendSearch = () => {
 
   useEffect(() => {
     if (recommendFriends?.pages.length) {
-      const latestPage = recommendFriends.pages[recommendFriends.pages.length - 1];
+      const latestPage =
+        recommendFriends.pages[recommendFriends.pages.length - 1];
       setRecommendFriendstate(latestPage.content);
     }
   }, [recommendFriends]);
 
-  const search = watch("search");
+  const search = watch('search');
 
   const {
     data: searchFriend,
-    isLoading: LoadingSearchFriends,
-    isError: isErrorSearchFriends,
     fetchNextPage: fetchNextPageSearch,
     hasNextPage: hasNextPageSearch,
     isFetchingNextPage: isFetchingNextPageSearch,
-    refetch: refetchSearch,
   } = useInfiniteQuery<IPaging<IContent[]>>({
-    queryKey: ["searchFriends", watch("search")],
-    queryFn: ({ pageParam = 0 }) => getSearchFriendsList(pageParam as number, 5, search),
+    queryKey: ['searchFriends', watch('search')],
+    queryFn: ({ pageParam = 0 }) =>
+      getSearchFriendsList(pageParam as number, 5, search),
     getNextPageParam: (lastPage, pages) => {
       if (!lastPage.last) {
         return pages.length;
@@ -114,7 +113,7 @@ const FriendSearch = () => {
         fetchNextPageSearch();
       }
     },
-    [fetchNextPageSearch, hasNextPageSearch]
+    [fetchNextPageSearch, hasNextPageSearch],
   );
 
   useEffect(() => {
@@ -134,20 +133,14 @@ const FriendSearch = () => {
         if (hasNextPage) {
           fetchNextPage();
         } else {
-          queryClient.removeQueries({ queryKey: ["recommendFriends"] });
-          queryClient.invalidateQueries({ queryKey: ["recommendFriends"] });
+          queryClient.removeQueries({ queryKey: ['recommendFriends'] });
+          queryClient.invalidateQueries({ queryKey: ['recommendFriends'] });
           refetch();
         }
         setShowLoading(false);
       }, MIN_WAIT_TIME);
     });
   };
-
-  useEffect(() => {
-    if (searchFriend && !hasNextPageSearch) {
-      console.log("조회가 완료되었습니다.");
-    }
-  }, [searchFriend, hasNextPageSearch]);
 
   const shouldShowLoading =
     showLoading &&
@@ -156,7 +149,7 @@ const FriendSearch = () => {
 
   return (
     <div
-      className={`relative flex flex-col ${isPending || showLoading ? "pointer-events-none" : ""}`}
+      className={`relative flex flex-col ${isPending || showLoading ? 'pointer-events-none' : ''}`}
     >
       <div className="flex ml-2">
         <div onClick={() => navigate(-1)} className="mr-2">
@@ -169,7 +162,9 @@ const FriendSearch = () => {
         </div>
       </div>
       <div className="flex flex-col relative">
-        <div className={`flex ${isPending || showLoading ? "relative dimmed" : ""}`}>
+        <div
+          className={`flex ${isPending || showLoading ? 'relative dimmed' : ''}`}
+        >
           {recommendFriendstate?.length ? (
             recommendFriendstate.flatMap((recommendFriend) => (
               <FriendRecommendContent
@@ -182,7 +177,9 @@ const FriendSearch = () => {
               />
             ))
           ) : (
-            <span className="text-xs ml-36 mt-3">추천하는 친구가 없습니다.</span>
+            <span className="text-xs ml-36 mt-3">
+              추천하는 친구가 없습니다.
+            </span>
           )}
         </div>
         <div className="mx-5">
@@ -200,7 +197,7 @@ const FriendSearch = () => {
                 className="w-full bg-white h-10"
                 type="text"
                 placeholder="친구 검색"
-                register={register("search")}
+                register={register('search')}
               />
             </div>
           </div>
@@ -229,14 +226,16 @@ const FriendSearch = () => {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
           <div className="text-white py-2 px-4 rounded shadow-lg">
             <Loading />
-            <div className="mt-2">아주 복잡한 알고리즘으로 추천친구를 불러오는 중...</div>
+            <div className="mt-2">추천친구를 불러오는 중...</div>
           </div>
         </div>
       )}
       <div ref={observerElem} />
       {isFetchingNextPageSearch && <Loading />}
       {searchFriend && !hasNextPageSearch && (
-        <span className="flex justify-center text-sm my-10">조회가 완료되었습니다.</span>
+        <span className="flex justify-center text-sm my-10">
+          조회가 완료되었습니다.
+        </span>
       )}
     </div>
   );
