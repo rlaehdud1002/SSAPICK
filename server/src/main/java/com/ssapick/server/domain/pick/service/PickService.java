@@ -173,6 +173,7 @@ public class PickService {
 			.pickCount(pickCacheRepository.getPickCount(sender.getId()))
 			.blockCount(pickCacheRepository.getBlockCount(sender.getId()))
 			.passCount(pickCacheRepository.getPassCount(sender.getId()))
+			.isCooltime(pickCacheRepository.isCooltime(sender.getId()))
 			.endTime(pickCacheRepository.getEndTime(sender.getId()))
 			.build();
 	}
