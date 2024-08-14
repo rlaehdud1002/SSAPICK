@@ -25,24 +25,6 @@ const Profile = () => {
     queryFn: async () => await getUserInfo(),
   });
 
-  const navigate = useNavigate();
-  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
-
-  const mutation = useMutation({
-    mutationFn: signOut,
-    onSuccess: () => {
-      console.log("로그아웃 성공");
-      setAccessToken("");
-      navigate("/");
-    },
-  });
-
-  const onLogout = () => {
-    mutation.mutate();
-  };
-
-  console.log(information);
-
   if (isLoading) {
     return <Loading />;
   }

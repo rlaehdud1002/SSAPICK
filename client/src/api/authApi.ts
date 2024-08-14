@@ -63,13 +63,11 @@ export const mmAuthConfirm = async (): Promise<boolean> => {
 
 // 로그아웃 요청
 export const signOut = async (): Promise<void> => {
-  const {
-    data: { success, data, message },
-  } = await instance.post('/auth/sign-out');
-  if (!success) {
-    throw new Error(message);
+  const response = await instance.post('/auth/sign-out');
+  console.log(response)
+  if (!response.statusText.startsWith("2")) {
+    throw new Error("에러 발생")
   }
-  return data;
 };
 
 // refresh token 요청

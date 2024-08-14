@@ -13,6 +13,8 @@ import { DialogFooter, DialogHeader } from "components/ui/dialog";
 import AccountIcon from "icons/AccountIcon";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { accessTokenState } from "atoms/UserAtoms";
 
 enum SignoutStep {
   CHECK,
@@ -22,6 +24,7 @@ enum SignoutStep {
 const SignoutModal = () => {
   const [step, setStep] = useState<SignoutStep>(SignoutStep.CHECK);
   const [open, setOpen] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenState);
 
   const nav = useNavigate();
 
@@ -29,12 +32,13 @@ const SignoutModal = () => {
     mutationKey: ["signout"],
     mutationFn: signOut,
     onSuccess: () => {
-      console.log("로그아웃 성공");
+      console.log("123123")
       if (step === SignoutStep.ALERT) {
         setTimeout(() => {
           setOpen(false);
         }, 1000);
       }
+      setAccessToken("");
       nav("/");
     },
   });
