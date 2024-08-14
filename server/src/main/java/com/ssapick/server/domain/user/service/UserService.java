@@ -119,8 +119,6 @@ public class UserService {
 	}
 
 	public Page<ProfileData.Friend> getUserByKeyword(User user, String keyword, Pageable pageable) {
-		userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
-
 		return userRepository.searchUserByKeyword(user.getId(), keyword, pageable);
 	}
 
