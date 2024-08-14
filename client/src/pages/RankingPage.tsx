@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IRank, IRankList } from 'atoms/Rank.type';
 import Loading from 'components/common/Loading';
 import RankUser from 'components/RankingPage/RankUser';
+import TrophyIcon from 'icons/TrophyIcon';
 
 const rankName = [
   'topMessageReceivers',
@@ -28,7 +29,7 @@ const Ranking = () => {
 
   return (
     <div className="m-6">
-      <RankUser rankInfo={rankList['questionUserRanking']}/>
+      <RankUser rankInfo={rankList['questionUserRanking']} />
       {rankName.map((key) => {
         const rankItem: IRankList[] = rankList[key];
         return <RankContent key={key} title={key} rankInfo={rankItem} />;

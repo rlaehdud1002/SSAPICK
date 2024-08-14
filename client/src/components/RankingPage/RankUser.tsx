@@ -25,10 +25,12 @@ const RankUser = ({ rankInfo }: RankUserProps) => {
         </span>
         <TrophyIcon width={25} height={25} />
       </div>
-      {rankIdx.map((rankIndex) => {
+      {rankInfo.length >= 3 ? rankIdx.map((rankIndex) => {
         const rank: IUserRanking = rankInfo[rankIndex];
         return <RankUserContent key={rankIndex} rank={rank} />;
-      })}
+      }) : <div className="text-center text-sm my-24">
+      랭킹을 위한 정보가 부족합니다.
+    </div>}
     </div>
   );
 };
