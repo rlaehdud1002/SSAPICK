@@ -83,6 +83,13 @@
   }
 }
 
+.noto-sans {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .luckiest_guy {
   font-family: 'Luckiest Guy';
   font-weight: 400;
@@ -119,5 +126,5 @@
 }
 
 .splash {
-  background-image: linear-gradient(45deg, #A1C4FD 0%, #000855 100%);
+  background-image: linear-gradient(45deg, #a1c4fd 0%, #000855 100%);
 }

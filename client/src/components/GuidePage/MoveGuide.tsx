@@ -1,14 +1,14 @@
-import GuideIcon from "icons/GuideIcon";
-import { useNavigate } from "react-router-dom";
+import GuideIcon from 'icons/GuideIcon';
+import { useNavigate } from 'react-router-dom';
 
 const MoveGuide = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/guide");
+    navigate('/guide');
   };
 
-  const isMain = window.location.pathname === "/";
+  const isMain = window.location.pathname === '/';
 
   console.log(isMain);
 

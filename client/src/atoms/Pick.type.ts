@@ -87,4 +87,5 @@ export interface IPickInfo {
   blockCount: number;
   passCount: number;
   cooltime: boolean;
+  endTime: string;
 }

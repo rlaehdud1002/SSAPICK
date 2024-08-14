@@ -1,6 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { UserSend } from 'api/authApi';
-import { profileImageState, sendUserInfoState, userInfostate } from 'atoms/UserAtoms';
+import {
+  profileImageState,
+  sendUserInfoState,
+  userInfostate,
+} from 'atoms/UserAtoms';
 import DoneButton from 'buttons/DoneButton';
 import InfoInput from 'components/LoginPage/InfoInput';
 import { useEffect } from 'react';
@@ -31,7 +35,7 @@ const UserAddInfo = () => {
       console.log('성공');
     },
   });
-  const { 
+  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -120,6 +124,7 @@ const UserAddInfo = () => {
               },
             })}
             errors={errors}
+            placeholder="YYYY-MM-DD"
           />
           <InfoInput
             name="town"
