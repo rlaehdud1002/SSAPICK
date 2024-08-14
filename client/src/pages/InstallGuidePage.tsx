@@ -1,10 +1,12 @@
 import LocationGuide from 'components/InstallGuidePage/LocationGuide';
-import Install from 'components/InstallGuidePage/Install';
+import InstallIOS from 'components/InstallGuidePage/InstallIOS';
+import InstallAndroid from 'components/InstallGuidePage/InstallAndroid';
 
 const InstallGuidePage = () => {
   return (
     <div className="flex flex-col splash absolute w-screen">
-      <Install />
+      <InstallIOS />
+      <InstallAndroid />
       <LocationGuide />
     </div>
   );
