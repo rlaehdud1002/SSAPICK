@@ -12,23 +12,25 @@ const Splash = () => {
           <span className="luckiest_guy">SSAFY</span>인의 모든 것,
         </div>
         <span className="luckiest_guy text-8xl text-color-5F86E9">SSAPICK</span>
-        <div onClick={() => navigate('/install')}>
+        <div>
           <img
             src="images\splash\qrcode_www.ssapick.kro.kr.png"
             alt="없어!"
             width={150}
             height={150}
-            className="rounded-2xl my-12 cursor-pointer"
+            className="rounded-2xl my-12"
           />
         </div>
         <span className="text-white">
           QR 코드를 찍고 <span className="luckiest_guy">SSAPICK</span>을
           다운받아보세요!
         </span>
-        <span className="text-color-000855 text-xs">
-          QR 코드를 클릭하고 <span className="luckiest_guy">INSTALL GUIDE</span>
-          를 확인해보세요!
-        </span>
+        <div
+          onClick={() => navigate('/install')}
+          className="luckiest_guy bg-white/50 py-2 px-5 rounded-xl mt-3 cursor-pointer"
+        >
+          INSTALL GUIDE
+        </div>
       </div>
     </div>
   );
