@@ -77,6 +77,7 @@ public class PickData {
 		private Integer blockCount;
 		private Integer passCount;
 		boolean isCooltime;
+		LocalDateTime endTime;
 
 		public static PickCondition init() {
 			return PickCondition.builder()
