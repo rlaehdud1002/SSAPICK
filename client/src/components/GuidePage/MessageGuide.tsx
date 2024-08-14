@@ -18,10 +18,10 @@ const MessageGuide = () => {
         <Carousel className="my-5">
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/Message.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/Message.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/MessageSend.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/MessageSend.png" alt="Pick" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />

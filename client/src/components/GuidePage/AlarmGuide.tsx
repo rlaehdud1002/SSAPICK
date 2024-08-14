@@ -12,7 +12,7 @@ const AlarmGuide = () => {
       <h1 className="text-3xl font-bold text-[#5f86e9] mb-5 text-center">알림</h1>
       <div className="flex">
         <div className="my-5">
-          <img width={200} src="icons/guide/Alarm.png" alt="" />
+          <img width={200} height={400} src="icons/guide/Alarm.png" alt="" />
         </div>
         <div className="flex flex-col items-center my-3 space-y-2 text-gray-700 text-center mt-24">
           <p className="whitespace-normal">상단의 종모양 아이콘을 클릭하면,</p>

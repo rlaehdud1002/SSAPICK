@@ -16,13 +16,13 @@ const PickGuide = () => {
         <Carousel className="my-5">
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/Pick.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/Pick.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/PickDone.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/PickDone.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/PickCoolTime.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/PickCoolTime.png" alt="Pick" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />
@@ -49,13 +49,13 @@ const PickGuide = () => {
         <Carousel className="my-5">
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/Pick.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/Pick.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/PickFriendsShuffle.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/PickFriendsShuffle.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/PickFriendsShuffled.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/PickFriendsShuffled.png" alt="Pick" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />
@@ -67,10 +67,10 @@ const PickGuide = () => {
         <Carousel className="my-5">
           <CarouselContent>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/PickPass.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/PickPass.png" alt="Pick" />
             </CarouselItem>
             <CarouselItem className="flex justify-center">
-              <img width={200} src="icons/guide/Picks.png" alt="Pick" />
+              <img width={200} height={400} src="icons/guide/Picks.png" alt="Pick" />
             </CarouselItem>
           </CarouselContent>
           {/* <CarouselPrevious />
