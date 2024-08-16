@@ -157,8 +157,7 @@ class UserRepositoryTest extends TestDatabaseContainer {
         Page<ProfileData.Friend> user = userRepository.searchUserByKeyword(1L, "", PageRequest.of(0, 10));
 
         List<ProfileData.Friend> content = user.getContent();
-
-
+        
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(content.size()).isEqualTo(1);
     }
